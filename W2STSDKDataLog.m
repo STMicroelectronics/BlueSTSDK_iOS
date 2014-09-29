@@ -103,7 +103,7 @@
 }
 
 - (bool)addRawDataWithGroup:(NSInteger)group data:(NSData *)data node:(W2STSDKNode *)node save:(BOOL)save {
-    return YES;
+    //return YES;
     assert(_dataManager && _context && _session && data);
     if (![self isRunning]) {
         return NO;
