@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger, W2STSDKManagerFilter) {
 
 @property (retain, nonatomic) W2STSDKDataLog * dataLog;
 @property (retain, nonatomic) NSMutableArray * nodes;
-@property (retain, nonatomic) W2STSDKNode * virtualNode;
+@property (retain, nonatomic) W2STSDKNode * localNode;
 @property (retain, nonatomic) W2STSDKCentral * central; //private
 @property (assign, nonatomic, readonly) BOOL knownNodesOnly;
 
@@ -44,10 +44,10 @@ typedef NS_ENUM(NSInteger, W2STSDKManagerFilter) {
 -(void)discoveryStop;
 -(void)discoveryToggle;
 
--(void)toggleVirtualNode;
--(void)actionVirtualNode:(BOOL)add;
--(void)addVirtualNode;
--(void)delVirtualNode;
+-(void)toggleLocalNode;
+-(void)actionLocalNode:(BOOL)add;
+-(void)addLocalNode;
+-(void)delLocalNode;
 
 -(NSArray *)filteredNodes:(W2STSDKManagerFilter)filter;
 

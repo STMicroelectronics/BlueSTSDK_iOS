@@ -22,4 +22,8 @@
 - (bool)addNode:(W2STSDKNode *)node save:(BOOL)save;
 - (bool)addRawDataWithGroup:(NSInteger)group data:(NSData *)data node:(W2STSDKNode *)node save:(BOOL)save;
 
+- (NSString *) createLogFile:(NSString*)identifier session:(W2STDBSession *)session sampleType:(NSString *)sampleType;
+- (NSArray *)createLogWithNode:(W2STDBNode *)node session:(W2STDBSession *)session;
+- (NSArray *)createLogWithSession:(W2STDBSession *)session;
+
 @end

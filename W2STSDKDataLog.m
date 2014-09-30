@@ -198,4 +198,104 @@
     return YES;
 }
 
+/* Log */
+- (NSString *) createLogFile:(NSString*)identifier session:(W2STDBSession *)session sampleType:(NSString *)sampleType {
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"YYYYMMDD-HHmmss"];
+    
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *filename = [[NSString stringWithFormat:@"%@-%@-%@", [df stringFromDate:session.date_start], identifier, sampleType] stringByAppendingPathExtension:@"txt"];
+    NSString *filepath = [documentsDirectory stringByAppendingPathComponent:filename ];
+
+    if ([manager fileExistsAtPath:filepath])
+        [manager removeItemAtPath:filepath error:nil];
+    
+    [[NSString stringWithFormat:@"Log file for node %@ date %@ type %@\n\n", identifier, [session.date_start description], sampleType]
+                writeToFile:filepath
+                 atomically:YES
+                   encoding:NSUTF8StringEncoding
+                      error:nil];
+    
+    return filepath;
+}
+
+//return an array of files with data
+- (NSArray *)createLogWithNode:(W2STDBNode *)node session:(W2STDBSession *)session {
+    NSString *filepath = @"";
+    NSFileHandle * fileHandler = nil;
+    NSArray *sortedSamples = nil;
+    NSMutableArray *logFiles = [[NSMutableArray alloc] init];
+    NSString *text = @"";
+    NSSet *samples = nil;
+    
+    /**** motions ****/
+    filepath = [self createLogFile:node.identifier session:session sampleType:@"motion"];
+    fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filepath];
+    [fileHandler seekToEndOfFile];
+    assert(fileHandler);
+    samples = node.rawDataMotions;
+    sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"time" ascending:YES ]]];
+    
+    for (W2STDBRawDataMotion *sample in sortedSamples) {
+        text = [NSString stringWithFormat:@"%7d - %5d %5d %5d  %5d %5d %5d  %5d %5d %5d\n"
+                , sample.time
+                , sample.acc_x, sample.acc_y, sample.acc_z
+                , sample.gyr_x, sample.gyr_y, sample.gyr_z
+                , sample.mag_x, sample.mag_y, sample.mag_z
+                ];
+        [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    [fileHandler closeFile];
+    [logFiles addObject:filepath];
+
+    /**** environment ****/
+    filepath = [self createLogFile:node.identifier session:session sampleType:@"environment"];
+    fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filepath];
+    [fileHandler seekToEndOfFile];
+    assert(fileHandler);
+    samples = node.rawDataEnvironments;
+    sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"time" ascending:YES ]]];
+    
+    for (W2STDBRawDataEnvironment *sample in sortedSamples) {
+        text = [NSString stringWithFormat:@"%7d - %5d %5d\n", sample.time, sample.pressure, sample.temperature];
+        [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    [fileHandler closeFile];
+    [logFiles addObject:filepath];
+    
+    /**** ahrs ****/
+    filepath = [self createLogFile:node.identifier session:session sampleType:@"ahrs"];
+    fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filepath];
+    [fileHandler seekToEndOfFile];
+    assert(fileHandler);
+    samples = node.rawDataAHRSs;
+    sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"time" ascending:YES ]]];
+    
+    for (W2STDBRawDataAHRS *sample in sortedSamples) {
+        text = [NSString stringWithFormat:@"%7d - %5d %5d %5d %5d\n", sample.time, sample.qx, sample.qy, sample.qz, sample.qw];
+        [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    [fileHandler closeFile];
+    [logFiles addObject:filepath];
+    
+    return logFiles;
+}
+
+- (NSArray *)createLogWithSession:(W2STDBSession *)session {
+    
+    
+    NSMutableArray *logFiles = [[NSMutableArray alloc] init];
+    
+    NSSet *nodes = session.nodes;
+    
+    for (W2STDBNode *node in nodes) {
+        [logFiles addObjectsFromArray:[self createLogWithNode:node session:session]];
+    }
+
+    return logFiles;
+    
+}
+
 @end

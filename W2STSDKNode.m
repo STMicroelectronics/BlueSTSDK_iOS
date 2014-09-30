@@ -183,7 +183,7 @@ NSTimer *bleDataTimer = nil;
 -(id) init {
     return [self init:nil manager:nil local:YES];
 }
--(id) initAsVirtual:(W2STSDKManager *)manager {
+-(id) initAsLocal:(W2STSDKManager *)manager {
     return [self init:nil manager:manager local:YES];
 }
 - (int16_t)featureByte {
@@ -635,9 +635,11 @@ NSTimer *bleDataTimer = nil;
     //W2STSDKNodeConnectionStatus previous = _connectionStatus;
     
     //if in disconnecting stop the reading
+    /*
     if (_connectionStatus == W2STSDKNodeConnectionStatusDisconnecting) {
         [self reading:NO];
     }
+     */
     
     if (_peripheral != nil) {
         _connectionStatus = _peripheral.state == CBPeripheralStateConnected ? W2STSDKNodeConnectionStatusConnected : W2STSDKNodeConnectionStatusDisconnected;
@@ -656,10 +658,10 @@ NSTimer *bleDataTimer = nil;
         NSArray *serviceUUIDs = nil; //@[[CBUUID UUIDWithString:W2STSDKMotionServiceUUIDString]]; //select all services and search the known characteristics
         [_peripheral discoverServices:serviceUUIDs];
         
-        if (_connectAndReading) {
-            [self reading:YES];
-            _connectAndReading = NO;
-        }
+//        if (_connectAndReading) {
+//            [self reading:YES];
+//            _connectAndReading = NO;
+//        }
     }
     
     if (_connectionStatus == W2STSDKNodeConnectionStatusDisconnected) {
@@ -674,19 +676,19 @@ NSTimer *bleDataTimer = nil;
 {
     return _notifiedReading;
 }
-NSTimer *timerLocalReading = nil;
+NSTimer *timerReadingLocal = nil;
 -(void) reading:(BOOL)enable {
     if (_local) {
         _notifiedReading = enable;
         //enable a timer to read data from sensors available inside the device
-        if (timerLocalReading != nil) {
-            [timerLocalReading invalidate];
+        if (timerReadingLocal != nil) {
+            [timerReadingLocal invalidate];
         }
         if (enable) {
-            if (timerLocalReading != nil) {
-                [timerLocalReading invalidate];
+            if (timerReadingLocal != nil) {
+                [timerReadingLocal invalidate];
             }
-            timerLocalReading = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(readingLocal) userInfo:nil repeats:YES];
+            timerReadingLocal = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(readingLocal) userInfo:nil repeats:YES];
         }
         return;
     }
@@ -697,16 +699,36 @@ NSTimer *timerLocalReading = nil;
     }
 }
 
-int v_count = 0;
+short v_count = 0;
 typedef struct {
-    short v_acce_val[3];
-    short v_gyro_val[3];
-    short v_magn_val[3];
-    int v_pres_val;
-    short v_temp_val;
-    float v_ahrs_val[4];
-} frame_t;
-frame_t frame;
+    short time;
+    short acce_x;
+    short acce_y;
+    short acce_z;
+    short gyro_x;
+    short gyro_y;
+    short gyro_z;
+    short magn_x;
+    short magn_y;
+    short magn_z;
+} frameMotion_t;
+typedef struct {
+    short time;
+    int presure;
+    short temperature;
+    short humidity;
+} frameEnvironment_t;
+typedef struct {
+    short time;
+    int qx;
+    int qy;
+    int qz;
+    int qw;
+} frameAHRS_t;
+
+frameMotion_t frameMotion;
+frameEnvironment_t frameEnvironment;
+frameAHRS_t frameAHRS;
 
 int my_irand(int min, int max) {
     return (int)my_drand((double)min, (double)max);
@@ -727,47 +749,65 @@ double my_drand(double min, double max) {
     
     //update randomly the vars
     if (v_count == 0) {
-        memset((void *)&frame, 0, sizeof(frame_t));
+        memset((void *)&frameMotion, 0, sizeof(frameMotion_t));
+        memset((void *)&frameEnvironment, 0, sizeof(frameEnvironment_t));
+        memset((void *)&frameAHRS, 0, sizeof(frameAHRS_t));
     }
     
-    frame.v_acce_val[0] = (frame.v_acce_val[0] * k + my_irand(-2000, 2000)) / (k + 1);
-    frame.v_acce_val[1] = (frame.v_acce_val[1] * k + my_irand(-2000, 2000)) / (k + 1);
-    frame.v_acce_val[2] = (frame.v_acce_val[2] * k + my_irand(-2000, 2000)) / (k + 1);
+    frameMotion.time = v_count;
+    frameMotion.acce_x = (frameMotion.acce_x * k + my_irand(-2000, 2000)) / (k + 1);
+    frameMotion.acce_y = (frameMotion.acce_y * k + my_irand(-2000, 2000)) / (k + 1);
+    frameMotion.acce_z = (frameMotion.acce_z * k + my_irand(-2000, 2000)) / (k + 1);
     
-    frame.v_gyro_val[0] = (frame.v_acce_val[0] * k + my_irand(-800, 800)) / (k + 1);
-    frame.v_gyro_val[1] = (frame.v_acce_val[1] * k + my_irand(-800, 800)) / (k + 1);
-    frame.v_gyro_val[2] = (frame.v_acce_val[2] * k + my_irand(-800, 800)) / (k + 1);
+    frameMotion.gyro_x = (frameMotion.gyro_x * k + my_irand(-2000, 2000)) / (k + 1);
+    frameMotion.gyro_y = (frameMotion.gyro_y * k + my_irand(-2000, 2000)) / (k + 1);
+    frameMotion.gyro_z = (frameMotion.gyro_z * k + my_irand(-2000, 2000)) / (k + 1);
+
+    frameMotion.magn_x = (frameMotion.magn_x * k + my_irand(-2000, 2000)) / (k + 1);
+    frameMotion.magn_y = (frameMotion.magn_y * k + my_irand(-2000, 2000)) / (k + 1);
+    frameMotion.magn_z = (frameMotion.magn_z * k + my_irand(-2000, 2000)) / (k + 1);
+
+    frameMotion.time = v_count;
+    frameEnvironment.presure = (frameEnvironment.presure * k + my_irand(980, 1080)) / (k + 1);
+    frameEnvironment.temperature = (frameEnvironment.temperature * k + my_irand(0, 100)) / (k + 1);
     
-    frame.v_magn_val[0] = (frame.v_acce_val[0] * k + my_irand(-800, 800)) / (k + 1);
-    frame.v_magn_val[1] = (frame.v_acce_val[1] * k + my_irand(-800, 800)) / (k + 1);
-    frame.v_magn_val[2] = (frame.v_acce_val[2] * k + my_irand(-800, 800)) / (k + 1);
+    frameMotion.time = v_count;
+    float qx = *((float *)&frameAHRS.qx);
+    float qy = *((float *)&frameAHRS.qy);
+    float qz = *((float *)&frameAHRS.qz);
+    float qw = *((float *)&frameAHRS.qw);
+
+    qx = (qx * k + (my_frand(0.0f, 1.0f))) / (k + 1);
+    qy = (qy * k + (my_frand(0.0f, 1.0f))) / (k + 1);
+    qz = (qz * k + (my_frand(0.0f, 1.0f))) / (k + 1);
+    qw = (qw * k + (my_frand(0.0f, 1.0f))) / (k + 1);
     
-    frame.v_pres_val = (frame.v_pres_val * k + my_irand(980, 1080)) / (k + 1);
-    frame.v_temp_val = (frame.v_temp_val * k + my_irand(0, 100)) / (k + 1);
-    
-    frame.v_ahrs_val[0] = (frame.v_ahrs_val[0] * k + (my_frand(0.0f, 1.0f))) / (k + 1);
-    frame.v_ahrs_val[1] = (frame.v_ahrs_val[1] * k + (my_frand(0.0f, 1.0f))) / (k + 1);
-    frame.v_ahrs_val[2] = (frame.v_ahrs_val[2] * k + (my_frand(0.0f, 1.0f))) / (k + 1);
-    frame.v_ahrs_val[3] = (frame.v_ahrs_val[3] * k + (my_frand(0.0f, 1.0f))) / (k + 1);
-    
+    frameAHRS.qx = *((int *)&qx);
+    frameAHRS.qy = *((int *)&qy);
+    frameAHRS.qz = *((int *)&qz);
+    frameAHRS.qw = *((int *)&qw);
+
     NSData *data;
-    data = [[NSData alloc] initWithBytes:(void *)&frame.v_acce_val length:sizeof(frame.v_acce_val)];
-    [self.features[W2STSDKNodeFeatureHWAccelerometerKey] updateData:data position:0 time:0];
- 
-    data = [[NSData alloc] initWithBytes:(void *)&frame.v_gyro_val length:sizeof(frame.v_gyro_val)];
-    [self.features[W2STSDKNodeFeatureHWGyroscopeKey] updateData:data position:0 time:0];
     
-    data = [[NSData alloc] initWithBytes:(void *)&frame.v_magn_val length:sizeof(frame.v_magn_val)];
-    [self.features[W2STSDKNodeFeatureHWMagnetometerKey] updateData:data position:0 time:0];
+    /**** motion ****/
     
-    data = [[NSData alloc] initWithBytes:(void *)&frame.v_pres_val length:sizeof(frame.v_pres_val)];
-    [self.features[W2STSDKNodeFeatureHWPressureKey] updateData:data position:0 time:0];
+    //add time
+    data = [[NSData alloc] initWithBytes:(void *)&frameMotion length:sizeof(frameMotion)];
+    
+    [self.features[W2STSDKNodeFeatureHWAccelerometerKey] updateData:data position:2 time:0];
+    [self.features[W2STSDKNodeFeatureHWGyroscopeKey] updateData:data position:8 time:0];
+    [self.features[W2STSDKNodeFeatureHWMagnetometerKey] updateData:data position:14 time:0];
+    [_manager.dataLog addRawDataWithGroup:W2STSDKNodeFrameGroupRaw data:data node:self save:NO];
+    
+    data = [[NSData alloc] initWithBytes:(void *)&frameEnvironment length:sizeof(frameEnvironment)];
+    [self.features[W2STSDKNodeFeatureHWPressureKey] updateData:data position:2 time:0];
+    [self.features[W2STSDKNodeFeatureHWTemperatureKey] updateData:data position:6 time:0];
+    //[self.features[W2STSDKNodeFeatureHWHumidityKey] updateData:data position:8 time:0];
+    [_manager.dataLog addRawDataWithGroup:W2STSDKNodeFrameGroupEnvironment data:data node:self save:NO];
 
-    data = [[NSData alloc] initWithBytes:(void *)&frame.v_temp_val length:sizeof(frame.v_temp_val)];
-    [self.features[W2STSDKNodeFeatureHWTemperatureKey] updateData:data position:0 time:0];
-
-    data = [[NSData alloc] initWithBytes:(void *)&frame.v_ahrs_val length:sizeof(frame.v_ahrs_val)];
-    [self.features[W2STSDKNodeFeatureSWAHRSKey] updateData:data position:0 time:0];
+    data = [[NSData alloc] initWithBytes:(void *)&frameAHRS length:sizeof(frameAHRS)];
+    [self.features[W2STSDKNodeFeatureSWAHRSKey] updateData:data position:2 time:0];
+    [_manager.dataLog addRawDataWithGroup:W2STSDKNodeFrameGroupAHRS data:data node:self save:NO];
 
     v_count++;
 
@@ -840,6 +880,11 @@ didDiscoverCharacteristicsForService:(CBService *)service
         if ([[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKConfCharacteristicUUIDString]]) {
             _configCharacteristic = c;
         }
+    }
+    
+    if (_connectAndReading) {
+        [self reading:YES];
+        _connectAndReading = NO;
     }
     
     //if reading try to start the reading for new characteristics

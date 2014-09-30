@@ -333,14 +333,14 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(id) init;
 
 /*!
- *  @method initAsVirtual:
+ *  @method initAsLocal:
  *
  *  @param manager  The manager
  *
  *  @discussion
  *
  */
--(id) initAsVirtual:(W2STSDKManager *)manager;
+-(id) initAsLocal:(W2STSDKManager *)manager;
 
 /*!
  *  @method init:

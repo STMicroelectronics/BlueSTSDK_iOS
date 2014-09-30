@@ -28,7 +28,7 @@ BOOL lockNodesArrays = NO;
     
     _central = [[W2STSDKCentral alloc] init:self];
     _nodes = [[NSMutableArray alloc] init];
-    _virtualNode = nil;
+    _localNode = nil;
     _dataLog = [[W2STSDKDataLog alloc] init];
     
     _knownNodesOnly = NO; //YES
@@ -38,32 +38,32 @@ BOOL lockNodesArrays = NO;
     return self;
 }
 
--(void)toggleVirtualNode {
-    [self actionVirtualNode:(_virtualNode == nil)];
+-(void)toggleLocalNode {
+    [self actionLocalNode:(_localNode == nil)];
 }
 
--(void)actionVirtualNode:(BOOL)add {
+-(void)actionLocalNode:(BOOL)add {
     if (!add) {
-        if (_virtualNode != nil) {
-            [_nodes removeObject:_virtualNode];
-            _virtualNode = nil;
+        if (_localNode != nil) {
+            [_nodes removeObject:_localNode];
+            _localNode = nil;
         }
     }
     else {
-        if (_virtualNode != nil) {
-            [_nodes removeObject:_virtualNode];
-            _virtualNode = nil;
+        if (_localNode != nil) {
+            [_nodes removeObject:_localNode];
+            _localNode = nil;
         }
-        _virtualNode = [[W2STSDKNode alloc] initAsVirtual:self];
-        _virtualNode.connectionStatus = W2STSDKNodeConnectionStatusUnknown;
-        [_nodes insertObject:_virtualNode atIndex:0]; //insert on the top of the list
+        _localNode = [[W2STSDKNode alloc] initAsLocal:self];
+        _localNode.connectionStatus = W2STSDKNodeConnectionStatusUnknown;
+        [_nodes insertObject:_localNode atIndex:0]; //insert on the top of the list
     }
 }
--(void)addVirtualNode {
-    [self actionVirtualNode:YES];
+-(void)addLocalNode {
+    [self actionLocalNode:YES];
 }
--(void)delVirtualNode {
-    [self actionVirtualNode:NO];
+-(void)delLocalNode {
+    [self actionLocalNode:NO];
 }
 -(void)checkDeadNodes {
     if (![self discoveryActive])
