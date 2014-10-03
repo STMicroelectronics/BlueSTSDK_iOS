@@ -40,8 +40,8 @@
 }
 -(void) startScan
 {
-    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], CBCentralManagerScanOptionAllowDuplicatesKey, nil];
-    //NSDictionary *options = nil;
+    //NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], CBCentralManagerScanOptionAllowDuplicatesKey, nil];
+    NSDictionary *options = nil;
 
     [_centralManager scanForPeripheralsWithServices:nil options:options];
     _scanActive = YES;
@@ -92,9 +92,13 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
      advertisementData:(NSDictionary *)advertisementData
                   RSSI:(NSNumber *)RSSI
 {
+    if ([advertisementData[CBAdvertisementDataLocalNameKey] isEqualToString:@"estimote"]) {
+        return; //nothing
+    }
+
     //[W2STSDKManager trace:peripheral text:@"didDiscoverPeripheral"];
     BOOL exist = YES;
-    BOOL supported = YES;
+//    BOOL supported = YES;
     NSString *what = nil;
     NSArray *nodes = [_manager filteredNodes:W2STSDKManagerFilterAllNodes];
     W2STSDKNode *node = [W2STSDKManager nodeIn:nodes peripheral:peripheral];
@@ -105,26 +109,26 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
         txPower = advertisementData[CBAdvertisementDataTxPowerLevelKey];
     }
     
-    //if ([txPower  intValue] >= 1) {
+    
+    if ([txPower  intValue] >= 1) {
         if (node == nil) {
             exist = NO;
             node = [[W2STSDKNode alloc] init:peripheral manager:_manager local:NO];
             [node updateLiveTime];
             [node updateBLEProperties:advertisementData RSSI:RSSI enableDelegate:YES];
-            supported = [node isSupportedBoard];
-            if (supported || _manager.knownNodesOnly == NO) {
+            if (node.isSupportedBoard || _manager.knownNodesOnly == NO) {
                 [_manager.nodes addObject:node];
+                what = W2STSDKNodeChangeAddedKey;
+                [_manager.dataLog addNode:node save:YES];
             }
-            what = W2STSDKNodeChangeAddedKey;
-            [_manager.dataLog addNode:node save:YES];
         }
         else {
             [node updateLiveTime];
-            supported = [node updateRSSI:RSSI enableDelegate:YES];
+            [node updateRSSI:RSSI enableDelegate:YES];
             what = [W2STSDKTools nodeChangeMakeStr:W2STSDKNodeChangeUpdatedKey val:W2STSDKNodeChangeRSSIVal];
         }
-      /*
     }
+    /*
     else {
         node.status = W2STSDKNodeStatusDead;
         //[_manager.nodes removeObject:node];

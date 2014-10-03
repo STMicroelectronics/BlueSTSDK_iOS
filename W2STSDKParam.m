@@ -174,7 +174,7 @@ NSString * const W2STSDKNodeParamSWAltimeterKey = @"AltimeterKey";
         [self updateValues];
         
         //add sample to data log
-        //[[W2STSDKManager sharedInstance].dataLog addParam:self];
+        //[[W2STSDKManager sharedInstance].dataLog addParam:self]; //not valid 
     }
     return s;
 }

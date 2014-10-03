@@ -13,7 +13,7 @@
 
 - (id)init {
     self = [super init];
-    [self createNewSessionRunning:YES save:YES];
+    _enable = NO;
     return self;
 }
 
@@ -22,6 +22,10 @@
 }
 - (W2STDBSession *)createNewSessionRunning:(BOOL)running save:(BOOL)save {
     //log: session init
+    if (!_enable) {
+        return nil;
+    }
+
     _dataManager = [W2STDBManager sharedInstance];
     _context = [_dataManager mainObjectContext];
     _session = [NSEntityDescription insertNewObjectForEntityForName:@"Session" inManagedObjectContext:_context];
@@ -50,7 +54,11 @@
 }
 
 - (void)closeCurrentSessionSave:(BOOL)save {
-   assert(_dataManager && _context && _session);
+    if (!_enable) {
+        return;
+    }
+
+    assert(_dataManager && _context && _session);
     if ([self isRunning]) {
         _session.running = [NSNumber numberWithBool:NO];
         _session.date_end = [NSDate date];
@@ -62,7 +70,11 @@
     }
 }
 - (bool)addNode:(W2STSDKNode *)node save:(BOOL)save {
-   assert(_dataManager && _context && _session && node);
+    if (!_enable) {
+        return NO;
+    }
+
+    assert(_dataManager && _context && _session && node);
     if (![self isRunning]) {
         return NO;
     }
@@ -103,7 +115,10 @@
 }
 
 - (bool)addRawDataWithGroup:(NSInteger)group data:(NSData *)data node:(W2STSDKNode *)node save:(BOOL)save {
-    //return YES;
+    if (!_enable) {
+        return NO;
+    }
+
     assert(_dataManager && _context && _session && data);
     if (![self isRunning]) {
         return NO;
@@ -200,19 +215,22 @@
 
 /* Log */
 - (NSString *) createLogFile:(NSString*)identifier session:(W2STDBSession *)session sampleType:(NSString *)sampleType {
+    W2STDBSession * s = session ? session : _session;
+    assert(s);
+
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateFormat:@"YYYYMMDD-HHmmss"];
     
     NSFileManager *manager = [NSFileManager defaultManager];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *filename = [[NSString stringWithFormat:@"%@-%@-%@", [df stringFromDate:session.date_start], identifier, sampleType] stringByAppendingPathExtension:@"txt"];
+    NSString *filename = [[NSString stringWithFormat:@"%@-%@-%@", [df stringFromDate:s.date_start], identifier, sampleType] stringByAppendingPathExtension:@"txt"];
     NSString *filepath = [documentsDirectory stringByAppendingPathComponent:filename ];
 
     if ([manager fileExistsAtPath:filepath])
         [manager removeItemAtPath:filepath error:nil];
     
-    [[NSString stringWithFormat:@"Log file for node %@ date %@ type %@\n\n", identifier, [session.date_start description], sampleType]
+    [[NSString stringWithFormat:@"Log file for node %@ date %@ type %@\n\n", identifier, [s.date_start description], sampleType]
                 writeToFile:filepath
                  atomically:YES
                    encoding:NSUTF8StringEncoding
@@ -223,6 +241,9 @@
 
 //return an array of files with data
 - (NSArray *)createLogWithNode:(W2STDBNode *)node session:(W2STDBSession *)session {
+    W2STDBSession * s = session ? session : _session;
+    assert(s);
+    
     NSString *filepath = @"";
     NSFileHandle * fileHandler = nil;
     NSArray *sortedSamples = nil;
@@ -231,7 +252,7 @@
     NSSet *samples = nil;
     
     /**** motions ****/
-    filepath = [self createLogFile:node.identifier session:session sampleType:@"motion"];
+    filepath = [self createLogFile:node.identifier session:s sampleType:@"motion"];
     fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filepath];
     [fileHandler seekToEndOfFile];
     assert(fileHandler);
@@ -251,7 +272,7 @@
     [logFiles addObject:filepath];
 
     /**** environment ****/
-    filepath = [self createLogFile:node.identifier session:session sampleType:@"environment"];
+    filepath = [self createLogFile:node.identifier session:s sampleType:@"environment"];
     fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filepath];
     [fileHandler seekToEndOfFile];
     assert(fileHandler);
@@ -266,7 +287,7 @@
     [logFiles addObject:filepath];
     
     /**** ahrs ****/
-    filepath = [self createLogFile:node.identifier session:session sampleType:@"ahrs"];
+    filepath = [self createLogFile:node.identifier session:s sampleType:@"ahrs"];
     fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filepath];
     [fileHandler seekToEndOfFile];
     assert(fileHandler);
@@ -284,14 +305,15 @@
 }
 
 - (NSArray *)createLogWithSession:(W2STDBSession *)session {
-    
+    W2STDBSession * s = session ? session : _session;
+    assert(s);
     
     NSMutableArray *logFiles = [[NSMutableArray alloc] init];
     
-    NSSet *nodes = session.nodes;
+    NSSet *nodes = s.nodes;
     
     for (W2STDBNode *node in nodes) {
-        [logFiles addObjectsFromArray:[self createLogWithNode:node session:session]];
+        [logFiles addObjectsFromArray:[self createLogWithNode:node session:s]];
     }
 
     return logFiles;

@@ -15,6 +15,7 @@
 @property (retain, nonatomic) W2STDBManager * dataManager;
 @property (retain, nonatomic) NSManagedObjectContext * context;
 @property (retain, nonatomic) W2STDBSession * session;
+@property (assign, nonatomic) BOOL enable;
 
 - (BOOL)isRunning;
 - (W2STDBSession *)createNewSessionRunning:(BOOL)running save:(BOOL)save;
