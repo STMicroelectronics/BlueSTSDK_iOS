@@ -61,6 +61,7 @@ typedef NS_ENUM(NSInteger, W2STSDKManagerFilter) {
 +(NSInteger)indexNodeIn:(NSArray *)nodes peripheral:(CBPeripheral *)peripheral;
 +(W2STSDKNode *)nodeIn:(NSArray *)nodes index:(NSUInteger)index;
 +(W2STSDKNode *)nodeIn:(NSArray *)nodes peripheral:(CBPeripheral *)peripheral;
++(W2STSDKNode *)nodeIn:(NSArray *)nodes name:(NSString *)name;
 
 + (W2STSDKManager *)sharedInstance;
 @end

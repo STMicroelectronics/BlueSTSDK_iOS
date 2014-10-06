@@ -110,7 +110,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
     }
     
     
-    if ([txPower  intValue] >= 1) {
+    //if ([txPower  intValue] >= 1) {
         if (node == nil) {
             exist = NO;
             node = [[W2STSDKNode alloc] init:peripheral manager:_manager local:NO];
@@ -127,7 +127,7 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
             [node updateRSSI:RSSI enableDelegate:YES];
             what = [W2STSDKTools nodeChangeMakeStr:W2STSDKNodeChangeUpdatedKey val:W2STSDKNodeChangeRSSIVal];
         }
-    }
+    //}
     /*
     else {
         node.status = W2STSDKNodeStatusDead;

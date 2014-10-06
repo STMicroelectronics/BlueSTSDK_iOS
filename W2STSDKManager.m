@@ -30,12 +30,12 @@ BOOL lockNodesArrays = NO;
     _nodes = [[NSMutableArray alloc] init];
     _localNode = nil;
     _dataLog = nil;
-    //_dataLog = [[W2STSDKDataLog alloc] init];
-    //_dataLog.enable = YES;
-    //[_dataLog createNewSessionRunning:YES save:YES];
+    _dataLog = [[W2STSDKDataLog alloc] init];
+    _dataLog.enable = YES;
+    [_dataLog createNewSessionRunning:YES save:YES];
     
-//    _knownNodesOnly = NO;
-    _knownNodesOnly = YES;
+    _knownNodesOnly = NO;
+//    _knownNodesOnly = YES;
     
     [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(checkDeadNodes) userInfo:nil repeats:YES];
     
@@ -221,6 +221,21 @@ BOOL lockNodesArrays = NO;
     }
     return node_ret;
 }
++(W2STSDKNode *)nodeIn:(NSArray *)nodes name:(NSString *)name {
+    assert(nodes != nil);
+    
+    W2STSDKNode *node_ret = nil;
+    
+    for(W2STSDKNode *node in nodes)
+    {
+        //if ([node.peripheral.name isEqual:name])
+        {
+            node_ret = node;
+            break;
+        }
+    }
+    return node_ret;
 
+}
 
 @end

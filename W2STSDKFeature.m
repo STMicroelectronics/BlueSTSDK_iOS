@@ -109,6 +109,17 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 -(NSString *)groupKey {
     return [W2STSDKFeature groupKeyLookup:[self groupMap]];
 }
+- (id)init {
+    self = [super init];
+    _node = nil;
+    _key = W2STSDKNodeFeatureInvalidKey;
+    
+    [self initializeFromKey];
+    
+    _params = [[NSMutableArray alloc] init];
+    
+    return self;
+}
 -(id) init:(NSString *)key node:(W2STSDKNode *)node {
     
     self = [super init];
