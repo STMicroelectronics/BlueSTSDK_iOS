@@ -30,9 +30,9 @@ BOOL lockNodesArrays = NO;
     _nodes = [[NSMutableArray alloc] init];
     _localNode = nil;
     _dataLog = nil;
-    _dataLog = [[W2STSDKDataLog alloc] init];
-    _dataLog.enable = YES;
-    [_dataLog createNewSessionRunning:YES save:YES];
+    //_dataLog = [[W2STSDKDataLog alloc] init];
+    //_dataLog.enable = YES;
+    //[_dataLog createNewSessionRunning:YES save:YES];
     
     _knownNodesOnly = NO;
 //    _knownNodesOnly = YES;
