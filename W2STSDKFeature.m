@@ -173,7 +173,6 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 
 }
 -(void)initializeFromKey {
-    
     _map        = (W2STSDKNodeFeature)[W2STSDKFeature fieldByKeyIntValue:_key field:@"map"];
     _name       = [W2STSDKFeature fieldByKeyString:_key field:@"name"];
     _shortName  = [W2STSDKFeature fieldByKeyString:_key field:@"shortName"];
@@ -190,15 +189,28 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 -(NSUInteger)updateData:(NSData *)data position:(NSUInteger)pos time:(NSUInteger)time {
     NSUInteger s = 0;
     
+    _time = time;
     for(W2STSDKParam *prm in _params)
     {
         s += [prm updateData:data position:(pos+s) time:time];
     }
 
     [_delegate feature:self paramsDidUpdate:nil];
-
+        
     return s;
     
+}
+
+-(W2STSDKParam *)paramAtIndex:(NSInteger)index {
+    return index >= 0 && index < _params.count ? (W2STSDKParam *)_params[index] : nil;
+}
+
+-(NSArray *)arrayValues:(BOOL)rawDataMode {
+    NSMutableArray *ret = [[NSMutableArray alloc] init];
+    for(int i = 0; i < _params.count; i++) {
+        [ret addObject:[((W2STSDKParam *)_params[i]) numberValue:rawDataMode]];
+    }
+    return ret;
 }
 
 /**** groups management ****/

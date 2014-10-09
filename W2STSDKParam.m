@@ -266,8 +266,12 @@ NSString * const W2STSDKNodeParamSWAltimeterKey = @"AltimeterKey";
     return ret;
 }
 
+-(NSNumber *)numberValue:(BOOL)rawDataMode {
+    return rawDataMode ? [NSNumber numberWithInteger:_rawValue] : [NSNumber numberWithDouble:_value];
+}
+
 //update all values from data
--(NSString *)valueStr {
+-(NSString *)stringValue {
     NSString * ret = @"na";
     switch([W2STSDKFeature mapLookup:_feature.key]) {
         case W2STSDKNodeFeatureInvalid: ret = @"inv"; break;

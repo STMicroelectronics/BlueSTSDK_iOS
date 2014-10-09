@@ -92,9 +92,9 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error
      advertisementData:(NSDictionary *)advertisementData
                   RSSI:(NSNumber *)RSSI
 {
-    if ([advertisementData[CBAdvertisementDataLocalNameKey] isEqualToString:@"estimote"]) {
-        return; //nothing
-    }
+//    if ([advertisementData[CBAdvertisementDataLocalNameKey] isEqualToString:@"estimote"]) {
+//        return; //nothing
+//    }
 
     //[W2STSDKManager trace:peripheral text:@"didDiscoverPeripheral"];
     BOOL exist = YES;

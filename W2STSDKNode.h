@@ -380,6 +380,10 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 - (BOOL) updateConnectionStatus;
 - (BOOL) isConnectable;
 
+- (BOOL)featureAvailable:(NSString *)featureKey;
+- (W2STSDKFeature *)featureWithKey:(NSString *)featureKey;
+- (BOOL)paramAvailable:(NSString *)paramKey;
+
 - (BOOL) updateBLEProperties:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI enableDelegate:(BOOL)enableDelegate;
 - (BOOL) updateAdvertisement:(NSDictionary *)advertisementData enableDelegate:(BOOL)enableDelegate;
 - (BOOL) updateRSSI:(NSNumber *)RSSI enableDelegate:(BOOL)enableDelegate;

@@ -103,6 +103,7 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 @property (retain, nonatomic) NSString *unit;
 @property (assign, nonatomic) W2STSDKParamType type;
 @property (assign, nonatomic) NSUInteger size;
+@property (readonly, assign, nonatomic) NSInteger time;
 
 @property (assign, nonatomic) float min;
 @property (assign, nonatomic) float max;
@@ -126,6 +127,8 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 -(NSString *)groupKey;
 -(id) init:(NSString *)key node:(W2STSDKNode *)node;
 -(NSUInteger)updateData:(NSData *)data position:(NSUInteger)pos time:(NSUInteger)time;
+-(W2STSDKParam *)paramAtIndex:(NSInteger)index;
+-(NSArray *)arrayValues:(BOOL)rawDataMode;
 
 +(NSInteger)fieldByKeyIntValue:(NSString *)key field:(NSString *)field;
 +(NSNumber *)fieldByKeyNumber:(NSString *)key field:(NSString *)field;

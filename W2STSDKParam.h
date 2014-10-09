@@ -113,7 +113,8 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeParamSWAltimeterKey;
 
 -(id)init:(NSString *)key feature:(W2STSDKFeature *)feature node:(W2STSDKNode *)node;
 -(NSUInteger)updateData:(NSData *)data position:(NSUInteger)pos time:(NSUInteger)time;
--(NSString *)valueStr;
+-(NSNumber *)numberValue:(BOOL)rawDataMode;
+-(NSString *)stringValue;
 
 +(void)initStatic;
 +(NSArray *)allKeys;

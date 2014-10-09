@@ -490,7 +490,9 @@ NSTimer *bleDataTimer = nil;
     ret = [[_features allKeys] containsObject:featureKey];
     return ret;
 }
-
+- (W2STSDKFeature *)featureWithKey:(NSString *)featureKey {
+    return [self featureAvailable:featureKey] ? _features[featureKey] : nil;
+}
 - (BOOL)paramAvailable:(NSString *)paramKey {
     BOOL ret = NO;
     
@@ -787,28 +789,30 @@ double my_drand(double min, double max) {
     frameAHRS.qz = *((int *)&qz);
     frameAHRS.qw = *((int *)&qw);
 
-    NSData *data;
     
     /**** motion ****/
     
     //add time
-    data = [[NSData alloc] initWithBytes:(void *)&frameMotion length:sizeof(frameMotion)];
-    
-    [self.features[W2STSDKNodeFeatureHWAccelerometerKey] updateData:data position:2 time:0];
-    [self.features[W2STSDKNodeFeatureHWGyroscopeKey] updateData:data position:8 time:0];
-    [self.features[W2STSDKNodeFeatureHWMagnetometerKey] updateData:data position:14 time:0];
-    [_manager.dataLog addRawDataWithGroup:W2STSDKNodeFrameGroupRaw data:data node:self save:NO];
-    
-    data = [[NSData alloc] initWithBytes:(void *)&frameEnvironment length:sizeof(frameEnvironment)];
-    [self.features[W2STSDKNodeFeatureHWPressureKey] updateData:data position:2 time:0];
-    [self.features[W2STSDKNodeFeatureHWTemperatureKey] updateData:data position:6 time:0];
-    //[self.features[W2STSDKNodeFeatureHWHumidityKey] updateData:data position:8 time:0];
-    [_manager.dataLog addRawDataWithGroup:W2STSDKNodeFrameGroupEnvironment data:data node:self save:NO];
-
-    data = [[NSData alloc] initWithBytes:(void *)&frameAHRS length:sizeof(frameAHRS)];
-    [self.features[W2STSDKNodeFeatureSWAHRSKey] updateData:data position:2 time:0];
-    [_manager.dataLog addRawDataWithGroup:W2STSDKNodeFrameGroupAHRS data:data node:self save:NO];
-
+    assert(_manager.dataLog);
+    if (_manager.dataLog.enable) {
+        NSData *data;
+        data = [[NSData alloc] initWithBytes:(void *)&frameMotion length:sizeof(frameMotion)];
+        
+        [self.features[W2STSDKNodeFeatureHWAccelerometerKey] updateData:data position:2 time:0];
+        [self.features[W2STSDKNodeFeatureHWGyroscopeKey] updateData:data position:8 time:0];
+        [self.features[W2STSDKNodeFeatureHWMagnetometerKey] updateData:data position:14 time:0];
+        [_manager.dataLog addRawDataWithGroup:W2STSDKNodeFrameGroupRaw data:data node:self save:NO];
+        
+        data = [[NSData alloc] initWithBytes:(void *)&frameEnvironment length:sizeof(frameEnvironment)];
+        [self.features[W2STSDKNodeFeatureHWPressureKey] updateData:data position:2 time:0];
+        [self.features[W2STSDKNodeFeatureHWTemperatureKey] updateData:data position:6 time:0];
+        //[self.features[W2STSDKNodeFeatureHWHumidityKey] updateData:data position:8 time:0];
+        [_manager.dataLog addRawDataWithGroup:W2STSDKNodeFrameGroupEnvironment data:data node:self save:NO];
+        
+        data = [[NSData alloc] initWithBytes:(void *)&frameAHRS length:sizeof(frameAHRS)];
+        [self.features[W2STSDKNodeFeatureSWAHRSKey] updateData:data position:2 time:0];
+        [_manager.dataLog addRawDataWithGroup:W2STSDKNodeFrameGroupAHRS data:data node:self save:NO];
+    }
     v_count++;
 
     [_delegate node:self dataDidUpdate:W2STSDKNodeChangeDataVal param:W2STSDKAllGroup];
@@ -1049,11 +1053,13 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
         [self updateConfigForData:data];
     }
     else {
+        //data
         group = [W2STSDKNode uuid2groupSafe:uuid];
         if(![group isEqualToString:@""] ) {
             [self updateValueForData:data group:group];
             W2STSDKNodeFrameGroup framegroup = [W2STSDKNode group2mapSafe:group];
-            [_manager.dataLog addRawDataWithGroup:framegroup data:data node:self save:NO];
+            //[_manager.dataLog addRawDataWithGroup:framegroup data:data node:self save:NO];
+            [_manager.dataLog addDataWithGroup:framegroup node:self time:0 save:NO];
         }
         
     }
@@ -1121,9 +1127,6 @@ long frame_node_count = 0;
     pos += 2;
     
     //get the group of the characteristic received
-    
-    
-    //decode the environment frame
     
     NSArray *keys;
     keys = [W2STSDKNode getFeaturesFromGroup:group];
