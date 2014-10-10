@@ -45,6 +45,7 @@
 - (void)setEnable:(BOOL)enable {
     if (_enable != enable) {
         _enable = enable; //apply before to enable the autoSave
+        [self closeCurrentSession];
 
 #ifdef W2STSDK_SAVE_AUTO
         if (enable) {
@@ -104,10 +105,10 @@
     [dateFormatterDescr setTimeStyle:NSDateFormatterLongStyle];
     
     //initialize the fields
-    _session.date_start = [NSDate date];
-    _session.date_end = [NSDate date]; //if the session is open this is a dummy value
-    _session.name = [dateFormatterName stringFromDate:_session.date_start];
-    _session.descr = [dateFormatterDescr stringFromDate:_session.date_start];
+    _session.dateStart = [NSDate date];
+    _session.dateEnd = [NSDate date]; //if the session is open this is a dummy value
+    _session.name = [dateFormatterName stringFromDate:_session.dateStart];
+    _session.descr = [dateFormatterDescr stringFromDate:_session.dateStart];
     _session.running = [NSNumber numberWithBool:YES];
     
     //save data
@@ -121,7 +122,7 @@
     return _session;
 }
 
-- (void)saveCurrentSession {
+- (void)saveDB {
     assert(_dataManager && _context);
     [_dataManager save];
 }
@@ -129,18 +130,23 @@
 #ifdef W2STSDK_SAVE_AUTO
 - (void)autoSaveAction {
     NSTimeInterval diff = 0;
-    if (_autoSave) {
-        BOOL res = [_dataManager save];
-        if (res) {
-            NSDate *prevSave = self.lastSave;
-            self.lastSave = [NSDate date];
-            diff = [self.lastSave timeIntervalSinceDate:prevSave];
+    if (_session) {
+        if (_autoSave) {
+            BOOL res = [_dataManager save];
+            if (res) {
+                NSDate *prevSave = self.lastSave;
+                self.lastSave = [NSDate date];
+                diff = [self.lastSave timeIntervalSinceDate:prevSave];
+            }
+            self.autoSave = YES; //reset the timer
+            NSLog(@"Save result %@ lastSave (%f) %@ ", (res ? @"OK" : @"NO"), diff, [self.lastSave description]);
         }
-        self.autoSave = YES; //reset the timer
-        NSLog(@"Save result %@ lastSave (%f) %@ ", (res ? @"OK" : @"NO"), diff, [self.lastSave description]);
+        else {
+            self.autoSave = NO; //invalidate the timer
+        }
     }
     else {
-        self.autoSave = NO; //invalidate the timer
+        NSLog(@"Save no session");
     }
 }
 #endif
@@ -154,8 +160,8 @@
 
     if ([self isRunning]) {
         _session.running = [NSNumber numberWithBool:NO];
-        _session.date_end = [NSDate date];
-        
+        _session.dateEnd = [NSDate date];
+        [self updateCountSamplesForSession:nil group:W2STSDKNodeFrameGroupAll];
     }
 
     //save data
@@ -254,36 +260,25 @@
     return ret;
 }
 
-- (BOOL)addDataTestSampleWithNode:(W2STSDKNode *)node {
-    W2STDBRawDataEnvironment *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"RawDataEnvironment" inManagedObjectContext:_context];
-    
-    NSInteger time = (NSInteger)([[NSDate date] timeIntervalSinceDate:_startTest] * 1000.0f) % 65536;
-    db_item.time = [NSNumber numberWithInteger:time];
-    db_item.pressure = [NSNumber numberWithInteger:((time % 100) + 1000)];
-    db_item.temperature = [NSNumber numberWithInteger:((time % 100) + 2000)];
-    db_item.humidity = [NSNumber numberWithInteger:((time % 100) + 3000)];
-    
-    //store relationship info
-    db_item.node = node.dbNode;
-    //[node.dbNode addRawDataEnvironmentsObject:db_item];
-    
-    return YES;
-}
 
-- (BOOL)addDataWithGroup:(NSInteger)group node:(W2STSDKNode *)node time:(NSInteger)time save:(BOOL)save {
+- (BOOL)addSampleWithGroup:(NSInteger)group node:(W2STSDKNode *)node time:(NSInteger)time save:(BOOL)save {
     assert(_dataManager && _context);
     if (!_enable || ![self isRunning]) {
         return NO;
     }
+
+    assert(group == W2STSDKNodeFrameGroupMotion || group == W2STSDKNodeFrameGroupEnvironment || group == W2STSDKNodeFrameGroupAHRS);
     
     W2STSDKFeature *feature = nil;
-    W2STSDKParam *param = nil;
     NSArray *values = nil;
     
     switch((W2STSDKNodeFrameGroup)group) {
-        case W2STSDKNodeFrameGroupRaw:
+        case W2STSDKNodeFrameGroupMotion:
         {
-            W2STDBRawDataMotion *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"RawDataMotion" inManagedObjectContext:_context];
+            W2STDBSampleMotion *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"SampleMotion" inManagedObjectContext:_context];
+            db_item.session = _session;
+            db_item.node = node.dbNode;
+            db_item.timeStamp = [NSDate date];
             db_item.time = [NSNumber numberWithInteger:time];
             
             feature = [node featureWithKey:W2STSDKNodeFeatureHWAccelerometerKey];
@@ -311,14 +306,15 @@
                 db_item.mag_z = values[2];
             }
             
-            //store relationship info
-            db_item.node = node.dbNode;
-            //[node.dbNode addRawDataMotionsObject:db_item];
+            node.dbNode.countSamplesMotion = @([node.dbNode.countSamplesMotion intValue] + 1);
         }
             break;
         case W2STSDKNodeFrameGroupEnvironment:
         {
-            W2STDBRawDataEnvironment *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"RawDataEnvironment" inManagedObjectContext:_context];
+            W2STDBSampleEnvironment *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"SampleEnvironment" inManagedObjectContext:_context];
+            db_item.session = _session;
+            db_item.node = node.dbNode;
+            db_item.timeStamp = [NSDate date];
             db_item.time = [NSNumber numberWithInteger:time];
 
             feature = [node featureWithKey:W2STSDKNodeFeatureHWPressureKey];
@@ -334,15 +330,17 @@
                 db_item.humidity = [[feature paramAtIndex:0] numberValue:NO];
             }
             
-            //store relationship info
-            db_item.node = node.dbNode;
-            //[node.dbNode addRawDataEnvironmentsObject:db_item];
+            node.dbNode.countSamplesEnvironment = @([node.dbNode.countSamplesEnvironment intValue] + 1);
         }
             break;
         case W2STSDKNodeFrameGroupAHRS:
         {
-            W2STDBRawDataAHRS *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"RawDataAHRS" inManagedObjectContext:_context];
+            W2STDBSampleAHRS *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"SampleAHRS" inManagedObjectContext:_context];
+            db_item.session = _session;
+            db_item.node = node.dbNode;
+            db_item.timeStamp = [NSDate date];
             db_item.time = [NSNumber numberWithInteger:time];
+
             feature = [node featureWithKey:W2STSDKNodeFeatureSWAHRSKey];
             if (feature) {
                 values = [feature arrayValues:NO];
@@ -353,9 +351,7 @@
                 db_item.qw = [[feature paramAtIndex:3] numberValue:NO];
             }
             
-            //store relationship info
-            db_item.node = node.dbNode;
-            //[node.dbNode addRawDataAHRSsObject:db_item];
+            node.dbNode.countSamplesAHRS = @([node.dbNode.countSamplesAHRS intValue] + 1);
         }
             break;
         default:
@@ -366,13 +362,12 @@
     return YES;
 }
 
-- (BOOL)addRawDataWithGroup:(NSInteger)group data:(NSData *)data node:(W2STSDKNode *)node save:(BOOL)save {
+/*
+- (BOOL)addSampleWithGroup:(NSInteger)group data:(NSData *)data node:(W2STSDKNode *)node save:(BOOL)save {
     assert(_dataManager && _context && data);
     if (!_enable || ![self isRunning]) {
         return NO;
     }
-    
-    return YES;
     
     const unsigned char *buffer = (const unsigned char *)[data bytes];
     //int8_t size = (int8_t)data.length;
@@ -382,11 +377,11 @@
     
     uint8_t hw_map = node.hwFeatureByte;
     uint8_t sw_map = node.swFeatureByte;
-/*
-    switch((W2STSDKNodeFrameGroup)group) {
+
+     switch((W2STSDKNodeFrameGroup)group) {
         case W2STSDKNodeFrameGroupRaw:
         {
-            W2STDBRawDataMotion *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"RawDataMotion" inManagedObjectContext:_context];
+            W2STDBSampleMotion *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"SampleMotion" inManagedObjectContext:_context];
             
             db_item.time = [NSNumber numberWithUnsignedInt:time]; pos+=2; //save time
             if (hw_map & (W2STSDKNodeFeatureHWAcce & 0xFF)) {
@@ -411,13 +406,13 @@
             
             //store relationship info
             db_item.node = node.dbNode;
-            [node.dbNode addRawDataMotionsObject:db_item];
+            [node.dbNode addSampleMotionsObject:db_item];
             
         }
             break;
         case W2STSDKNodeFrameGroupEnvironment:
         {
-            W2STDBRawDataEnvironment *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"RawDataEnvironment" inManagedObjectContext:_context];
+            W2STDBSampleEnvironment *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"SampleEnvironment" inManagedObjectContext:_context];
             
             db_item.time = time; pos+=2; //save time
             if (hw_map & (W2STSDKNodeFeatureHWPres & 0xFF)) {
@@ -432,12 +427,12 @@
             
             //store relationship info
             db_item.node = node.dbNode;
-            [node.dbNode addRawDataEnvironmentsObject:db_item];
+            [node.dbNode addSampleEnvironmentsObject:db_item];
         }
             break;
         case W2STSDKNodeFrameGroupAHRS:
         {
-            W2STDBRawDataAHRS *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"RawDataAHRS" inManagedObjectContext:_context];
+            W2STDBSampleAHRS *db_item = [NSEntityDescription insertNewObjectForEntityForName:@"SampleAHRS" inManagedObjectContext:_context];
             
             db_item.time = time; pos+=2; //save time
             if (sw_map & (W2STSDKNodeFeatureSWAHRS & 0xFF)) {
@@ -450,13 +445,12 @@
             
             //store relationship info
             db_item.node = node.dbNode;
-            [node.dbNode addRawDataAHRSsObject:db_item];
+            [node.dbNode addSampleAHRSsObject:db_item];
        }
             break;
         default:
             break;
     }
-    */
     //save data
     if (save) {
         [_dataManager save];
@@ -464,25 +458,139 @@
 
     return YES;
 }
+ */
+
+/**************** DB data retrieve ****************/
+- (void)updateCountSamplesForNode:(W2STDBNode *)dbNode group:(NSInteger)group {
+    /*
+     * No using the getSamples to future optimization
+     * using (if possible) a count in the query
+     */
+    NSArray *samples = nil;
+    if ((group & W2STSDKNodeFrameGroupMotion) == W2STSDKNodeFrameGroupMotion) {
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"SampleMotion"];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"node == %@", dbNode]];
+        samples = [_context executeFetchRequest:fetchRequest error:NULL];
+        dbNode.countSamplesMotion = [NSNumber numberWithInteger:samples.count];
+        
+    }
+    if ((group & W2STSDKNodeFrameGroupEnvironment) == W2STSDKNodeFrameGroupEnvironment) {
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"SampleEnvironment"];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"node == %@", dbNode]];
+        samples = [_context executeFetchRequest:fetchRequest error:NULL];
+        dbNode.countSamplesEnvironment = [NSNumber numberWithInteger:samples.count];
+    }
+    if ((group & W2STSDKNodeFrameGroupAHRS) == W2STSDKNodeFrameGroupAHRS) {
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"SampleAHRS"];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"node == %@", dbNode]];
+        samples = [_context executeFetchRequest:fetchRequest error:NULL];
+        dbNode.countSamplesAHRS = [NSNumber numberWithInteger:samples.count];
+    }
+}
+- (void)updateCountSamplesForSession:(W2STDBSession *)dbSession group:(NSInteger)group {
+    W2STDBSession *s = dbSession ? dbSession : _session;
+    
+    if (s) {
+        for(W2STDBNode * dbNode in s.nodes) {
+            [self updateCountSamplesForNode:dbNode group:group];
+        }
+    }
+    
+}
+- (NSInteger)countSamplesForNode:(W2STDBNode *)dbNode group:(NSInteger)group force:(BOOL)force {
+    if (force) {
+        [self updateCountSamplesForNode:dbNode group:group];
+    }
+    
+    NSInteger count = 0;
+    if ((group & W2STSDKNodeFrameGroupMotion) == W2STSDKNodeFrameGroupMotion) {
+        count += [dbNode.countSamplesMotion integerValue];
+    }
+    if ((group & W2STSDKNodeFrameGroupEnvironment) == W2STSDKNodeFrameGroupEnvironment) {
+        count += [dbNode.countSamplesMotion integerValue];
+    }
+    if ((group & W2STSDKNodeFrameGroupAHRS) == W2STSDKNodeFrameGroupAHRS) {
+        count += [dbNode.countSamplesMotion integerValue];
+    }
+    return count;
+}
+
+- (NSInteger)countSamplesForSession:(W2STDBSession *)dbSession group:(NSInteger)group force:(BOOL)force {
+    W2STDBSession *s = dbSession ? dbSession : _session;
+    NSInteger count = 0;
+    
+    if (s) {
+        for(W2STDBNode * dbNode in s.nodes) {
+            count += [self countSamplesForNode:dbNode group:group force:force];
+        }
+    }
+    
+    return count;
+}
+- (NSArray *)samplesForNode:(W2STDBNode *)node group:(NSInteger)group {
+    NSMutableArray *samples = [[NSMutableArray alloc] init];
+    if ((group & W2STSDKNodeFrameGroupMotion) == W2STSDKNodeFrameGroupMotion) {
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"SampleMotion"];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"node == %@", node]];
+        [samples addObjectsFromArray:[_context executeFetchRequest:fetchRequest error:NULL]];
+    }
+    if ((group & W2STSDKNodeFrameGroupEnvironment) == W2STSDKNodeFrameGroupEnvironment) {
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"SampleEnvironment"];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"node == %@", node]];
+        [samples addObjectsFromArray:[_context executeFetchRequest:fetchRequest error:NULL]];
+    }
+    if ((group & W2STSDKNodeFrameGroupAHRS) == W2STSDKNodeFrameGroupAHRS) {
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"SampleAHRS"];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"node == %@", node]];
+        [samples addObjectsFromArray:[_context executeFetchRequest:fetchRequest error:NULL]];
+    }
+    
+    return samples;
+}
+- (NSArray *)samplesForSession:(W2STDBSession *)dbSession group:(NSInteger)group {
+    W2STDBSession *s = dbSession ? dbSession : _session;
+    NSMutableArray *samples = [[NSMutableArray alloc] init];
+    
+    if (s) {
+        for(W2STDBNode * node in s.nodes) {
+            [samples addObjectsFromArray:[self samplesForNode:node group:group]];
+        }
+    }
+    
+    return samples;
+}
+
+- (NSArray *)sessionsWithDate:(NSDate *)date {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Session"];
+    if (date) {
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"date == %@", date]]; //in case to filter by date
+    }
+    [fetchRequest setPredicate:[NSPredicate predicateWithValue:YES]];
+    [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"dateStart" ascending:NO]]];
+    NSError *err;
+    NSArray *ret = [_context executeFetchRequest:fetchRequest error:&err];
+    return ret;
+}
+/**************** /////////// ****************/
 
 /* Log */
-- (NSString *) createLogFile:(NSString*)identifier session:(W2STDBSession *)session sampleType:(NSString *)sampleType {
-    W2STDBSession * s = session ? session : _session;
+- (NSString *) createLogFileWithNode:(W2STDBNode *)node session:(W2STDBSession *)dbSession sampleType:(NSString *)sampleType countSample:(NSInteger)countSample {
+    W2STDBSession * s = dbSession ? dbSession : _session;
     assert(s);
 
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"YYYYMMDD-HHmmss"];
+    [df setDateFormat:@"YYYYMMdd_HHmmss"];
     
     NSFileManager *manager = [NSFileManager defaultManager];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *filename = [[NSString stringWithFormat:@"%@-%@-%@", [df stringFromDate:s.date_start], identifier, sampleType] stringByAppendingPathExtension:@"txt"];
+    NSString *filename = [[NSString stringWithFormat:@"%@_%@_%@", [df stringFromDate:s.dateStart], node.name, sampleType] stringByAppendingPathExtension:@"txt"];
     NSString *filepath = [documentsDirectory stringByAppendingPathComponent:filename ];
 
     if ([manager fileExistsAtPath:filepath])
         [manager removeItemAtPath:filepath error:nil];
     
-    [[NSString stringWithFormat:@"Log file for node %@ date %@ type %@\n\n", identifier, [s.date_start description], sampleType]
+    [[NSString stringWithFormat:@"Log file for node name:%@ identifier:%@ date:[%@] type:%@ samples:%ld \n\n", node.name, node.identifier, [s.dateStart description], sampleType, (long)countSample]
                 writeToFile:filepath
                  atomically:YES
                    encoding:NSUTF8StringEncoding
@@ -492,8 +600,8 @@
 }
 
 //return an array of files with data
-- (NSArray *)createLogWithNode:(W2STDBNode *)node session:(W2STDBSession *)session {
-    W2STDBSession * s = session ? session : _session;
+- (NSArray *)createLogWithNode:(W2STDBNode *)node session:(W2STDBSession *)dbSession {
+    W2STDBSession * s = dbSession ? dbSession : _session;
     assert(s);
     
     NSString *filepath = @"";
@@ -503,22 +611,26 @@
     NSString *text = @"";
     NSSet *samples = nil;
     
+    NSDateFormatter *dateFormatterName = [[NSDateFormatter alloc] init];
+    [dateFormatterName setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+
     /**** motions ****/
-    filepath = [self createLogFile:node.identifier session:s sampleType:@"motion"];
+    filepath = [self createLogFileWithNode:node session:s sampleType:@"motion" countSample:[node.countSamplesMotion integerValue]];
     fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filepath];
     [fileHandler seekToEndOfFile];
     assert(fileHandler);
-    samples = [[NSSet alloc] init];
-    //samples = node.rawDataMotions;
-    //query missing
-    sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"time" ascending:YES ]]];
+    samples = [[NSSet alloc] initWithArray:[self samplesForNode:node group:W2STSDKNodeFrameGroupMotion]];
+    sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:YES ]]];
     
-    for (W2STDBRawDataMotion *sample in sortedSamples) {
-        text = [NSString stringWithFormat:@"%7d - %5d %5d %5d  %5d %5d %5d  %5d %5d %5d\n"
-                , sample.time
-                , sample.acc_x, sample.acc_y, sample.acc_z
-                , sample.gyr_x, sample.gyr_y, sample.gyr_z
-                , sample.mag_x, sample.mag_y, sample.mag_z
+    text = @"iOS_timestamp device_count acc_x acc_y acc_z gyro_x gyro_y gyro_z magn_x magn_y magn_z\n";
+    [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    for (W2STDBSampleMotion *sample in sortedSamples) {
+        text = [NSString stringWithFormat:@"%@ %7d %5d %5d %5d  %5d %5d %5d  %5d %5d %5d\n"
+                , [dateFormatterName stringFromDate:sample.timeStamp]
+                , [sample.time intValue]
+                , [sample.acc_x intValue], [sample.acc_y intValue], [sample.acc_z intValue]
+                , [sample.gyr_x intValue], [sample.gyr_y intValue], [sample.gyr_z intValue]
+                , [sample.mag_x intValue], [sample.mag_y intValue], [sample.mag_z intValue]
                 ];
         [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
     }
@@ -526,32 +638,46 @@
     [logFiles addObject:filepath];
 
     /**** environment ****/
-    filepath = [self createLogFile:node.identifier session:s sampleType:@"environment"];
+    filepath = [self createLogFileWithNode:node session:s sampleType:@"environment" countSample:[node.countSamplesEnvironment integerValue]];
     fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filepath];
     [fileHandler seekToEndOfFile];
     assert(fileHandler);
-    //samples = node.rawDataEnvironments;
-    //query missing
-    sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"time" ascending:YES ]]];
+    samples = [[NSSet alloc] initWithArray:[self samplesForNode:node group:W2STSDKNodeFrameGroupEnvironment]];
+    sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:YES ]]];
     
-    for (W2STDBRawDataEnvironment *sample in sortedSamples) {
-        text = [NSString stringWithFormat:@"%7d - %5d %5d\n", sample.time, sample.pressure, sample.temperature];
+    text = @"iOS_timestamp device_count pressure temp\n";
+    [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    for (W2STDBSampleEnvironment *sample in sortedSamples) {
+        text = [NSString stringWithFormat:@"%@ %7d %0.2f %0.1f\n"
+                , [dateFormatterName stringFromDate:sample.timeStamp]
+                , [sample.time intValue]
+                , [sample.pressure floatValue]
+                , [sample.temperature floatValue]
+                //, [sample.humidity floatValue]
+                ];
         [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
     }
     [fileHandler closeFile];
     [logFiles addObject:filepath];
     
     /**** ahrs ****/
-    filepath = [self createLogFile:node.identifier session:s sampleType:@"ahrs"];
+    filepath = [self createLogFileWithNode:node session:s sampleType:@"ahrs" countSample:[node.countSamplesAHRS integerValue]];
     fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filepath];
     [fileHandler seekToEndOfFile];
     assert(fileHandler);
-    //samples = node.rawDataAHRSs;
-    //query missing
-    sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"time" ascending:YES ]]];
+    samples = [[NSSet alloc] initWithArray:[self samplesForNode:node group:W2STSDKNodeFrameGroupAHRS]];
+    sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:YES ]]];
     
-    for (W2STDBRawDataAHRS *sample in sortedSamples) {
-        text = [NSString stringWithFormat:@"%7d - %5d %5d %5d %5d\n", sample.time, sample.qx, sample.qy, sample.qz, sample.qw];
+    text = @"iOS_timestamp device_count x y z w\n";
+    [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    for (W2STDBSampleAHRS *sample in sortedSamples) {
+        text = [NSString stringWithFormat:@"%@ %7d %0.5f %0.5f %0.5f %0.5f\n"
+                , [dateFormatterName stringFromDate:sample.timeStamp]
+                , [sample.time intValue]
+                , [sample.qx doubleValue]
+                , [sample.qy doubleValue]
+                , [sample.qz doubleValue]
+                , [sample.qw doubleValue]];
         [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
     }
     [fileHandler closeFile];
@@ -560,8 +686,8 @@
     return logFiles;
 }
 
-- (NSArray *)createLogWithSession:(W2STDBSession *)session {
-    W2STDBSession * s = session ? session : _session;
+- (NSArray *)createLogWithSession:(W2STDBSession *)dbSession {
+    W2STDBSession * s = dbSession ? dbSession : _session;
     assert(s);
     
     NSMutableArray *logFiles = [[NSMutableArray alloc] init];

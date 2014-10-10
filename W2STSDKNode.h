@@ -9,10 +9,10 @@
 #import "W2STSDKDefine.h"
 #import "W2STSDKCommand.h"
 
-W2STSDK_EXTERN NSString *W2STSDKMotionServiceUUIDString;       // 02366E80-CF3A-11E1-9AB4-0002A5D5C51B     Service UUID
-W2STSDK_EXTERN NSString *W2STSDKRawCharacteristicUUIDString;   // 230A1B80-CF4B-11E1-AC36-0002A5D5C51B     Raw motion Characteristic
-W2STSDK_EXTERN NSString *W2STSDKAHRSCharacteristicUUIDString;  // 240A1B80-CF4B-11E1-AC36-0002A5D5C51B     AHRS Characteristic
-W2STSDK_EXTERN NSString *W2STSDKEnvCharacteristicUUIDString;   // 250A1B80-CF4B-11E1-AC36-0002A5D5C51B     Environment Characteristic
+W2STSDK_EXTERN NSString *W2STSDKMotionServiceUUIDString;          // 02366E80-CF3A-11E1-9AB4-0002A5D5C51B     Service UUID
+W2STSDK_EXTERN NSString *W2STSDKMotionCharacteristicUUIDString;   // 230A1B80-CF4B-11E1-AC36-0002A5D5C51B     Motion Characteristic
+W2STSDK_EXTERN NSString *W2STSDKAHRSCharacteristicUUIDString;     // 240A1B80-CF4B-11E1-AC36-0002A5D5C51B     AHRS Characteristic
+W2STSDK_EXTERN NSString *W2STSDKEnvCharacteristicUUIDString;      // 250A1B80-CF4B-11E1-AC36-0002A5D5C51B     Environment Characteristic
 
 W2STSDK_EXTERN NSString *W2STSDKNodeConfigGeneric;
 W2STSDK_EXTERN NSString *W2STSDKNodeConfigParamName;
@@ -119,10 +119,11 @@ typedef NS_ENUM(NSInteger, W2STSDKNodeMode) {
 };
 
 typedef NS_ENUM(NSInteger, W2STSDKNodeFrameGroup) {
-    W2STSDKNodeFrameGroupUndefined    = -1,
-    W2STSDKNodeFrameGroupRaw          = 0,
-    W2STSDKNodeFrameGroupEnvironment  = 1,
-    W2STSDKNodeFrameGroupAHRS         = 2,
+    W2STSDKNodeFrameGroupUndefined    = 0,
+    W2STSDKNodeFrameGroupMotion       = 1,
+    W2STSDKNodeFrameGroupEnvironment  = 2,
+    W2STSDKNodeFrameGroupAHRS         = 4,
+    W2STSDKNodeFrameGroupAll          = W2STSDKNodeFrameGroupMotion | W2STSDKNodeFrameGroupEnvironment | W2STSDKNodeFrameGroupAHRS,
 };
 
 @protocol W2STSDKNodeDelegate;

@@ -128,7 +128,7 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 -(id) init:(NSString *)key node:(W2STSDKNode *)node;
 -(NSUInteger)updateData:(NSData *)data position:(NSUInteger)pos time:(NSUInteger)time;
 -(W2STSDKParam *)paramAtIndex:(NSInteger)index;
--(NSArray *)arrayValues:(BOOL)rawDataMode;
+-(NSArray *)arrayValues:(BOOL)SampleMode;
 
 +(NSInteger)fieldByKeyIntValue:(NSString *)key field:(NSString *)field;
 +(NSNumber *)fieldByKeyNumber:(NSString *)key field:(NSString *)field;

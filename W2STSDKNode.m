@@ -25,16 +25,16 @@ NSString *W2STSDKMotionServiceUUIDString         = @"02366E80-CF3A-11E1-9AB4-000
 NSString *W2STSDKEnvironmentalServiceUUIDString  = @"42821A40-E477-11E2-82D0-0002A5D5C51B"; //Environment service
 NSString *W2STSDKCommandServiceUUIDString        = @"03366E80-CF3A-11E1-9AB4-0002A5D5C51B"; //Config service
 
-NSString *W2STSDKRawCharacteristicUUIDString  = @"230A1B80-CF4B-11E1-AC36-0002A5D5C51B"; //Raw motion char
-NSString *W2STSDKAHRSCharacteristicUUIDString = @"240A1B80-CF4B-11E1-AC36-0002A5D5C51B"; //AHRS char
-NSString *W2STSDKEnvCharacteristicUUIDString  = @"250A1B80-CF4B-11E1-AC36-0002A5D5C51B"; //Environment char
+NSString *W2STSDKMotionCharacteristicUUIDString  = @"230A1B80-CF4B-11E1-AC36-0002A5D5C51B"; //Motion char
+NSString *W2STSDKAHRSCharacteristicUUIDString    = @"240A1B80-CF4B-11E1-AC36-0002A5D5C51B"; //AHRS char
+NSString *W2STSDKEnvCharacteristicUUIDString     = @"250A1B80-CF4B-11E1-AC36-0002A5D5C51B"; //Environment char
 
-NSString *W2STSDKConfCharacteristicUUIDString  = @"360A1B80-CF4B-11E1-AC36-0002A5D5C51B"; //Config char
+NSString *W2STSDKConfCharacteristicUUIDString    = @"360A1B80-CF4B-11E1-AC36-0002A5D5C51B"; //Config char
 
-NSString *W2STSDKAllGroup  = @"AllData";
-NSString *W2STSDKRawGroup  = @"RawData";
-NSString *W2STSDKAHRSGroup = @"AHRSData";
-NSString *W2STSDKEnvGroup  = @"EnvData";
+NSString *W2STSDKAllGroup     = @"AllData";
+NSString *W2STSDKMotionGroup  = @"MotionData";
+NSString *W2STSDKAHRSGroup    = @"AHRSData";
+NSString *W2STSDKEnvGroup     = @"EnvData";
 
 NSString *W2STSDKNodeConfigGeneric   = @"generic";
 NSString *W2STSDKNodeConfigParamName      = @"param:name";
@@ -102,13 +102,13 @@ NSTimer *bleDataTimer = nil;
                         [[NSNumber alloc] initWithInt:W2STSDKNodeBoardNameCodeLocal      ] : @"Local",
                         };
         
-        uuid2group = @{W2STSDKRawCharacteristicUUIDString  : W2STSDKRawGroup,
-                       W2STSDKAHRSCharacteristicUUIDString : W2STSDKAHRSGroup,
-                       W2STSDKEnvCharacteristicUUIDString  : W2STSDKEnvGroup,
+        uuid2group = @{W2STSDKMotionCharacteristicUUIDString  : W2STSDKMotionGroup,
+                       W2STSDKAHRSCharacteristicUUIDString    : W2STSDKAHRSGroup,
+                       W2STSDKEnvCharacteristicUUIDString     : W2STSDKEnvGroup,
                        };
-        group2map = @{W2STSDKRawGroup : [NSNumber numberWithInt:W2STSDKNodeFrameGroupRaw],
-                      W2STSDKAHRSGroup : [NSNumber numberWithInt:W2STSDKNodeFrameGroupAHRS],
-                      W2STSDKEnvGroup : [NSNumber numberWithInt:W2STSDKNodeFrameGroupEnvironment],
+        group2map = @{W2STSDKMotionGroup : [NSNumber numberWithInt:W2STSDKNodeFrameGroupMotion],
+                      W2STSDKAHRSGroup   : [NSNumber numberWithInt:W2STSDKNodeFrameGroupAHRS],
+                      W2STSDKEnvGroup    : [NSNumber numberWithInt:W2STSDKNodeFrameGroupEnvironment],
                       };
     });
     
@@ -801,17 +801,17 @@ double my_drand(double min, double max) {
         [self.features[W2STSDKNodeFeatureHWAccelerometerKey] updateData:data position:2 time:0];
         [self.features[W2STSDKNodeFeatureHWGyroscopeKey] updateData:data position:8 time:0];
         [self.features[W2STSDKNodeFeatureHWMagnetometerKey] updateData:data position:14 time:0];
-        [_manager.dataLog addRawDataWithGroup:W2STSDKNodeFrameGroupRaw data:data node:self save:NO];
+        //[_manager.dataLog addSampleWithGroup:W2STSDKNodeFrameGroupMotion node:<#(W2STSDKNode *)#> time:<#(NSInteger)#> save:<#(BOOL)#>addSampleWithGroup: data:data node:self save:NO];
         
         data = [[NSData alloc] initWithBytes:(void *)&frameEnvironment length:sizeof(frameEnvironment)];
         [self.features[W2STSDKNodeFeatureHWPressureKey] updateData:data position:2 time:0];
         [self.features[W2STSDKNodeFeatureHWTemperatureKey] updateData:data position:6 time:0];
         //[self.features[W2STSDKNodeFeatureHWHumidityKey] updateData:data position:8 time:0];
-        [_manager.dataLog addRawDataWithGroup:W2STSDKNodeFrameGroupEnvironment data:data node:self save:NO];
+        //[_manager.dataLog addSampleWithGroup:W2STSDKNodeFrameGroupEnvironment data:data node:self save:NO];
         
         data = [[NSData alloc] initWithBytes:(void *)&frameAHRS length:sizeof(frameAHRS)];
         [self.features[W2STSDKNodeFeatureSWAHRSKey] updateData:data position:2 time:0];
-        [_manager.dataLog addRawDataWithGroup:W2STSDKNodeFrameGroupAHRS data:data node:self save:NO];
+        //[_manager.dataLog addSampleWithGroup:W2STSDKNodeFrameGroupAHRS data:data node:self save:NO];
     }
     v_count++;
 
@@ -848,7 +848,7 @@ double my_drand(double min, double max) {
 didDiscoverServices:(NSError *)error {
     NSArray *charUUIDs = @[[CBUUID UUIDWithString:W2STSDKEnvCharacteristicUUIDString],
                            [CBUUID UUIDWithString:W2STSDKAHRSCharacteristicUUIDString],
-                           [CBUUID UUIDWithString:W2STSDKRawCharacteristicUUIDString],
+                           [CBUUID UUIDWithString:W2STSDKMotionCharacteristicUUIDString],
                            [CBUUID UUIDWithString:W2STSDKConfCharacteristicUUIDString],
                            ];
     
@@ -875,7 +875,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
     for (CBCharacteristic *c in service.characteristics) {
         if ([[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKEnvCharacteristicUUIDString]] ||
             [[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKAHRSCharacteristicUUIDString]] ||
-            [[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKRawCharacteristicUUIDString]]) {
+            [[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKMotionCharacteristicUUIDString]]) {
             [_notifiedCharacteristics addObject:c];
             //[_peripheral setNotifyValue:YES forCharacteristic:c]; //unselect to auto start reading
             //NSLog(@"Discovered characteristic %@", c);
@@ -949,7 +949,7 @@ unsigned int convertData(const void * buffer, const int bufferSize, int * ppos, 
 +(NSArray *)getFeaturesFromGroup:(NSString *)group {
     NSArray *array = nil;
     
-    if ([group isEqualToString:W2STSDKRawGroup]) {
+    if ([group isEqualToString:W2STSDKMotionGroup]) {
         array = @[
                   W2STSDKNodeFeatureHWAccelerometerKey,
                   W2STSDKNodeFeatureHWGyroscopeKey,
@@ -979,7 +979,7 @@ unsigned int convertData(const void * buffer, const int bufferSize, int * ppos, 
 +(NSArray *)getParamsFromGroup:(NSString *)group {
     NSArray *array = nil;
     
-    if ([group isEqualToString:W2STSDKRawGroup]) {
+    if ([group isEqualToString:W2STSDKMotionGroup]) {
         array = @[
                   W2STSDKNodeParamHWAccelerometerXKey,
                   W2STSDKNodeParamHWAccelerometerYKey,
@@ -1058,8 +1058,8 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
         if(![group isEqualToString:@""] ) {
             [self updateValueForData:data group:group];
             W2STSDKNodeFrameGroup framegroup = [W2STSDKNode group2mapSafe:group];
-            //[_manager.dataLog addRawDataWithGroup:framegroup data:data node:self save:NO];
-            [_manager.dataLog addDataWithGroup:framegroup node:self time:0 save:NO];
+            //[_manager.dataLog addSampleWithGroup:framegroup data:data node:self save:NO];
+            [_manager.dataLog addSampleWithGroup:framegroup node:self time:0 save:NO];
         }
         
     }
