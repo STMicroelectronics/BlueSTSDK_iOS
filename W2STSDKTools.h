@@ -19,6 +19,7 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeChangeResumedKey;
 W2STSDK_EXTERN NSString * const W2STSDKNodeChangeDeletedKey;
 
 W2STSDK_EXTERN NSString * const W2STSDKNodeChangeRSSIVal;
+W2STSDK_EXTERN NSString * const W2STSDKNodeChangeBatteryVal;
 W2STSDK_EXTERN NSString * const W2STSDKNodeChangeDataVal;
 W2STSDK_EXTERN NSString * const W2STSDKNodeChangeConfigVal;
 W2STSDK_EXTERN NSString * const W2STSDKNodeChangeAdvertisementVal;

@@ -18,6 +18,7 @@
     //CBCharacteristic *_controlCharacteristic;
     BOOL _notifiedReading;
     BOOL _connectAndReading;
+    NSTimer *_readingStatusTimer;
 }
 #define WORKAROUND_READLENGTHFIELD 1
 
@@ -30,11 +31,13 @@ NSString *W2STSDKAHRSCharacteristicUUIDString    = @"240A1B80-CF4B-11E1-AC36-000
 NSString *W2STSDKEnvCharacteristicUUIDString     = @"250A1B80-CF4B-11E1-AC36-0002A5D5C51B"; //Environment char
 
 NSString *W2STSDKConfCharacteristicUUIDString    = @"360A1B80-CF4B-11E1-AC36-0002A5D5C51B"; //Config char
+NSString *W2STSDKBatteryCharacteristicUUIDString    = @"350A1B80-CF4B-11E1-AC36-0002A5D5C51B"; //Battery char
 
 NSString *W2STSDKAllGroup     = @"AllData";
 NSString *W2STSDKMotionGroup  = @"MotionData";
 NSString *W2STSDKAHRSGroup    = @"AHRSData";
 NSString *W2STSDKEnvGroup     = @"EnvData";
+
 
 NSString *W2STSDKNodeConfigGeneric   = @"generic";
 NSString *W2STSDKNodeConfigParamName      = @"param:name";
@@ -52,30 +55,32 @@ static NSDictionary * boardNames = nil;
 static NSDictionary * uuid2group = nil;
 static NSDictionary * group2map = nil;
 
-NSTimer *bleDataTimer = nil;
-
--(void)startBleDataTimining {
-    if (bleDataTimer != nil && [bleDataTimer isValid]) {
-        [bleDataTimer invalidate];
-        bleDataTimer = nil;
+-(void)startReadingStatusTimer {
+    if (_readingStatusTimer != nil && [_readingStatusTimer isValid]) {
+        [_readingStatusTimer invalidate];
+        _readingStatusTimer = nil;
     }
-    bleDataTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(bleDataUpdate) userInfo:nil repeats:YES];
+    _readingStatusTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(readingStatusTimerTick) userInfo:nil repeats:YES];
 }
 
--(void)stopBleDataTimining {
-    if (bleDataTimer != nil && [bleDataTimer isValid]) {
-        [bleDataTimer invalidate];
+-(void)stopReadingStatusTimer {
+    if (_readingStatusTimer != nil && [_readingStatusTimer isValid]) {
+        [_readingStatusTimer invalidate];
     }
-    bleDataTimer = nil;
+    _readingStatusTimer = nil;
 }
 
--(void)bleDataUpdate {
-    //NSLog(@"Update BLE data node %@", self.name);
-    if (self.isConnected) {
+-(void)readingStatusTimerTick {
+    NSLog(@"Reading Timer tick data node %@", self.name);
+    if (self.isConnected && self.peripheral) {
         [self.peripheral readRSSI];
+        if (_batteryCharacteristic) {
+            [self.peripheral readValueForCharacteristic:_batteryCharacteristic];
+        }
     }
 }
 
+/*
 -(id) initStatus:(W2STSDKNodeStatus)status cstatus:(W2STSDKNodeConnectionStatus)cstatus {
     //self = [self init:nil manager:nil local:YES];
     self = [super init];
@@ -83,7 +88,7 @@ NSTimer *bleDataTimer = nil;
     self.connectionStatus = cstatus;
     return self;
 }
-
+*/
 -(id) init:(CBPeripheral *)peripheral manager:(W2STSDKManager *)manager local:(BOOL)local {
     static dispatch_once_t onceToken;
     
@@ -92,6 +97,7 @@ NSTimer *bleDataTimer = nil;
     
     self = [super init];
     
+    _readingStatusTimer = nil;
     dispatch_once(&onceToken, ^{
         boardNames = @{ [[NSNumber alloc] initWithInt:W2STSDKNodeBoardNameCodeUnknown    ] : @"Unknown",
                         [[NSNumber alloc] initWithInt:W2STSDKNodeBoardNameCodeNone       ] : @"None",
@@ -171,7 +177,7 @@ NSTimer *bleDataTimer = nil;
         _identifier = _peripheral.identifier;
         _boardNameCode = W2STSDKNodeBoardNameCodeNone;
         _info = @"";
-        [self startBleDataTimining];
+        [self startReadingStatusTimer];
         
     }
     else {
@@ -844,13 +850,29 @@ double my_drand(double min, double max) {
 /* Peripheral Delegate Protocol */
 
 //Retrive services and select the Motion service
+NSArray *charDataUUIDs = nil;
+NSArray *charServUUIDs = nil;
+NSArray *charUUIDs = nil;
+
 -  (void)peripheral:(CBPeripheral *)peripheral
 didDiscoverServices:(NSError *)error {
-    NSArray *charUUIDs = @[[CBUUID UUIDWithString:W2STSDKEnvCharacteristicUUIDString],
-                           [CBUUID UUIDWithString:W2STSDKAHRSCharacteristicUUIDString],
-                           [CBUUID UUIDWithString:W2STSDKMotionCharacteristicUUIDString],
-                           [CBUUID UUIDWithString:W2STSDKConfCharacteristicUUIDString],
-                           ];
+    if (!charDataUUIDs) {
+        charDataUUIDs = @[
+                          [CBUUID UUIDWithString:W2STSDKMotionCharacteristicUUIDString],
+                          [CBUUID UUIDWithString:W2STSDKEnvCharacteristicUUIDString],
+                          [CBUUID UUIDWithString:W2STSDKAHRSCharacteristicUUIDString],
+                          ];
+    }
+    if (!charServUUIDs) {
+        charServUUIDs = @[
+                          [CBUUID UUIDWithString:W2STSDKConfCharacteristicUUIDString],
+                          [CBUUID UUIDWithString:W2STSDKBatteryCharacteristicUUIDString],
+                          ];
+    }
+    if (!charUUIDs) {
+        NSMutableArray *chars = [[NSMutableArray alloc] initWithArray:charDataUUIDs];
+        charUUIDs = [chars arrayByAddingObjectsFromArray:charServUUIDs];
+    }
     
     for (CBService *service in peripheral.services) {
         //if ([[service UUID] isEqual:[CBUUID UUIDWithString:W2STSDKMotionServiceUUIDString]]) {
@@ -873,16 +895,20 @@ didDiscoverCharacteristicsForService:(CBService *)service
     
    // NSLog(@"- %@", service);
     for (CBCharacteristic *c in service.characteristics) {
-        if ([[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKEnvCharacteristicUUIDString]] ||
-            [[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKAHRSCharacteristicUUIDString]] ||
-            [[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKMotionCharacteristicUUIDString]]) {
+        if ([charDataUUIDs containsObject:[c UUID]]) {
             [_notifiedCharacteristics addObject:c];
             //[_peripheral setNotifyValue:YES forCharacteristic:c]; //unselect to auto start reading
             //NSLog(@"Discovered characteristic %@", c);
         }
-        
-        if ([[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKConfCharacteristicUUIDString]]) {
+        else if ([[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKConfCharacteristicUUIDString]]) {
             _configCharacteristic = c;
+        }
+        else if ([[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKBatteryCharacteristicUUIDString]]) {
+            _batteryCharacteristic = c;
+        }
+        else {
+            //unknown char
+            NSLog(@"Unknown char:%@", [c UUID]);
         }
     }
     
@@ -1049,22 +1075,43 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
      ctrl     [ ctrl      (1 byte ) | addr      (1 byte ) | err         (1 byte ) | len        (1 byte ) | payload    (N bytes) ] // framelen = 4 + N, N = len * 2
     */
     
-    if ([uuid isEqualToString:W2STSDKConfCharacteristicUUIDString]) {
-        [self updateConfigForData:data];
-    }
-    else {
+    CBUUID *cbuuid = [characteristic UUID];
+    if ([charDataUUIDs containsObject:cbuuid]) {
         //data
         group = [W2STSDKNode uuid2groupSafe:uuid];
         if(![group isEqualToString:@""] ) {
-            [self updateValueForData:data group:group];
+            [self updateValueWithData:data group:group];
             W2STSDKNodeFrameGroup framegroup = [W2STSDKNode group2mapSafe:group];
             //[_manager.dataLog addSampleWithGroup:framegroup data:data node:self save:NO];
             [_manager.dataLog addSampleWithGroup:framegroup node:self time:0 save:NO];
         }
-        
+    }
+    else if ([cbuuid isEqual:[CBUUID UUIDWithString:W2STSDKConfCharacteristicUUIDString]]) {
+        [self updateConfigWithData:data];
+    }
+    else if ([cbuuid isEqual:[CBUUID UUIDWithString:W2STSDKBatteryCharacteristicUUIDString]]) {
+        [self updateBatteryWithData:data];
+    }
+    else {
+        //unknown char
+        NSLog(@"Unknown char on reading:%@", cbuuid);
+    }
+
+}
+
+- (void)updateBatteryWithData:(NSData *)data {
+    const unsigned char *dataBuffer = (const unsigned char *)[data bytes];
+    if (dataBuffer) {
+        NSInteger batteryPrevious = self.battery;
+        self.battery = *((int16_t *)dataBuffer);
+        //if (abs(batteryPrevious - self.battery) > 0.5) {
+        if (batteryPrevious != self.battery) {
+            NSLog(@"Battery data: %lu %@", (unsigned long)self.battery, [data description]);
+            [_delegate node:self dataDidUpdate:W2STSDKNodeChangeBatteryVal param:@""];
+        }
     }
 }
-- (void)updateConfigForData:(NSData *)data {
+- (void)updateConfigWithData:(NSData *)data {
     W2STSDKCommand *cmd = [W2STSDKCommand createWithData:data];
 
 #if WORKAROUND_READLENGTHFIELD
@@ -1113,7 +1160,7 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
     }
 }
 long frame_node_count = 0;
-- (void)updateValueForData:(NSData *)data group:(NSString *)group {
+- (void)updateValueWithData:(NSData *)data group:(NSString *)group {
     unsigned short timele = 0; //2 bytes for timestamp
     int pos = 0;
 

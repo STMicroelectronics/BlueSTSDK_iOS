@@ -578,20 +578,27 @@
     W2STDBSession * s = dbSession ? dbSession : _session;
     assert(s);
 
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setDateFormat:@"YYYYMMdd_HHmmss"];
+    NSDateFormatter *df_file = [[NSDateFormatter alloc] init];
+    [df_file setDateFormat:@"YYYYMMdd_HHmmss"];
+    NSDateFormatter *df_header = [[NSDateFormatter alloc] init];
+    [df_header setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     
     NSFileManager *manager = [NSFileManager defaultManager];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *filename = [[NSString stringWithFormat:@"%@_%@_%@", [df stringFromDate:s.dateStart], node.name, sampleType] stringByAppendingPathExtension:@"txt"];
+    NSString *filename = [[NSString stringWithFormat:@"%@_%@_%@", [df_file stringFromDate:s.dateStart], node.name, sampleType] stringByAppendingPathExtension:@"txt"];
     NSString *filepath = [documentsDirectory stringByAppendingPathComponent:filename ];
 
     if ([manager fileExistsAtPath:filepath])
         [manager removeItemAtPath:filepath error:nil];
     
-    [[NSString stringWithFormat:@"Log file for node name:%@ identifier:%@ date:[%@] type:%@ samples:%ld \n\n", node.name, node.identifier, [s.dateStart description], sampleType, (long)countSample]
-                writeToFile:filepath
+    NSString *headerLog = [NSString stringWithFormat:@"Node name:%@ identifier:%@ date:%@ type:%@ samples:%ld \n\n",
+                           node.name,
+                           node.identifier,
+                           [df_header stringFromDate:s.dateStart],
+                           sampleType, (long)countSample];
+
+    [headerLog  writeToFile:filepath
                  atomically:YES
                    encoding:NSUTF8StringEncoding
                       error:nil];
@@ -610,75 +617,115 @@
     NSMutableArray *logFiles = [[NSMutableArray alloc] init];
     NSString *text = @"";
     NSSet *samples = nil;
+    NSTimeInterval t=0;
+    NSInteger perc = 0, perc_prev = 0;
+    NSInteger count = 0;
+    NSString *sampleType = @"";
     
-    NSDateFormatter *dateFormatterName = [[NSDateFormatter alloc] init];
-    [dateFormatterName setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    //NSDateFormatter *dateFormatterName = [[NSDateFormatter alloc] init];
+    //[dateFormatterName setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 
     /**** motions ****/
-    filepath = [self createLogFileWithNode:node session:s sampleType:@"motion" countSample:[node.countSamplesMotion integerValue]];
+    sampleType = @"motion";
+    count = 0;
+    perc = 0;
+    perc_prev = 0;
+    filepath = [self createLogFileWithNode:node session:s sampleType:sampleType countSample:[node.countSamplesMotion integerValue]];
     fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filepath];
     [fileHandler seekToEndOfFile];
     assert(fileHandler);
     samples = [[NSSet alloc] initWithArray:[self samplesForNode:node group:W2STSDKNodeFrameGroupMotion]];
     sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:YES ]]];
     
-    text = @"iOS_timestamp device_count acc_x acc_y acc_z gyro_x gyro_y gyro_z magn_x magn_y magn_z\n";
+    text = @"time (s)  device_count  acc:[x y z] (mg)  gyro:[x y z] (dps)  magn:[x y z] (mGa)\n";
     [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
     for (W2STDBSampleMotion *sample in sortedSamples) {
-        text = [NSString stringWithFormat:@"%@ %7d %5d %5d %5d  %5d %5d %5d  %5d %5d %5d\n"
-                , [dateFormatterName stringFromDate:sample.timeStamp]
+        t = [sample.timeStamp timeIntervalSinceDate:s.dateStart];
+        text = [NSString stringWithFormat:@"%0.3f %7d %5d %5d %5d  %5d %5d %5d  %5d %5d %5d\n"
+                , t
                 , [sample.time intValue]
                 , [sample.acc_x intValue], [sample.acc_y intValue], [sample.acc_z intValue]
                 , [sample.gyr_x intValue], [sample.gyr_y intValue], [sample.gyr_z intValue]
                 , [sample.mag_x intValue], [sample.mag_y intValue], [sample.mag_z intValue]
                 ];
         [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+        perc_prev = perc;
+        perc = (100 * count) / sortedSamples.count;
+        count++;
+        if (perc != perc_prev) {
+            [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
+        }
     }
     [fileHandler closeFile];
     [logFiles addObject:filepath];
 
     /**** environment ****/
-    filepath = [self createLogFileWithNode:node session:s sampleType:@"environment" countSample:[node.countSamplesEnvironment integerValue]];
+    sampleType = @"environment";
+    count = 0;
+    perc = 0;
+    perc_prev = 0;
+    filepath = [self createLogFileWithNode:node session:s sampleType:sampleType countSample:[node.countSamplesEnvironment integerValue]];
     fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filepath];
     [fileHandler seekToEndOfFile];
     assert(fileHandler);
     samples = [[NSSet alloc] initWithArray:[self samplesForNode:node group:W2STSDKNodeFrameGroupEnvironment]];
     sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:YES ]]];
     
-    text = @"iOS_timestamp device_count pressure temp\n";
+    text = @"time (s)  device_count  pressure (mbar)  temp (°C) \n";
     [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
     for (W2STDBSampleEnvironment *sample in sortedSamples) {
-        text = [NSString stringWithFormat:@"%@ %7d %0.2f %0.1f\n"
-                , [dateFormatterName stringFromDate:sample.timeStamp]
+        t = [sample.timeStamp timeIntervalSinceDate:s.dateStart];
+        text = [NSString stringWithFormat:@"%0.3f %7d %0.2f %0.2f\n"
+                , t
                 , [sample.time intValue]
                 , [sample.pressure floatValue]
                 , [sample.temperature floatValue]
                 //, [sample.humidity floatValue]
                 ];
         [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+        perc_prev = perc;
+        perc = (100 * count) / sortedSamples.count;
+        count++;
+        if (perc != perc_prev) {
+            [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
+        }
     }
     [fileHandler closeFile];
     [logFiles addObject:filepath];
     
     /**** ahrs ****/
-    filepath = [self createLogFileWithNode:node session:s sampleType:@"ahrs" countSample:[node.countSamplesAHRS integerValue]];
+    sampleType = @"ahrs";
+    count = 0;
+    perc = 0;
+    perc_prev = 0;
+    filepath = [self createLogFileWithNode:node session:s sampleType:sampleType countSample:[node.countSamplesAHRS integerValue]];
     fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:filepath];
     [fileHandler seekToEndOfFile];
     assert(fileHandler);
     samples = [[NSSet alloc] initWithArray:[self samplesForNode:node group:W2STSDKNodeFrameGroupAHRS]];
     sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:YES ]]];
     
-    text = @"iOS_timestamp device_count x y z w\n";
+    text = @"time (s)  device_count  quaternions:[x y z w]\n";
     [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
     for (W2STDBSampleAHRS *sample in sortedSamples) {
-        text = [NSString stringWithFormat:@"%@ %7d %0.5f %0.5f %0.5f %0.5f\n"
-                , [dateFormatterName stringFromDate:sample.timeStamp]
+        t = [sample.timeStamp timeIntervalSinceDate:s.dateStart];
+        text = [NSString stringWithFormat:@"%0.3f %7d %0.3f %0.3f %0.3f %0.3f\n"
+                , t
                 , [sample.time intValue]
                 , [sample.qx doubleValue]
                 , [sample.qy doubleValue]
                 , [sample.qz doubleValue]
                 , [sample.qw doubleValue]];
         [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+        perc_prev = perc;
+        perc = (100 * count) / sortedSamples.count;
+        count++;
+        if (perc != perc_prev) {
+            [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
+        }
     }
     [fileHandler closeFile];
     [logFiles addObject:filepath];

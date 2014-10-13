@@ -13,6 +13,8 @@ W2STSDK_EXTERN NSString *W2STSDKMotionServiceUUIDString;          // 02366E80-CF
 W2STSDK_EXTERN NSString *W2STSDKMotionCharacteristicUUIDString;   // 230A1B80-CF4B-11E1-AC36-0002A5D5C51B     Motion Characteristic
 W2STSDK_EXTERN NSString *W2STSDKAHRSCharacteristicUUIDString;     // 240A1B80-CF4B-11E1-AC36-0002A5D5C51B     AHRS Characteristic
 W2STSDK_EXTERN NSString *W2STSDKEnvCharacteristicUUIDString;      // 250A1B80-CF4B-11E1-AC36-0002A5D5C51B     Environment Characteristic
+W2STSDK_EXTERN NSString *W2STSDKConfCharacteristicUUIDString;      // 360A1B80-CF4B-11E1-AC36-0002A5D5C51B     Config Characteristic
+W2STSDK_EXTERN NSString *W2STSDKBatteryCharacteristicUUIDString;      // 350A1B80-CF4B-11E1-AC36-0002A5D5C51B     Battery Characteristic
 
 W2STSDK_EXTERN NSString *W2STSDKNodeConfigGeneric;
 W2STSDK_EXTERN NSString *W2STSDKNodeConfigParamName;
@@ -171,6 +173,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  */
 @property (retain, nonatomic) NSMutableArray * notifiedCharacteristics;
 @property (retain, nonatomic) CBCharacteristic * configCharacteristic;
+@property (retain, nonatomic) CBCharacteristic * batteryCharacteristic;
 
 /*!
  *  @property manager
@@ -215,7 +218,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 @property (assign, nonatomic) NSUInteger memsDivChar;
 @property (assign, nonatomic) NSUInteger envDivChar;
 @property (assign, nonatomic) NSUInteger ahrsDivChar;
-@property (assign, nonatomic) NSUInteger battery;
+@property (assign, nonatomic) NSInteger battery;
 
 /*!
  *  @property RSSI
@@ -363,7 +366,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @discussion
  *
  */
--(id) initStatus:(W2STSDKNodeStatus)status cstatus:(W2STSDKNodeConnectionStatus)cstatus;
+//-(id) initStatus:(W2STSDKNodeStatus)status cstatus:(W2STSDKNodeConnectionStatus)cstatus;
 +(NSString *) stateStr:(CBPeripheral *)peripheral;
 
 +(NSString *)configKeyFromCode:(W2STSDKNodeConfigCode)code;

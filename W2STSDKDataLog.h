@@ -10,11 +10,15 @@
 #import "W2STDBManager.h"
 #import "W2STSDK.h"
 
+@protocol W2STSDKDataLogDelegate;
+
 @interface W2STSDKDataLog : NSObject
 
 #define W2STSDK_SAVE_AUTO
 #define W2STSDK_SAVE_AUTO_TIME 2.5f //sec, double
 //#define W2STSDK_DATALOG_AUTO
+
+@property (retain, nonatomic) id<W2STSDKDataLogDelegate> delegate;
 
 @property (retain, nonatomic) W2STDBManager * dataManager;
 @property (retain, nonatomic) NSManagedObjectContext * context;
@@ -49,4 +53,9 @@
 - (NSArray *)createLogWithNode:(W2STDBNode *)node session:(W2STDBSession *)dbSession;
 - (NSArray *)createLogWithSession:(W2STDBSession *)dbSession;
 
+@end
+
+@protocol W2STSDKDataLogDelegate <NSObject>
+@required
+- (void)dbNode:(W2STDBNode *)dbNode session:(W2STDBSession *)dbSession sampleType:(NSString *)sampleType perc:(NSNumber *)perc;
 @end

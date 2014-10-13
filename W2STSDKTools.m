@@ -16,6 +16,7 @@ NSString * const W2STSDKNodeChangeResumedKey   = @"Resumed";
 NSString * const W2STSDKNodeChangeDeletedKey   = @"Deleted";
 
 NSString * const W2STSDKNodeChangeRSSIVal      = @"RSSI";
+NSString * const W2STSDKNodeChangeBatteryVal   = @"Battery";
 NSString * const W2STSDKNodeChangeDataVal      = @"Data";
 NSString * const W2STSDKNodeChangeConfigVal    = @"Config";
 NSString * const W2STSDKNodeChangeAdvertisementVal = @"Advertisement";
