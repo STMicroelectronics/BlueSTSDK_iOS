@@ -219,6 +219,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 @property (assign, nonatomic) NSUInteger envDivChar;
 @property (assign, nonatomic) NSUInteger ahrsDivChar;
 @property (assign, nonatomic) NSInteger battery;
+@property (assign, nonatomic) NSInteger rechargeStatus;
 
 /*!
  *  @property RSSI

@@ -40,8 +40,8 @@
 }
 -(void) startScan
 {
-    //NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], CBCentralManagerScanOptionAllowDuplicatesKey, nil];
-    NSDictionary *options = nil;
+    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], CBCentralManagerScanOptionAllowDuplicatesKey, nil];
+    //NSDictionary *options = nil;
 
     [_centralManager scanForPeripheralsWithServices:nil options:options];
     _scanActive = YES;

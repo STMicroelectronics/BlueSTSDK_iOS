@@ -18,9 +18,12 @@
     //CBCharacteristic *_controlCharacteristic;
     BOOL _notifiedReading;
     BOOL _connectAndReading;
-    NSTimer *_readingStatusTimer;
+    NSTimer *_readingBatteryStatusTimer;
+    NSTimer *_readingRSSIStatusTimer;
 }
 #define WORKAROUND_READLENGTHFIELD 1
+
+static int nodeCount = 0;
 
 NSString *W2STSDKMotionServiceUUIDString         = @"02366E80-CF3A-11E1-9AB4-0002A5D5C51B"; //Motion service
 NSString *W2STSDKEnvironmentalServiceUUIDString  = @"42821A40-E477-11E2-82D0-0002A5D5C51B"; //Environment service
@@ -55,24 +58,24 @@ static NSDictionary * boardNames = nil;
 static NSDictionary * uuid2group = nil;
 static NSDictionary * group2map = nil;
 
--(void)startReadingStatusTimer {
-    if (_readingStatusTimer != nil && [_readingStatusTimer isValid]) {
-        [_readingStatusTimer invalidate];
-        _readingStatusTimer = nil;
+-(void)startReadingBatteryStatusTimer {
+    if (_readingBatteryStatusTimer != nil && [_readingBatteryStatusTimer isValid]) {
+        [_readingBatteryStatusTimer invalidate];
+        _readingBatteryStatusTimer = nil;
     }
-    _readingStatusTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(readingStatusTimerTick) userInfo:nil repeats:YES];
+    _readingBatteryStatusTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(readingBatteryStatusTimerTick) userInfo:nil repeats:YES];
 }
 
--(void)stopReadingStatusTimer {
-    if (_readingStatusTimer != nil && [_readingStatusTimer isValid]) {
-        [_readingStatusTimer invalidate];
+-(void)stopReadingBatteryStatusTimer {
+    if (_readingBatteryStatusTimer != nil && [_readingBatteryStatusTimer isValid]) {
+        [_readingBatteryStatusTimer invalidate];
     }
-    _readingStatusTimer = nil;
+    _readingBatteryStatusTimer = nil;
 }
 
--(void)readingStatusTimerTick {
-    NSLog(@"Reading Timer tick data node %@", self.name);
+-(void)readingBatteryStatusTimerTick {
     if (self.isConnected && self.peripheral) {
+        NSLog(@"Reading Battery Timer node (%d) %@", nodeCount, self.name);
         [self.peripheral readRSSI];
         if (_batteryCharacteristic) {
             [self.peripheral readValueForCharacteristic:_batteryCharacteristic];
@@ -80,6 +83,26 @@ static NSDictionary * group2map = nil;
     }
 }
 
+-(void)startReadingRSSIStatusTimer {
+    if (_readingRSSIStatusTimer != nil && [_readingRSSIStatusTimer isValid]) {
+        [_readingRSSIStatusTimer invalidate];
+        _readingRSSIStatusTimer = nil;
+    }
+    _readingRSSIStatusTimer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(readingRSSIStatusTimerTick) userInfo:nil repeats:YES];
+}
+
+-(void)stopReadingRSSIStatusTimer {
+    if (_readingRSSIStatusTimer != nil && [_readingRSSIStatusTimer isValid]) {
+        [_readingRSSIStatusTimer invalidate];
+    }
+    _readingRSSIStatusTimer = nil;
+}
+-(void)readingRSSIStatusTimerTick {
+    if (self.isConnected && self.peripheral) {
+        NSLog(@"Reading RSSI Timer node (%d) RSSI:%@db", nodeCount, self.RSSI);
+        [self.peripheral readRSSI];
+    }
+}
 /*
 -(id) initStatus:(W2STSDKNodeStatus)status cstatus:(W2STSDKNodeConnectionStatus)cstatus {
     //self = [self init:nil manager:nil local:YES];
@@ -97,7 +120,11 @@ static NSDictionary * group2map = nil;
     
     self = [super init];
     
-    _readingStatusTimer = nil;
+    nodeCount++;
+    
+    _readingBatteryStatusTimer = nil;
+    _readingRSSIStatusTimer = nil;
+    
     dispatch_once(&onceToken, ^{
         boardNames = @{ [[NSNumber alloc] initWithInt:W2STSDKNodeBoardNameCodeUnknown    ] : @"Unknown",
                         [[NSNumber alloc] initWithInt:W2STSDKNodeBoardNameCodeNone       ] : @"None",
@@ -159,7 +186,8 @@ static NSDictionary * group2map = nil;
     //init as local
     _advManuData = nil;
     _RSSI = @0;
-
+    _battery = 0;
+    _rechargeStatus = 0;
     if (_local == NO)
     {
         
@@ -172,12 +200,14 @@ static NSDictionary * group2map = nil;
         }
 
         _peripheral = peripheral;
+        _peripheral.delegate = self;
         _peripheralName = _peripheral.name;
         _name = _peripheralName;
         _identifier = _peripheral.identifier;
         _boardNameCode = W2STSDKNodeBoardNameCodeNone;
         _info = @"";
-        [self startReadingStatusTimer];
+        [self startReadingBatteryStatusTimer];
+        [self startReadingRSSIStatusTimer];
         
     }
     else {
@@ -1103,10 +1133,12 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
     const unsigned char *dataBuffer = (const unsigned char *)[data bytes];
     if (dataBuffer) {
         NSInteger batteryPrevious = self.battery;
+        NSInteger rechargeStatusPrevious = self.rechargeStatus;
         self.battery = *((int16_t *)dataBuffer);
+        self.rechargeStatus = *((int16_t *)(dataBuffer+2));
         //if (abs(batteryPrevious - self.battery) > 0.5) {
-        if (batteryPrevious != self.battery) {
-            NSLog(@"Battery data: %lu %@", (unsigned long)self.battery, [data description]);
+        if (batteryPrevious != self.battery || rechargeStatusPrevious != self.rechargeStatus) {
+            NSLog(@"Battery data: B:%dm%% S:%dmA %@", (int16_t)self.battery, (int16_t)self.rechargeStatus, [data description]);
             [_delegate node:self dataDidUpdate:W2STSDKNodeChangeBatteryVal param:@""];
         }
     }
@@ -1149,8 +1181,8 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
                 NSLog(@"Led is '0x%0.4X'", (int)self.led);
                 break;
             case W2STSDK_CTRL_REG_RAM_BATT_VOLT:
-                self.battery = *(short *)cmd.ctrlFrame.payload;
-                NSLog(@"Batt is '0x%0.4X'", (int)self.battery);
+                //self.battery = *(short *)cmd.ctrlFrame.payload;
+                //NSLog(@"Batt is '0x%0.4X'", (int)self.battery);
                 break;
             default:
                 break;
@@ -1185,10 +1217,20 @@ long frame_node_count = 0;
     
     [_delegate node:self dataDidUpdate:W2STSDKNodeChangeDataVal param:group];
 }
-- (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral
-                          error:(NSError *)error {
-    if (error == nil) {
+
+/* deprecated delegate */
+/*
+- (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral error:(NSError *)error {
+    NSLog(@"RSSI:%@db", peripheral.RSSI);
+    if (error == nil && peripheral == self.peripheral) {
         [self updateRSSI:peripheral.RSSI enableDelegate:YES];
+    }
+}
+*/
+- (void)peripheral:(CBPeripheral *)peripheral didReadRSSI:(NSNumber *)RSSI error:(NSError *)error {
+    NSLog(@"RSSI:%@db", RSSI);
+    if (error == nil && peripheral == self.peripheral) {
+        [self updateRSSI:RSSI enableDelegate:YES];
     }
 }
 
@@ -1209,7 +1251,7 @@ long frame_node_count = 0;
         }
             break;
         case W2STSDKNodeConfigParamINEMOCode:
-            ret = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)self.battery];
+            //ret = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)self.battery];
             break;
         case W2STSDKNodeConfigParamModeCode:
             ret = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)self.led];
