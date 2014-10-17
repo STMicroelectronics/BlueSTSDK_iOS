@@ -229,7 +229,7 @@ static NSDictionary * group2map = nil;
     //bmesh initialitation
     //_hwFeatureByte = (int)W2STSDKNodeFeatureHWAcce | (int)W2STSDKNodeFeatureHWGyro | (int)W2STSDKNodeFeatureHWMagn | (int)W2STSDKNodeFeatureHWTemp;
     //_swFeatureByte = (int)W2STSDKNodeFeatureSWAHRS;
-    _hwFeatureByte = 0xC0; //0xFF;
+    _hwFeatureByte = 0xF4; //0xC0; //0xFF;
     _swFeatureByte = 0x80; //0xFF;
     
     _name = @"your device"; //get the name of device
@@ -719,14 +719,10 @@ NSTimer *timerReadingLocal = nil;
     if (_local) {
         _notifiedReading = enable;
         //enable a timer to read data from sensors available inside the device
-        if (timerReadingLocal != nil) {
-            [timerReadingLocal invalidate];
-        }
+        [timerReadingLocal invalidate];
+        timerReadingLocal = nil;
         if (enable) {
-            if (timerReadingLocal != nil) {
-                [timerReadingLocal invalidate];
-            }
-            timerReadingLocal = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(readingLocal) userInfo:nil repeats:YES];
+            timerReadingLocal = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(readingLocal:) userInfo:nil repeats:YES];
         }
         return;
     }
@@ -752,16 +748,16 @@ typedef struct {
 } frameMotion_t;
 typedef struct {
     short time;
-    int presure;
+    int pressure;
     short temperature;
     short humidity;
 } frameEnvironment_t;
 typedef struct {
     short time;
-    int qx;
-    int qy;
-    int qz;
-    int qw;
+    float qx;
+    float qy;
+    float qz;
+    float qw;
 } frameAHRS_t;
 
 frameMotion_t frameMotion;
@@ -779,12 +775,9 @@ double my_drand(double min, double max) {
     double r = (((double)n/(double)RAND_MAX) * (double)(max - min)) + (double)min;
     return r;
 }
--(void)readingLocal {
+-(void)readingLocal:(NSTimer *)timer {
     assert(_local);
     int k = v_count >= 9 ? 9 : v_count;
-//    size_t size = sizeof(val);
-    //memcpy(buffer, val, size);
-    
     //update randomly the vars
     if (v_count == 0) {
         memset((void *)&frameMotion, 0, sizeof(frameMotion_t));
@@ -797,57 +790,97 @@ double my_drand(double min, double max) {
     frameMotion.acce_y = (frameMotion.acce_y * k + my_irand(-2000, 2000)) / (k + 1);
     frameMotion.acce_z = (frameMotion.acce_z * k + my_irand(-2000, 2000)) / (k + 1);
     
-    frameMotion.gyro_x = (frameMotion.gyro_x * k + my_irand(-2000, 2000)) / (k + 1);
-    frameMotion.gyro_y = (frameMotion.gyro_y * k + my_irand(-2000, 2000)) / (k + 1);
-    frameMotion.gyro_z = (frameMotion.gyro_z * k + my_irand(-2000, 2000)) / (k + 1);
+    frameMotion.gyro_x = (frameMotion.gyro_x * k + my_irand(-200, 200)) / (k + 1);
+    frameMotion.gyro_y = (frameMotion.gyro_y * k + my_irand(-200, 200)) / (k + 1);
+    frameMotion.gyro_z = (frameMotion.gyro_z * k + my_irand(-200, 200)) / (k + 1);
 
-    frameMotion.magn_x = (frameMotion.magn_x * k + my_irand(-2000, 2000)) / (k + 1);
-    frameMotion.magn_y = (frameMotion.magn_y * k + my_irand(-2000, 2000)) / (k + 1);
-    frameMotion.magn_z = (frameMotion.magn_z * k + my_irand(-2000, 2000)) / (k + 1);
+    frameMotion.magn_x = (frameMotion.magn_x * k + my_irand(-800, 800)) / (k + 1);
+    frameMotion.magn_y = (frameMotion.magn_y * k + my_irand(-800, 800)) / (k + 1);
+    frameMotion.magn_z = (frameMotion.magn_z * k + my_irand(-800, 800)) / (k + 1);
 
-    frameMotion.time = v_count;
-    frameEnvironment.presure = (frameEnvironment.presure * k + my_irand(980, 1080)) / (k + 1);
+    frameEnvironment.time = v_count;
+    frameEnvironment.pressure = (frameEnvironment.pressure * k + my_irand(980, 1080)) / (k + 1);
     frameEnvironment.temperature = (frameEnvironment.temperature * k + my_irand(0, 100)) / (k + 1);
     
-    frameMotion.time = v_count;
-    float qx = *((float *)&frameAHRS.qx);
-    float qy = *((float *)&frameAHRS.qy);
-    float qz = *((float *)&frameAHRS.qz);
-    float qw = *((float *)&frameAHRS.qw);
-
-    qx = (qx * k + (my_frand(0.0f, 1.0f))) / (k + 1);
-    qy = (qy * k + (my_frand(0.0f, 1.0f))) / (k + 1);
-    qz = (qz * k + (my_frand(0.0f, 1.0f))) / (k + 1);
-    qw = (qw * k + (my_frand(0.0f, 1.0f))) / (k + 1);
+    frameAHRS.time = v_count;
+//    float qx = frameAHRS.qx;
+//    float qy = frameAHRS.qy;
+//    float qz = frameAHRS.qz;
+//    float qw = frameAHRS.qw;
+//
+//    
+//    qx = 0.707; //(qx * k + (my_frand(0.0f, 1.0f))) / (k + 1);
+//    qy = 0.707; //(qy * k + (my_frand(0.0f, 1.0f))) / (k + 1);
+//    qz = 0; //(qz * k + (my_frand(0.0f, 1.0f))) / (k + 1);
+//    qw = 0; //(qw * k + (my_frand(0.0f, 1.0f))) / (k + 1);
     
-    frameAHRS.qx = *((int *)&qx);
-    frameAHRS.qy = *((int *)&qy);
-    frameAHRS.qz = *((int *)&qz);
-    frameAHRS.qw = *((int *)&qw);
-
+    frameAHRS.qx = (frameAHRS.qx * k + (my_frand(0.0f, 1.0f))) / (k + 1);
+    frameAHRS.qy = (frameAHRS.qy * k + (my_frand(0.0f, 1.0f))) / (k + 1);
+    frameAHRS.qz = (frameAHRS.qz * k + (my_frand(0.0f, 1.0f))) / (k + 1);
+    //frameAHRS.qw = (frameAHRS.qw * k + (my_frand(0.0f, 1.0f))) / (k + 1);
+    frameAHRS.qw = sqrtf(1 - (powf(frameAHRS.qx, 2) + powf(frameAHRS.qy, 2) + powf(frameAHRS.qz, 2)));
     
     /**** motion ****/
     
     //add time
-    assert(_manager.dataLog);
-    if (_manager.dataLog.enable) {
-        NSData *data;
-        data = [[NSData alloc] initWithBytes:(void *)&frameMotion length:sizeof(frameMotion)];
-        
-        [self.features[W2STSDKNodeFeatureHWAccelerometerKey] updateData:data position:2 time:0];
-        [self.features[W2STSDKNodeFeatureHWGyroscopeKey] updateData:data position:8 time:0];
-        [self.features[W2STSDKNodeFeatureHWMagnetometerKey] updateData:data position:14 time:0];
-        //[_manager.dataLog addSampleWithGroup:W2STSDKNodeFrameGroupMotion node:<#(W2STSDKNode *)#> time:<#(NSInteger)#> save:<#(BOOL)#>addSampleWithGroup: data:data node:self save:NO];
-        
-        data = [[NSData alloc] initWithBytes:(void *)&frameEnvironment length:sizeof(frameEnvironment)];
-        [self.features[W2STSDKNodeFeatureHWPressureKey] updateData:data position:2 time:0];
-        [self.features[W2STSDKNodeFeatureHWTemperatureKey] updateData:data position:6 time:0];
-        //[self.features[W2STSDKNodeFeatureHWHumidityKey] updateData:data position:8 time:0];
-        //[_manager.dataLog addSampleWithGroup:W2STSDKNodeFrameGroupEnvironment data:data node:self save:NO];
-        
-        data = [[NSData alloc] initWithBytes:(void *)&frameAHRS length:sizeof(frameAHRS)];
-        [self.features[W2STSDKNodeFeatureSWAHRSKey] updateData:data position:2 time:0];
-        //[_manager.dataLog addSampleWithGroup:W2STSDKNodeFrameGroupAHRS data:data node:self save:NO];
+    NSData *data;
+    uint8_t pos = 0, l=0;
+    unsigned char buffer[0x20];
+
+    pos=0;
+    memset(buffer, 0x00, 0x20);
+    memcpy(&buffer[pos], &frameMotion.time, l=2); pos+=l;
+    memcpy(&buffer[pos], &frameMotion.acce_x, l=2); pos+=l;
+    memcpy(&buffer[pos], &frameMotion.acce_y, l=2); pos+=l;
+    memcpy(&buffer[pos], &frameMotion.acce_z, l=2); pos+=l;
+    memcpy(&buffer[pos], &frameMotion.gyro_x, l=2); pos+=l;
+    memcpy(&buffer[pos], &frameMotion.gyro_y, l=2); pos+=l;
+    memcpy(&buffer[pos], &frameMotion.gyro_z, l=2); pos+=l;
+    memcpy(&buffer[pos], &frameMotion.magn_x, l=2); pos+=l;
+    memcpy(&buffer[pos], &frameMotion.magn_y, l=2); pos+=l;
+    memcpy(&buffer[pos], &frameMotion.magn_z, l=2); pos+=l;
+
+    data = [[NSData alloc] initWithBytes:(void *)buffer length:sizeof(frameMotion)];
+    [self updateValueWithData:data group:W2STSDKMotionGroup];
+    
+    /*
+    [self.features[W2STSDKNodeFeatureHWAccelerometerKey] updateData:data position:2 time:frameMotion.time];
+    [self.features[W2STSDKNodeFeatureHWGyroscopeKey] updateData:data position:8 time:frameMotion.time];
+    [self.features[W2STSDKNodeFeatureHWMagnetometerKey] updateData:data position:14 time:0];
+     */
+    
+    pos=0;
+    memset(buffer, 0x00, 0x20);
+    memcpy(&buffer[pos], &frameEnvironment.time, l=2); pos+=l;
+    memcpy(&buffer[pos], &frameEnvironment.pressure, l=4); pos+=l;
+    memcpy(&buffer[pos], &frameEnvironment.temperature, l=2); pos+=l;
+    memcpy(&buffer[pos], &frameEnvironment.humidity, l=2); pos+=l;
+    data = [[NSData alloc] initWithBytes:(void *)buffer length:sizeof(frameEnvironment)];
+    [self updateValueWithData:data group:W2STSDKEnvGroup];
+    
+    /*
+    [self.features[W2STSDKNodeFeatureHWPressureKey] updateData:data position:2 time:0];
+    [self.features[W2STSDKNodeFeatureHWTemperatureKey] updateData:data position:6 time:0];
+    //[self.features[W2STSDKNodeFeatureHWHumidityKey] updateData:data position:8 time:0];
+     */
+
+    pos=0;
+    
+    memset(buffer, 0x00, 0x20);
+    memcpy(&buffer[pos], &frameAHRS.time, l=2); pos+=l;
+    memcpy(&buffer[pos], &frameAHRS.qx, l=4); pos+=l;
+    memcpy(&buffer[pos], &frameAHRS.qy, l=4); pos+=l;
+    memcpy(&buffer[pos], &frameAHRS.qz, l=4); pos+=l;
+    memcpy(&buffer[pos], &frameAHRS.qw, l=4); pos+=l;
+    data = [[NSData alloc] initWithBytes:(void *)buffer length:sizeof(frameAHRS)];
+    [self updateValueWithData:data group:W2STSDKAHRSGroup];
+    //[self.features[W2STSDKNodeFeatureSWAHRSKey] updateData:data position:2 time:0];
+
+    //assert(_manager.dataLog);
+    if (_manager && _manager.dataLog && _manager.dataLog.enable) {
+        [_manager.dataLog addSampleWithGroup:W2STSDKNodeFrameGroupMotion node:self time:v_count save:NO];
+        [_manager.dataLog addSampleWithGroup:W2STSDKNodeFrameGroupEnvironment node:self time:v_count save:NO];
+        [_manager.dataLog addSampleWithGroup:W2STSDKNodeFrameGroupAHRS node:self time:v_count save:NO];
     }
     v_count++;
 
@@ -1105,6 +1138,9 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
      ctrl     [ ctrl      (1 byte ) | addr      (1 byte ) | err         (1 byte ) | len        (1 byte ) | payload    (N bytes) ] // framelen = 4 + N, N = len * 2
     */
     
+    uint16_t time = 0;
+    [data getBytes:&time length:2];
+    
     CBUUID *cbuuid = [characteristic UUID];
     if ([charDataUUIDs containsObject:cbuuid]) {
         //data
@@ -1113,7 +1149,8 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
             [self updateValueWithData:data group:group];
             W2STSDKNodeFrameGroup framegroup = [W2STSDKNode group2mapSafe:group];
             //[_manager.dataLog addSampleWithGroup:framegroup data:data node:self save:NO];
-            [_manager.dataLog addSampleWithGroup:framegroup node:self time:0 save:NO];
+            
+            [_manager.dataLog addSampleWithGroup:framegroup node:self time:time save:NO];
         }
     }
     else if ([cbuuid isEqual:[CBUUID UUIDWithString:W2STSDKConfCharacteristicUUIDString]]) {
