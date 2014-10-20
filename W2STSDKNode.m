@@ -604,7 +604,7 @@ static NSDictionary * group2map = nil;
 
 - (BOOL)_connect:(BOOL)conn{
     if (_local) {
-        _connectionStatus = W2STSDKNodeConnectionStatusConnected;
+        _connectionStatus = conn ? W2STSDKNodeConnectionStatusConnected : W2STSDKNodeConnectionStatusDisconnected;
         [_delegate node:self connectionDidChange:_connectionStatus];
         return YES;
     }
@@ -714,9 +714,9 @@ static NSDictionary * group2map = nil;
 {
     return _notifiedReading;
 }
-NSTimer *timerReadingLocal = nil;
 -(void) reading:(BOOL)enable {
     if (_local) {
+        static NSTimer *timerReadingLocal = nil;
         _notifiedReading = enable;
         //enable a timer to read data from sensors available inside the device
         [timerReadingLocal invalidate];
