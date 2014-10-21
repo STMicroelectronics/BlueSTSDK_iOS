@@ -36,7 +36,7 @@ BOOL lockNodesArrays = NO;
     
     //[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(checkDeadNodes) userInfo:nil repeats:YES];
     
-    [self actionLocalNode:YES];
+    //[self actionLocalNode:YES];
     
     return self;
 }
@@ -164,6 +164,13 @@ BOOL lockNodesArrays = NO;
 -(NSArray *)filteredNodes:(W2STSDKManagerFilter)filter {
     return [W2STSDKManager filteredNodesIn:_nodes filter:filter];
 }
+
+-(W2STSDKNode *)nodeWithName:(NSString *)name {
+    return [W2STSDKManager nodeIn:self.nodes name:name];
+}
+
+
+//static methods
 +(NSArray *)filteredNodesIn:(NSArray *)nodes filter:(W2STSDKManagerFilter)filter {
     assert(nodes != nil);
     
@@ -195,42 +202,42 @@ BOOL lockNodesArrays = NO;
     return cacheNodes;
 }
 +(NSInteger)indexNodeIn:(NSArray *)nodes peripheral:(CBPeripheral *)peripheral {
-    assert(nodes != nil);
+    //assert(nodes != nil);
     W2STSDKNode *node = [W2STSDKManager nodeIn:nodes peripheral:peripheral];
     NSInteger ret = node != nil ? -1 : [nodes indexOfObject:node];
     
     return ret;
 }
 +(W2STSDKNode *)nodeIn:(NSArray *)nodes index:(NSUInteger)index {
-    assert(nodes != nil);
-    return nodes.count > 0 && index < nodes.count ? nodes[index] : nil;
+    //assert(nodes != nil);
+    return nodes && nodes.count > 0 && index < nodes.count ? nodes[index] : nil;
 }
 +(W2STSDKNode *)nodeIn:(NSArray *)nodes peripheral:(CBPeripheral *)peripheral {
-    assert(nodes != nil);
+    //assert(nodes != nil);
     
     W2STSDKNode *node_ret = nil;
     
-    for(W2STSDKNode *node in nodes)
-    {
-        if ([node.peripheral.identifier isEqual:peripheral.identifier])
-        {
-            node_ret = node;
-            break;
+    if (nodes) {
+        for(W2STSDKNode *node in nodes) {
+            if ([node.peripheral.identifier isEqual:peripheral.identifier]) {
+                node_ret = node;
+                break;
+            }
         }
     }
     return node_ret;
 }
 +(W2STSDKNode *)nodeIn:(NSArray *)nodes name:(NSString *)name {
-    assert(nodes != nil);
+    //assert(nodes != nil);
     
     W2STSDKNode *node_ret = nil;
     
-    for(W2STSDKNode *node in nodes)
-    {
-        //if ([node.peripheral.name isEqual:name])
-        {
-            node_ret = node;
-            break;
+    if (nodes) {
+        for(W2STSDKNode *node in nodes) {
+            if ([node.peripheral.name isEqual:name]) {
+                node_ret = node;
+                break;
+            }
         }
     }
     return node_ret;

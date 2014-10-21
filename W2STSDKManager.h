@@ -50,6 +50,7 @@ typedef NS_ENUM(NSInteger, W2STSDKManagerFilter) {
 -(void)delLocalNode;
 
 -(NSArray *)filteredNodes:(W2STSDKManagerFilter)filter;
+-(W2STSDKNode *)nodeWithName:(NSString *)name;
 
 //to avoid misconfiguration we prefere to export a method to filter the nodes
 //and static methods to manage them
