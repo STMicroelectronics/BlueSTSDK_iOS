@@ -63,7 +63,8 @@ static NSDictionary * group2map = nil;
         [_readingBatteryStatusTimer invalidate];
         _readingBatteryStatusTimer = nil;
     }
-    _readingBatteryStatusTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(readingBatteryStatusTimerTick) userInfo:nil repeats:YES];
+    _readingBatteryStatusTimer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(readingBatteryStatusTimerTick:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:_readingBatteryStatusTimer forMode:NSDefaultRunLoopMode];
 }
 
 -(void)stopReadingBatteryStatusTimer {
@@ -73,12 +74,14 @@ static NSDictionary * group2map = nil;
     _readingBatteryStatusTimer = nil;
 }
 
--(void)readingBatteryStatusTimerTick {
-    if (self.isConnected && self.peripheral) {
-        NSLog(@"Reading Battery Timer node (%d) %@", nodeCount, self.name);
-        [self.peripheral readRSSI];
-        if (_batteryCharacteristic) {
-            [self.peripheral readValueForCharacteristic:_batteryCharacteristic];
+-(void)readingBatteryStatusTimerTick:(NSTimer *)timer {
+    if (!_local) {
+        if (self.isConnected && self.peripheral) {
+            //NSLog(@"Reading Battery Timer node (%d) %@", nodeCount, self.name);
+            [self.peripheral readRSSI];
+            if (_batteryCharacteristic) {
+                [self.peripheral readValueForCharacteristic:_batteryCharacteristic];
+            }
         }
     }
 }
@@ -88,7 +91,8 @@ static NSDictionary * group2map = nil;
         [_readingRSSIStatusTimer invalidate];
         _readingRSSIStatusTimer = nil;
     }
-    _readingRSSIStatusTimer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(readingRSSIStatusTimerTick) userInfo:nil repeats:YES];
+    _readingRSSIStatusTimer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(readingRSSIStatusTimerTick:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:_readingRSSIStatusTimer forMode:NSDefaultRunLoopMode];
 }
 
 -(void)stopReadingRSSIStatusTimer {
@@ -97,10 +101,12 @@ static NSDictionary * group2map = nil;
     }
     _readingRSSIStatusTimer = nil;
 }
--(void)readingRSSIStatusTimerTick {
-    if (self.isConnected && self.peripheral) {
-        NSLog(@"Reading RSSI Timer node (%d) RSSI:%@db", nodeCount, self.RSSI);
-        [self.peripheral readRSSI];
+-(void)readingRSSIStatusTimerTick:(NSTimer *)timer {
+    if (!_local) {
+        if (self.isConnected && self.peripheral) {
+            //NSLog(@"Reading RSSI Timer node (%d) RSSI:%@db", nodeCount, self.RSSI);
+            [self.peripheral readRSSI];
+        }
     }
 }
 /*
@@ -722,14 +728,16 @@ static NSDictionary * group2map = nil;
         [timerReadingLocal invalidate];
         timerReadingLocal = nil;
         if (enable) {
-            timerReadingLocal = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(readingLocal:) userInfo:nil repeats:YES];
+            timerReadingLocal = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(readingLocal:) userInfo:nil repeats:YES];
+            [[NSRunLoop mainRunLoop] addTimer:timerReadingLocal forMode:NSDefaultRunLoopMode];
         }
-        return;
     }
-    if (_notifiedCharacteristics != nil && _notifiedCharacteristics.count > 0) {
-        _notifiedReading = enable;
-        [self readingSync];
-        [_delegate node:self readingDidChange:_notifiedReading];
+    else {
+        if (_notifiedCharacteristics != nil && _notifiedCharacteristics.count > 0) {
+            _notifiedReading = enable;
+            [self readingSync];
+            [_delegate node:self readingDidChange:_notifiedReading];
+        }
     }
 }
 

@@ -36,7 +36,7 @@ BOOL lockNodesArrays = NO;
     
     //[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(checkDeadNodes) userInfo:nil repeats:YES];
     
-    //[self actionLocalNode:YES];
+    [self actionLocalNode:YES];
     
     return self;
 }

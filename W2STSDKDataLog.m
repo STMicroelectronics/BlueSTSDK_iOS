@@ -146,7 +146,7 @@
         }
     }
     else {
-        NSLog(@"Save no session");
+        //NSLog(@"Save no session");
     }
 }
 #endif
