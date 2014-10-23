@@ -111,6 +111,12 @@
     _session.descr = [dateFormatterDescr stringFromDate:_session.dateStart];
     _session.running = [NSNumber numberWithBool:YES];
     
+    //add all existings nodes
+    NSArray *nodes = [[W2STSDKManager sharedInstance] filteredNodes:W2STSDKManagerFilterAllNodes];
+    for(W2STSDKNode * node in nodes) {
+        [self addNode:node save:NO];
+    }
+    
     //save data
     if (save) {
         [_dataManager save];

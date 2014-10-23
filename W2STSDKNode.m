@@ -728,7 +728,7 @@ static NSDictionary * group2map = nil;
         [timerReadingLocal invalidate];
         timerReadingLocal = nil;
         if (enable) {
-            timerReadingLocal = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(readingLocal:) userInfo:nil repeats:YES];
+            timerReadingLocal = [NSTimer timerWithTimeInterval:0.5 target:self selector:@selector(readingLocal:) userInfo:nil repeats:YES];
             [[NSRunLoop mainRunLoop] addTimer:timerReadingLocal forMode:NSDefaultRunLoopMode];
         }
     }

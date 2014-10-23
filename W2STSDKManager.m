@@ -34,9 +34,9 @@ BOOL lockNodesArrays = NO;
     //_knownNodesOnly = NO;
     _knownNodesOnly = YES;
     
-    //[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(checkDeadNodes) userInfo:nil repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(checkDeadNodes) userInfo:nil repeats:YES];
     
-    [self actionLocalNode:YES];
+    //[self actionLocalNode:YES];
     
     return self;
 }
