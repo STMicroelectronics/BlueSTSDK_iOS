@@ -598,7 +598,7 @@
     if ([manager fileExistsAtPath:filepath])
         [manager removeItemAtPath:filepath error:nil];
     
-    NSString *headerLog = [NSString stringWithFormat:@"Node name:%@ identifier:%@ date:%@ type:%@ samples:%ld \n\n",
+    NSString *headerLog = [NSString stringWithFormat:@"Node name:%@ identifier:%@ date:%@ type:%@ samples:%ld \n",
                            node.name,
                            node.identifier,
                            [df_header stringFromDate:s.dateStart],
@@ -643,27 +643,40 @@
     samples = [[NSSet alloc] initWithArray:[self samplesForNode:node group:W2STSDKNodeFrameGroupMotion]];
     sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:YES ]]];
     
-    text = @"time (s)  device_count  acc:[x y z] (mg)  gyro:[x y z] (dps)  magn:[x y z] (mGa)\n";
+    text = @"time (s), count, acc (mg), gyro (dps), magn (mGa)\n\n";
+    [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    text = @"time          count    ax    ay    az     gx    gy    gz     mx    my    mz\n";
     [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
     [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
-    for (W2STDBSampleMotion *sample in sortedSamples) {
-        t = [sample.timeStamp timeIntervalSinceDate:s.dateStart];
-        text = [NSString stringWithFormat:@"%0.3f %7d %5d %5d %5d  %5d %5d %5d  %5d %5d %5d\n"
-                , t
-                , [sample.time intValue]
-                , [sample.acc_x intValue], [sample.acc_y intValue], [sample.acc_z intValue]
-                , [sample.gyr_x intValue], [sample.gyr_y intValue], [sample.gyr_z intValue]
-                , [sample.mag_x intValue], [sample.mag_y intValue], [sample.mag_z intValue]
-                ];
-        [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
-        perc_prev = perc;
-        perc = (100 * count) / sortedSamples.count;
-        count++;
-        if (perc != perc_prev) {
-            [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
+
+    if (![self.delegate abortingRequired]) {
+        for (W2STDBSampleMotion *sample in sortedSamples) {
+            t = [sample.timeStamp timeIntervalSinceDate:s.dateStart];
+            text = [NSString stringWithFormat:@"%0.6f %10d %5d %5d %5d  %5d %5d %5d  %5d %5d %5d\n"
+                    , t
+                    , [sample.time intValue]
+                    , [sample.acc_x intValue], [sample.acc_y intValue], [sample.acc_z intValue]
+                    , [sample.gyr_x intValue], [sample.gyr_y intValue], [sample.gyr_z intValue]
+                    , [sample.mag_x intValue], [sample.mag_y intValue], [sample.mag_z intValue]
+                    ];
+            [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+            perc_prev = perc;
+            perc = (100 * count) / sortedSamples.count;
+            count++;
+            if ([self.delegate abortingRequired]) {
+                break;
+            }
+            if (perc != perc_prev) {
+                [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
+            }
         }
     }
     [fileHandler closeFile];
+
+    if ([self.delegate abortingRequired]) {
+        return nil;
+    }
+    
     [logFiles addObject:filepath];
 
     /**** environment ****/
@@ -678,27 +691,39 @@
     samples = [[NSSet alloc] initWithArray:[self samplesForNode:node group:W2STSDKNodeFrameGroupEnvironment]];
     sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:YES ]]];
     
-    text = @"time (s)  device_count  pressure (mbar)  temp (°C) \n";
+    text = @"time (s), count, pressure (mbar), temperature (°C)\n\n";
+    [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    text = @"time          count  press  temp\n";
     [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
     [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
-    for (W2STDBSampleEnvironment *sample in sortedSamples) {
-        t = [sample.timeStamp timeIntervalSinceDate:s.dateStart];
-        text = [NSString stringWithFormat:@"%0.3f %7d %0.2f %0.2f\n"
-                , t
-                , [sample.time intValue]
-                , [sample.pressure floatValue]
-                , [sample.temperature floatValue]
-                //, [sample.humidity floatValue]
-                ];
-        [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
-        perc_prev = perc;
-        perc = (100 * count) / sortedSamples.count;
-        count++;
-        if (perc != perc_prev) {
-            [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
+
+    if (![self.delegate abortingRequired]) {
+        for (W2STDBSampleEnvironment *sample in sortedSamples) {
+            t = [sample.timeStamp timeIntervalSinceDate:s.dateStart];
+            text = [NSString stringWithFormat:@"%0.6f %10d  %0.2f  %0.2f\n"
+                    , t
+                    , [sample.time intValue]
+                    , [sample.pressure floatValue]
+                    , [sample.temperature floatValue]
+                    //, [sample.humidity floatValue]
+                    ];
+            [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+            perc_prev = perc;
+            perc = (100 * count) / sortedSamples.count;
+            count++;
+            if ([self.delegate abortingRequired]) {
+                break;
+            }
+            if (perc != perc_prev) {
+                [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
+            }
         }
     }
     [fileHandler closeFile];
+    
+    if ([self.delegate abortingRequired]) {
+        return nil;
+    }
     [logFiles addObject:filepath];
     
     /**** ahrs ****/
@@ -713,27 +738,39 @@
     samples = [[NSSet alloc] initWithArray:[self samplesForNode:node group:W2STSDKNodeFrameGroupAHRS]];
     sortedSamples = [samples sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:YES ]]];
     
-    text = @"time (s)  device_count  quaternions:[x y z w]\n";
+    text = @"time (s), count, quaternions\n\n";
+    [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+    text = @"time          count  qx      qy      qz      qw\n";
     [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
     [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
-    for (W2STDBSampleAHRS *sample in sortedSamples) {
-        t = [sample.timeStamp timeIntervalSinceDate:s.dateStart];
-        text = [NSString stringWithFormat:@"%0.3f %7d %0.3f %0.3f %0.3f %0.3f\n"
-                , t
-                , [sample.time intValue]
-                , [sample.qx doubleValue]
-                , [sample.qy doubleValue]
-                , [sample.qz doubleValue]
-                , [sample.qw doubleValue]];
-        [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
-        perc_prev = perc;
-        perc = (100 * count) / sortedSamples.count;
-        count++;
-        if (perc != perc_prev) {
-            [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
+    
+    if (![self.delegate abortingRequired]) {
+        for (W2STDBSampleAHRS *sample in sortedSamples) {
+            t = [sample.timeStamp timeIntervalSinceDate:s.dateStart];
+            text = [NSString stringWithFormat:@"%0.6f %10d  %0.5f  %0.5f  %0.5f  %0.5f\n"
+                    , t
+                    , [sample.time intValue]
+                    , [sample.qx doubleValue]
+                    , [sample.qy doubleValue]
+                    , [sample.qz doubleValue]
+                    , [sample.qw doubleValue]];
+            [fileHandler writeData:[text dataUsingEncoding:NSUTF8StringEncoding]];
+            perc_prev = perc;
+            perc = (100 * count) / sortedSamples.count;
+            count++;
+            if ([self.delegate abortingRequired]) {
+                break;
+            }
+            if (perc != perc_prev) {
+                [self.delegate dbNode:node session:s sampleType:sampleType perc:@(perc)];
+            }
         }
     }
     [fileHandler closeFile];
+    
+    if ([self.delegate abortingRequired]) {
+        return nil;
+    }
     [logFiles addObject:filepath];
     
     return logFiles;

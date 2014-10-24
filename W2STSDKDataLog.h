@@ -58,4 +58,5 @@
 @protocol W2STSDKDataLogDelegate <NSObject>
 @required
 - (void)dbNode:(W2STDBNode *)dbNode session:(W2STDBSession *)dbSession sampleType:(NSString *)sampleType perc:(NSNumber *)perc;
+- (BOOL)abortingRequired;
 @end

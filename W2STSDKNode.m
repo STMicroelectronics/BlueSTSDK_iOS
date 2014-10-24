@@ -19,6 +19,7 @@
     BOOL _notifiedReading;
     BOOL _connectAndReading;
     NSTimer *_readingBatteryStatusTimer;
+    BOOL _readingBatteryRequired;
     NSTimer *_readingRSSIStatusTimer;
 }
 #define WORKAROUND_READLENGTHFIELD 1
@@ -63,11 +64,13 @@ static NSDictionary * group2map = nil;
         [_readingBatteryStatusTimer invalidate];
         _readingBatteryStatusTimer = nil;
     }
-    _readingBatteryStatusTimer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(readingBatteryStatusTimerTick:) userInfo:nil repeats:YES];
+    _readingBatteryRequired = NO;
+    _readingBatteryStatusTimer = [NSTimer timerWithTimeInterval:5.0f target:self selector:@selector(readingBatteryStatusTimerTick:) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:_readingBatteryStatusTimer forMode:NSDefaultRunLoopMode];
 }
 
 -(void)stopReadingBatteryStatusTimer {
+    _readingBatteryRequired = NO;
     if (_readingBatteryStatusTimer != nil && [_readingBatteryStatusTimer isValid]) {
         [_readingBatteryStatusTimer invalidate];
     }
@@ -76,13 +79,14 @@ static NSDictionary * group2map = nil;
 
 -(void)readingBatteryStatusTimerTick:(NSTimer *)timer {
     if (!_local) {
-        if (self.isConnected && self.peripheral) {
-            //NSLog(@"Reading Battery Timer node (%d) %@", nodeCount, self.name);
-            [self.peripheral readRSSI];
-            if (_batteryCharacteristic) {
-                [self.peripheral readValueForCharacteristic:_batteryCharacteristic];
-            }
-        }
+        _readingBatteryRequired = YES;
+        NSLog(@"Reading Battery Timer REQUIRED for node (%d) %@", nodeCount, self.name);
+//        if (self.isConnected && self.peripheral) {
+//            //NSLog(@"Reading Battery Timer node (%d) %@", nodeCount, self.name);
+//            if (_batteryCharacteristic) {
+//                [self.peripheral readValueForCharacteristic:_batteryCharacteristic];
+//            }
+//        }
     }
 }
 
@@ -91,7 +95,7 @@ static NSDictionary * group2map = nil;
         [_readingRSSIStatusTimer invalidate];
         _readingRSSIStatusTimer = nil;
     }
-    _readingRSSIStatusTimer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(readingRSSIStatusTimerTick:) userInfo:nil repeats:YES];
+    _readingRSSIStatusTimer = [NSTimer timerWithTimeInterval:2.0f target:self selector:@selector(readingRSSIStatusTimerTick:) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:_readingRSSIStatusTimer forMode:NSDefaultRunLoopMode];
 }
 
@@ -192,7 +196,7 @@ static NSDictionary * group2map = nil;
     //init as local
     _advManuData = nil;
     _RSSI = @0;
-    _battery = 0;
+    _battery = -1;
     _rechargeStatus = 0;
     if (_local == NO)
     {
@@ -265,6 +269,7 @@ static NSDictionary * group2map = nil;
     }
     return ret;
 }
+
 +(W2STSDKNodeConfigCode)configCodeFromKey:(NSString *)key {
     W2STSDKNodeConfigCode ret = W2STSDKNodeConfigGenericCode;
     
@@ -1159,6 +1164,11 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
             //[_manager.dataLog addSampleWithGroup:framegroup data:data node:self save:NO];
             
             [_manager.dataLog addSampleWithGroup:framegroup node:self time:time save:NO];
+            if (framegroup == W2STSDKNodeFrameGroupEnvironment && _readingBatteryRequired && _batteryCharacteristic && self.peripheral && self.isConnected) {
+                NSLog(@"Reading Battery Timer node (%d) %@", nodeCount, self.name);
+                [self.peripheral readValueForCharacteristic:_batteryCharacteristic];
+                _readingBatteryRequired = NO;
+            }
         }
     }
     else if ([cbuuid isEqual:[CBUUID UUIDWithString:W2STSDKConfCharacteristicUUIDString]]) {
@@ -1181,6 +1191,9 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
         NSInteger rechargeStatusPrevious = self.rechargeStatus;
         self.battery = *((int16_t *)dataBuffer);
         self.rechargeStatus = *((int16_t *)(dataBuffer+2));
+        if (self.battery == 0x0 && self.rechargeStatus == 0x00) {
+            self.battery = -1; //I suppose the battery information is not available
+        }
         //if (abs(batteryPrevious - self.battery) > 0.5) {
         if (batteryPrevious != self.battery || rechargeStatusPrevious != self.rechargeStatus) {
             NSLog(@"Battery data: B:%dm%% S:%dmA %@", (int16_t)self.battery, (int16_t)self.rechargeStatus, [data description]);
