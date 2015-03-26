@@ -35,7 +35,7 @@
 
 -(id)initWithAdvertise:(NSDictionary *)advertisementData{
     _name = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
-    _txPower = [[advertisementData objectForKey:CBAdvertisementDataTxPowerLevelKey] unsignedCharValue];
+    _txPower = [advertisementData objectForKey:CBAdvertisementDataTxPowerLevelKey];
     NSData *rawData = [advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey];
     if([rawData length]!=5)
         @throw [NSException

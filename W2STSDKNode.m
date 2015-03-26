@@ -26,9 +26,6 @@ static dispatch_queue_t sNotificationQueue;
     NSMutableSet *mBleConnectionDelegates;
     NSMutableSet *mNodeStatusDelegates;
     
-    W2STSDKBleAdvertiseParser *mAdvertiseParser;
-    
-    
     BOOL _notifiedReading;
     BOOL _connectAndReading;
     NSTimer *_readingBatteryStatusTimer;
@@ -1461,10 +1458,12 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     mPeripheral=peripheral;
     _name = peripheral.name;
     _tag = peripheral.identifier.UUIDString;
-    mAdvertiseParser = [[W2STSDKBleAdvertiseParser alloc]
+    W2STSDKBleAdvertiseParser *parser = [[W2STSDKBleAdvertiseParser alloc]
                         initWithAdvertise:advertisementData];
-    mFeatureMask = mAdvertiseParser.featureMap;
-    _type = mAdvertiseParser.nodeType;
+    mFeatureMask = parser.featureMap;
+    _type = parser.nodeType;
+    [self updateRssi:rssi];
+    [self updateTxPower: parser.txPower];
     NSLog(@"create Node: name: %@ type: %x feature: %d",_name,_type,mFeatureMask);
     return self;
 }
@@ -1485,5 +1484,15 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
         });
     }//for
 }
+
+-(void) updateTxPower:(NSNumber *)txPower{
+    _txPower=txPower;
+    for (id<W2STSDKNodeBleConnectionParamDelegate> delegate in mBleConnectionDelegates) {
+        dispatch_async(sNotificationQueue,^{
+            [delegate node:self didChangeTxPower:txPower.integerValue];
+        });
+    }//for
+}
+
 
 @end

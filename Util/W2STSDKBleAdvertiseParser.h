@@ -19,13 +19,14 @@ typedef NS_ENUM(NSInteger, W2STSDKBLeAdvertiseAddressType) {
 
 @interface W2STSDKBleAdvertiseParser : NSObject
 
-@property (readonly, nonatomic) W2STSDKBLeAdvertiseAddressType type;
-@property (readonly, retain, nonatomic) NSString *address;
-@property (readonly, retain, nonatomic) NSString *name;
-@property (readonly,  nonatomic) unsigned char deviceId;
-@property (readonly,  nonatomic) unsigned int featureMap;
-@property (readonly,  nonatomic) unsigned char txPower;
-@property (readonly,  nonatomic) W2STSDKNodeType nodeType;
+//@property (readonly) W2STSDKBLeAdvertiseAddressType type; //not present in the dictionary advertise
+//@property (readonly) NSString *address; //not present in the dictionary advertise
+
+@property (readonly) NSString *name;
+@property (readonly) unsigned char deviceId;
+@property (readonly) unsigned int featureMap;
+@property (readonly) NSNumber* txPower;
+@property (readonly) W2STSDKNodeType nodeType;
 
 -(id)initWithAdvertise:(NSDictionary*)advertisementData;
 
