@@ -5,64 +5,28 @@
 //  Created by Antonino Raucea on 02/04/14.
 //  Copyright (c) 2014 STMicroelectronics. All rights reserved.
 //
+#ifndef W2STApp_W2STSDKManager_h
+#define W2STApp_W2STSDKManager_h
 
-#import "W2STSDKDefine.h"
+#import <Foundation/Foundation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
 
-
-@class W2STSDKCentral;
-@class W2STSDKDataLog;
-
-typedef NS_ENUM(NSInteger, W2STSDKManagerFilter) {
-    W2STSDKManagerFilterAllNodes         = 0,
-    W2STSDKManagerFilterConnectedOnly    = 1,
-    W2STSDKManagerFilterConnectedNo      = 2,
-    W2STSDKManagerFilterDeadOnly         = 3,
-    W2STSDKManagerFilterDeadNo           = 4,
-};
-
-
-
+#include "W2STSDKNode.h"
 @protocol W2STSDKManagerDelegate;
 
-@interface W2STSDKManager : NSObject
 
-@property (retain, nonatomic) W2STSDKDataLog * dataLog;
-@property (retain, nonatomic) NSMutableArray * nodes;
-@property (retain, nonatomic) W2STSDKNode * localNode;
-@property (retain, nonatomic) W2STSDKCentral * central; //private
-@property (assign, nonatomic, readonly) BOOL knownNodesOnly;
-
-@property (retain, nonatomic) id<W2STSDKManagerDelegate> delegate;
-
--(void)clear;
--(void)knownNodesOnlySet:(BOOL)value;
--(void)knownNodesOnlyToggle;
-
--(BOOL)discoveryActive;
--(void)discovery:(BOOL)enable;
+@interface W2STSDKManager : NSObject<CBCentralManagerDelegate>
 -(void)discoveryStart;
+-(void)discoveryStart:(int)timeoutMs;
 -(void)discoveryStop;
--(void)discoveryToggle;
 
--(void)toggleLocalNode;
--(void)actionLocalNode:(BOOL)add;
--(void)addLocalNode;
--(void)delLocalNode;
-
--(NSArray *)filteredNodes:(W2STSDKManagerFilter)filter;
+-(void)addDelegate:(id<W2STSDKManagerDelegate>)delegate;
+-(void)removeDelegate:(id<W2STSDKManagerDelegate>)delegate;
+-(NSArray *) nodes;
+-(BOOL) isDiscovering;
+-(void) resetDiscovery;
 -(W2STSDKNode *)nodeWithName:(NSString *)name;
-
-//to avoid misconfiguration we prefere to export a method to filter the nodes
-//and static methods to manage them
-//-(NSUInteger)nodesCountWithFilter:(W2STSDKManagerFilter)filterCondition;
-//-(NSInteger)findIndexByPeripheral:(CBPeripheral *)peripheral filter:(W2STSDKManagerFilter)filterCondition;
-//-(W2STSDKNode *)findNodeByPeripheral:(CBPeripheral *)peripheral filter:(W2STSDKManagerFilter)filterCondition;
-
-+(NSArray *)filteredNodesIn:(NSArray *)nodes filter:(W2STSDKManagerFilter)filter;
-+(NSInteger)indexNodeIn:(NSArray *)nodes peripheral:(CBPeripheral *)peripheral;
-+(W2STSDKNode *)nodeIn:(NSArray *)nodes index:(NSUInteger)index;
-+(W2STSDKNode *)nodeIn:(NSArray *)nodes peripheral:(CBPeripheral *)peripheral;
-+(W2STSDKNode *)nodeIn:(NSArray *)nodes name:(NSString *)name;
+-(W2STSDKNode *)nodeWithTag:(NSString *)tag;
 
 + (W2STSDKManager *)sharedInstance;
 @end
@@ -70,8 +34,8 @@ typedef NS_ENUM(NSInteger, W2STSDKManagerFilter) {
 //protocol
 @protocol W2STSDKManagerDelegate <NSObject>
 @required
-- (void)manager:(W2STSDKManager *)manager nodesDidChange:(W2STSDKNode *)node what:(NSString *)what; //W2STSDKManagerNodeChange...
-- (void)manager:(W2STSDKManager *)manager discoveryDidChange:(BOOL)discovery;
-
-
+- (void)manager:(W2STSDKManager *)manager didDiscoverNode:(W2STSDKNode *)node;
+- (void)manager:(W2STSDKManager *)manager didChangeDiscovery:(BOOL)enable;
 @end
+
+#endif

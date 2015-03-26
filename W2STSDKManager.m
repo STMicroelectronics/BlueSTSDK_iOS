@@ -6,11 +6,26 @@
 //  Copyright (c) 2014 STMicroelectronics. All rights reserved.
 //
 
+#import <CoreBluetooth/CBCentralManager.h>
 #import "W2STSDKManager.h"
 
-@implementation W2STSDKManager {
+
+@interface W2STSDKManager()
+-(id)init;
+-(void)notifyNewNode:(W2STSDKNode*)node;
+-(void)changeDiscoveryStatus:(BOOL)newStatus;
+
+@end
+
+@implementation W2STSDKManager{
+    BOOL mIsScanning;
+    dispatch_queue_t mNotificationQueue;
+     //TODO ADD LOOK
+    NSMutableSet *mManagerListener;
+    NSMutableSet *mDiscoveryedNode;
+    CBCentralManager * mCBCentralManager;
 }
-BOOL lockNodesArrays = NO;
+
 
 +(W2STSDKManager *)sharedInstance {
     static W2STSDKManager *this = nil;
@@ -23,225 +38,117 @@ BOOL lockNodesArrays = NO;
 
 -(id)init {
     self = [super init];
-    [W2STSDKParam initStatic];
-    [W2STSDKFeature initStatic];
-    
-    _central = [[W2STSDKCentral alloc] init:self];
-    _nodes = [[NSMutableArray alloc] init];
-    _localNode = nil;
-    _dataLog = [[W2STSDKDataLog alloc] init];
-  
-    //_knownNodesOnly = NO;
-    _knownNodesOnly = YES;
-    
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(checkDeadNodes) userInfo:nil repeats:YES];
-    
-    //[self actionLocalNode:YES];
-    
+
+    mDiscoveryedNode = [[NSMutableSet alloc] init];
+    mManagerListener = [[NSMutableSet alloc] init];
+    mCBCentralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+    mNotificationQueue = dispatch_queue_create("W2STSDKManager", DISPATCH_QUEUE_CONCURRENT);
+
     return self;
 }
 
--(void)toggleLocalNode {
-    [self actionLocalNode:(_localNode == nil)];
+-(void) discoveryStart{
+    [self discoveryStart:-1];
 }
 
--(void)actionLocalNode:(BOOL)add {
-    if (!add) {
-        if (_localNode != nil) {
-            [_nodes removeObject:_localNode];
-            _localNode = nil;
+-(void) discoveryStart:(int)timeoutMs{
+    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+                             [NSNumber numberWithBool:YES],
+                             CBCentralManagerScanOptionAllowDuplicatesKey, nil];
+    //NSDictionary *options = nil;
+    
+    [mCBCentralManager scanForPeripheralsWithServices:nil options:options];
+    [self changeDiscoveryStatus:true];
+    if(timeoutMs>0){
+        //TODO STOP THE SCAN AFTER THE TIMEOUT
+    }
+    
+}
+
+-(void) discoveryStop{
+    [mCBCentralManager stopScan];
+}
+
+-(void)resetDiscovery {
+    [mDiscoveryedNode removeAllObjects];
+}
+
+-(NSArray*) nodes{
+    return [mDiscoveryedNode allObjects];
+}
+
+-(void)addDelegate:(id<W2STSDKManagerDelegate>)delegate {
+    [mManagerListener addObject:delegate];
+    
+}
+-(void)removeDelegate:(id<W2STSDKManagerDelegate>)delegate{
+    [mManagerListener removeObject:delegate];
+}
+
+-(BOOL)isDiscovering{
+    return mIsScanning;
+}
+
+-(void)changeDiscoveryStatus:(BOOL)newStatus{
+    mIsScanning=newStatus;
+    //notify the new status to the other listeners
+    for (id<W2STSDKManagerDelegate> delegate in mManagerListener) {
+        dispatch_async(mNotificationQueue, ^{
+            [delegate manager:self didChangeDiscovery:newStatus];
+        });
+    }
+}
+
+-(void)notifyNewNode:(W2STSDKNode *)node{
+    for (id<W2STSDKManagerDelegate> delegate in mManagerListener) {
+        dispatch_async(mNotificationQueue, ^{
+            [delegate manager:self didDiscoverNode:node];
+        });
+    }
+}
+
+-(W2STSDKNode *)nodeWithName:(NSString *)name{
+    for (W2STSDKNode *node in mDiscoveryedNode) {
+        if ([name isEqual: node.name]) {
+            return node;
         }
     }
-    else {
-        if (_localNode != nil) {
-            [_nodes removeObject:_localNode];
-            _localNode = nil;
-        }
-        _localNode = [[W2STSDKNode alloc] initAsLocal:self];
-        _localNode.connectionStatus = W2STSDKNodeConnectionStatusUnknown;
-        [_nodes insertObject:_localNode atIndex:0]; //insert on the top of the list
-    }
+    return nil;
 }
--(void)addLocalNode {
-    [self actionLocalNode:YES];
-}
--(void)delLocalNode {
-    [self actionLocalNode:NO];
-}
--(void)checkDeadNodes {
-    if (![self discoveryActive])
-        return;
-    
-    if (lockNodesArrays) {
-        return;
-    }
-    
-    
-    lockNodesArrays = YES;
-    BOOL changed;
-    //NSMutableArray *deadNodes = [[NSMutableArray alloc] init];
-    for(W2STSDKNode *node in _nodes) {
-        changed = [node checkLiveTime];
-        if (changed) {
-            //remove node from list
-            //[deadNodes addObject:node];
-            switch (node.status) {
-                case W2STSDKNodeStatusDead:
-                    [_delegate manager:self nodesDidChange:node what:W2STSDKNodeChangeDeadKey];
-                    break;
-                case W2STSDKNodeStatusResumed:
-                    [_delegate manager:self nodesDidChange:node what:W2STSDKNodeChangeResumedKey];
-                    break;
-                case W2STSDKNodeStatusDeleted:
-                    [_delegate manager:self nodesDidChange:node what:W2STSDKNodeChangeDeletedKey];
-                    break;
-                default:
-                    //nothing
-                    break;
-            }
+
+-(W2STSDKNode *)nodeWithTag:(NSString *)tag{
+    for (W2STSDKNode *node in mDiscoveryedNode) {
+        if ([tag isEqual: node.tag]) {
+            return node;
         }
     }
-
-    lockNodesArrays = NO;
+    return nil;
 }
 
 
--(void)clear {
-    if (lockNodesArrays)
-        return;
-    
-    lockNodesArrays = YES;
-    BOOL scan_condition = [_central scanActive];
-    if (scan_condition)
-    {
-        [_central stopScan];
-    }
-    if (_nodes != nil) {
-        for(W2STSDKNode *n in _nodes) {
-            n.status = W2STSDKNodeStatusDead;
-            [n reading:NO];
-            [n disconnect];
-        }
-        [_nodes removeAllObjects];
-    }
-    
-    if (scan_condition)
-    {
-        [_central startScan];
-    }
-    lockNodesArrays = NO;
-}
 
-
-/* Filter */
--(void)knownNodesOnlySet:(BOOL)value {
-    _knownNodesOnly = value;
-    if ([_central scanActive])
-    {
-        //remove all object and start again with the scan
-        [self clear];
+/////////////////////// CBCentralManagerDelegate///////////////////////////////
+- (void)centralManager:(CBCentralManager *)central
+ didDiscoverPeripheral:(CBPeripheral *)peripheral
+     advertisementData:(NSDictionary *)advertisementData
+                  RSSI:(NSNumber *)RSSI{
+    NSString *tag = peripheral.identifier.UUIDString;
+    W2STSDKNode *node = [self nodeWithTag:tag];
+    if(node == nil){
+        node = [[W2STSDKNode alloc] init:peripheral];
+        [mDiscoveryedNode addObject:node];
+        [self notifyNewNode:node];
+    }else{
+        //[node updateRssi:RSSI];
     }
 }
--(void)knownNodesOnlyToggle {
-    [self knownNodesOnlySet:!_knownNodesOnly];
-}
-/* Discovery */
--(BOOL)discoveryActive {
-    return _central.scanActive;
-}
--(void)discovery:(BOOL)enable {
-    [_central scan:enable];
-}
--(void)discoveryStart {
-    [self discovery:YES];
-}
--(void)discoveryStop {
-    [self discovery:NO];
-}
--(void)discoveryToggle {
-    [_central toggleScan];
-}
--(NSArray *)filteredNodes:(W2STSDKManagerFilter)filter {
-    return [W2STSDKManager filteredNodesIn:_nodes filter:filter];
-}
 
--(W2STSDKNode *)nodeWithName:(NSString *)name {
-    return [W2STSDKManager nodeIn:self.nodes name:name];
-}
-
-
-//static methods
-+(NSArray *)filteredNodesIn:(NSArray *)nodes filter:(W2STSDKManagerFilter)filter {
-    assert(nodes != nil);
-    
-    //Note to improve/semplify this method we have to use the predicates
-    NSArray *cacheNodes = @[]; //empty array
-    BOOL (^pBlock)(id evaluatedObject, NSDictionary *bindings);
-    
-    if ([nodes count] > 0) {
-        switch (filter) {
-            case W2STSDKManagerFilterAllNodes:
-                pBlock = ^BOOL(W2STSDKNode *node, NSDictionary *bindings) { return YES; };
-                break;
-            case W2STSDKManagerFilterConnectedOnly:
-                pBlock = ^BOOL(W2STSDKNode *node, NSDictionary *bindings) { return node.connectionStatus == W2STSDKNodeConnectionStatusConnected; };
-                break;
-            case W2STSDKManagerFilterConnectedNo:
-                pBlock = ^BOOL(W2STSDKNode *node, NSDictionary *bindings) { return node.connectionStatus != W2STSDKNodeConnectionStatusConnected; };
-                break;
-            case W2STSDKManagerFilterDeadOnly:
-                pBlock = ^BOOL(W2STSDKNode *node, NSDictionary *bindings) { return node.status == W2STSDKNodeStatusDead; };
-                break;
-            case W2STSDKManagerFilterDeadNo:
-                pBlock = ^BOOL(W2STSDKNode *node, NSDictionary *bindings) { return node.status != W2STSDKNodeStatusDead; };
-                break;
-                
-        }
-        cacheNodes = [nodes filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:pBlock]];
+- (void)centralManagerDidUpdateState:(CBCentralManager *)central{
+    CBCentralManagerState state = [central state];
+    if(state!=CBCentralManagerStatePoweredOn){
+        [self changeDiscoveryStatus:false];
     }
-    return cacheNodes;
 }
-+(NSInteger)indexNodeIn:(NSArray *)nodes peripheral:(CBPeripheral *)peripheral {
-    //assert(nodes != nil);
-    W2STSDKNode *node = [W2STSDKManager nodeIn:nodes peripheral:peripheral];
-    NSInteger ret = node != nil ? -1 : [nodes indexOfObject:node];
-    
-    return ret;
-}
-+(W2STSDKNode *)nodeIn:(NSArray *)nodes index:(NSUInteger)index {
-    //assert(nodes != nil);
-    return nodes && nodes.count > 0 && index < nodes.count ? nodes[index] : nil;
-}
-+(W2STSDKNode *)nodeIn:(NSArray *)nodes peripheral:(CBPeripheral *)peripheral {
-    //assert(nodes != nil);
-    
-    W2STSDKNode *node_ret = nil;
-    
-    if (nodes) {
-        for(W2STSDKNode *node in nodes) {
-            if ([node.peripheral.identifier isEqual:peripheral.identifier]) {
-                node_ret = node;
-                break;
-            }
-        }
-    }
-    return node_ret;
-}
-+(W2STSDKNode *)nodeIn:(NSArray *)nodes name:(NSString *)name {
-    //assert(nodes != nil);
-    
-    W2STSDKNode *node_ret = nil;
-    
-    if (nodes) {
-        for(W2STSDKNode *node in nodes) {
-            if ([node.peripheral.name isEqual:name]) {
-                node_ret = node;
-                break;
-            }
-        }
-    }
-    return node_ret;
 
-}
 
 @end

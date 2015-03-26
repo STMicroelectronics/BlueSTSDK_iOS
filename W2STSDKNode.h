@@ -189,6 +189,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @discussion
  */
 @property (retain, readonly) NSString *name;
+@property (retain, readonly) NSString *tag;
 /*!
  *  @property localName
  *
@@ -358,6 +359,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  */
 -(id) init :(CBPeripheral *)peripheral manager:(W2STSDKManager *)manager local:(BOOL)local;
+-(id) init :(CBPeripheral *)peripheral ;
 /*!
  *  @method initStatus:
  *

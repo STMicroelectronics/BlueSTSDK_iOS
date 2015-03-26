@@ -155,13 +155,14 @@ static NSDictionary * group2map = nil;
                       };
     });
     
-    if (manager == nil)
+   /* if (manager == nil)
     {
         @throw [NSException
                 exceptionWithName:@"InvalidArgumentException"
                 reason:@"Manager can't be null"
                 userInfo:nil];
     }
+    */
     
     _notifiedCharacteristics = [[NSMutableArray alloc] init];
     _configCharacteristic = nil;
@@ -178,6 +179,7 @@ static NSDictionary * group2map = nil;
 
     _manager = manager;
     _peripheral = nil;
+    _tag= peripheral.identifier.UUIDString;
     
     //ble properties
     _name = @"noname";
@@ -232,6 +234,11 @@ static NSDictionary * group2map = nil;
 -(id) initAsLocal:(W2STSDKManager *)manager {
     return [self init:nil manager:manager local:YES];
 }
+
+-(id)init:(CBPeripheral *)peripheral{
+    return [self init:peripheral manager:nil local:false];
+}
+
 - (int16_t)featureByte {
     return ((_hwFeatureByte<<8) | _swFeatureByte);
 }
@@ -621,7 +628,7 @@ static NSDictionary * group2map = nil;
     }
     
     BOOL ret = NO;
-	if (_manager != nil && _manager.central != nil && _manager.central.centralManager != nil && _peripheral != nil) {
+	/*if (_manager != nil && _manager.central != nil && _manager.central.centralManager != nil && _peripheral != nil) {
         
         if ((conn && _peripheral.state == CBPeripheralStateDisconnected && _isConnectable)
             ||
@@ -649,6 +656,7 @@ static NSDictionary * group2map = nil;
             ret = YES;
         }
 	}
+     */
 
     return ret;
 }
@@ -890,11 +898,13 @@ double my_drand(double min, double max) {
     //[self.features[W2STSDKNodeFeatureSWAHRSKey] updateData:data position:2 time:0];
 
     //assert(_manager.dataLog);
+    /*
     if (_manager && _manager.dataLog && _manager.dataLog.enable) {
         [_manager.dataLog addSampleWithGroup:W2STSDKNodeFrameGroupMotion node:self time:v_count save:NO];
         [_manager.dataLog addSampleWithGroup:W2STSDKNodeFrameGroupEnvironment node:self time:v_count save:NO];
         [_manager.dataLog addSampleWithGroup:W2STSDKNodeFrameGroupAHRS node:self time:v_count save:NO];
     }
+     */
     v_count++;
 
     [_delegate node:self dataDidUpdate:W2STSDKNodeChangeDataVal param:W2STSDKAllGroup];
@@ -1163,7 +1173,7 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
             W2STSDKNodeFrameGroup framegroup = [W2STSDKNode group2mapSafe:group];
             //[_manager.dataLog addSampleWithGroup:framegroup data:data node:self save:NO];
             
-            [_manager.dataLog addSampleWithGroup:framegroup node:self time:time save:NO];
+            //[_manager.dataLog addSampleWithGroup:framegroup node:self time:time save:NO];
             if (framegroup == W2STSDKNodeFrameGroupEnvironment && _readingBatteryRequired && _batteryCharacteristic && self.peripheral && self.isConnected) {
                 NSLog(@"Reading Battery Timer node (%d) %@", nodeCount, self.name);
                 [self.peripheral readValueForCharacteristic:_batteryCharacteristic];

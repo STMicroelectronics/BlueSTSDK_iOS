@@ -112,7 +112,7 @@
     _session.running = [NSNumber numberWithBool:YES];
     
     //add all existings nodes
-    NSArray *nodes = [[W2STSDKManager sharedInstance] filteredNodes:W2STSDKManagerFilterAllNodes];
+    NSArray *nodes = [[W2STSDKManager sharedInstance] nodes];
     for(W2STSDKNode * node in nodes) {
         [self addNode:node save:NO];
     }
