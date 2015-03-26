@@ -135,11 +135,17 @@
     NSString *tag = peripheral.identifier.UUIDString;
     W2STSDKNode *node = [self nodeWithTag:tag];
     if(node == nil){
-        node = [[W2STSDKNode alloc] init:peripheral];
-        [mDiscoveryedNode addObject:node];
-        [self notifyNewNode:node];
+        @try {
+            node = [[W2STSDKNode alloc] init:peripheral rssi:RSSI
+                                   advertise:advertisementData];
+            [mDiscoveryedNode addObject:node];
+            [self notifyNewNode:node];
+        }
+        @catch (NSException *exception) {//not a valid advertise -> avoid to add it
+        }
+       
     }else{
-        //[node updateRssi:RSSI];
+        [node updateRssi:RSSI];
     }
 }
 

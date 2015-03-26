@@ -6,22 +6,37 @@
 //  Copyright (c) 2014 STMicroelectronics. All rights reserved.
 //
 
+/////////////new sdk///////////////////
 #import "W2STSDKNode.h"
+#import "Util/W2STSDKBleAdvertiseParser.h"
 
 @interface W2STSDKNode()
 
 
 @end
 
+//private static variable
+static dispatch_queue_t sNotificationQueue;
+
 @implementation W2STSDKNode {
     //NSMutableArray *_notifiedCharacteristics;
     //CBCharacteristic *_controlCharacteristic;
+    CBPeripheral *mPeripheral;
+    uint32_t mFeatureMask;
+    NSMutableSet *mBleConnectionDelegates;
+    NSMutableSet *mNodeStatusDelegates;
+    
+    W2STSDKBleAdvertiseParser *mAdvertiseParser;
+    
+    
     BOOL _notifiedReading;
     BOOL _connectAndReading;
     NSTimer *_readingBatteryStatusTimer;
     BOOL _readingBatteryRequired;
     NSTimer *_readingRSSIStatusTimer;
 }
+////////////////////////////////////
+
 #define WORKAROUND_READLENGTHFIELD 1
 
 static int nodeCount = 0;
@@ -107,9 +122,9 @@ static NSDictionary * group2map = nil;
 }
 -(void)readingRSSIStatusTimerTick:(NSTimer *)timer {
     if (!_local) {
-        if (self.isConnected && self.peripheral) {
+        if (self.isConnected && mPeripheral) {
             //NSLog(@"Reading RSSI Timer node (%d) RSSI:%@db", nodeCount, self.RSSI);
-            [self.peripheral readRSSI];
+            [mPeripheral readRSSI];
         }
     }
 }
@@ -178,13 +193,10 @@ static NSDictionary * group2map = nil;
     _local = local;
 
     _manager = manager;
-    _peripheral = nil;
     _tag= peripheral.identifier.UUIDString;
     
     //ble properties
     _name = @"noname";
-    _peripheralName = @"na pname";
-    _localName = @"na lname";
     
     _txPowerLastUpdate = nil;
     _rssiLastUpdate = nil;
@@ -211,11 +223,8 @@ static NSDictionary * group2map = nil;
                     userInfo:nil];
         }
 
-        _peripheral = peripheral;
-        _peripheral.delegate = self;
-        _peripheralName = _peripheral.name;
-        _name = _peripheralName;
-        _identifier = _peripheral.identifier;
+        mPeripheral = peripheral;
+        mPeripheral.delegate = self;
         _boardNameCode = W2STSDKNodeBoardNameCodeNone;
         _info = @"";
         [self startReadingBatteryStatusTimer];
@@ -235,9 +244,6 @@ static NSDictionary * group2map = nil;
     return [self init:nil manager:manager local:YES];
 }
 
--(id)init:(CBPeripheral *)peripheral{
-    return [self init:peripheral manager:nil local:false];
-}
 
 - (int16_t)featureByte {
     return ((_hwFeatureByte<<8) | _swFeatureByte);
@@ -250,9 +256,6 @@ static NSDictionary * group2map = nil;
     _swFeatureByte = 0x80; //0xFF;
     
     _name = @"your device"; //get the name of device
-    _localName = @"lname"; //get the name of device
-    _peripheralName = @"pname"; //get the name of device
-    _identifier = nil;
     _boardNameCode = W2STSDKNodeBoardNameCodeLocal;
     _info = @"none";
     
@@ -374,10 +377,7 @@ static NSDictionary * group2map = nil;
 -(NSString *)nameBoardGetString {
     return [[self class] nameBoard:_boardNameCode];
 }
--(NSString *)UUIDGetString {
-    
-    return _identifier == nil ? @"00000000-0000-0000-0000-000000000000" : [_identifier UUIDString];
-}
+
 
 -(BOOL)updateBLEProperties:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI enableDelegate:(BOOL)enableDelegate {
     BOOL changed,changed_advr, changed_rssi;
@@ -431,13 +431,7 @@ static NSDictionary * group2map = nil;
                 [self populateFeatures];
             }
         }
-        
-        if ([[advertisementData allKeys] containsObject:CBAdvertisementDataLocalNameKey])
-        {
-            _localName = advertisementData[CBAdvertisementDataLocalNameKey];
-            _name = _localName;
-        }
-        
+                
         if ([[advertisementData allKeys] containsObject:CBAdvertisementDataTxPowerLevelKey])
         {
             _txPower = advertisementData[CBAdvertisementDataTxPowerLevelKey];
@@ -698,8 +692,8 @@ static NSDictionary * group2map = nil;
     }
      */
     
-    if (_peripheral != nil) {
-        _connectionStatus = _peripheral.state == CBPeripheralStateConnected ? W2STSDKNodeConnectionStatusConnected : W2STSDKNodeConnectionStatusDisconnected;
+    if (mPeripheral != nil) {
+        _connectionStatus = mPeripheral.state == CBPeripheralStateConnected ? W2STSDKNodeConnectionStatusConnected : W2STSDKNodeConnectionStatusDisconnected;
     }
     else {
         _connectionStatus = W2STSDKNodeConnectionStatusUnknown;
@@ -713,7 +707,7 @@ static NSDictionary * group2map = nil;
         //start a services discovery
         _leaveTime = nil;
         NSArray *serviceUUIDs = nil; //@[[CBUUID UUIDWithString:W2STSDKMotionServiceUUIDString]]; //select all services and search the known characteristics
-        [_peripheral discoverServices:serviceUUIDs];
+        [mPeripheral discoverServices:serviceUUIDs];
         
 //        if (_connectAndReading) {
 //            [self reading:YES];
@@ -915,7 +909,7 @@ double my_drand(double min, double max) {
     }
     for (CBCharacteristic *c in _notifiedCharacteristics)
     {
-        [_peripheral setNotifyValue:_notifiedReading forCharacteristic:c];
+        [mPeripheral setNotifyValue:_notifiedReading forCharacteristic:c];
     }
 }
 -(void) startReading
@@ -1132,7 +1126,7 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
     NSString *group = @""; //key of the group received
 
     //check if the peripheral is correct
-    if (peripheral != _peripheral) {
+    if (peripheral != mPeripheral) {
         NSLog(@"Wrong peripheral\n");
         return ;
     }
@@ -1174,9 +1168,9 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
             //[_manager.dataLog addSampleWithGroup:framegroup data:data node:self save:NO];
             
             //[_manager.dataLog addSampleWithGroup:framegroup node:self time:time save:NO];
-            if (framegroup == W2STSDKNodeFrameGroupEnvironment && _readingBatteryRequired && _batteryCharacteristic && self.peripheral && self.isConnected) {
+            if (framegroup == W2STSDKNodeFrameGroupEnvironment && _readingBatteryRequired && _batteryCharacteristic && mPeripheral && self.isConnected) {
                 NSLog(@"Reading Battery Timer node (%d) %@", nodeCount, self.name);
-                [self.peripheral readValueForCharacteristic:_batteryCharacteristic];
+                [mPeripheral readValueForCharacteristic:_batteryCharacteristic];
                 _readingBatteryRequired = NO;
             }
         }
@@ -1297,7 +1291,7 @@ long frame_node_count = 0;
 */
 - (void)peripheral:(CBPeripheral *)peripheral didReadRSSI:(NSNumber *)RSSI error:(NSError *)error {
     NSLog(@"RSSI:%@db", RSSI);
-    if (error == nil && peripheral == self.peripheral) {
+    if (error == nil && peripheral == mPeripheral) {
         [self updateRSSI:RSSI enableDelegate:YES];
     }
 }
@@ -1332,7 +1326,7 @@ long frame_node_count = 0;
     return ret;
 }
 -(void)forceReadingConfig {
-    [self.peripheral readValueForCharacteristic:_configCharacteristic];
+    [mPeripheral readValueForCharacteristic:_configCharacteristic];
 }
 //return the controlService sent
 -(W2STSDKCommand *)sendConfig:(W2STSDKCommand *)command {
@@ -1353,11 +1347,11 @@ long frame_node_count = 0;
         
         NSLog(@"sendControl [%@]", [dataToSend description]);
         NSLog(@"Writing value for characteristic %@", _configCharacteristic);
-        [self.peripheral writeValue:dataToSend forCharacteristic:_configCharacteristic type:CBCharacteristicWriteWithResponse];
+        [mPeripheral writeValue:dataToSend forCharacteristic:_configCharacteristic type:CBCharacteristicWriteWithResponse];
         
         if (command.ctrlFrame.ctrl.map.operation == 0) {
             //this is a get command
-            [self.peripheral readValueForCharacteristic:_configCharacteristic];
+            [mPeripheral readValueForCharacteristic:_configCharacteristic];
         }
     }
     return command;
@@ -1453,4 +1447,43 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     //[self sendControl:[W2STSDKCommandServices create:(BOOL) firmware:<#(BOOL)#>]];
     return nil;
 }
+////////////////// NEW SDK ///////////
+
+-(id)init:(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sNotificationQueue = dispatch_queue_create("W2STNode", DISPATCH_QUEUE_CONCURRENT);
+    });
+
+    mNodeStatusDelegates = [[NSMutableSet alloc]init];
+    mBleConnectionDelegates = [[NSMutableSet alloc]init];
+    
+    mPeripheral=peripheral;
+    _name = peripheral.name;
+    _tag = peripheral.identifier.UUIDString;
+    mAdvertiseParser = [[W2STSDKBleAdvertiseParser alloc]
+                        initWithAdvertise:advertisementData];
+    mFeatureMask = mAdvertiseParser.featureMap;
+    _type = mAdvertiseParser.nodeType;
+    NSLog(@"create Node: name: %@ type: %x feature: %d",_name,_type,mFeatureMask);
+    return self;
+}
+
+-(void) addBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate{
+    [mBleConnectionDelegates addObject:delegate];
+}
+-(void) removeBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate{
+    [mBleConnectionDelegates addObject:delegate];
+}
+
+-(void) updateRssi:(NSNumber *)rssi{
+    _RSSI=rssi;
+    _rssiLastUpdate = [NSDate date];
+    for (id<W2STSDKNodeBleConnectionParamDelegate> delegate in mBleConnectionDelegates) {
+        dispatch_async(sNotificationQueue,^{
+            [delegate node:self didChangeRssi:rssi.integerValue];
+        });
+    }//for
+}
+
 @end

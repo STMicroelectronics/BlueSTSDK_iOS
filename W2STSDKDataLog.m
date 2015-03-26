@@ -234,13 +234,13 @@
     W2STDBNode *db_node = nil;
     BOOL ret = NO;
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Node"];
-    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"(identifier = %@) && (session = %@)", [node UUIDGetString], _session]];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"(identifier = %@) && (session = %@)", node.tag, _session]];
     //[fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"time" ascending:NO]]];
     NSArray *res = [_context executeFetchRequest:fetchRequest error:NULL];
     assert(res.count <= 1);
     if (res.count == 0) {
         db_node = [NSEntityDescription insertNewObjectForEntityForName:@"Node" inManagedObjectContext:_context];
-        db_node.identifier = [node UUIDGetString];
+        db_node.identifier = node.tag;
         ret = YES;    }
     else {
         //update fields

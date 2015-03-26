@@ -6,6 +6,9 @@
 //  Copyright (c) 2014 STMicroelectronics. All rights reserved.
 //
 
+#ifndef W2STApp_W2STSDKNode_h
+#define W2STApp_W2STSDKNode_h
+
 #import "W2STSDKDefine.h"
 #import "W2STSDKCommand.h"
 
@@ -113,12 +116,7 @@ typedef NS_ENUM(NSUInteger, W2STSDKNodeBoardNameCode) {
     W2STSDKNodeBoardNameCodeLocal    = 0x100,
 };
 
-typedef NS_ENUM(NSInteger, W2STSDKNodeMode) {
-    W2STSDKNodeModeUndefined         = -1,
-    W2STSDKNodeModeDebug             = 0,
-    W2STSDKNodeModeHighPerformance   = 1,
-    W2STSDKNodeModeLowPower          = 2,
-};
+
 
 typedef NS_ENUM(NSInteger, W2STSDKNodeFrameGroup) {
     W2STSDKNodeFrameGroupUndefined    = 0,
@@ -128,8 +126,38 @@ typedef NS_ENUM(NSInteger, W2STSDKNodeFrameGroup) {
     W2STSDKNodeFrameGroupAll          = W2STSDKNodeFrameGroupMotion | W2STSDKNodeFrameGroupEnvironment | W2STSDKNodeFrameGroupAHRS,
 };
 
+/////////////////// new sdk//////////////////
+
+#import "W2STSDKManager.h"
+
+typedef NS_ENUM(NSInteger, W2STSDKNodeMode) {
+    W2STSDKNodeModeUSB_DFU,
+    W2STSDKNodeModeOTA_BLE_DFU,
+    W2STSDKNodeModeApplication
+};
+typedef NS_ENUM(NSInteger, W2STSDKNodeState) {
+    W2STSDKNodeStateInit          = 0,
+    W2STSDKNodeStateIdle          = 1,
+    W2STSDKNodeStateConnecting    = 2,
+    W2STSDKNodeStateConnected     = 3,
+    W2STSDKNodeStateDisconnecting = 4,
+    W2STSDKNodeStateLost          = 5,
+    W2STSDKNodeStateUnreachable   = 6,
+    W2STSDKNodeStateDead          = 7,
+};
+
+typedef NS_ENUM(NSInteger, W2STSDKNodeType) {
+    W2STSDKNodeTypeGeneric      = 0x00,
+    W2STSDKNodeTypeWeSU         = 0x01,
+    W2STSDKNodeTypeL1_Discovery = 0x02,
+    W2STSDKNodeTypeNucleo       = 0x80,
+};
+
+@protocol W2STSDKNodeBleConnectionParamDelegate;
+/////////// end new sdk/////////////////////////
+
 @protocol W2STSDKNodeDelegate;
-@class W2STSDKManager;
+
 @class W2STSDKCommand;
 @class W2STDBNode;
 
@@ -158,13 +186,13 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @discussion The current status of the node of the peripheral, initially set to <code>W2STSDKNodeStatusNew</code>. After the first connection the status change in <code>W2STSDKNodeStatusNormal</code>
  *
  */
-@property (assign, nonatomic) W2STSDKNodeStatus status;
+
 /*!
  *  @property peripheral
  *
  *  @discussion
  */
-@property (retain, nonatomic) CBPeripheral * peripheral;
+
 
 /*!
  *  @property peripheral
@@ -188,27 +216,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @discussion
  */
-@property (retain, readonly) NSString *name;
-@property (retain, readonly) NSString *tag;
-/*!
- *  @property localName
- *
- *  @discussion
- */
-@property (retain, readonly) NSString *peripheralName;
-/*!
- *  @property localName
- *
- *  @discussion
- */
-@property (retain, readonly) NSString *localName;
 
-/*!
- *  @property UUID
- *
- *  @discussion
- */
-@property (assign, readonly) NSUUID *identifier;
 
 /*** configuration properties ****/
 @property (retain, nonatomic) NSData * addressBLE; //48bits
@@ -227,14 +235,14 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @discussion
  */
-@property (retain, readonly) NSNumber *RSSI;
+
 
 /*!
  *  @property txPower
  *
  *  @discussion
  */
-@property (retain, readonly) NSNumber *txPower;
+
 
 /*!
  *  @property isConnectable
@@ -268,7 +276,6 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 /******** bMESH Date ********/
 @property (readonly) NSDate *leaveTime;
 @property (readonly) NSDate *scanLastDone;
-@property (readonly) NSDate *rssiLastUpdate;
 @property (readonly) NSDate *txPowerLastUpdate;
 
 /******** bMESH Properties ********/
@@ -359,7 +366,8 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  */
 -(id) init :(CBPeripheral *)peripheral manager:(W2STSDKManager *)manager local:(BOOL)local;
--(id) init :(CBPeripheral *)peripheral ;
+
+
 /*!
  *  @method initStatus:
  *
@@ -377,7 +385,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 
 -(BOOL)isSupportedBoard;
 -(NSString *)nameBoardGetString;
--(NSString *)UUIDGetString;
+
 
 - (BOOL) connectAndReading;
 - (BOOL) connect;
@@ -420,6 +428,19 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 //-(W2STSDKCommand *)bleSetLed:(BOOL)state;
 //-(W2STSDKCommand *)bleGetLed;
 
+////////////////////////////NEW SDK ///////////////////////////
+@property (assign, nonatomic) W2STSDKNodeStatus status;
+@property (assign, nonatomic) W2STSDKNodeType type;
+@property (readonly) NSDate *rssiLastUpdate;
+@property (retain, readonly) NSString *name;
+@property (retain, readonly) NSString *tag;
+@property (retain, readonly) NSNumber *RSSI;
+@property (retain, readonly) NSNumber *txPower;
+
+-(id) init :(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData;
+-(void) addBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate;
+-(void) removeBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate;
+-(void)updateRssi:(NSNumber*)rssi;
 @end
 
 //Protocols definition
@@ -432,4 +453,12 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 - (void)node:(W2STSDKNode *)node configurationDidChange:(NSString *)what;
 @end
 
+@protocol W2STSDKNodeBleConnectionParamDelegate <NSObject>
+@required
+- (void) node:(W2STSDKNode *)node didChangeRssi:(NSInteger)newRssi;
+- (void) node:(W2STSDKNode *)node didChangeTxPower:(NSInteger)newPower;
+
+@end
+
+#endif
 
