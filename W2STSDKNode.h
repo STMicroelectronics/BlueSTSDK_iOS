@@ -64,14 +64,14 @@ typedef NS_ENUM(NSInteger, W2STSDKNodeConfigCode) {
  *  @constant W2STSDKNodeStatusResumed Node is resumed
  *
  */
-typedef NS_ENUM(NSInteger, W2STSDKNodeStatus) {
-    W2STSDKNodeStatusError           = -1,
-    W2STSDKNodeStatusInit            = 0,
-    W2STSDKNodeStatusNormal          = 1,
-    W2STSDKNodeStatusNormalNoCheck   = 2,
-    W2STSDKNodeStatusDead            = 3,
-    W2STSDKNodeStatusResumed         = 4,
-    W2STSDKNodeStatusDeleted         = 5,
+typedef NS_ENUM(NSInteger, W2STSDKNodeStatusOld) {
+    W2STSDKNodeStatusOldError           = -1,
+    W2STSDKNodeStatusOldInit            = 0,
+    W2STSDKNodeStatusOldNormal          = 1,
+    W2STSDKNodeStatusOldNormalNoCheck   = 2,
+    W2STSDKNodeStatusOldDead            = 3,
+    W2STSDKNodeStatusOldResumed         = 4,
+    W2STSDKNodeStatusOldDeleted         = 5,
 };
 /*!
  *  @enum W2STSDKNodeConnectionStatus
@@ -154,9 +154,10 @@ typedef NS_ENUM(NSInteger, W2STSDKNodeType) {
 };
 
 @protocol W2STSDKNodeBleConnectionParamDelegate;
+@protocol W2STSDKNodeStateDelegate;
 /////////// end new sdk/////////////////////////
 
-@protocol W2STSDKNodeDelegate;
+@protocol W2STSDKNodeDelegateOld;
 
 @class W2STSDKCommand;
 @class W2STDBNode;
@@ -170,7 +171,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @discussion The delegate object that will receive node events.
  *
  */
-@property (nonatomic) id<W2STSDKNodeDelegate> delegate;
+@property (nonatomic) id<W2STSDKNodeDelegateOld> delegate;
 
 /*!
  *  @property dbNode
@@ -186,7 +187,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @discussion The current status of the node of the peripheral, initially set to <code>W2STSDKNodeStatusNew</code>. After the first connection the status change in <code>W2STSDKNodeStatusNormal</code>
  *
  */
-
+@property (readonly) W2STSDKNodeStatusOld status;
 /*!
  *  @property peripheral
  *
@@ -387,11 +388,8 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(NSString *)nameBoardGetString;
 
 
-- (BOOL) connectAndReading;
-- (BOOL) connect;
-- (BOOL) disconnect;
 - (BOOL) toggleConnect;
-- (BOOL) isConnected;
+
 - (BOOL) updateConnectionStatus;
 - (BOOL) isConnectable;
 
@@ -429,7 +427,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 //-(W2STSDKCommand *)bleGetLed;
 
 ////////////////////////////NEW SDK ///////////////////////////
-@property (assign, nonatomic) W2STSDKNodeStatus status;
+@property (assign, nonatomic) W2STSDKNodeState state;
 @property (assign, nonatomic) W2STSDKNodeType type;
 @property (readonly) NSDate *rssiLastUpdate;
 @property (retain, readonly) NSString *name;
@@ -440,16 +438,35 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(id) init :(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData;
 -(void) addBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate;
 -(void) removeBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate;
+-(void) addNodeStatusDelegate:(id<W2STSDKNodeStateDelegate>)delegate;
+-(void) removeNodeStatusDelegate:(id<W2STSDKNodeStateDelegate>)delegate;
+-(BOOL) equals:(W2STSDKNode *)node;
+-(void) readRssi;
+-(void) connect;
+-(BOOL) isConnected;
+-(void) disconnect;
+
 //////////////// start internal/package methods ///////////////////////
 -(void)updateRssi:(NSNumber*)rssi;
 -(void)updateTxPower:(NSNumber*)txPower;
+-(void)completeConnection;
+-(void)connectionError:(NSError*)error;
+-(void) updateNodeStatus:(W2STSDKNodeState)newState;
+
+
 //////////////// end internal/package methods ///////////////////////
 @end
 
 //Protocols definition
-@protocol W2STSDKNodeDelegate <NSObject>
+@protocol W2STSDKNodeStateDelegate <NSObject>
 @required
-- (void)node:(W2STSDKNode *)node statusDidChange:(W2STSDKNodeStatus)status;
+- (void) node:(W2STSDKNode *)node didChangeState:(W2STSDKNodeState)newState prevState:(W2STSDKNodeState)prevState;
+@end
+////////////////////////END NEW SDK/////////////////////////////////
+//Protocols definition
+@protocol W2STSDKNodeDelegateOld <NSObject>
+@required
+- (void)node:(W2STSDKNode *)node statusDidChange:(W2STSDKNodeStatusOld)status;
 - (void)node:(W2STSDKNode *)node connectionDidChange:(W2STSDKNodeConnectionStatus)connectionStatus;
 - (void)node:(W2STSDKNode *)node readingDidChange:(BOOL)readingStatus;
 - (void)node:(W2STSDKNode *)node dataDidUpdate:(NSString *)what param:(NSString *)param;

@@ -29,6 +29,11 @@
 -(W2STSDKNode *)nodeWithTag:(NSString *)tag;
 
 + (W2STSDKManager *)sharedInstance;
+
+/////////package function//////////////
+-(void)connect:(CBPeripheral*)peripheral;
+-(void)disconnect:(CBPeripheral*)peripheral;
+
 @end
 
 //protocol

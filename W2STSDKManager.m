@@ -14,7 +14,7 @@
 -(id)init;
 -(void)notifyNewNode:(W2STSDKNode*)node;
 -(void)changeDiscoveryStatus:(BOOL)newStatus;
-
+-(void)notifyConnectionError:(CBPeripheral*)peripheral error:(NSError*)error;
 @end
 
 @implementation W2STSDKManager{
@@ -60,8 +60,13 @@
     [mCBCentralManager scanForPeripheralsWithServices:nil options:options];
     [self changeDiscoveryStatus:true];
     if(timeoutMs>0){
-        //TODO STOP THE SCAN AFTER THE TIMEOUT
-    }
+        NSTimeInterval delay = 1.0f; //def value
+        if (timeoutMs >= 0 && timeoutMs <= 60000) { //max 60 sec
+            delay = (NSTimeInterval)((double)timeoutMs / 1000.0f);
+        }
+        
+        [self performSelector:@selector(discoveryStop) withObject:nil afterDelay:delay];
+    }//if
     
 }
 
@@ -125,7 +130,13 @@
     return nil;
 }
 
+-(void)connect:(CBPeripheral*)peripheral{
+    [mCBCentralManager connectPeripheral:peripheral options:nil];
+}
 
+-(void)disconnect:(CBPeripheral*)peripheral{
+    [mCBCentralManager cancelPeripheralConnection:peripheral];
+}
 
 /////////////////////// CBCentralManagerDelegate///////////////////////////////
 - (void)centralManager:(CBCentralManager *)central
@@ -153,8 +164,37 @@
     CBCentralManagerState state = [central state];
     if(state!=CBCentralManagerStatePoweredOn){
         [self changeDiscoveryStatus:false];
+    }else{
+        [self changeDiscoveryStatus:true];
     }
 }
 
+- (void)centralManager:(CBCentralManager *)central
+  didConnectPeripheral:(CBPeripheral *)peripheral{
+    NSString *tag = peripheral.identifier.UUIDString;
+    W2STSDKNode *node = [self nodeWithTag:tag];
+    if(node == nil) //we did not handle this periferal
+        return;
+    [node completeConnection];
+}
 
+-(void)notifyConnectionError:(CBPeripheral*)peripheral error:(NSError*)error{
+    NSString *tag = peripheral.identifier.UUIDString;
+    W2STSDKNode *node = [self nodeWithTag:tag];
+    if(node == nil) //we did not handle this periferal
+        return;
+    [node connectionError:error];
+}
+
+- (void)centralManager:(CBCentralManager *)central
+didFailToConnectPeripheral:(CBPeripheral *)peripheral
+                 error:(NSError *)error{
+    [self notifyConnectionError:peripheral error:error];
+}
+
+- (void)centralManager:(CBCentralManager *)central
+didDisconnectPeripheral:(CBPeripheral *)peripheral
+                 error:(NSError *)error{
+    [self notifyConnectionError:peripheral error:error];
+}
 @end

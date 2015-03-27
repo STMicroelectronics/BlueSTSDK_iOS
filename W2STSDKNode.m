@@ -185,7 +185,7 @@ static NSDictionary * group2map = nil;
     _params = [[NSMutableDictionary alloc] init];
     
     //node initialization
-    _status = W2STSDKNodeStatusInit;
+    _status = W2STSDKNodeStatusOldInit;
     _connectionStatus = W2STSDKNodeConnectionStatusUnknown;
     _local = local;
 
@@ -481,23 +481,23 @@ static NSDictionary * group2map = nil;
     }
     
     BOOL changed = NO;
-    W2STSDKNodeStatus nextStatus = _status;
-    if (_status != W2STSDKNodeStatusDead) {
+    W2STSDKNodeStatusOld nextStatus = _status;
+    if (_status != W2STSDKNodeStatusOldDead) {
         //if no check
-        nextStatus = W2STSDKNodeStatusNormalNoCheck;
+        nextStatus = W2STSDKNodeStatusOldNormalNoCheck;
         if (_leaveTime != nil) {
             //check enable
             //if connect then the node is always in normal state
             //else check if in dead state
-            nextStatus = W2STSDKNodeStatusNormal;
-            if (_status == W2STSDKNodeStatusNormal) {
+            nextStatus = W2STSDKNodeStatusOldNormal;
+            if (_status == W2STSDKNodeStatusOldNormal) {
                 if (![self isConnected]) {
                     NSDate *now = [NSDate date];
                     NSDate *lst = _leaveTime;
                     NSTimeInterval t_sec = [now timeIntervalSinceDate:lst];
                     if (t_sec > DEAD_TIME) {
                         NSLog(@"Dead node: %@ %0.2f %@", _name, t_sec, lst);
-                        nextStatus = W2STSDKNodeStatusDead;
+                        nextStatus = W2STSDKNodeStatusOldDead;
                     }
                 }
             }
@@ -512,7 +512,7 @@ static NSDictionary * group2map = nil;
         
         if (t_sec < DEAD_TIME) {
             NSLog(@"Resumed node: %@ %0.2f %@", _name, t_sec, lst);
-            nextStatus = W2STSDKNodeStatusResumed;
+            nextStatus = W2STSDKNodeStatusOldResumed;
         }
     }
     changed = nextStatus != _status;
@@ -651,16 +651,20 @@ static NSDictionary * group2map = nil;
 
     return ret;
 }
+/*
 - (BOOL)connectAndReading {
     _connectAndReading = YES;
     return [self _connect:YES];
+ 
 }
+
 - (BOOL)connect {
     return [self _connect:YES];
 }
 - (BOOL)disconnect {
     return [self _connect:NO];
 }
+ 
 - (BOOL)toggleConnect {
     return [self _connect:!self.isConnected];
 }
@@ -668,6 +672,7 @@ static NSDictionary * group2map = nil;
     //[self updateConnectionStatus];
     return _connectionStatus == W2STSDKNodeConnectionStatusConnected ? YES : NO;
 }
+ */
 
 /*
  * Called when a connect/disconnect event occurs in a peripheral
@@ -930,7 +935,7 @@ double my_drand(double min, double max) {
 NSArray *charDataUUIDs = nil;
 NSArray *charServUUIDs = nil;
 NSArray *charUUIDs = nil;
-
+/*
 -  (void)peripheral:(CBPeripheral *)peripheral
 didDiscoverServices:(NSError *)error {
     if (!charDataUUIDs) {
@@ -957,10 +962,10 @@ didDiscoverServices:(NSError *)error {
         //}
     }
 }
-
+*/
 
 //for each services find the known characteristics
-- (void)peripheral:(CBPeripheral *)peripheral
+/*- (void)peripheral:(CBPeripheral *)peripheral
 didDiscoverCharacteristicsForService:(CBService *)service
              error:(NSError *)error {
     
@@ -1000,7 +1005,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
     }
     
 }
-
+*/
 #pragma mark - String Conversion
 - (NSString *)hexadecimalString:(NSData *)data {
     /* Returns hexadecimal string of NSData. Empty string if data is empty.   */
@@ -1456,6 +1461,8 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     mBleConnectionDelegates = [[NSMutableSet alloc]init];
     
     mPeripheral=peripheral;
+    mPeripheral.delegate=self;
+    _state=W2STSDKNodeStateIdle;
     _name = peripheral.name;
     _tag = peripheral.identifier.UUIDString;
     W2STSDKBleAdvertiseParser *parser = [[W2STSDKBleAdvertiseParser alloc]
@@ -1475,6 +1482,13 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     [mBleConnectionDelegates addObject:delegate];
 }
 
+-(void) addNodeStatusDelegate:(id<W2STSDKNodeStateDelegate>)delegate{
+    [mNodeStatusDelegates addObject:delegate];
+}
+-(void) removeNodeStatusDelegate:(id<W2STSDKNodeStateDelegate>)delegate{
+    [mNodeStatusDelegates addObject:delegate];
+}
+
 -(void) updateRssi:(NSNumber *)rssi{
     _RSSI=rssi;
     _rssiLastUpdate = [NSDate date];
@@ -1492,6 +1506,114 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
             [delegate node:self didChangeTxPower:txPower.integerValue];
         });
     }//for
+}
+
+- (BOOL) equals:(W2STSDKNode *)node{
+    return [_tag isEqualToString:node.tag];
+}
+
+-(void)readRssi{
+    [mPeripheral readRSSI];
+}
+
+-(void) updateNodeStatus:(W2STSDKNodeState)newState{
+    W2STSDKNodeState oldState = _state;
+    _state = newState;
+    for (id<W2STSDKNodeStateDelegate> delegate in mNodeStatusDelegates) {
+        dispatch_async(sNotificationQueue,^{
+            [delegate node:self didChangeState:newState prevState:oldState];
+        });
+    }//for
+}
+
+-(void)connect{
+    [self updateNodeStatus:W2STSDKNodeStateConnecting];
+    [[W2STSDKManager sharedInstance]connect:mPeripheral];
+}
+
+- (BOOL) isConnected{
+    return self.state==W2STSDKNodeStateConnected;
+}
+
+-(void) disconnect{
+    [self updateNodeStatus:W2STSDKNodeStateDisconnecting];
+    [[W2STSDKManager sharedInstance]disconnect:mPeripheral];
+    [self updateNodeStatus:W2STSDKNodeStateIdle];
+}
+
+-(void)completeConnection{
+    if(mPeripheral.state !=	CBPeripheralStateConnected){
+        [self updateNodeStatus:W2STSDKNodeStateUnreachable];
+        return;
+    }
+    //else
+    [mPeripheral discoverServices:nil];
+}
+
+-(void)connectionError:(NSError*)error{
+    NSLog(@"Error Node:%@ %@ (%d)",self.name,error.description,error.code);
+   [self updateNodeStatus:W2STSDKNodeStateDead];
+}
+
+
+// CBPeriperalDelegate
+- (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral
+                          error:(NSError *)error{
+    if(error!=nil){
+        [self updateRssi:peripheral.RSSI];
+    }else
+        //TODO CHANGE THE NODE STATUS?
+        NSLog(@"Error Updating Rssi: %@ (%d)",error.description,error.code);
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral
+didDiscoverServices:(NSError *)error{
+    for (CBService *service in peripheral.services) {
+        [peripheral discoverCharacteristics:nil forService:service];
+    }
+}
+
+
+//for each services find the known characteristics
+- (void)peripheral:(CBPeripheral *)peripheral
+didDiscoverCharacteristicsForService:(CBService *)service
+             error:(NSError *)error {
+    
+    if (error && [error code] != 0) {
+        NSLog(@"Error %@\n", error);
+        return ;
+    }
+    
+    
+    // NSLog(@"- %@", service);
+    for (CBCharacteristic *c in service.characteristics) {
+        if ([charDataUUIDs containsObject:[c UUID]]) {
+            [_notifiedCharacteristics addObject:c];
+            //[_peripheral setNotifyValue:YES forCharacteristic:c]; //unselect to auto start reading
+            //NSLog(@"Discovered characteristic %@", c);
+        }
+        else if ([[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKConfCharacteristicUUIDString]]) {
+            _configCharacteristic = c;
+        }
+        else if ([[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKBatteryCharacteristicUUIDString]]) {
+            _batteryCharacteristic = c;
+        }
+        else {
+            //unknown char
+            NSLog(@"Unknown char:%@", [c UUID]);
+        }
+    }
+    
+    if (_connectAndReading) {
+        [self reading:YES];
+        _connectAndReading = NO;
+    }
+    
+    //if reading try to start the reading for new characteristics
+    if (_notifiedReading) {
+        [self readingSync];
+    }
+    
 }
 
 
