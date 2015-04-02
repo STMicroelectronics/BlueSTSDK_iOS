@@ -97,7 +97,7 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 @property (readonly, retain, nonatomic) W2STSDKNode * node;
 @property (readonly, assign, nonatomic) W2STSDKNodeFeature map;
 
-@property (retain, nonatomic) NSString *name;
+
 @property (retain, nonatomic) NSString *shortName;
 @property (retain, nonatomic) NSString *format;
 @property (retain, nonatomic) NSString *unit;
@@ -138,10 +138,11 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 
 ////////////////////////NEW SDK/////////////////////////////////////////////////
 @property(readonly) bool enabled;
+@property (retain, nonatomic) NSString *name;
 
 -(id) initWhitNode: (W2STSDKNode*)node;
 
-///////package methdo////////////
+///////package method////////////
 -(void) setEnabled:(bool)enabled;
 
 /////////////////////////END NEW SDK////////////////////////////////////////////

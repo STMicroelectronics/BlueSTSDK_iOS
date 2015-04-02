@@ -7,11 +7,10 @@
 //
 
 /////////////new sdk///////////////////
-@import ObjectiveC;
-@import CoreFoundation;
 
 #import "W2STSDKNode.h"
 #import "W2STSDKFeature.h"
+#import "Util/W2STSDKCharacteristic.h"
 #import "Util/W2STSDKBleAdvertiseParser.h"
 #import "Util/W2STSDKBleNodeDefines.h"
 
@@ -32,7 +31,7 @@ static dispatch_queue_t sNotificationQueue;
     NSMutableSet *mNodeStatusDelegates;
     
     NSMutableDictionary *mMaskToFeature;
-    CFMutableDictionaryRef mCharFeatureMap;
+    NSMutableArray *mCharFeatureMap;
     NSMutableArray *mAvailableFeature;
     
     BOOL _notifiedReading;
@@ -1497,7 +1496,7 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 
     mNodeStatusDelegates = [[NSMutableSet alloc]init];
     mBleConnectionDelegates = [[NSMutableSet alloc]init];
-    mCharFeatureMap = CFDictionaryCreateMutable(NULL, 0, 0, 0);
+    mCharFeatureMap = [[NSMutableArray alloc]init];
     
     mPeripheral=peripheral;
     mPeripheral.delegate=self;
@@ -1612,6 +1611,8 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 
 - (void)peripheral:(CBPeripheral *)peripheral
 didDiscoverServices:(NSError *)error{
+    if([self isConnected]) //we already run this method one time
+        return;
     for (CBService *service in peripheral.services) {
         NSLog(@"Discover sService: %@",service.UUID.UUIDString);
         [peripheral discoverCharacteristics:nil forService:service];
@@ -1623,6 +1624,8 @@ didDiscoverServices:(NSError *)error{
 - (void)peripheral:(CBPeripheral *)peripheral
 didDiscoverCharacteristicsForService:(CBService *)service
              error:(NSError *)error {
+    if([self isConnected]) //we already run this method one time
+        return;
     
     if (error && [error code] != 0) {
         NSLog(@"Error %@\n", error);
@@ -1648,9 +1651,9 @@ didDiscoverCharacteristicsForService:(CBService *)service
                     }//if
                 }//for
                 if(charFeature.count != 0){
-                    //TODO create an object for merge the characteristics and the feature?
-                    CFDictionaryAddValue(mCharFeatureMap,(__bridge const void*) c ,
-                                         (__bridge const void*)charFeature);
+                    W2STSDKCharacteristic* temp = [[W2STSDKCharacteristic alloc]
+                                                   initWithChar:c features:charFeature];
+                    [mCharFeatureMap addObject: temp];
                 }//if
             }//if featureChar
         }//for char
@@ -1659,8 +1662,8 @@ didDiscoverCharacteristicsForService:(CBService *)service
     
     //debug
     NSLog(@"Know Char:");
-    for (CBCharacteristic *temp in [(__bridge NSDictionary*)mCharFeatureMap allKeys]) {
-        NSLog(@"Add Char %@",temp.UUID.UUIDString);
+    for (W2STSDKCharacteristic *temp in mCharFeatureMap) {
+        NSLog(@"Add Char %@",temp.characteristic.UUID.UUIDString);
     }
     /*
     // NSLog(@"- %@", service);

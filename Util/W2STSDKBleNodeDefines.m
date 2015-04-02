@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "../W2STSDKFeature.h"
+#import "../Features/W2STSDKFeatureAcceleration.h"
+#import "../Features/W2STSDKFeatureGyroscope.h"
+#import "../Features/W2STSTSDKFeatureMagnetometer.h"
+
 #import "W2STSDKBleNodeDefines.h"
 
 #define COMMON_FEATURE_UUID @"-0001-11E1-AC36-0002A5D5C51B"
@@ -95,16 +98,24 @@
 
 @implementation W2STSDKBoardFeatureMap
 static NSDictionary *nucleoFeatureMap = nil;
+static NSDictionary *wesuFeatureMap = nil;
 static NSDictionary *boardFeatureMap = nil;
 +(void)initialize{
     if(self == [W2STSDKBoardFeatureMap class]){
     nucleoFeatureMap = @{
-                         @0x00200000: [W2STSDKFeature class], //gyo
-                         @0x00400000: [W2STSDKFeature class], //gyo
-                         @0x00800000: [W2STSDKFeature class] //acc
+                         @0x00200000: [W2STSTSDKFeatureMagnetometer class], //mag
+                         @0x00400000: [W2STSDKFeatureGyroscope class], //gyo
+                         @0x00800000: [W2STSDKFeatureAcceleration class] //acc
                          };
-    
+
+    wesuFeatureMap = @{
+                       @0x00200000: [W2STSTSDKFeatureMagnetometer class], //mag
+                       @0x00400000: [W2STSDKFeatureGyroscope class], //gyo
+                       @0x00800000: [W2STSDKFeatureAcceleration class] //acc
+                       };
+        
     boardFeatureMap = @{
+                        @0x01:wesuFeatureMap,
                         @0x80:nucleoFeatureMap
                         };
     }
