@@ -7,12 +7,18 @@
 //
 
 /////////////new sdk///////////////////
+@import ObjectiveC;
+@import CoreFoundation;
+
 #import "W2STSDKNode.h"
+#import "W2STSDKFeature.h"
 #import "Util/W2STSDKBleAdvertiseParser.h"
+#import "Util/W2STSDKBleNodeDefines.h"
 
 @interface W2STSDKNode()
+-(void)buildAvailableFeatures:(featureMask_t)mask maskFeatureMap:(NSDictionary*)maskFeatureMap;
 
-
+-(W2STSDKFeature*) buildFeatureFromClass:(Class)featureClass;
 @end
 
 //private static variable
@@ -22,9 +28,12 @@ static dispatch_queue_t sNotificationQueue;
     //NSMutableArray *_notifiedCharacteristics;
     //CBCharacteristic *_controlCharacteristic;
     CBPeripheral *mPeripheral;
-    uint32_t mFeatureMask;
     NSMutableSet *mBleConnectionDelegates;
     NSMutableSet *mNodeStatusDelegates;
+    
+    NSMutableDictionary *mMaskToFeature;
+    CFMutableDictionaryRef mCharFeatureMap;
+    NSMutableArray *mAvailableFeature;
     
     BOOL _notifiedReading;
     BOOL _connectAndReading;
@@ -1451,6 +1460,35 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 }
 ////////////////// NEW SDK ///////////
 
+-(W2STSDKFeature*) buildFeatureFromClass:(Class)featureClass{
+    return [((W2STSDKFeature*)[featureClass alloc]) initWhitNode:self];
+
+}
+
+-(void)buildAvailableFeatures:(featureMask_t)mask maskFeatureMap:(NSDictionary*)maskFeatureMap{
+    uint32_t nBit = 8*sizeof(featureMask_t);
+    mAvailableFeature = [[NSMutableArray alloc] initWithCapacity:nBit];
+    mMaskToFeature = [[NSMutableDictionary alloc] initWithCapacity:nBit];
+    if(maskFeatureMap==nil)
+        return;
+    for (uint32_t i=0; i<nBit; i++) {
+        featureMask_t test = 1<<i;
+        if((mask & test)!=0){
+            NSNumber *temp =[NSNumber numberWithUnsignedInt:test];
+            Class featureClass = [maskFeatureMap objectForKey: temp];
+            if(featureClass!=nil){
+                W2STSDKFeature *f = [self buildFeatureFromClass:featureClass];
+                if(f!=nil){
+                    [mAvailableFeature addObject:f];
+                    [mMaskToFeature setObject:f forKey:temp];
+                }else{
+                    NSLog(@"Impossible build the feature @%",[featureClass description]);
+                }//if f
+            }// if featureClass
+        }//if mask
+    }//for
+}
+
 -(id)init:(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -1459,6 +1497,7 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 
     mNodeStatusDelegates = [[NSMutableSet alloc]init];
     mBleConnectionDelegates = [[NSMutableSet alloc]init];
+    mCharFeatureMap = CFDictionaryCreateMutable(NULL, 0, 0, 0);
     
     mPeripheral=peripheral;
     mPeripheral.delegate=self;
@@ -1467,11 +1506,11 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     _tag = peripheral.identifier.UUIDString;
     W2STSDKBleAdvertiseParser *parser = [[W2STSDKBleAdvertiseParser alloc]
                         initWithAdvertise:advertisementData];
-    mFeatureMask = parser.featureMap;
+    [self buildAvailableFeatures: parser.featureMap maskFeatureMap:parser.featureMaskMap];
     _type = parser.nodeType;
     [self updateRssi:rssi];
     [self updateTxPower: parser.txPower];
-    NSLog(@"create Node: name: %@ type: %x feature: %d",_name,_type,mFeatureMask);
+    NSLog(@"create Node: name: %@ type: %x feature: %d",_name,_type,parser.featureMap);
     return self;
 }
 
@@ -1526,6 +1565,11 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     }//for
 }
 
+-(NSArray*) getFeatures{
+    return mAvailableFeature;
+
+}
+
 -(void)connect{
     [self updateNodeStatus:W2STSDKNodeStateConnecting];
     [[W2STSDKManager sharedInstance]connect:mPeripheral];
@@ -1569,6 +1613,7 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 - (void)peripheral:(CBPeripheral *)peripheral
 didDiscoverServices:(NSError *)error{
     for (CBService *service in peripheral.services) {
+        NSLog(@"Discover sService: %@",service.UUID.UUIDString);
         [peripheral discoverCharacteristics:nil forService:service];
     }
 }
@@ -1584,7 +1629,40 @@ didDiscoverCharacteristicsForService:(CBService *)service
         return ;
     }
     
+    if( [[service UUID] isEqual:[W2STSDKServiceDebug serviceUuid]]  ){
+        //build the debug service
+        NSLog(@"Debug Service Discoverd");
+    }else if( [[service UUID] isEqual:[W2STSDKServiceConfig serviceUuid]]  ){
+        NSLog(@"Debug Config Discoverd");
+    }else{
+        for (CBCharacteristic *c in service.characteristics) {
+            if ([W2STSDKFeatureCharacteristics isFeatureCharacteristics: c.UUID]){
+                featureMask_t featureMask = [W2STSDKFeatureCharacteristics extractFeatureMask:c.UUID];
+                NSMutableArray *charFeature = [[NSMutableArray alloc] initWithCapacity:1];
+                for(NSNumber *mask in mMaskToFeature.allKeys ){
+                    featureMask_t temp = mask.unsignedIntegerValue;
+                    if((temp & featureMask)!=0){
+                        W2STSDKFeature *f = [mMaskToFeature objectForKey:mask];
+                        [f setEnabled:true];
+                        [charFeature addObject:f];
+                    }//if
+                }//for
+                if(charFeature.count != 0){
+                    //TODO create an object for merge the characteristics and the feature?
+                    CFDictionaryAddValue(mCharFeatureMap,(__bridge const void*) c ,
+                                         (__bridge const void*)charFeature);
+                }//if
+            }//if featureChar
+        }//for char
+    }//if else
+    [self updateNodeStatus:W2STSDKNodeStateConnected];
     
+    //debug
+    NSLog(@"Know Char:");
+    for (CBCharacteristic *temp in [(__bridge NSDictionary*)mCharFeatureMap allKeys]) {
+        NSLog(@"Add Char %@",temp.UUID.UUIDString);
+    }
+    /*
     // NSLog(@"- %@", service);
     for (CBCharacteristic *c in service.characteristics) {
         if ([charDataUUIDs containsObject:[c UUID]]) {
@@ -1608,12 +1686,12 @@ didDiscoverCharacteristicsForService:(CBService *)service
         [self reading:YES];
         _connectAndReading = NO;
     }
-    
+
     //if reading try to start the reading for new characteristics
     if (_notifiedReading) {
         [self readingSync];
     }
-    
+*/
 }
 
 

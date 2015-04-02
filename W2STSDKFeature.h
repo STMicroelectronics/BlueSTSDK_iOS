@@ -136,7 +136,15 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 +(NSObject *)fieldByKey:(NSString *)key field:(NSString *)field;
 +(NSDictionary *)configByKey:(NSString *)key;
 
+////////////////////////NEW SDK/////////////////////////////////////////////////
+@property(readonly) bool enabled;
 
+-(id) initWhitNode: (W2STSDKNode*)node;
+
+///////package methdo////////////
+-(void) setEnabled:(bool)enabled;
+
+/////////////////////////END NEW SDK////////////////////////////////////////////
 @end
 
 //Protocols definition

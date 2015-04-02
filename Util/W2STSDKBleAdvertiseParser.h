@@ -9,7 +9,8 @@
 #ifndef W2STApp_BleAdvertiseParser_h
 #define W2STApp_BleAdvertiseParser_h
 
-#import "../W2STSDKNode.h"
+#include "W2STSDKBleNodeDefines.h"
+#include "../W2STSDKNode.h"
 
 typedef NS_ENUM(NSInteger, W2STSDKBLeAdvertiseAddressType) {
     W2STSDKBLeAdvertiseAddressType_PUBLIC,
@@ -24,12 +25,12 @@ typedef NS_ENUM(NSInteger, W2STSDKBLeAdvertiseAddressType) {
 
 @property (readonly) NSString *name;
 @property (readonly) unsigned char deviceId;
-@property (readonly) unsigned int featureMap;
+@property (readonly) featureMask_t featureMap;
 @property (readonly) NSNumber* txPower;
 @property (readonly) W2STSDKNodeType nodeType;
 
 -(id)initWithAdvertise:(NSDictionary*)advertisementData;
-
+-(NSDictionary*) featureMaskMap;
 
 
 @end

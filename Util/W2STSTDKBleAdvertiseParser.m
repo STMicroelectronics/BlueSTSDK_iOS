@@ -10,14 +10,16 @@
 #import <CoreBluetooth/CBAdvertisementData.h>
 #import "W2STSDKBleAdvertiseParser.h"
 
+
 @interface W2STSDKBleAdvertiseParser()
+
 -(W2STSDKNodeType) getNodeType:(unsigned char) type;
 
 @end
 
 @implementation W2STSDKBleAdvertiseParser
 
--(W2STSDKNodeType) getNodeType:(unsigned char) type; {
+-(W2STSDKNodeType) getNodeType:(unsigned char) type {
     if (type==0x00)
         return W2STSDKNodeTypeGeneric;
     if (type == 0x01)
@@ -45,8 +47,13 @@
     //else
     _deviceId = *((unsigned char*)rawData.bytes);
     _nodeType = [self getNodeType: _deviceId];
-    [rawData getBytes:&_featureMap length:4];
+    [rawData getBytes:&_featureMap length:sizeof(featureMask_t)];
     return self;
+}
+
+-(NSDictionary*) featureMaskMap{
+    id temp = [NSNumber numberWithUnsignedChar: _deviceId];
+    return [[W2STSDKBoardFeatureMap boardFeatureMap] objectForKey:temp];
 }
 
 @end

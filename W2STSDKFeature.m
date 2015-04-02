@@ -264,4 +264,19 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     assert(ret != nil);
     return ret;
 }
+
+
+///////////////////////////NEW SDK/////////////////////////////////////////////
+
+-(id) initWhitNode: (W2STSDKNode*)node{
+    _enabled=false;
+    return self;
+}
+
+-(void) setEnabled:(bool)enabled{
+    _enabled=enabled;
+}
+
+//////////////////////// END NEW SDK///////////////////////////////////////////
+
 @end

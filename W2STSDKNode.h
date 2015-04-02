@@ -441,6 +441,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(void) addNodeStatusDelegate:(id<W2STSDKNodeStateDelegate>)delegate;
 -(void) removeNodeStatusDelegate:(id<W2STSDKNodeStateDelegate>)delegate;
 -(BOOL) equals:(W2STSDKNode *)node;
+-(NSArray*) getFeatures;
 -(void) readRssi;
 -(void) connect;
 -(BOOL) isConnected;
