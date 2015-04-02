@@ -5,8 +5,10 @@
 //  Created by Antonino Raucea on 30/04/14.
 //  Copyright (c) 2014 STMicroelectronics. All rights reserved.
 //
+#ifndef W2STApp_W2STSDKFeature_h
+#define W2STApp_W2STSDKFeature_h
+#include "W2STSDKDefine.h"
 
-#import "W2STSDKDefine.h"
 
 #define W2STSDK_NODE_BRD_FEA_HW 0x000 // 0xxx -.-
 #define W2STSDK_NODE_BRD_FEA_SW 0x800 // 1xxx -.-
@@ -80,9 +82,14 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupHWUtilityKey;
 W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupSWUtilityKey;
 W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 
-@protocol W2STSDKFeatureDelegate;
-@class W2STSDKNode;
+@protocol W2STSDKFeatureDelegateOld;
+
 @class W2STSDKParam;
+
+///////////////////////////////NEW SDK//////////////////////////////////////
+@class W2STSDKNode;
+
+//////////////////////////////OLD SDK///////////////////////////////////////
 
 @interface W2STSDKFeature : NSObject
 
@@ -92,9 +99,8 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
  *  @discussion The delegate object that will receive node events.
  *
  */
-@property (nonatomic) id<W2STSDKFeatureDelegate> delegate;
+@property (nonatomic) id<W2STSDKFeatureDelegateOld> delegate;
 @property (readonly, retain, nonatomic) NSString * key;
-@property (readonly, retain, nonatomic) W2STSDKNode * node;
 @property (readonly, assign, nonatomic) W2STSDKNodeFeature map;
 
 
@@ -103,7 +109,7 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 @property (retain, nonatomic) NSString *unit;
 @property (assign, nonatomic) W2STSDKParamType type;
 @property (assign, nonatomic) NSUInteger size;
-@property (readonly, assign, nonatomic) NSInteger time;
+
 
 @property (assign, nonatomic) float min;
 @property (assign, nonatomic) float max;
@@ -139,17 +145,38 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 ////////////////////////NEW SDK/////////////////////////////////////////////////
 @property(readonly) bool enabled;
 @property (retain, nonatomic) NSString *name;
+@property (readonly,retain,nonatomic) W2STSDKNode *parentNode;
+@property (readonly) uint32_t timeStamp;
+@property (readonly) NSDate* lastUpdate;
+
 
 -(id) initWhitNode: (W2STSDKNode*)node;
 
+
 ///////package method////////////
 -(void) setEnabled:(bool)enabled;
-
+-(NSArray*) getFieldData;
+-(NSArray*) getFieldDesc;
+-(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 /////////////////////////END NEW SDK////////////////////////////////////////////
 @end
 
+/////////////////////////// NEW SDK ///////////////////////////////////////////
 //Protocols definition
 @protocol W2STSDKFeatureDelegate <NSObject>
 @required
+- (void)didUpdateFeature:(W2STSDKFeature *)feature;
+@end
+@protocol W2STSDKFeatureLogDelegate <NSObject>
+@required
+- (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw data:(NSArray*)data;
+@end
+
+//Protocols definition
+@protocol W2STSDKFeatureDelegateOld <NSObject>
+@required
 - (void)feature:(W2STSDKFeature *)feature paramsDidUpdate:(W2STSDKParam *)param; //nil for all
 @end
+
+#endif
+

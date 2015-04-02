@@ -1130,73 +1130,6 @@ unsigned int convertData(const void * buffer, const int bufferSize, int * ppos, 
     return array;
 }
 
-- (void)peripheral:(CBPeripheral *)peripheral
-didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
-             error:(NSError *)error {
-    NSString *group = @""; //key of the group received
-
-    //check if the peripheral is correct
-    if (peripheral != mPeripheral) {
-        NSLog(@"Wrong peripheral\n");
-        return ;
-    }
-    
-    //get the received uuid characteristic
-    NSString * uuid = [[[NSUUID alloc] initWithUUIDBytes:[characteristic.UUID.data bytes]] UUIDString];
-
-    //check if an error is notified
-    if (error != nil && [error code] != 0) {
-        NSLog(@"UUID: %@ Error: %@\n", uuid, error);
-        return ;
-    }
-    
-    //get data from characteristic
-    NSData *data = characteristic.value;
-#if 0
-    //Show received frame
-    NSString *hexAllString = [self hexadecimalString:characteristic.value];
-    NSLog(@"UUID: %@ Data: %@", uuid, hexAllString);
-#endif
-    /*
-     frame structures
-     raw env  [ timestamp (2 bytes) | pressure  (4 bytes) | temperature (2 bytes) | humidity   (2 bytes) ] // max 10 bytes
-     raw mems [ timestamp (2 bytes) | acc x,y,z (6 bytes) | gyro x,y,z  (6 bytes) | magn x,y,z (6 bytes) ] // max 20 bytes
-     ahrs     [ timestamp (2 bytes) | q0        (4 bytes) | q1          (4 bytes) | q2         (4 bytes) | q3         (4 bytes) ] // max 18 bytes
-     ctrl     [ ctrl      (1 byte ) | addr      (1 byte ) | err         (1 byte ) | len        (1 byte ) | payload    (N bytes) ] // framelen = 4 + N, N = len * 2
-    */
-    
-    uint16_t time = 0;
-    [data getBytes:&time length:2];
-    
-    CBUUID *cbuuid = [characteristic UUID];
-    if ([charDataUUIDs containsObject:cbuuid]) {
-        //data
-        group = [W2STSDKNode uuid2groupSafe:uuid];
-        if(![group isEqualToString:@""] ) {
-            [self updateValueWithData:data group:group];
-            W2STSDKNodeFrameGroup framegroup = [W2STSDKNode group2mapSafe:group];
-            //[_manager.dataLog addSampleWithGroup:framegroup data:data node:self save:NO];
-            
-            //[_manager.dataLog addSampleWithGroup:framegroup node:self time:time save:NO];
-            if (framegroup == W2STSDKNodeFrameGroupEnvironment && _readingBatteryRequired && _batteryCharacteristic && mPeripheral && self.isConnected) {
-                NSLog(@"Reading Battery Timer node (%d) %@", nodeCount, self.name);
-                [mPeripheral readValueForCharacteristic:_batteryCharacteristic];
-                _readingBatteryRequired = NO;
-            }
-        }
-    }
-    else if ([cbuuid isEqual:[CBUUID UUIDWithString:W2STSDKConfCharacteristicUUIDString]]) {
-        [self updateConfigWithData:data];
-    }
-    else if ([cbuuid isEqual:[CBUUID UUIDWithString:W2STSDKBatteryCharacteristicUUIDString]]) {
-        [self updateBatteryWithData:data];
-    }
-    else {
-        //unknown char
-        NSLog(@"Unknown char on reading:%@", cbuuid);
-    }
-
-}
 
 - (void)updateBatteryWithData:(NSData *)data {
     const unsigned char *dataBuffer = (const unsigned char *)[data bytes];
@@ -1517,14 +1450,14 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     [mBleConnectionDelegates addObject:delegate];
 }
 -(void) removeBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate{
-    [mBleConnectionDelegates addObject:delegate];
+    [mBleConnectionDelegates removeObject:delegate];
 }
 
 -(void) addNodeStatusDelegate:(id<W2STSDKNodeStateDelegate>)delegate{
     [mNodeStatusDelegates addObject:delegate];
 }
 -(void) removeNodeStatusDelegate:(id<W2STSDKNodeStateDelegate>)delegate{
-    [mNodeStatusDelegates addObject:delegate];
+    [mNodeStatusDelegates removeObject:delegate];
 }
 
 -(void) updateRssi:(NSNumber *)rssi{
@@ -1665,36 +1598,32 @@ didDiscoverCharacteristicsForService:(CBService *)service
     for (W2STSDKCharacteristic *temp in mCharFeatureMap) {
         NSLog(@"Add Char %@",temp.characteristic.UUID.UUIDString);
     }
-    /*
-    // NSLog(@"- %@", service);
-    for (CBCharacteristic *c in service.characteristics) {
-        if ([charDataUUIDs containsObject:[c UUID]]) {
-            [_notifiedCharacteristics addObject:c];
-            //[_peripheral setNotifyValue:YES forCharacteristic:c]; //unselect to auto start reading
-            //NSLog(@"Discovered characteristic %@", c);
-        }
-        else if ([[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKConfCharacteristicUUIDString]]) {
-            _configCharacteristic = c;
-        }
-        else if ([[c UUID] isEqual:[CBUUID UUIDWithString:W2STSDKBatteryCharacteristicUUIDString]]) {
-            _batteryCharacteristic = c;
-        }
-        else {
-            //unknown char
-            NSLog(@"Unknown char:%@", [c UUID]);
-        }
-    }
+}
+
+-(void)characteristicUpdate:(CBCharacteristic*)characteristics{
     
-    if (_connectAndReading) {
-        [self reading:YES];
-        _connectAndReading = NO;
+    NSData *newData = characteristics.value;
+    NSArray *features = [W2STSDKCharacteristic getFeaturesFromChar:characteristics
+                                                                in:mCharFeatureMap];
+    uint32_t timestamp;
+    uint32_t offset=2;
+    for(W2STSDKFeature *f in features){
+        offset += [f update:timestamp data:newData dataOffset:offset];
     }
 
-    //if reading try to start the reading for new characteristics
-    if (_notifiedReading) {
-        [self readingSync];
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral
+didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
+             error:(NSError *)error {
+    
+    //check if an error is notified
+    if (error != nil && [error code] != 0) {
+        NSLog(@"UUID: %@ Error: %@\n", characteristic.UUID.UUIDString, error);
+        return ;
     }
-*/
+    
+    [self characteristicUpdate:characteristic];
 }
 
 

@@ -8,7 +8,17 @@
 
 #import "W2STSDKFeature.h"
 
-@implementation W2STSDKFeature
+@interface W2STSDKFeature()
+
+@end
+
+@implementation W2STSDKFeature{
+    NSMutableSet *mFeatureDelegates;
+    NSMutableSet *mFeatureLogDelegates;
+
+}
+
+
 
 static NSDictionary * W2STSDKNodeFeatureGroupKeys = nil;
 static NSDictionary * W2STSDKNodeFeatureConfig = nil;
@@ -111,7 +121,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 }
 - (id)init {
     self = [super init];
-    _node = nil;
+    _parentNode = nil;
     _key = W2STSDKNodeFeatureInvalidKey;
     
     [self initializeFromKey];
@@ -124,7 +134,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     
     self = [super init];
     
-    _node = node;
+    _parentNode = node;
     _key = key;
     [self initializeFromKey];
     
@@ -189,7 +199,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 -(NSUInteger)updateData:(NSData *)data position:(NSUInteger)pos time:(NSUInteger)time {
     NSUInteger s = 0;
     
-    _time = time;
+    _timeStamp = time;
     for(W2STSDKParam *prm in _params)
     {
         s += [prm updateData:data position:(pos+s) time:time];
@@ -269,12 +279,41 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 ///////////////////////////NEW SDK/////////////////////////////////////////////
 
 -(id) initWhitNode: (W2STSDKNode*)node{
+    mFeatureDelegates = [[NSMutableSet alloc] init];
+    mFeatureLogDelegates = [[NSMutableSet alloc] init];
+    _parentNode=node;
     _enabled=false;
     return self;
 }
 
 -(void) setEnabled:(bool)enabled{
     _enabled=enabled;
+}
+
+-(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
+    return data.length;
+}
+
+-(void) addFeatureDelegate:(id<W2STSDKFeatureDelegate>)delegate{
+    [mFeatureDelegates addObject:delegate];
+}
+-(void) removeFeatureDelegate:(id<W2STSDKFeatureDelegate>)delegate{
+    [mFeatureDelegates removeObject:delegate];
+}
+
+-(void) addFeatureLogDelegate:(id<W2STSDKFeatureLogDelegate>)delegate{
+    [mFeatureLogDelegates addObject:delegate];
+}
+-(void) removeFeatureLogDelegate:(id<W2STSDKFeatureLogDelegate>)delegate{
+    [mFeatureLogDelegates removeObject:delegate];
+}
+
+-(NSArray*)getFieldData{
+    return nil;
+}
+
+-(NSArray*)getFieldDesc{
+    return nil;
 }
 
 //////////////////////// END NEW SDK///////////////////////////////////////////

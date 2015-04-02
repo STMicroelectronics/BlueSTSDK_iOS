@@ -7,6 +7,7 @@
 //
 
 #import "W2STSDKDefine.h"
+@class W2STSDKNode;
 
 #define W2STSDK_CTRL_FRAME_IS_READ(frame) (frame.ctrl.map.operation == W2STSDK_CTRL_OPT_READ)
 #define W2STSDK_CTRL_FRAME_IS_WRITE(frame) (frame.ctrl.map.operation == W2STSDK_CTRL_OPT_WRITE)
