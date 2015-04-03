@@ -7,17 +7,19 @@
 //
 
 #import "W2STSDKFeature.h"
-
+///////////////// NEW SDK///////////////////
 @interface W2STSDKFeature()
 
 @end
+
+static dispatch_queue_t sNotificationQueue;
 
 @implementation W2STSDKFeature{
     NSMutableSet *mFeatureDelegates;
     NSMutableSet *mFeatureLogDelegates;
 
 }
-
+/////////////////END NEW SDK/////////////////
 
 
 static NSDictionary * W2STSDKNodeFeatureGroupKeys = nil;
@@ -199,7 +201,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 -(NSUInteger)updateData:(NSData *)data position:(NSUInteger)pos time:(NSUInteger)time {
     NSUInteger s = 0;
     
-    _timeStamp = time;
+    //_timeStamp = time;
     for(W2STSDKParam *prm in _params)
     {
         s += [prm updateData:data position:(pos+s) time:time];
@@ -237,7 +239,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 
 /**** fields management ****/
 +(W2STSDKNodeFeature)mapLookup:(NSString *)key {
-    return (W2STSDKNodeFeature)[W2STSDKFeature fieldByKeyIntValue:key field:@"map"];;
+    return (W2STSDKNodeFeature)[W2STSDKFeature fieldByKeyIntValue:key field:@"map"];
 }
 
 +(float)fieldByKeyFloatValue:(NSString *)key field:(NSString *)field {
@@ -279,6 +281,12 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 ///////////////////////////NEW SDK/////////////////////////////////////////////
 
 -(id) initWhitNode: (W2STSDKNode*)node{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sNotificationQueue = dispatch_queue_create("W2STSDKFeature", DISPATCH_QUEUE_CONCURRENT);
+    });
+    
+    
     mFeatureDelegates = [[NSMutableSet alloc] init];
     mFeatureLogDelegates = [[NSMutableSet alloc] init];
     _parentNode=node;
@@ -288,10 +296,6 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 
 -(void) setEnabled:(bool)enabled{
     _enabled=enabled;
-}
-
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
-    return data.length;
 }
 
 -(void) addFeatureDelegate:(id<W2STSDKFeatureDelegate>)delegate{
@@ -309,11 +313,51 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 }
 
 -(NSArray*)getFieldData{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must overide %@ in a subclass]",
+                                           NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
     return nil;
 }
 
 -(NSArray*)getFieldDesc{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must overide %@ in a subclass]",
+                                           NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
     return nil;
+}
+
+-(uint32_t)getTimeStamp{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must overide %@ in a subclass]",
+                                           NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
+    return -1;
+}
+
+-(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must overide %@ in a subclass]",
+                                           NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
+    return 0;
+}
+
+-(void) notifyNewData{
+    for (id<W2STSDKFeatureDelegate> delegate in mFeatureDelegates) {
+        dispatch_async(sNotificationQueue,^{
+            [delegate didUpdateFeature:self];
+        });
+    }//for
+}
+
+-(void) notifyLogData:(NSData*)rawData data:(NSArray*)data{
+    for (id<W2STSDKFeatureLogDelegate> delegate in mFeatureDelegates) {
+        dispatch_async(sNotificationQueue,^{
+            [delegate feature:self rawData:rawData data:data];
+        });
+    }//for
 }
 
 //////////////////////// END NEW SDK///////////////////////////////////////////
