@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
+#import "../W2STSDKFeature.h"
+
 @interface W2STSDKCharacteristic : NSObject
 
 @property CBCharacteristic* characteristic;
@@ -17,5 +19,5 @@
 -(id) initWithChar:(CBCharacteristic*)characteristics features:(NSArray*)features;
 
 +(NSArray*) getFeaturesFromChar:(CBCharacteristic*)characteristic in:(NSArray*)CharFeatureArray;
-
++(CBCharacteristic*) getCharFromFeature:(W2STSDKFeature*)feature in:(NSArray*)CharFeatureArray;
 @end

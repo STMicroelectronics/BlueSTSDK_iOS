@@ -1517,6 +1517,7 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     [self updateNodeStatus:W2STSDKNodeStateIdle];
 }
 
+
 -(void)completeConnection{
     if(mPeripheral.state !=	CBPeripheralStateConnected){
         [self updateNodeStatus:W2STSDKNodeStateUnreachable];
@@ -1531,6 +1532,13 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
    [self updateNodeStatus:W2STSDKNodeStateDead];
 }
 
+-(BOOL)readFeature:(W2STSDKFeature *)feature{
+    CBCharacteristic *c = [W2STSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
+    if(c==nil)
+        return false;
+    [mPeripheral readValueForCharacteristic:c];
+    return true;
+}
 
 // CBPeriperalDelegate
 - (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral
