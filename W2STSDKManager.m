@@ -72,6 +72,7 @@
 
 -(void) discoveryStop{
     [mCBCentralManager stopScan];
+    [self changeDiscoveryStatus:false];
 }
 
 -(void)resetDiscovery {
@@ -144,6 +145,7 @@
      advertisementData:(NSDictionary *)advertisementData
                   RSSI:(NSNumber *)RSSI{
     NSString *tag = peripheral.identifier.UUIDString;
+    NSLog(@"Discover: %@",peripheral.name);
     W2STSDKNode *node = [self nodeWithTag:tag];
     if(node == nil){
         @try {
