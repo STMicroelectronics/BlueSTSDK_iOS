@@ -171,7 +171,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @discussion The delegate object that will receive node events.
  *
  */
-@property (nonatomic) id<W2STSDKNodeDelegateOld> delegate;
+@property (nonatomic) id<W2STSDKNodeDelegateOld> delegate __attribute__ ((deprecated));
 
 /*!
  *  @property dbNode
@@ -179,7 +179,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @discussion .
  *
  */
-@property (assign, nonatomic) W2STDBNode * dbNode;
+@property (assign, nonatomic) W2STDBNode * dbNode __attribute__ ((deprecated));
 
 /*!
  *  @property status
@@ -187,7 +187,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @discussion The current status of the node of the peripheral, initially set to <code>W2STSDKNodeStatusNew</code>. After the first connection the status change in <code>W2STSDKNodeStatusNormal</code>
  *
  */
-@property (readonly) W2STSDKNodeStatusOld status;
+@property (readonly) W2STSDKNodeStatusOld status __attribute__ ((deprecated));
 /*!
  *  @property peripheral
  *
@@ -200,16 +200,16 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @discussion
  */
-@property (retain, nonatomic) NSMutableArray * notifiedCharacteristics;
-@property (retain, nonatomic) CBCharacteristic * configCharacteristic;
-@property (retain, nonatomic) CBCharacteristic * batteryCharacteristic;
+@property (retain, nonatomic) NSMutableArray * notifiedCharacteristics __attribute__ ((deprecated));
+@property (retain, nonatomic) CBCharacteristic * configCharacteristic __attribute__ ((deprecated));
+@property (retain, nonatomic) CBCharacteristic * batteryCharacteristic __attribute__ ((deprecated));
 
 /*!
  *  @property manager
  *
  *  @discussion
  */
-@property (retain, nonatomic) W2STSDKManager * manager;
+@property (retain, nonatomic) W2STSDKManager * manager __attribute__ ((deprecated));
 
 /******** BLE Properties ********/
 /*!
@@ -220,16 +220,16 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 
 
 /*** configuration properties ****/
-@property (retain, nonatomic) NSData * addressBLE; //48bits
-@property (assign, nonatomic) BOOL iNemoEngine;
-@property (assign, nonatomic) NSUInteger led;
-@property (assign, nonatomic) W2STSDKNodeMode mode;
-@property (assign, nonatomic) NSUInteger boardFreq;
-@property (assign, nonatomic) NSUInteger memsDivChar;
-@property (assign, nonatomic) NSUInteger envDivChar;
-@property (assign, nonatomic) NSUInteger ahrsDivChar;
-@property (assign, nonatomic) NSInteger battery;
-@property (assign, nonatomic) NSInteger rechargeStatus;
+@property (retain, nonatomic) NSData * addressBLE __attribute__ ((deprecated)); //48bits
+@property (assign, nonatomic) BOOL iNemoEngine __attribute__ ((deprecated));
+@property (assign, nonatomic) NSUInteger led __attribute__ ((deprecated));
+@property (assign, nonatomic) W2STSDKNodeMode mode __attribute__ ((deprecated));
+@property (assign, nonatomic) NSUInteger boardFreq __attribute__ ((deprecated));
+@property (assign, nonatomic) NSUInteger memsDivChar __attribute__ ((deprecated));
+@property (assign, nonatomic) NSUInteger envDivChar __attribute__ ((deprecated));
+@property (assign, nonatomic) NSUInteger ahrsDivChar __attribute__ ((deprecated));
+@property (assign, nonatomic) NSInteger battery __attribute__ ((deprecated));
+@property (assign, nonatomic) NSInteger rechargeStatus __attribute__ ((deprecated));
 
 /*!
  *  @property RSSI
@@ -250,14 +250,14 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @discussion
  */
-@property (assign, readonly) BOOL isConnectable;
+@property (assign, readonly) BOOL isConnectable __attribute__ ((deprecated));
 
 /*!
  *  @property channel
  *
  *  @discussion
  */
-@property (retain, readonly) NSNumber *channel;
+@property (retain, readonly) NSNumber *channel __attribute__ ((deprecated));
 /*!
  *  @property connectionStatus
  *
@@ -265,19 +265,19 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *              delegate method {@link connectionDidChange:}.
  *
  */
-@property (assign, nonatomic) W2STSDKNodeConnectionStatus connectionStatus;
+@property (assign, nonatomic) W2STSDKNodeConnectionStatus connectionStatus __attribute__ ((deprecated));
 
 /*!
  *  @property local
  *
  *  @discussion
  */
-@property (assign, readonly) BOOL local;
+@property (assign, readonly) BOOL local __attribute__ ((deprecated));
 
 /******** bMESH Date ********/
-@property (readonly) NSDate *leaveTime;
-@property (readonly) NSDate *scanLastDone;
-@property (readonly) NSDate *txPowerLastUpdate;
+@property (readonly) NSDate *leaveTime __attribute__ ((deprecated));
+@property (readonly) NSDate *scanLastDone __attribute__ ((deprecated));
+@property (readonly) NSDate *txPowerLastUpdate __attribute__ ((deprecated));
 
 /******** bMESH Properties ********/
 /*!
@@ -285,25 +285,25 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @discussion
  */
-@property (assign, readonly) W2STSDKNodeBoardNameCode boardNameCode;
+@property (assign, readonly) W2STSDKNodeBoardNameCode boardNameCode __attribute__ ((deprecated));
 /*!
  *  @property hwFeatureByte
  *
  *  @discussion
  */
-@property (assign, readonly) int8_t hwFeatureByte;
+@property (assign, readonly) int8_t hwFeatureByte __attribute__ ((deprecated));
 /*!
  *  @property swFeatureByte
  *
  *  @discussion
  */
-@property (assign, readonly) int8_t swFeatureByte;
+@property (assign, readonly) int8_t swFeatureByte __attribute__ ((deprecated));
 /*!
  *  @property featureByte
  *
  *  @discussion
  */
-@property (assign, readonly) int16_t featureByte;
+@property (assign, readonly) int16_t featureByte __attribute__ ((deprecated));
 
 /******** Generic Properties ********/
 /*!
@@ -311,14 +311,14 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @discussion
  */
-@property (retain, nonatomic) NSString *info;
+@property (retain, nonatomic) NSString *info __attribute__ ((deprecated));
 
 /*!
  *  @property connectionStatus
  *
  *  @discussion
  */
-@property (retain, nonatomic) NSData *advManuData;
+@property (retain, nonatomic) NSData *advManuData __attribute__ ((deprecated));
 
 /******** Data Properties ********/
 /*!
@@ -326,14 +326,14 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @discussion
  */
-@property (nonatomic, retain) NSMutableDictionary *features;
-@property (nonatomic, retain) NSMutableArray *valueFeatures;
+@property (nonatomic, retain) NSMutableDictionary *features __attribute__ ((deprecated));
+@property (nonatomic, retain) NSMutableArray *valueFeatures __attribute__ ((deprecated));
 /*!
  *  @property Params
  *
  *  @discussion
  */
-@property (nonatomic, retain) NSMutableDictionary *params;
+@property (nonatomic, retain) NSMutableDictionary *params __attribute__ ((deprecated));
 
 
 /******** Methods ********/
@@ -344,7 +344,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @discussion     
  *
  */
--(id) init;
+-(id) init __attribute__ ((deprecated));
 
 /*!
  *  @method initAsLocal:
@@ -354,7 +354,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @discussion
  *
  */
--(id) initAsLocal:(W2STSDKManager *)manager;
+-(id) initAsLocal:(W2STSDKManager *)manager __attribute__ ((deprecated));
 
 /*!
  *  @method init:
@@ -366,7 +366,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @discussion
  *
  */
--(id) init :(CBPeripheral *)peripheral manager:(W2STSDKManager *)manager local:(BOOL)local;
+-(id) init :(CBPeripheral *)peripheral manager:(W2STSDKManager *)manager local:(BOOL)local __attribute__ ((deprecated));
 
 
 /*!
@@ -379,48 +379,48 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  */
 //-(id) initStatus:(W2STSDKNodeStatus)status cstatus:(W2STSDKNodeConnectionStatus)cstatus;
-+(NSString *) stateStr:(CBPeripheral *)peripheral;
++(NSString *) stateStr:(CBPeripheral *)peripheral __attribute__ ((deprecated));
 
-+(NSString *)configKeyFromCode:(W2STSDKNodeConfigCode)code;
-+(W2STSDKNodeConfigCode)configCodeFromKey:(NSString *)key;
++(NSString *)configKeyFromCode:(W2STSDKNodeConfigCode)code __attribute__ ((deprecated));
++(W2STSDKNodeConfigCode)configCodeFromKey:(NSString *)key __attribute__ ((deprecated));
 
--(BOOL)isSupportedBoard;
--(NSString *)nameBoardGetString;
+-(BOOL)isSupportedBoard __attribute__ ((deprecated));
+-(NSString *)nameBoardGetString __attribute__ ((deprecated));
 
 
-- (BOOL) toggleConnect;
+- (BOOL) toggleConnect __attribute__ ((deprecated));
 
-- (BOOL) updateConnectionStatus;
-- (BOOL) isConnectable;
+- (BOOL) updateConnectionStatus __attribute__ ((deprecated));
+- (BOOL) isConnectable __attribute__ ((deprecated));
 
-- (BOOL)featureAvailable:(NSString *)featureKey;
-- (W2STSDKFeature *)featureWithKey:(NSString *)featureKey;
-- (BOOL)paramAvailable:(NSString *)paramKey;
+- (BOOL)featureAvailable:(NSString *)featureKey __attribute__ ((deprecated));
+- (W2STSDKFeature *)featureWithKey:(NSString *)featureKey __attribute__ ((deprecated));
+- (BOOL)paramAvailable:(NSString *)paramKey __attribute__ ((deprecated));
 
-- (BOOL) updateBLEProperties:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI enableDelegate:(BOOL)enableDelegate;
-- (BOOL) updateAdvertisement:(NSDictionary *)advertisementData enableDelegate:(BOOL)enableDelegate;
-- (BOOL) updateRSSI:(NSNumber *)RSSI enableDelegate:(BOOL)enableDelegate;
+- (BOOL) updateBLEProperties:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI enableDelegate:(BOOL)enableDelegate __attribute__ ((deprecated));
+- (BOOL) updateAdvertisement:(NSDictionary *)advertisementData enableDelegate:(BOOL)enableDelegate __attribute__ ((deprecated));
+- (BOOL) updateRSSI:(NSNumber *)RSSI enableDelegate:(BOOL)enableDelegate __attribute__ ((deprecated));
 
--(void)updateLiveTime;
--(BOOL)checkLiveTime;
+-(void)updateLiveTime __attribute__ ((deprecated));
+-(BOOL)checkLiveTime __attribute__ ((deprecated));
 
 //Reading
--(BOOL) isReading;
--(void) reading:(BOOL)enable;
--(void) readingSync;
--(void) startReading;
--(void) stopReading;
--(void) toggleReading;
+-(BOOL) isReading __attribute__ ((deprecated));
+-(void) reading:(BOOL)enable __attribute__ ((deprecated));
+-(void) readingSync __attribute__ ((deprecated));
+-(void) startReading __attribute__ ((deprecated));
+-(void) stopReading __attribute__ ((deprecated));
+-(void) toggleReading __attribute__ ((deprecated));
 
 //config
--(NSString *)config:(NSString *)what;
--(void)forceReadingConfig;
--(W2STSDKCommand *)sendConfig:(W2STSDKCommand *)controlService;
+-(NSString *)config:(NSString *)what __attribute__ ((deprecated));
+-(void)forceReadingConfig __attribute__ ((deprecated));
+-(W2STSDKCommand *)sendConfig:(W2STSDKCommand *)controlService __attribute__ ((deprecated));
 
--(NSString *)writeConfig:(NSString *)what param:(NSString *)param;
--(void)getAllConfig;
--(void)getConfig:(NSString *)what;
--(void)getConfigWithReg:(unsigned char)regEnum;
+-(NSString *)writeConfig:(NSString *)what param:(NSString *)param __attribute__ ((deprecated));
+-(void)getAllConfig __attribute__ ((deprecated));
+-(void)getConfig:(NSString *)what __attribute__ ((deprecated));
+-(void)getConfigWithReg:(unsigned char)regEnum __attribute__ ((deprecated));
 
 //-(W2STSDKCommand *)bleGetFirmwareVersion;
 //-(W2STSDKCommand *)bleSetLed:(BOOL)state;
