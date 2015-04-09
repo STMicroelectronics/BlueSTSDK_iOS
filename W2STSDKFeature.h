@@ -87,6 +87,9 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 @class W2STSDKParam;
 
 ///////////////////////////////NEW SDK//////////////////////////////////////
+@protocol W2STSDKFeatureDelegate;
+@protocol W2STSDKFeatureLogDelegate;
+
 @class W2STSDKNode;
 
 //////////////////////////////OLD SDK///////////////////////////////////////
@@ -99,48 +102,48 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
  *  @discussion The delegate object that will receive node events.
  *
  */
-@property (nonatomic) id<W2STSDKFeatureDelegateOld> delegate;
-@property (readonly, retain, nonatomic) NSString * key;
-@property (readonly, assign, nonatomic) W2STSDKNodeFeature map;
+@property (nonatomic) id<W2STSDKFeatureDelegateOld> delegate __deprecated;
+@property (readonly, retain, nonatomic) NSString * key __deprecated;
+@property (readonly, assign, nonatomic) W2STSDKNodeFeature map __deprecated;
 
 
-@property (retain, nonatomic) NSString *shortName;
-@property (retain, nonatomic) NSString *format;
-@property (retain, nonatomic) NSString *unit;
-@property (assign, nonatomic) W2STSDKParamType type;
-@property (assign, nonatomic) NSUInteger size;
+@property (retain, nonatomic) NSString *shortName __deprecated;
+@property (retain, nonatomic) NSString *format __deprecated;
+@property (retain, nonatomic) NSString *unit __deprecated;
+@property (assign, nonatomic) W2STSDKParamType type __deprecated;
+@property (assign, nonatomic) NSUInteger size __deprecated;
 
 
-@property (assign, nonatomic) float min;
-@property (assign, nonatomic) float max;
-@property (assign, nonatomic) float interval;
-@property (assign, nonatomic) NSUInteger decimal;
+@property (assign, nonatomic) float min __deprecated;
+@property (assign, nonatomic) float max __deprecated;
+@property (assign, nonatomic) float interval __deprecated;
+@property (assign, nonatomic) NSUInteger decimal __deprecated;
 
-@property (retain, nonatomic) NSMutableArray * params;
+@property (retain, nonatomic) NSMutableArray * params __deprecated;
 
 
-+(void)initStatic;
-+(NSArray *)allKeys;
-+(NSString *)keyLookup:(W2STSDKNodeFeature)map;
-+(W2STSDKNodeFeature)mapLookup:(NSString *)key;
-+(NSString *)groupKeyFromKey:(NSString *)key;
-+(W2STSDKNodeFeatureGroup)groupMapFromMap:(W2STSDKNodeFeature)map;
-+(BOOL)checkAvailabilityInMap:(NSUInteger)val map:(W2STSDKNodeFeature)map;
-+(BOOL)isHardware:(W2STSDKNodeFeature)map;
-+(BOOL)isSoftware:(W2STSDKNodeFeature)map;
++(void)initStatic __deprecated;
++(NSArray *)allKeys __deprecated;
++(NSString *)keyLookup:(W2STSDKNodeFeature)map __deprecated;
++(W2STSDKNodeFeature)mapLookup:(NSString *)key __deprecated;
++(NSString *)groupKeyFromKey:(NSString *)key __deprecated;
++(W2STSDKNodeFeatureGroup)groupMapFromMap:(W2STSDKNodeFeature)map __deprecated;
++(BOOL)checkAvailabilityInMap:(NSUInteger)val map:(W2STSDKNodeFeature)map __deprecated;
++(BOOL)isHardware:(W2STSDKNodeFeature)map __deprecated;
++(BOOL)isSoftware:(W2STSDKNodeFeature)map __deprecated;
 
--(W2STSDKNodeFeatureGroup)groupMap;
--(NSString *)groupKey;
--(id) init:(NSString *)key node:(W2STSDKNode *)node;
--(NSUInteger)updateData:(NSData *)data position:(NSUInteger)pos time:(NSUInteger)time;
--(W2STSDKParam *)paramAtIndex:(NSInteger)index;
--(NSArray *)arrayValues:(BOOL)SampleMode;
+-(W2STSDKNodeFeatureGroup)groupMap __deprecated;
+-(NSString *)groupKey __deprecated;
+-(id) init:(NSString *)key node:(W2STSDKNode *)node __deprecated;
+-(NSUInteger)updateData:(NSData *)data position:(NSUInteger)pos time:(NSUInteger)time __deprecated;
+-(W2STSDKParam *)paramAtIndex:(NSInteger)index __deprecated;
+-(NSArray *)arrayValues:(BOOL)SampleMode __deprecated;
 
-+(NSInteger)fieldByKeyIntValue:(NSString *)key field:(NSString *)field;
-+(NSNumber *)fieldByKeyNumber:(NSString *)key field:(NSString *)field;
-+(NSString *)fieldByKeyString:(NSString *)key field:(NSString *)field;
-+(NSObject *)fieldByKey:(NSString *)key field:(NSString *)field;
-+(NSDictionary *)configByKey:(NSString *)key;
++(NSInteger)fieldByKeyIntValue:(NSString *)key field:(NSString *)field __deprecated;
++(NSNumber *)fieldByKeyNumber:(NSString *)key field:(NSString *)field __deprecated;
++(NSString *)fieldByKeyString:(NSString *)key field:(NSString *)field __deprecated;
++(NSObject *)fieldByKey:(NSString *)key field:(NSString *)field __deprecated;
++(NSDictionary *)configByKey:(NSString *)key __deprecated;
 
 ////////////////////////NEW SDK/////////////////////////////////////////////////
 @property(readonly) bool enabled;
@@ -150,9 +153,14 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 
 
 -(id) initWhitNode: (W2STSDKNode*)node;
--(NSArray*) getFieldData;
--(NSArray*) getFieldDesc;
--(uint32_t) getTimeStamp;
+-(void) addFeatureDelegate:(id<W2STSDKFeatureDelegate>)delegate;
+-(void) removeFeatureDelegate:(id<W2STSDKFeatureDelegate>)delegate;
+-(void) addFeatureLogDelegate:(id<W2STSDKFeatureLogDelegate>)delegate;
+-(void) removeFeatureLogDelegate:(id<W2STSDKFeatureLogDelegate>)delegate;
+
+-(NSArray*) getFieldsData;
+-(NSArray*) getFieldsDesc;
+-(uint32_t) getTimestamp;
 
 ///////package method////////////
 -(void) setEnabled:(bool)enabled;

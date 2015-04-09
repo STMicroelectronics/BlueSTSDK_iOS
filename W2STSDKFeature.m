@@ -51,14 +51,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     return W2STSDKNodeFeatureAllKeys;
 }
 
-+(BOOL)isHWFeature:(NSString *)key {
-    W2STSDKNodeFeature map = [W2STSDKFeature mapLookup:key];
-    return W2STSDK_NODE_BRD_FEA_IS_HARDWARE(map);
-}
-+(BOOL)isSWFeature:(NSString *)key {
-    W2STSDKNodeFeature map = [W2STSDKFeature mapLookup:key];
-    return W2STSDK_NODE_BRD_FEA_IS_SOFTWARE(map);
-}
+
 +(BOOL)isHardware:(W2STSDKNodeFeature)map {
     return W2STSDK_NODE_BRD_FEA_IS_HARDWARE(map);
 }
@@ -312,7 +305,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     [mFeatureLogDelegates removeObject:delegate];
 }
 
--(NSArray*)getFieldData{
+-(NSArray*)getFieldsData{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must overide %@ in a subclass]",
                                            NSStringFromSelector(_cmd)]
@@ -320,7 +313,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     return nil;
 }
 
--(NSArray*)getFieldDesc{
+-(NSArray*)getFieldsDesc{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must overide %@ in a subclass]",
                                            NSStringFromSelector(_cmd)]
@@ -328,7 +321,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     return nil;
 }
 
--(uint32_t)getTimeStamp{
+-(uint32_t)getTimestamp{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must overide %@ in a subclass]",
                                            NSStringFromSelector(_cmd)]
