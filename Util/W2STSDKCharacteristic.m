@@ -9,7 +9,7 @@
 #import "W2STSDKCharacteristic.h"
 
 @implementation W2STSDKCharacteristic
-+(NSArray*) getFeaturesFromChar:(CBCharacteristic*)characteristic in:(NSArray*)charFeatureArray{
++(NSArray*) getFeaturesFromChar:(CBCharacteristic const*)characteristic in:(NSArray*)charFeatureArray{
     
     for( W2STSDKCharacteristic *temp in charFeatureArray){
         if([temp.characteristic.UUID isEqual:characteristic.UUID]){
@@ -19,12 +19,12 @@
     return nil;
 }
 
-+(CBCharacteristic*) getCharFromFeature:(W2STSDKFeature*)feature in:(NSArray*)CharFeatureArray{
++(CBCharacteristic const* ) getCharFromFeature:(W2STSDKFeature*)feature in:(NSArray*)CharFeatureArray{
     NSMutableArray *candidateChar = [NSMutableArray array];
     NSMutableArray *nCharFeatures = [NSMutableArray array];
     for(W2STSDKCharacteristic *temp in CharFeatureArray){
         if ([temp.features containsObject:feature]){
-            [candidateChar addObject:temp.features];
+            [candidateChar addObject:temp.characteristic];
             [nCharFeatures addObject: [NSNumber numberWithUnsignedInt: temp.features.count]];
         }//if
     }//for
@@ -34,7 +34,7 @@
         return [candidateChar objectAtIndex:0];
     }else{
         uint32_t maxNFeature =0;
-        CBCharacteristic *bestChar = nil;
+        CBCharacteristic const* bestChar = nil;
         for(uint32_t i=0;i<candidateChar.count;i++){
             uint32_t currentFeature =[[nCharFeatures objectAtIndex:i] unsignedIntegerValue];
             if(maxNFeature < currentFeature){
@@ -48,8 +48,8 @@
 
 
 
--(id) initWithChar:(CBCharacteristic*)characteristic features:(NSArray*)features{
-    self.characteristic=characteristic;
+-(id) initWithChar:(CBCharacteristic const*)charact features:(NSArray*)features{
+    self.characteristic=charact;
     self.features = features;
     return self;
 }

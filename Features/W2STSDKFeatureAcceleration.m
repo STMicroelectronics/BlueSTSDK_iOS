@@ -69,15 +69,15 @@ static NSArray *sFieldDesc;
     self = [super initWhitNode:node];
     self.name=FEATURE_NANE;
     mRwQueue = dispatch_queue_create("W2STSDKFeatureAcc", DISPATCH_QUEUE_CONCURRENT);
-    mFieldData = [NSMutableArray arrayWithCapacity:3];
+    mFieldData = [NSMutableArray arrayWithObjects:@0,@0,@0, nil];
     return self;
 }
 
--(NSArray*) getFieldDesc{
+-(NSArray*) getFieldsDesc{
     return sFieldDesc;
 }
 
--(NSArray*) getFieldData{
+-(NSArray*) getFieldsData{
     __block NSArray *temp;
     dispatch_sync(mRwQueue, ^(){
         temp = [mFieldData copy];

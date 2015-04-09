@@ -346,7 +346,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 }
 
 -(void) notifyLogData:(NSData*)rawData data:(NSArray*)data{
-    for (id<W2STSDKFeatureLogDelegate> delegate in mFeatureDelegates) {
+    for (id<W2STSDKFeatureLogDelegate> delegate in mFeatureLogDelegates) {
         dispatch_async(sNotificationQueue,^{
             [delegate feature:self rawData:rawData data:data];
         });

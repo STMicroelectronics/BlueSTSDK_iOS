@@ -1440,9 +1440,11 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
                         initWithAdvertise:advertisementData];
     [self buildAvailableFeatures: parser.featureMap maskFeatureMap:parser.featureMaskMap];
     _type = parser.nodeType;
-    [self updateRssi:rssi];
+
     [self updateTxPower: parser.txPower];
-    NSLog(@"create Node: name: %@ type: %x feature: %d",_name,_type,parser.featureMap);
+    
+    [self updateRssi:rssi];
+    //NSLog(@"create Node: name: %@ type: %x feature: %d",_name,_type,parser.featureMap);
     return self;
 }
 
@@ -1533,7 +1535,7 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 }
 
 -(BOOL)readFeature:(W2STSDKFeature *)feature{
-    CBCharacteristic *c = [W2STSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
+    CBCharacteristic const* c = [W2STSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
     if(c==nil)
         return false;
     [mPeripheral readValueForCharacteristic:c];
@@ -1632,6 +1634,29 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
     }
     
     [self characteristicUpdate:characteristic];
+}
+
++(NSString*) stateToString:(W2STSDKNodeState)state{
+    switch (state) {
+        case W2STSDKNodeStateConnected:
+            return @"Connected";
+        case W2STSDKNodeStateConnecting:
+            return @"Connecting";
+        case W2STSDKNodeStateDead:
+            return @"Dead";
+        case W2STSDKNodeStateDisconnecting:
+            return @"Disconnecting";
+        case W2STSDKNodeStateIdle:
+            return @"Idle";
+        case W2STSDKNodeStateInit:
+            return @"Init";
+        case W2STSDKNodeStateLost:
+            return @"Lost";
+        case W2STSDKNodeStateUnreachable:
+            return @"Unreachable";
+        default:
+            return@"Invalid Enum value";
+    }
 }
 
 

@@ -435,6 +435,8 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 @property (retain, readonly) NSNumber *RSSI;
 @property (retain, readonly) NSNumber *txPower;
 
++(NSString*) stateToString:(W2STSDKNodeState)state;
+
 -(id) init :(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData;
 -(void) addBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate;
 -(void) removeBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate;

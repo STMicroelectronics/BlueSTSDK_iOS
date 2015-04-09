@@ -18,8 +18,8 @@
 -(id) initWhitNode:(W2STSDKNode *)node;
 
 //abstract method
--(NSArray*) getFieldDesc;
--(NSArray*) getFieldData;
+-(NSArray*) getFieldsDesc;
+-(NSArray*) getFieldsData;
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 @end
