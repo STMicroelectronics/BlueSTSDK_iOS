@@ -9,7 +9,7 @@
 #import "W2STSDKCharacteristic.h"
 
 @implementation W2STSDKCharacteristic
-+(NSArray*) getFeaturesFromChar:(CBCharacteristic const*)characteristic in:(NSArray*)charFeatureArray{
++(NSArray*) getFeaturesFromChar:(CBCharacteristic*)characteristic in:(NSArray*)charFeatureArray{
     
     for( W2STSDKCharacteristic *temp in charFeatureArray){
         if([temp.characteristic.UUID isEqual:characteristic.UUID]){
@@ -48,9 +48,9 @@
 
 
 
--(id) initWithChar:(CBCharacteristic const*)charact features:(NSArray*)features{
-    self.characteristic=charact;
-    self.features = features;
+-(id) initWithChar:(CBCharacteristic*)charact features:(NSArray*)features{
+    _characteristic=charact;
+    _features = features;
     return self;
 }
 

@@ -34,12 +34,13 @@ static dispatch_queue_t sNotificationQueue;
     NSMutableDictionary *mMaskToFeature;
     NSMutableArray *mCharFeatureMap;
     NSMutableArray *mAvailableFeature;
+    NSMutableSet *mNotifyFeature;
     
-    BOOL _notifiedReading;
-    BOOL _connectAndReading;
-    NSTimer *_readingBatteryStatusTimer;
-    BOOL _readingBatteryRequired;
-    NSTimer *_readingRSSIStatusTimer;
+    BOOL _notifiedReading __deprecated;
+    BOOL _connectAndReading __deprecated;
+    NSTimer *_readingBatteryStatusTimer __deprecated;;
+    BOOL _readingBatteryRequired __deprecated;
+    NSTimer *_readingRSSIStatusTimer __deprecated;
 }
 ////////////////////////////////////
 
@@ -1428,10 +1429,10 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
         sNotificationQueue = dispatch_queue_create("W2STNode", DISPATCH_QUEUE_CONCURRENT);
     });
 
-    mNodeStatusDelegates = [[NSMutableSet alloc]init];
-    mBleConnectionDelegates = [[NSMutableSet alloc]init];
-    mCharFeatureMap = [[NSMutableArray alloc]init];
-    
+    mNodeStatusDelegates = [NSMutableSet set];
+    mBleConnectionDelegates = [NSMutableSet set];
+    mCharFeatureMap = [NSMutableArray array];
+    mNotifyFeature = [NSMutableSet set];
     mPeripheral=peripheral;
     mPeripheral.delegate=self;
     _state=W2STSDKNodeStateIdle;
@@ -1536,10 +1537,37 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 }
 
 -(BOOL)readFeature:(W2STSDKFeature *)feature{
-    CBCharacteristic const* c = [W2STSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
+    CBCharacteristic *c = [W2STSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
     if(c==nil)
         return false;
     [mPeripheral readValueForCharacteristic:c];
+    return true;
+}
+
+
+-(BOOL) isEnableNotification:(W2STSDKFeature*)feature{
+    return [mNotifyFeature containsObject:feature];
+}
+
+-(BOOL) enableNotification:(W2STSDKFeature*)feature{
+    if(![feature enabled])
+        return false;
+    CBCharacteristic *c = [W2STSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
+    if(c==nil)
+        return false;
+    [mPeripheral setNotifyValue:YES forCharacteristic:c];
+    [mNotifyFeature addObject:feature];
+    return true;
+}
+
+-(BOOL) disableNotification:(W2STSDKFeature*)feature{
+    if(![feature enabled])
+        return false;
+    CBCharacteristic *c = [W2STSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
+    if(c==nil)
+        return false;
+    [mPeripheral setNotifyValue:NO forCharacteristic:c];
+    [mNotifyFeature removeObject:feature];
     return true;
 }
 

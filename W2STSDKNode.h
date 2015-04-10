@@ -449,6 +449,9 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(BOOL) isConnected;
 -(void) disconnect;
 -(BOOL) readFeature:(W2STSDKFeature*)feature;
+-(BOOL) isEnableNotification:(W2STSDKFeature*)feature;
+-(BOOL) enableNotification:(W2STSDKFeature*)feature;
+-(BOOL) disableNotification:(W2STSDKFeature*)feature;
 
 //////////////// start internal/package methods ///////////////////////
 -(void)updateRssi:(NSNumber*)rssi;

@@ -13,11 +13,11 @@
 
 @interface W2STSDKCharacteristic : NSObject
 
-@property CBCharacteristic const* characteristic;
-@property NSArray* features;
+@property(strong,nonatomic,readonly) CBCharacteristic* characteristic;
+@property(strong,nonatomic,readonly) NSArray* features;
 
--(id) initWithChar:(CBCharacteristic const*)charac features:(NSArray*)features;
+-(id) initWithChar:(CBCharacteristic*)charac features:(NSArray*)features;
 
 +(NSArray*) getFeaturesFromChar:(CBCharacteristic const*)characteristic in:(NSArray*)CharFeatureArray;
-+(CBCharacteristic const*) getCharFromFeature:(W2STSDKFeature*)feature in:(NSArray*)CharFeatureArray;
++(CBCharacteristic*) getCharFromFeature:(W2STSDKFeature*)feature in:(NSArray*)CharFeatureArray;
 @end
