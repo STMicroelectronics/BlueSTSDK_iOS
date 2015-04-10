@@ -36,6 +36,10 @@ static dispatch_queue_t sNotificationQueue;
     NSMutableArray *mAvailableFeature;
     NSMutableSet *mNotifyFeature;
     
+    // array that will contain the service for that we request the characteristics,
+    //when this array becames empty the node is connected
+    NSMutableArray *mCharDiscoverServiceReq;
+    
     BOOL _notifiedReading __deprecated;
     BOOL _connectAndReading __deprecated;
     NSTimer *_readingBatteryStatusTimer __deprecated;;
@@ -1585,6 +1589,8 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 didDiscoverServices:(NSError *)error{
     if([self isConnected]) //we already run this method one time
         return;
+    
+    mCharDiscoverServiceReq = [NSMutableArray arrayWithArray: peripheral.services];
     for (CBService *service in peripheral.services) {
         NSLog(@"Discover sService: %@",service.UUID.UUIDString);
         [peripheral discoverCharacteristics:nil forService:service];
@@ -1596,7 +1602,9 @@ didDiscoverServices:(NSError *)error{
 - (void)peripheral:(CBPeripheral *)peripheral
 didDiscoverCharacteristicsForService:(CBService *)service
              error:(NSError *)error {
-    if([self isConnected]) //we already run this method one time
+    
+    //we already see this service -> return
+    if(![mCharDiscoverServiceReq containsObject:service])
         return;
     
     if (error && [error code] != 0) {
@@ -1630,7 +1638,10 @@ didDiscoverCharacteristicsForService:(CBService *)service
             }//if featureChar
         }//for char
     }//if else
-    [self updateNodeStatus:W2STSDKNodeStateConnected];
+    
+    [mCharDiscoverServiceReq removeObject:service];
+    if(mCharDiscoverServiceReq.count == 0)
+        [self updateNodeStatus:W2STSDKNodeStateConnected];
     
     //debug
     NSLog(@"Know Char:");
