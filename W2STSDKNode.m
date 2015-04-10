@@ -36,6 +36,8 @@ static dispatch_queue_t sNotificationQueue;
     NSMutableArray *mAvailableFeature;
     NSMutableSet *mNotifyFeature;
     
+    BOOL mUserAskDisconnect;
+    
     // array that will contain the service for that we request the characteristics,
     //when this array becames empty the node is connected
     NSMutableArray *mCharDiscoverServiceReq;
@@ -1420,7 +1422,7 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
                     [mAvailableFeature addObject:f];
                     [mMaskToFeature setObject:f forKey:temp];
                 }else{
-                    NSLog(@"Impossible build the feature @%",[featureClass description]);
+                    NSLog(@"Impossible build the feature %@",[featureClass description]);
                 }//if f
             }// if featureClass
         }//if mask
@@ -1511,20 +1513,10 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 }
 
 -(void)connect{
+    mUserAskDisconnect=false;
     [self updateNodeStatus:W2STSDKNodeStateConnecting];
     [[W2STSDKManager sharedInstance]connect:mPeripheral];
 }
-
-- (BOOL) isConnected{
-    return self.state==W2STSDKNodeStateConnected;
-}
-
--(void) disconnect{
-    [self updateNodeStatus:W2STSDKNodeStateDisconnecting];
-    [[W2STSDKManager sharedInstance]disconnect:mPeripheral];
-    [self updateNodeStatus:W2STSDKNodeStateIdle];
-}
-
 
 -(void)completeConnection{
     if(mPeripheral.state !=	CBPeripheralStateConnected){
@@ -1533,6 +1525,34 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     }
     //else
     [mPeripheral discoverServices:nil];
+}
+
+
+- (BOOL) isConnected{
+    return self.state==W2STSDKNodeStateConnected;
+}
+
+
+-(void)completeDisconnection:(NSError*)error{
+    if(mUserAskDisconnect){
+        if(error==nil){
+            //all ok
+            [self updateNodeStatus:W2STSDKNodeStateIdle];
+        }else{
+            NSLog(@"Node: %@ Error: %@",_name,[error debugDescription]);
+            [self updateNodeStatus:W2STSDKNodeStateDead];
+        }
+    }else{
+        NSLog(@"Node: %@ Error: %@",_name,[error debugDescription]);
+        [self updateNodeStatus:W2STSDKNodeStateUnreachable];
+    }
+    
+}
+
+-(void) disconnect{
+    [self updateNodeStatus:W2STSDKNodeStateDisconnecting];
+    mUserAskDisconnect=true;
+    [[W2STSDKManager sharedInstance]disconnect:mPeripheral];
 }
 
 -(void)connectionError:(NSError*)error{

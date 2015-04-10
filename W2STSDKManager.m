@@ -197,6 +197,10 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
 - (void)centralManager:(CBCentralManager *)central
 didDisconnectPeripheral:(CBPeripheral *)peripheral
                  error:(NSError *)error{
-    [self notifyConnectionError:peripheral error:error];
+    NSString *tag = peripheral.identifier.UUIDString;
+    W2STSDKNode *node = [self nodeWithTag:tag];
+    if(node == nil) //we did not handle this periferal
+        return;
+    [node completeDisconnection:error];
 }
 @end

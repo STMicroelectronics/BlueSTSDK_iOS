@@ -457,6 +457,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(void)updateRssi:(NSNumber*)rssi;
 -(void)updateTxPower:(NSNumber*)txPower;
 -(void)completeConnection;
+-(void)completeDisconnection:(NSError*)error;
 -(void)connectionError:(NSError*)error;
 -(void)updateNodeStatus:(W2STSDKNodeState)newState;
 -(void)characteristicUpdate:(CBCharacteristic*)characteristics;
