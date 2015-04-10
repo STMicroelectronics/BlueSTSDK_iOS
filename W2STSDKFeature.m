@@ -8,6 +8,8 @@
 
 #import "W2STSDKFeature.h"
 ///////////////// NEW SDK///////////////////
+#import "W2STSDKFeatureField.h"
+
 @interface W2STSDKFeature()
 
 @end
@@ -351,6 +353,19 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
             [delegate feature:self rawData:rawData data:data];
         });
     }//for
+}
+
++(NSString*) getFeatureDataDescription:(W2STSDKFeature*)feature{
+    NSMutableString *s = [NSMutableString stringWithString:@"Timestamp:"];
+    [s appendFormat:@"%d ",[feature getTimestamp] ];
+    NSArray *fields = [feature getFieldsDesc];
+    NSArray *datas = [feature getFieldsData ];
+    for (int i = 0; i < fields.count; i++) {
+        W2STSDKFeatureField *field =(W2STSDKFeatureField*)[fields objectAtIndex:i];
+        NSNumber *data = (NSNumber*)[datas objectAtIndex:i];
+        [s appendFormat:@"%@: %@ ",field.name,data.stringValue];
+    }//for
+    return s;
 }
 
 //////////////////////// END NEW SDK///////////////////////////////////////////
