@@ -9,6 +9,9 @@
 #import "W2STSDKFeatureGyroscope.h"
 #import "W2STSDKFeatureField.h"
 
+#import "../Util/NSData+NumberConversion.h"
+
+
 #define FEATURE_NANE @"Gyroscope"
 #define FEATURE_UNIT @"dps"
 #define FEATURE_MIN @-2000
@@ -97,9 +100,9 @@ static NSArray *sFieldDesc;
     
     
     short gyroX,gyroY,gyroZ;
-    [rawData getBytes:&gyroX range:NSMakeRange(offset+0, 2)];
-    [rawData getBytes:&gyroY range:NSMakeRange(offset+2, 2)];
-    [rawData getBytes:&gyroZ range:NSMakeRange(offset+4, 2)];
+    gyroX= [rawData extractLeUInt16FromOffset:offset];
+    gyroY= [rawData extractLeUInt16FromOffset:offset+2];
+    gyroZ= [rawData extractLeUInt16FromOffset:offset+4];
     
     dispatch_barrier_async(mRwQueue, ^(){
         mTimestamp = timestamp;

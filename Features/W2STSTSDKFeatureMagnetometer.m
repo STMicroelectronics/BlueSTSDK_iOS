@@ -10,6 +10,9 @@
 #import "W2STSTSDKFeatureMagnetometer.h"
 #import "W2STSDKFeatureField.h"
 
+#import "../Util/NSData+NumberConversion.h"
+
+
 #define FEATURE_NANE @"Magnetometer"
 #define FEATURE_UNIT @"mGa"
 #define FEATURE_MIN @-2000
@@ -98,9 +101,9 @@ static NSArray *sFieldDesc;
     
     
     short magX,magY,magZ;
-    [rawData getBytes:&magX range:NSMakeRange(offset+0, 2)];
-    [rawData getBytes:&magY range:NSMakeRange(offset+2, 2)];
-    [rawData getBytes:&magZ range:NSMakeRange(offset+4, 2)];
+    magX= [rawData extractLeUInt16FromOffset:offset];
+    magY= [rawData extractLeUInt16FromOffset:offset+2];
+    magZ= [rawData extractLeUInt16FromOffset:offset+4];
     
     dispatch_barrier_async(mRwQueue, ^(){
         mTimestamp = timestamp;

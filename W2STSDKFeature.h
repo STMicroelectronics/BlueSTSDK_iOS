@@ -162,11 +162,12 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 -(NSArray*) getFieldsDesc;
 -(uint32_t) getTimestamp;
 
-///////package method////////////
--(void) setEnabled:(bool)enabled;
+/// protected method
 -(void) notifyNewData;
 -(void) notifyLogData:(NSData*)rawData data:(NSArray*)data;
 
+///////package method////////////
+-(void) setEnabled:(bool)enabled;
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 /////////////////////////END NEW SDK////////////////////////////////////////////
 @end

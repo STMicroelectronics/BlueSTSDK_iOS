@@ -13,6 +13,7 @@
 #import "Util/W2STSDKCharacteristic.h"
 #import "Util/W2STSDKBleAdvertiseParser.h"
 #import "Util/W2STSDKBleNodeDefines.h"
+#import "util/NSData+NumberConversion.h"
 
 @interface W2STSDKNode()
 -(void)buildAvailableFeatures:(featureMask_t)mask maskFeatureMap:(NSDictionary*)maskFeatureMap;
@@ -1615,7 +1616,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
     NSData *newData = characteristics.value;
     NSArray *features = [W2STSDKCharacteristic getFeaturesFromChar:characteristics
                                                                 in:mCharFeatureMap];
-    uint32_t timestamp;
+    uint32_t timestamp = [newData extractLeUInt16FromOffset: 0];
     uint32_t offset=2;
     for(W2STSDKFeature *f in features){
         offset += [f update:timestamp data:newData dataOffset:offset];
