@@ -17,5 +17,13 @@
     return temp;
 }
 
+-(float) extractLeFloatFromOffset:(NSUInteger)offset{
+    NSRange range = NSMakeRange(offset, 4);
+    float temp;
+    [self getBytes:&temp range:range];
+    return temp;
+}
+
+
 @end
 

@@ -11,6 +11,8 @@
 #import "../Features/W2STSDKFeatureAcceleration.h"
 #import "../Features/W2STSDKFeatureGyroscope.h"
 #import "../Features/W2STSTSDKFeatureMagnetometer.h"
+#import "../Features/W2STSDKFeatureMemsSensorFusion.h"
+
 
 #import "W2STSDKBleNodeDefines.h"
 
@@ -105,13 +107,15 @@ static NSDictionary *boardFeatureMap = nil;
     nucleoFeatureMap = @{
                          @0x00200000: [W2STSTSDKFeatureMagnetometer class], //mag
                          @0x00400000: [W2STSDKFeatureGyroscope class], //gyo
-                         @0x00800000: [W2STSDKFeatureAcceleration class] //acc
+                         @0x00800000: [W2STSDKFeatureAcceleration class], //acc
+                         @0x00000080: [W2STSDKFeatureMemsSensorFusion class] //Mems sensor fusion
                          };
 
     wesuFeatureMap = @{
                        @0x00200000: [W2STSTSDKFeatureMagnetometer class], //mag
                        @0x00400000: [W2STSDKFeatureGyroscope class], //gyo
-                       @0x00800000: [W2STSDKFeatureAcceleration class] //acc
+                       @0x00800000: [W2STSDKFeatureAcceleration class], //acc
+                       @0x00000080: [W2STSDKFeatureMemsSensorFusion class] //mems sensor fusion
                        };
         
     boardFeatureMap = @{
