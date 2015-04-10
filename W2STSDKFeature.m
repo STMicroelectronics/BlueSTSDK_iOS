@@ -363,7 +363,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     for (int i = 0; i < fields.count; i++) {
         W2STSDKFeatureField *field =(W2STSDKFeatureField*)[fields objectAtIndex:i];
         NSNumber *data = (NSNumber*)[datas objectAtIndex:i];
-        [s appendFormat:@"%@: %@ ",field.name,data.stringValue];
+        [s appendFormat:@"%@: %@ (%@) ",field.name,data.stringValue,field.unit];
     }//for
     return s;
 }

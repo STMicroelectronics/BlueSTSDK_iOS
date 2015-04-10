@@ -12,8 +12,9 @@
 #import "../Features/W2STSDKFeatureGyroscope.h"
 #import "../Features/W2STSTSDKFeatureMagnetometer.h"
 #import "../Features/W2STSDKFeatureMemsSensorFusion.h"
-
-
+#import "../Features/W2STSDKFeatureHumidity.h"
+#import "../Features/W2STSDKFeatureTemperature.h"
+#import "../Features/W2STSDKFEaturePressure.h"
 #import "W2STSDKBleNodeDefines.h"
 
 #define COMMON_FEATURE_UUID @"-0001-11E1-AC36-0002A5D5C51B"
@@ -108,6 +109,9 @@ static NSDictionary *boardFeatureMap = nil;
                          @0x00200000: [W2STSTSDKFeatureMagnetometer class], //mag
                          @0x00400000: [W2STSDKFeatureGyroscope class], //gyo
                          @0x00800000: [W2STSDKFeatureAcceleration class], //acc
+                         @0x00080000: [W2STSDKFeatureHumidity class], //humidity
+                         @0x00040000: [W2STSDKFeatureTemperature class], //temperature
+                         @0x00100000: [W2STSDKFeaturePressure class], //pressure
                          @0x00000080: [W2STSDKFeatureMemsSensorFusion class] //Mems sensor fusion
                          };
 
