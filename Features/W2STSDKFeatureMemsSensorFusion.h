@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 STMicroelectronics. All rights reserved.
 //
 
-#import "W2STSDKFeature.h"
+#import "W2STSDKFeatureAutoConfigurable.h"
 
-@interface W2STSDKFeatureMemsSensorFusion : W2STSDKFeature
+@interface W2STSDKFeatureMemsSensorFusion : W2STSDKFeatureAutoConfigurable
 +(void)initialize;
 +(float)getX:(NSArray*)data;
 +(float)getY:(NSArray*)data;

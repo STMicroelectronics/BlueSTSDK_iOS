@@ -10,6 +10,8 @@
 
 @interface NSData(NumberConversion)
 
+-(uint8_t) extractUInt8FromOffset:(NSUInteger)offset;
+
 -(uint16_t) extractLeUInt16FromOffset:(NSUInteger)offset;
 -(int16_t) extractLeInt16FromOffset:(NSUInteger)offset;
 -(int32_t) extractLeInt32FromOffset:(NSUInteger)offset;

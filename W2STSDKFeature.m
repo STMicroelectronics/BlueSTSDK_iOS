@@ -364,6 +364,17 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     }//for
 }
 
+-(BOOL) sendCommand:(uint8_t)commandType data:(NSData*)commandData{
+    return [_parentNode sendCommandMessageToFeature: self type:commandType data:commandData];
+}
+
+//optinal abstract method -> default implementation is an empty method
+-(void) commandResponceReveivedWithTimestamp:(uint32_t)timestamp
+                                 commandType:(uint8_t)commandType
+                                        data:(NSData*)data{
+    
+}
+
 +(NSString*) getFeatureDataDescription:(W2STSDKFeature*)feature{
     NSMutableString *s = [NSMutableString stringWithString:@"Timestamp:"];
     [s appendFormat:@"%d ",[feature getTimestamp] ];

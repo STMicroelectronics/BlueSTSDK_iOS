@@ -462,6 +462,9 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(void)updateNodeStatus:(W2STSDKNodeState)newState;
 -(void)characteristicUpdate:(CBCharacteristic*)characteristics;
 
+-(BOOL)sendCommandMessageToFeature:(W2STSDKFeature*)f type:(uint8_t)commandType
+                     data:(NSData*) commandData;
+
 
 //////////////// end internal/package methods ///////////////////////
 @end

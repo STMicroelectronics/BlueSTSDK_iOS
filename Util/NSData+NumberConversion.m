@@ -10,6 +10,14 @@
 
 @implementation NSData(NumberConversion)
 
+-(uint8_t) extractUInt8FromOffset:(NSUInteger)offset{
+    NSRange range = NSMakeRange(offset, 1);
+    uint8_t temp;
+    [self getBytes:&temp range:range];
+    return temp;
+}
+
+
 -(uint16_t) extractLeUInt16FromOffset:(NSUInteger)offset{
     NSRange range = NSMakeRange(offset, 2);
     uint16_t temp;

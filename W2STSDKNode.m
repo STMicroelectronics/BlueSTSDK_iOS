@@ -25,8 +25,9 @@
 static dispatch_queue_t sNotificationQueue;
 
 @implementation W2STSDKNode {
+#pragma mark NodePrivateObject
     //NSMutableArray *_notifiedCharacteristics;
-    //CBCharacteristic *_controlCharacteristic;
+    CBCharacteristic *mFeatureCommand;
     CBPeripheral *mPeripheral;
     NSMutableSet *mBleConnectionDelegates;
     NSMutableSet *mNodeStatusDelegates;
@@ -1400,6 +1401,8 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 }
 ////////////////// NEW SDK ///////////
 
+#pragma mark newSDK
+
 -(W2STSDKFeature*) buildFeatureFromClass:(Class)featureClass{
     return [((W2STSDKFeature*)[featureClass alloc]) initWhitNode:self];
 
@@ -1435,10 +1438,12 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
         sNotificationQueue = dispatch_queue_create("W2STNode", DISPATCH_QUEUE_CONCURRENT);
     });
 
+    
     mNodeStatusDelegates = [NSMutableSet set];
     mBleConnectionDelegates = [NSMutableSet set];
     mCharFeatureMap = [NSMutableArray array];
     mNotifyFeature = [NSMutableSet set];
+    mFeatureCommand=nil;
     mPeripheral=peripheral;
     mPeripheral.delegate=self;
     _state=W2STSDKNodeStateIdle;
@@ -1595,6 +1600,26 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     return true;
 }
 
++(NSData*)prepareMessageWithMask:(featureMask_t)mask type:(uint8_t)type data:(NSData*)data{
+    NSMutableData *msg = [NSMutableData dataWithCapacity:(sizeof(featureMask_t)+1+data.length)];
+    [msg appendBytes:&type length:1];
+    [msg appendBytes:&mask length:4];
+    [msg appendData:data];
+    return msg;
+}
+
+-(BOOL)sendCommandMessageToFeature:(W2STSDKFeature*)feature type:(uint8_t)commandType
+                     data:(NSData*) commandData{
+    if(mFeatureCommand==nil)
+        return false;
+    
+    CBCharacteristic *featureChar = [W2STSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
+    featureMask_t featureMask = [W2STSDKFeatureCharacteristics extractFeatureMask:featureChar.UUID];
+    NSData *msg = [W2STSDKNode prepareMessageWithMask:featureMask type:commandType data:commandData];
+    [mPeripheral writeValue:msg forCharacteristic:featureChar type:CBCharacteristicWriteWithoutResponse];
+    return true;
+}
+
 // CBPeriperalDelegate
 - (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral
                           error:(NSError *)error{
@@ -1636,7 +1661,11 @@ didDiscoverCharacteristicsForService:(CBService *)service
         //build the debug service
         NSLog(@"Debug Service Discoverd");
     }else if( [[service UUID] isEqual:[W2STSDKServiceConfig serviceUuid]]  ){
-        NSLog(@"Debug Config Discoverd");
+        NSLog(@"Config Service Discoverd");
+        for (CBCharacteristic *c in service.characteristics) {
+            if ([c.UUID isEqual: [W2STSDKServiceConfig featureCommandUuid]])
+                mFeatureCommand = c;
+        }//for
     }else{
         for (CBCharacteristic *c in service.characteristics) {            
             if ([W2STSDKFeatureCharacteristics isFeatureCharacteristics: c.UUID]){
@@ -1660,9 +1689,11 @@ didDiscoverCharacteristicsForService:(CBService *)service
     }//if else
     
     [mCharDiscoverServiceReq removeObject:service];
-    if(mCharDiscoverServiceReq.count == 0)
+    if(mCharDiscoverServiceReq.count == 0){
+        if(mFeatureCommand!=nil)
+           [mPeripheral setNotifyValue:YES forCharacteristic:mFeatureCommand];
         [self updateNodeStatus:W2STSDKNodeStateConnected];
-    
+    }
     //debug
     NSLog(@"Know Char:");
     for (W2STSDKCharacteristic *temp in mCharFeatureMap) {
@@ -1670,7 +1701,23 @@ didDiscoverCharacteristicsForService:(CBService *)service
     }
 }
 
+-(void)notifyCommandResponse:(NSData*)data{
+
+    uint32_t timestamp =[data extractLeUInt16FromOffset: 0];
+    uint32_t featureMask = [data extractBeUInt32FromOffset:2];
+    uint8_t commandType = [data extractUInt8FromOffset:6];
+    NSData *resp = [data subdataWithRange:NSMakeRange(7, data.length-7)];
+    W2STSDKFeature *f = [mMaskToFeature objectForKey: [NSNumber numberWithUnsignedInt:featureMask]];
+    [f commandResponceReveivedWithTimestamp:timestamp commandType:commandType
+                                       data: resp];
+}
+
 -(void)characteristicUpdate:(CBCharacteristic*)characteristics{
+    
+    if([characteristics isEqual: mFeatureCommand]){
+        [self notifyCommandResponse: characteristics.value];
+        return;
+    }//else
     
     NSData *newData = characteristics.value;
     NSArray *features = [W2STSDKCharacteristic getFeaturesFromChar:characteristics
