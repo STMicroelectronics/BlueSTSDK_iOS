@@ -147,22 +147,24 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 
 ////////////////////////NEW SDK/////////////////////////////////////////////////
 @property(readonly) bool enabled;
-@property (retain, nonatomic) NSString *name;
+@property (readonly,retain, nonatomic) NSString *name;
 @property (readonly,retain,nonatomic) W2STSDKNode *parentNode;
 @property (readonly) NSDate* lastUpdate;
 
 +(NSString*) getFeatureDataDescription:(W2STSDKFeature*)feature;
--(id) initWhitNode: (W2STSDKNode*)node;
 -(void) addFeatureDelegate:(id<W2STSDKFeatureDelegate>)delegate;
 -(void) removeFeatureDelegate:(id<W2STSDKFeatureDelegate>)delegate;
 -(void) addFeatureLogDelegate:(id<W2STSDKFeatureLogDelegate>)delegate;
 -(void) removeFeatureLogDelegate:(id<W2STSDKFeatureLogDelegate>)delegate;
 
+//abstact method
+-(id) initWhitNode: (W2STSDKNode*)node;
 -(NSArray*) getFieldsData;
 -(NSArray*) getFieldsDesc;
 -(uint32_t) getTimestamp;
 
 /// protected method
+-(id) initWhitNode: (W2STSDKNode*)node name:(NSString*)name;
 -(void) notifyNewData;
 -(void) notifyLogData:(NSData*)rawData data:(NSArray*)data;
 

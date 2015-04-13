@@ -11,7 +11,7 @@
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NANE @"Quaternion"
+#define FEATURE_NAME @"Quaternion"
 #define FEATURE_UNIT @""
 #define FEATURE_MIN @-1.0f
 #define FEATURE_MAX @1.0
@@ -80,8 +80,7 @@ static NSArray *sFieldDesc;
 }
 
 -(id) initWhitNode:(W2STSDKNode *)node{
-    self = [super initWhitNode:node];
-    self.name=FEATURE_NANE;
+    self = [super initWhitNode:node name:FEATURE_NAME];
     mRwQueue = dispatch_queue_create("FeatureMemsSensorFusion", DISPATCH_QUEUE_CONCURRENT);
     mFieldData = [NSMutableArray arrayWithObjects:@0,@0,@0,@0, nil];
     return self;

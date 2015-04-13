@@ -276,6 +276,14 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 ///////////////////////////NEW SDK/////////////////////////////////////////////
 
 -(id) initWhitNode: (W2STSDKNode*)node{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must overide %@ in a subclass]",
+                                           NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
+    return nil;
+}
+
+-(id) initWhitNode: (W2STSDKNode*)node name:(NSString *)name{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sNotificationQueue = dispatch_queue_create("W2STSDKFeature", DISPATCH_QUEUE_CONCURRENT);
@@ -286,6 +294,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     mFeatureLogDelegates = [[NSMutableSet alloc] init];
     _parentNode=node;
     _enabled=false;
+    _name=name;
     return self;
 }
 
@@ -363,7 +372,10 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     for (int i = 0; i < fields.count; i++) {
         W2STSDKFeatureField *field =(W2STSDKFeatureField*)[fields objectAtIndex:i];
         NSNumber *data = (NSNumber*)[datas objectAtIndex:i];
-        [s appendFormat:@"%@: %@ (%@) ",field.name,data.stringValue,field.unit];
+        [s appendFormat:@"%@: %@ ",field.name,data.stringValue];
+        if(field.unit.length!=0){
+            [s appendFormat:@"(%@) ", field.unit ];
+        }
     }//for
     return s;
 }

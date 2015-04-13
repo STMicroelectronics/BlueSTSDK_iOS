@@ -20,7 +20,7 @@
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NANE @"Humidity"
+#define FEATURE_NAME @"Humidity"
 #define FEATURE_UNIT @"%"
 #define FEATURE_MIN @0
 #define FEATURE_MAX @100
@@ -37,7 +37,7 @@ static NSArray *sFieldDesc;
 +(void)initialize{
     if(self == [W2STSDKFeatureHumidity class]){
         sFieldDesc = [[NSArray alloc] initWithObjects:
-                      [W2STSDKFeatureField  createWithName: FEATURE_NANE
+                      [W2STSDKFeatureField  createWithName: FEATURE_NAME
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
                                                        min:FEATURE_MIN
@@ -56,8 +56,7 @@ static NSArray *sFieldDesc;
 
 
 -(id) initWhitNode:(W2STSDKNode *)node{
-    self = [super initWhitNode:node];
-    self.name=FEATURE_NANE;
+    self = [super initWhitNode:node name:FEATURE_NAME];
     mRwQueue = dispatch_queue_create("W2STSDKFeatureHumidity", DISPATCH_QUEUE_CONCURRENT);
     mFieldData = [NSMutableArray arrayWithObjects:@0, nil];
     return self;

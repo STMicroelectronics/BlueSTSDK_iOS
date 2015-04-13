@@ -13,7 +13,7 @@
 #import "../Util/NSData+NumberConversion.h"
 
 
-#define FEATURE_NANE @"Magnetometer"
+#define FEATURE_NAME @"Magnetometer"
 #define FEATURE_UNIT @"mGa"
 #define FEATURE_MIN @-2000
 #define FEATURE_MAX @2000
@@ -70,8 +70,7 @@ static NSArray *sFieldDesc;
 }
 
 -(id) initWhitNode:(W2STSDKNode *)node{
-    self = [super initWhitNode:node];
-    self.name=FEATURE_NANE;
+    self = [super initWhitNode:node name:FEATURE_NAME];
     mRwQueue = dispatch_queue_create("W2STSDKFeatureMag", DISPATCH_QUEUE_CONCURRENT);
     mFieldData = [NSMutableArray arrayWithObjects:@0,@0,@0,nil];
     return self;
