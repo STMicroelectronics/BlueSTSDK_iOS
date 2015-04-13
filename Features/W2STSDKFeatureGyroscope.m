@@ -72,6 +72,7 @@ static NSArray *sFieldDesc;
     self = [super initWhitNode:node name:FEATURE_NAME];
     mRwQueue = dispatch_queue_create("W2STSDKFeatureGyro", DISPATCH_QUEUE_CONCURRENT);
     mFieldData = [NSMutableArray arrayWithObjects:@0,@0,@0,nil];
+    mTimestamp=0;
     return self;
 }
 

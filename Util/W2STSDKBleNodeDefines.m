@@ -15,7 +15,10 @@
 #import "../Features/W2STSDKFeatureHumidity.h"
 #import "../Features/W2STSDKFeatureTemperature.h"
 #import "../Features/W2STSDKFEaturePressure.h"
+#import "../Features/W2STSDKFeatureMemsSensorFusionCompact.h"
 #import "W2STSDKBleNodeDefines.h"
+#import "NSData+NumberConversion.h"
+
 
 #define COMMON_FEATURE_UUID @"-0001-11E1-AC36-0002A5D5C51B"
 
@@ -24,13 +27,7 @@
 @implementation W2STSDKFeatureCharacteristics
 
 +(featureMask_t)extractFeatureMask:(CBUUID *)uuid{
-    featureMask_t featureMask;
-    unsigned char *pointer =(unsigned char*) &featureMask;
-    [uuid.data getBytes:(pointer+0) range:NSMakeRange(3,1)];
-    [uuid.data getBytes:(pointer+1) range:NSMakeRange(2,1)];
-    [uuid.data getBytes:(pointer+2) range:NSMakeRange(1,1)];
-    [uuid.data getBytes:(pointer+3) range:NSMakeRange(0,1)];
-    return featureMask;
+    return [uuid.data extractBeUInt32FromOffset:0];
 }
 
 +(bool) isFeatureCharacteristics:(CBUUID*)uuid{
@@ -112,7 +109,8 @@ static NSDictionary *boardFeatureMap = nil;
                          @0x00080000: [W2STSDKFeatureHumidity class], //humidity
                          @0x00040000: [W2STSDKFeatureTemperature class], //temperature
                          @0x00100000: [W2STSDKFeaturePressure class], //pressure
-                         @0x00000080: [W2STSDKFeatureMemsSensorFusion class] //Mems sensor fusion
+                         @0x00000080: [W2STSDKFeatureMemsSensorFusion class], //Mems sensor fusion
+                         @0x00000100: [W2STSDKFeatureMemsSensorFusionCompact class] //Mems sensor fusion compact
                          };
 
     wesuFeatureMap = @{

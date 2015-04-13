@@ -1638,7 +1638,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
     }else if( [[service UUID] isEqual:[W2STSDKServiceConfig serviceUuid]]  ){
         NSLog(@"Debug Config Discoverd");
     }else{
-        for (CBCharacteristic *c in service.characteristics) {
+        for (CBCharacteristic *c in service.characteristics) {            
             if ([W2STSDKFeatureCharacteristics isFeatureCharacteristics: c.UUID]){
                 featureMask_t featureMask = [W2STSDKFeatureCharacteristics extractFeatureMask:c.UUID];
                 NSMutableArray *charFeature = [[NSMutableArray alloc] initWithCapacity:1];

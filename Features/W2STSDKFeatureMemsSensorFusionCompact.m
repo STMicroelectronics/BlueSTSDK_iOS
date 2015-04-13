@@ -1,32 +1,36 @@
 //
-//  W2STSDKFeatureQuaternion.m
+//  W2STSDKFeatureMemsSensorFusionCompact.m
 //  W2STApp
 //
-//  Created by Giovanni Visentini on 10/04/15.
+//  Created by Giovanni Visentini on 13/04/15.
 //  Copyright (c) 2015 STMicroelectronics. All rights reserved.
 //
 
-#import "W2STSDKFeatureMemsSensorFusion.h"
-#import "W2STSDKFeatureField.h"
-
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"MemsSensorFusion"
+#import "W2STSDKFeatureMemsSensorFusionCompact.h"
+#import "W2STSDKFeatureField.h"
+
+#define FEATURE_NAME @"MemsSensorFusion (Compact)"
 #define FEATURE_UNIT @""
 #define FEATURE_MIN @-1.0f
 #define FEATURE_MAX @1.0
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeFloat
 
+#define QUATERNION_DELAY_MS 30
+#define SCALE_FACTOR 10000.0f
+
 static NSArray *sFieldDesc;
 
-@implementation W2STSDKFeatureMemsSensorFusion{
+@implementation W2STSDKFeatureMemsSensorFusionCompact{
     NSMutableArray *mFieldData;
     uint32_t mTimestamp;
     dispatch_queue_t mRwQueue;
+    dispatch_queue_t mNotificationQueue;
 }
 
 +(void)initialize{
-    if(self == [W2STSDKFeatureMemsSensorFusion class]){
+    if(self == [W2STSDKFeatureMemsSensorFusionCompact class]){
         sFieldDesc = [[NSArray alloc] initWithObjects:
                       [W2STSDKFeatureField  createWithName: @"x"
                                                       unit:FEATURE_UNIT
@@ -55,6 +59,18 @@ static NSArray *sFieldDesc;
 }
 
 
+-(id) initWhitNode:(W2STSDKNode *)node{
+    self = [super initWhitNode:node name:FEATURE_NAME];
+    mNotificationQueue = dispatch_queue_create("W2STSDKFeatureMemsSensorFusionCompactNotification",
+                                               DISPATCH_QUEUE_CONCURRENT);
+    mRwQueue = dispatch_queue_create("W2STSDKFeatureMemsSensorFusionCompactNotificationRwQueue",
+                                     DISPATCH_QUEUE_CONCURRENT);
+    mFieldData = [NSMutableArray arrayWithObjects:@0,@0,@0,@0, nil];
+    mTimestamp=0;
+
+    return self;
+}
+
 +(float)getX:(NSArray*)data{
     if(data.count!=0)
     return NAN;
@@ -79,13 +95,6 @@ static NSArray *sFieldDesc;
     return[[data objectAtIndex:3] floatValue];
 }
 
--(id) initWhitNode:(W2STSDKNode *)node{
-    self = [super initWhitNode:node name:FEATURE_NAME];
-    mRwQueue = dispatch_queue_create("FeatureMemsSensorFusion", DISPATCH_QUEUE_CONCURRENT);
-    mFieldData = [NSMutableArray arrayWithObjects:@0,@0,@0,@0, nil];
-    mTimestamp=0;
-    return self;
-}
 
 -(NSArray*) getFieldsDesc{
     return sFieldDesc;
@@ -107,29 +116,36 @@ static NSArray *sFieldDesc;
     return temp;
 }
 
+
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
-    
+
+    const uint32_t nQuat = (rawData.length-offset)/6;
+    const int64_t quatDelay = QUATERNION_DELAY_MS/nQuat;
     
     float x,y,z,w;
-    x= [rawData extractLeFloatFromOffset:offset];
-    y= [rawData extractLeFloatFromOffset:offset+4];
-    z= [rawData extractLeFloatFromOffset:offset+8];
-    
-    if((rawData.length-offset) > 12)
-        w= [rawData extractLeFloatFromOffset:offset+12];
-    else
+    dispatch_time_t startTime = dispatch_time(DISPATCH_TIME_NOW, 0);
+    for (uint32_t i=0; i<nQuat; i++) {
+        x= [rawData extractLeInt16FromOffset:offset+0]/SCALE_FACTOR;
+        y= [rawData extractLeInt16FromOffset:offset+2]/SCALE_FACTOR;
+        z= [rawData extractLeInt16FromOffset:offset+4]/SCALE_FACTOR;
         w = 1-sqrt(x*x+y*y+z*z);
-    
-    dispatch_barrier_async(mRwQueue, ^(){
-        mTimestamp = timestamp;
-        [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:x]];
-        [mFieldData replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:y]];
-        [mFieldData replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:z]];
-        [mFieldData replaceObjectAtIndex:3 withObject:[NSNumber numberWithFloat:w]];
-        [self notifyNewData];
-        [self notifyLogData:rawData data:mFieldData];
-    });
-    return 6;
+
+        dispatch_after(startTime, mNotificationQueue, ^{
+            dispatch_barrier_async(mRwQueue, ^(){
+                mTimestamp = timestamp;
+                [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:x]];
+                [mFieldData replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:y]];
+                [mFieldData replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:z]];
+                [mFieldData replaceObjectAtIndex:3 withObject:[NSNumber numberWithFloat:w]];
+                [self notifyNewData];
+                [self notifyLogData: [rawData subdataWithRange:NSMakeRange(offset, 6)] data:mFieldData];
+            });
+
+        });
+        offset += 6;
+        startTime = dispatch_time(startTime,quatDelay);
+    }//for
+    return 6*nQuat;
 }
 
 @end

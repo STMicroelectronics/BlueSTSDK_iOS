@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CBAdvertisementData.h>
 #import "W2STSDKBleAdvertiseParser.h"
+#import "NSData+NumberConversion.h"
 
 
 @interface W2STSDKBleAdvertiseParser()
@@ -47,7 +48,7 @@
     //else
     _deviceId = *((unsigned char*)rawData.bytes);
     _nodeType = [self getNodeType: _deviceId];
-    [rawData getBytes:&_featureMap length:sizeof(featureMask_t)];
+    _featureMap = [rawData extractBeUInt32FromOffset:1];
     return self;
 }
 
