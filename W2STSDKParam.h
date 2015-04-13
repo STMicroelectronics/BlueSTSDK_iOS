@@ -93,34 +93,34 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeParamSWCompassKey;
 W2STSDK_EXTERN NSString * const W2STSDKNodeParamSWAltimeterKey;
 
 
-@property (readonly, assign, nonatomic) NSDate * lastUpdate;
+@property (readonly, assign, nonatomic) NSDate * lastUpdate __deprecated;
 
-@property (readonly, assign, nonatomic) double value;
-@property (readonly, assign, nonatomic) NSInteger rawValue;
-@property (readonly, assign, nonatomic) NSInteger time;
+@property (readonly, assign, nonatomic) double value __deprecated;
+@property (readonly, assign, nonatomic) NSInteger rawValue __deprecated;
+@property (readonly, assign, nonatomic) NSInteger time __deprecated;
 
-@property (retain, nonatomic) NSData *data;
+@property (retain, nonatomic) NSData *data __deprecated;
 
-@property (retain, nonatomic) NSString *name;
-@property (retain, nonatomic) NSString *shortName;
+@property (retain, nonatomic) NSString *name __deprecated;
+@property (retain, nonatomic) NSString *shortName __deprecated;
 
-@property (retain, nonatomic) NSString *key;
-@property (assign, readonly) W2STSDKNodeParam map;
-@property (retain, nonatomic) W2STSDKFeature *feature;
+@property (retain, nonatomic) NSString *key __deprecated;
+@property (assign, readonly) W2STSDKNodeParam map __deprecated;
+@property (retain, nonatomic) W2STSDKFeature *feature __deprecated;
 //@property (retain, nonatomic) NSString *keyFeature;
-@property (retain, nonatomic) W2STSDKNode * node;
+@property (retain, nonatomic) W2STSDKNode * node __deprecated;
 
 
--(id)init:(NSString *)key feature:(W2STSDKFeature *)feature node:(W2STSDKNode *)node;
--(NSUInteger)updateData:(NSData *)data position:(NSUInteger)pos time:(NSUInteger)time;
--(NSNumber *)numberValue:(BOOL)rawDataMode;
--(NSString *)stringValue;
+-(id)init:(NSString *)key feature:(W2STSDKFeature *)feature node:(W2STSDKNode *)node __deprecated;
+-(NSUInteger)updateData:(NSData *)data position:(NSUInteger)pos time:(NSUInteger)time __deprecated;
+-(NSNumber *)numberValue:(BOOL)rawDataMode __deprecated;
+-(NSString *)stringValue __deprecated;
 
-+(void)initStatic;
-+(NSArray *)allKeys;
++(void)initStatic __deprecated;
++(NSArray *)allKeys __deprecated;
 
-+(NSString *)keyFeature:(NSString *)key;
-+(NSString *)nameByKey:(NSString *)key mode:(NSString *)mode;
-+(W2STSDKNodeParam)mapLookup:(NSString *)key;
++(NSString *)keyFeature:(NSString *)key __deprecated;
++(NSString *)nameByKey:(NSString *)key mode:(NSString *)mode __deprecated; 
++(W2STSDKNodeParam)mapLookup:(NSString *)key __deprecated;
 
 @end

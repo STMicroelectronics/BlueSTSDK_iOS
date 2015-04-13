@@ -28,11 +28,11 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeChangeTxPowerVal;
 
 @interface W2STSDKTools : NSObject
 
-+(NSString *)nodeChangeComponentsStr:(NSString *)str field:(NSString *)field;
-+(NSString *)nodeChangeMakeStr:(NSString *)key val:(NSString *)val;
++(NSString *)nodeChangeComponentsStr:(NSString *)str field:(NSString *)field __deprecated;
++(NSString *)nodeChangeMakeStr:(NSString *)key val:(NSString *)val __deprecated;
 
 //tools
-+(void) trace:(CBPeripheral *)peripheral text:(NSString *)text;
-+(void) tracePeripherals:(NSArray *)peripherals text:(NSString *)text;
++(void) trace:(CBPeripheral *)peripheral text:(NSString *)text __deprecated;
++(void) tracePeripherals:(NSArray *)peripherals text:(NSString *)text __deprecated;
 
 @end
