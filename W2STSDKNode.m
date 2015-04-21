@@ -1616,7 +1616,7 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     CBCharacteristic *featureChar = [W2STSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
     featureMask_t featureMask = [W2STSDKFeatureCharacteristics extractFeatureMask:featureChar.UUID];
     NSData *msg = [W2STSDKNode prepareMessageWithMask:featureMask type:commandType data:commandData];
-    [mPeripheral writeValue:msg forCharacteristic:featureChar type:CBCharacteristicWriteWithoutResponse];
+    [mPeripheral writeValue:msg forCharacteristic:mFeatureCommand type:CBCharacteristicWriteWithoutResponse];
     return true;
 }
 
