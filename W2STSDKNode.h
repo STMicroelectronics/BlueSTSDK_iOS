@@ -129,6 +129,8 @@ typedef NS_ENUM(NSInteger, W2STSDKNodeFrameGroup) {
 /////////////////// new sdk//////////////////
 
 #import "W2STSDKManager.h"
+
+@class W2STSDKDebug;
 @class W2STSDKFeature;
 typedef NS_ENUM(NSInteger, W2STSDKNodeMode) {
     W2STSDKNodeModeUSB_DFU,
@@ -433,6 +435,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 @property (retain, readonly) NSString *name;
 @property (retain, readonly) NSString *tag;
 @property (retain, readonly) NSNumber *RSSI;
+@property (retain, readonly) W2STSDKDebug *debugConsole;
 @property (retain, readonly) NSNumber *txPower;
 
 +(NSString*) stateToString:(W2STSDKNodeState)state;

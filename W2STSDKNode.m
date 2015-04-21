@@ -10,6 +10,7 @@
 
 #import "W2STSDKNode.h"
 #import "W2STSDKFeature.h"
+#import "W2STSDKDebug.h"
 #import "Util/W2STSDKCharacteristic.h"
 #import "Util/W2STSDKBleAdvertiseParser.h"
 #import "Util/W2STSDKBleNodeDefines.h"
@@ -1444,6 +1445,7 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     mCharFeatureMap = [NSMutableArray array];
     mNotifyFeature = [NSMutableSet set];
     mFeatureCommand=nil;
+    _debugConsole=nil;
     mPeripheral=peripheral;
     mPeripheral.delegate=self;
     _state=W2STSDKNodeStateIdle;
@@ -1642,6 +1644,23 @@ didDiscoverServices:(NSError *)error{
     }
 }
 
+-(W2STSDKDebug*) buildDebugService:(CBService*)service{
+    
+    CBCharacteristic *term=nil,*err=nil;
+    for(CBCharacteristic *c in service.characteristics){
+        if([c.UUID isEqual:W2STSDKServiceDebug.termUuid]){
+            term = c;
+        }else if([c.UUID isEqual:W2STSDKServiceDebug.stdErrUuid]){
+            err = c;
+        }//if-else-if
+    }//for
+    if(term!=nil && err!=nil){
+        return [[W2STSDKDebug alloc]initWithNode:self device:mPeripheral
+                                       termChart:term errChart:err];
+    
+    }//else
+    return nil;
+}
 
 //for each services find the known characteristics
 - (void)peripheral:(CBPeripheral *)peripheral
@@ -1658,8 +1677,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
     }
     
     if( [[service UUID] isEqual:[W2STSDKServiceDebug serviceUuid]]  ){
-        //build the debug service
-        NSLog(@"Debug Service Discoverd");
+        _debugConsole = [self buildDebugService:service];
     }else if( [[service UUID] isEqual:[W2STSDKServiceConfig serviceUuid]]  ){
         NSLog(@"Config Service Discoverd");
         for (CBCharacteristic *c in service.characteristics) {
@@ -1716,6 +1734,10 @@ didDiscoverCharacteristicsForService:(CBService *)service
     
     if([characteristics isEqual: mFeatureCommand]){
         [self notifyCommandResponse: characteristics.value];
+        return;
+    }else if(_debugConsole!=nil &&
+             [W2STSDKServiceDebug isDebugCharacteristics:characteristics]){
+        [_debugConsole receiveCharacteristicsUpdate:characteristics];
         return;
     }//else
     

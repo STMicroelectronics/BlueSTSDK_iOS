@@ -76,9 +76,15 @@
 +(CBUUID*) termUuid{
     static CBUUID *term =nil;
     if(term ==nil)
-        term = [CBUUID UUIDWithString: STDERR_DEBUG_CHAR_UUID];
+        term = [CBUUID UUIDWithString: TEMR_DEBUG_CHAR_UUID];
     return term;
 }
+
++(bool) isDebugCharacteristics:(CBCharacteristic*) c{
+    return [c.UUID isEqual: W2STSDKServiceDebug.termUuid] ||
+        [c.UUID isEqual: W2STSDKServiceDebug.stdErrUuid];
+}
+
 @end
 
 @implementation W2STSDKServices

@@ -23,6 +23,7 @@ typedef uint32_t featureMask_t;
 +(CBUUID*) serviceUuid;
 +(CBUUID*) stdErrUuid;
 +(CBUUID*) termUuid;
++(bool) isDebugCharacteristics:(CBCharacteristic*) c;
 @end
 
 @interface W2STSDKServiceConfig: NSObject
