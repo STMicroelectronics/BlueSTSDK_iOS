@@ -11,7 +11,8 @@
 #import "W2STSDKFeatureMemsSensorFusionCompact.h"
 #import "W2STSDKFeatureField.h"
 
-#define FEATURE_NAME @"MemsSensorFusion (Compact)"
+//#define FEATURE_NAME @"MemsSensorFusion (Compact)"
+#define FEATURE_NAME @"MemsSensorFusionCompact"
 #define FEATURE_UNIT @""
 #define FEATURE_MIN @-1.0f
 #define FEATURE_MAX @1.0
@@ -138,7 +139,7 @@ static NSArray *sFieldDesc;
                 [mFieldData replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:z]];
                 [mFieldData replaceObjectAtIndex:3 withObject:[NSNumber numberWithFloat:w]];
                 [self notifyNewData];
-                [self notifyLogData: [rawData subdataWithRange:NSMakeRange(offset, 6)] data:mFieldData];
+                [self notifyLogData: [rawData subdataWithRange:NSMakeRange(offset, 6)] data:[mFieldData copy]];
             });
 
         });
