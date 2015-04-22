@@ -79,7 +79,7 @@ static NSArray *sFieldDesc;
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     
-    short press= [rawData extractLeInt32FromOffset:offset];
+    int32_t press= [rawData extractLeInt32FromOffset:offset];
     
     dispatch_barrier_async(mRwQueue, ^(){
         mTimestamp = timestamp;

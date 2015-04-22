@@ -14,6 +14,7 @@
     CBPeripheral *mDevice;
     CBCharacteristic* mTermChar;
     CBCharacteristic* mErrChar;
+    NSMutableArray *mWriteMessageQueue;
 }
 
 -(id) initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
@@ -23,11 +24,13 @@
     mTermChar=termChar;
     mErrChar=errChar;
     mDevice=device;
+    mWriteMessageQueue = [NSMutableArray array];
     return self;
 }
 
 -(void) writeMessage:(NSString*)msg{
-    NSData *tempData = [msg dataUsingEncoding:NSUTF8StringEncoding];
+    [mWriteMessageQueue addObject:msg];
+    NSData *tempData = [msg dataUsingEncoding:NSASCIIStringEncoding];
     [mDevice writeValue:tempData forCharacteristic:mTermChar type:CBCharacteristicWriteWithResponse];
 }
 
@@ -43,12 +46,13 @@
 
 
 //package method
--(void)receiveCharacteristicsWriteUpdate:(CBCharacteristic*)termChar status:(BOOL) status{
+-(void)receiveCharacteristicsWriteUpdate:(CBCharacteristic*)termChar error:(NSError *)error{
     if(_delegate == nil)
         return;
-    NSString *temp = [[NSString alloc]initWithData:termChar.value encoding:NSUTF8StringEncoding];
+    NSString *temp = mWriteMessageQueue.firstObject;
+    [mWriteMessageQueue removeObjectAtIndex:0];
     if([termChar.UUID isEqual:W2STSDKServiceDebug.termUuid]){
-        [_delegate debug:self didStdInSend: temp status:status];
+        [_delegate debug:self didStdInSend: temp error:error];
     }
 }
 -(void)receiveCharacteristicsUpdate:(CBCharacteristic*)termChar{

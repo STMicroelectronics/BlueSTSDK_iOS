@@ -1376,18 +1376,6 @@ long frame_node_count = 0;
     }
 }
 
-- (void)peripheral:(CBPeripheral *)peripheral
-didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
-             error:(NSError *)error {
-    
-    if (error) {
-        NSLog(@"Error writing characteristic value: %@",
-              [error localizedDescription]);
-    }
-    else {
-        NSLog(@"Ok writing characteristic");
-    }
-}
 -(W2STSDKCommand *)bleGetFirmwareVersion {
     //W2STSDKCommand * cs = [self sendControl: [W2STSDKCommand create:YES firmware:NO]];
     
@@ -1763,6 +1751,17 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
     }
     
     [self characteristicUpdate:characteristic];
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral
+didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
+             error:(NSError *)error{
+    
+    if ([characteristic.UUID isEqual: [W2STSDKServiceDebug termUuid]] &&
+        _debugConsole!=nil){
+        [_debugConsole receiveCharacteristicsWriteUpdate:characteristic error:error];
+    }
+    
 }
 
 +(NSString*) stateToString:(W2STSDKNodeState)state{

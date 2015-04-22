@@ -26,7 +26,7 @@
 -(void) writeMessage:(NSString*)msg;
 
 //package method
--(void)receiveCharacteristicsWriteUpdate:(CBCharacteristic*)termChar status:(BOOL) status;
+-(void)receiveCharacteristicsWriteUpdate:(CBCharacteristic*)termChar error:(NSError*)error;
 -(void)receiveCharacteristicsUpdate:(CBCharacteristic*)termChar;
 @end
 
@@ -34,7 +34,7 @@
 @required
 -(void) debug:(W2STSDKDebug*)debug didStdOutRecived:(NSString*) msg;
 -(void) debug:(W2STSDKDebug*)debug didStdErrRecived:(NSString*) msg;
--(void) debug:(W2STSDKDebug*)debug didStdInSend:(NSString*) msg status:(BOOL)status;
+-(void) debug:(W2STSDKDebug*)debug didStdInSend:(NSString*) msg error:(NSError*)error;
 @end
 
 #endif

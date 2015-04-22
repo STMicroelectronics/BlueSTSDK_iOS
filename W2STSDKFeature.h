@@ -151,7 +151,7 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 @property (readonly,retain,nonatomic) W2STSDKNode *parentNode;
 @property (readonly) NSDate* lastUpdate;
 
-+(NSString*) getFeatureDataDescription:(W2STSDKFeature*)feature;
+-(NSString*) description;
 -(void) addFeatureDelegate:(id<W2STSDKFeatureDelegate>)delegate;
 -(void) removeFeatureDelegate:(id<W2STSDKFeatureDelegate>)delegate;
 -(void) addFeatureLogDelegate:(id<W2STSDKFeatureLogDelegate>)delegate;

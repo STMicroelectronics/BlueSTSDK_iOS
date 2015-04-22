@@ -375,11 +375,11 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     
 }
 
-+(NSString*) getFeatureDataDescription:(W2STSDKFeature*)feature{
+-(NSString*) description{
     NSMutableString *s = [NSMutableString stringWithString:@"Timestamp:"];
-    [s appendFormat:@"%d ",[feature getTimestamp] ];
-    NSArray *fields = [feature getFieldsDesc];
-    NSArray *datas = [feature getFieldsData ];
+    [s appendFormat:@"%d ",[self getTimestamp] ];
+    NSArray *fields = [self getFieldsDesc];
+    NSArray *datas = [self getFieldsData ];
     for (int i = 0; i < fields.count; i++) {
         W2STSDKFeatureField *field =(W2STSDKFeatureField*)[fields objectAtIndex:i];
         NSNumber *data = (NSNumber*)[datas objectAtIndex:i];
