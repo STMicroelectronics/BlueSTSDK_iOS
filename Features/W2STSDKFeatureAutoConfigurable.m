@@ -91,7 +91,7 @@ static dispatch_queue_t sNotificationQueue;
     [mFeatureAutoConfDelegates removeObject:delegate];
 }
 
--(void) commandResponceReveivedWithTimestamp:(uint32_t)timestamp
+-(void) parseCommandResponseWithTimestamp:(uint32_t)timestamp
                                  commandType:(uint8_t)commandType
                                         data:(NSData*)data{
     uint8_t status = [data extractUInt8FromOffset:0];
@@ -109,7 +109,7 @@ static dispatch_queue_t sNotificationQueue;
             _isConfigurated=NO;
         }
     }else
-        [super commandResponceReveivedWithTimestamp:timestamp
+        [super parseCommandResponseWithTimestamp:timestamp
                                         commandType:commandType
                                                data:data];
 }

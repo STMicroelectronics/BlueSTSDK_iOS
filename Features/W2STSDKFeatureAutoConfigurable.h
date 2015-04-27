@@ -23,7 +23,7 @@
 
 //protected method
 -(id) initWhitNode: (W2STSDKNode*)node name:(NSString*)name;
--(void) commandResponceReveivedWithTimestamp:(uint32_t)timestamp
+-(void) parseCommandResponseWithTimestamp:(uint32_t)timestamp
                                  commandType:(uint8_t)commandType
                                         data:(NSData*)data;
 

@@ -309,10 +309,10 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     [mFeatureDelegates removeObject:delegate];
 }
 
--(void) addFeatureLogDelegate:(id<W2STSDKFeatureLogDelegate>)delegate{
+-(void) addFeatureLoggerDelegate:(id<W2STSDKFeatureLogDelegate>)delegate{
     [mFeatureLogDelegates addObject:delegate];
 }
--(void) removeFeatureLogDelegate:(id<W2STSDKFeatureLogDelegate>)delegate{
+-(void) removeFeatureLoggerDelegate:(id<W2STSDKFeatureLogDelegate>)delegate{
     [mFeatureLogDelegates removeObject:delegate];
 }
 
@@ -348,7 +348,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     return 0;
 }
 
--(void) notifyNewData{
+-(void) notifyUpdate{
     for (id<W2STSDKFeatureDelegate> delegate in mFeatureDelegates) {
         dispatch_async(sNotificationQueue,^{
             [delegate didUpdateFeature:self];
@@ -356,7 +356,7 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
     }//for
 }
 
--(void) notifyLogData:(NSData*)rawData data:(NSArray*)data{
+-(void) logFeatureUpdate:(NSData*)rawData data:(NSArray*)data{
     for (id<W2STSDKFeatureLogDelegate> delegate in mFeatureLogDelegates) {
         dispatch_async(sNotificationQueue,^{
             [delegate feature:self rawData:rawData data:data];
@@ -369,11 +369,16 @@ NSString * const W2STSDKNodeFeatureGroupInvalidKey = @"GroupInvalidKey";
 }
 
 //optinal abstract method -> default implementation is an empty method
--(void) commandResponceReveivedWithTimestamp:(uint32_t)timestamp
+-(void) parseCommandResponseWithTimestamp:(uint32_t)timestamp
                                  commandType:(uint8_t)commandType
                                         data:(NSData*)data{
     
 }
+
+-(void) writeData:(NSData *)data{
+    [_parentNode writeDataToFeature:self data:data];
+}
+
 
 -(NSString*) description{
     NSMutableString *s = [NSMutableString stringWithString:@"Timestamp:"];

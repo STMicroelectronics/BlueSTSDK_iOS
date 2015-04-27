@@ -110,8 +110,8 @@ static NSArray *sFieldDesc;
         [mFieldData replaceObjectAtIndex:1 withObject:[NSNumber numberWithShort:gyroY]];
         [mFieldData replaceObjectAtIndex:2 withObject:[NSNumber numberWithShort:gyroZ]];
         
-        [self notifyNewData];
-        [self notifyLogData:[rawData subdataWithRange:NSMakeRange(offset, 6)] data:[mFieldData copy]];
+        [self notifyUpdate];
+        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 6)] data:[mFieldData copy]];
     });
     return 6;
 }

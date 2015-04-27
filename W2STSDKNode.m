@@ -1604,11 +1604,24 @@ long frame_node_count = 0;
         return false;
     
     CBCharacteristic *featureChar = [W2STSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
+    if(featureChar==nil)
+        return false;
     featureMask_t featureMask = [W2STSDKFeatureCharacteristics extractFeatureMask:featureChar.UUID];
     NSData *msg = [W2STSDKNode prepareMessageWithMask:featureMask type:commandType data:commandData];
     [mPeripheral writeValue:msg forCharacteristic:mFeatureCommand type:CBCharacteristicWriteWithoutResponse];
     return true;
 }
+
+-(BOOL)writeDataToFeature:(W2STSDKFeature *)f data:(NSData *)data{
+    
+    CBCharacteristic *featureChar = [W2STSDKCharacteristic getCharFromFeature:f in:mCharFeatureMap];
+    if(featureChar==nil)
+        return false;
+    
+    [mPeripheral writeValue:data forCharacteristic:featureChar type:CBCharacteristicWriteWithoutResponse];
+    return true;
+}
+
 
 // CBPeriperalDelegate
 - (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral
@@ -1714,7 +1727,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
     uint8_t commandType = [data extractUInt8FromOffset:6];
     NSData *resp = [data subdataWithRange:NSMakeRange(7, data.length-7)];
     W2STSDKFeature *f = [mMaskToFeature objectForKey: [NSNumber numberWithUnsignedInt:featureMask]];
-    [f commandResponceReveivedWithTimestamp:timestamp commandType:commandType
+    [f parseCommandResponseWithTimestamp:timestamp commandType:commandType
                                        data: resp];
 }
 

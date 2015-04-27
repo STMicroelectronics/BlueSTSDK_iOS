@@ -111,8 +111,8 @@ static NSArray *sFieldDesc;
         [mFieldData replaceObjectAtIndex:1 withObject:[NSNumber numberWithShort:magY]];
         [mFieldData replaceObjectAtIndex:2 withObject:[NSNumber numberWithShort:magZ]];
         
-        [self notifyNewData];
-        [self notifyLogData:[rawData subdataWithRange:NSMakeRange(offset, 6)] data:[mFieldData copy]];
+        [self notifyUpdate];
+        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 6)] data:[mFieldData copy]];
     });
     return 6;
 }

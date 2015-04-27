@@ -154,8 +154,8 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 -(NSString*) description;
 -(void) addFeatureDelegate:(id<W2STSDKFeatureDelegate>)delegate;
 -(void) removeFeatureDelegate:(id<W2STSDKFeatureDelegate>)delegate;
--(void) addFeatureLogDelegate:(id<W2STSDKFeatureLogDelegate>)delegate;
--(void) removeFeatureLogDelegate:(id<W2STSDKFeatureLogDelegate>)delegate;
+-(void) addFeatureLoggerDelegate:(id<W2STSDKFeatureLogDelegate>)delegate;
+-(void) removeFeatureLoggerDelegate:(id<W2STSDKFeatureLogDelegate>)delegate;
 
 //abstact method
 -(id) initWhitNode: (W2STSDKNode*)node;
@@ -165,12 +165,14 @@ W2STSDK_EXTERN NSString * const W2STSDKNodeFeatureGroupInvalidKey;
 
 /// protected method
 -(id) initWhitNode: (W2STSDKNode*)node name:(NSString*)name;
--(void) notifyNewData;
--(void) notifyLogData:(NSData*)rawData data:(NSArray*)data;
+-(void) notifyUpdate;
+-(void) logFeatureUpdate:(NSData*)rawData data:(NSArray*)data;
 -(BOOL) sendCommand:(uint8_t)commandType data:(NSData*)commandData;
--(void) commandResponceReveivedWithTimestamp:(uint32_t)timestamp
+-(void) parseCommandResponseWithTimestamp:(uint32_t)timestamp
                                  commandType:(uint8_t)commandType
                                         data:(NSData*)data;
+-(void)writeData:(NSData*)data;
+
 ///////package method////////////
 -(void) setEnabled:(bool)enabled;
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;

@@ -432,7 +432,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 @property (assign, nonatomic) W2STSDKNodeState state;
 @property (assign, nonatomic) W2STSDKNodeType type;
 @property (readonly) NSDate *rssiLastUpdate;
-@property (retain, readonly) NSString *name;
+@property (retain, readonly) NSString *name;	
 @property (retain, readonly) NSString *tag;
 @property (retain, readonly) NSNumber *RSSI;
 @property (retain, readonly) W2STSDKDebug *debugConsole;
@@ -468,6 +468,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(BOOL)sendCommandMessageToFeature:(W2STSDKFeature*)f type:(uint8_t)commandType
                      data:(NSData*) commandData;
 
+-(BOOL)writeDataToFeature:(W2STSDKFeature*)f data:(NSData*)data;
 
 //////////////// end internal/package methods ///////////////////////
 @end

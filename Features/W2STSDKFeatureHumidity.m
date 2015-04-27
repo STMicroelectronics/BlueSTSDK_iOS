@@ -92,9 +92,8 @@ static NSArray *sFieldDesc;
         mTimestamp = timestamp;
         [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:(hum/10.0f)]];
         
-        [self notifyNewData];
- 
-        [self notifyLogData:[rawData subdataWithRange:NSMakeRange(offset, 2)] data:[mFieldData copy]];
+        [self notifyUpdate];
+        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 2)] data:[mFieldData copy]];
     });
     return 2;
 }
