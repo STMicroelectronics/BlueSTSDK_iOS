@@ -44,25 +44,31 @@ static dispatch_queue_t sNotificationQueue;
 
 -(void)notifyAutoConfStart{
     for (id<W2STSDKFeatureAutoConfigurableDelegate> delegate in mFeatureAutoConfDelegates) {
-        dispatch_async(sNotificationQueue, ^(){
-            [delegate didAutoConfigurationStart: self];
-        });
+        if( [delegate respondsToSelector:@selector(didAutoConfigurationStart:)]){
+            dispatch_async(sNotificationQueue, ^(){
+                [delegate didAutoConfigurationStart: self];
+            });
+        }//if
     }
 }
 
 -(void)notifyAutoConfStopWithStatus:(int32_t)status{
     for (id<W2STSDKFeatureAutoConfigurableDelegate> delegate in mFeatureAutoConfDelegates) {
-        dispatch_async(sNotificationQueue, ^(){
-            [delegate didConfigurationFinished:self status:status];
-        });
+         if( [delegate respondsToSelector:@selector(didConfigurationFinished:status:)]){
+             dispatch_async(sNotificationQueue, ^(){
+                 [delegate didConfigurationFinished:self status:status];
+             });
+         }//if
     }
 }
 
 -(void) notifyAutoConfChangeStatus:(int32_t)newStatus{
     for (id<W2STSDKFeatureAutoConfigurableDelegate> delegate in mFeatureAutoConfDelegates) {
-        dispatch_async(sNotificationQueue, ^(){
-            [delegate didAutoConfigurationChange:self status:newStatus];
-        });
+        if( [delegate respondsToSelector:@selector(didAutoConfigurationChange:status:)]){
+            dispatch_async(sNotificationQueue, ^(){
+                [delegate didAutoConfigurationChange:self status:newStatus];
+            });
+        }//if
     }
 }
 
