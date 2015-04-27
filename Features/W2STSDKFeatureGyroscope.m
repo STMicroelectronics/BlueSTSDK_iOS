@@ -51,19 +51,19 @@ static NSArray *sFieldDesc;
 
 
 +(float)getGyroX:(NSArray*)data{
-    if(data.count!=0)
+    if(data.count==0)
         return NAN;
     return[[data objectAtIndex:0] floatValue];
 }
 
 +(float)getGyroY:(NSArray*)data{
-    if(data.count>=1)
+    if(data.count<1)
         return NAN;
     return[[data objectAtIndex:1] floatValue];
 }
 
 +(float)getGyroZ:(NSArray*)data{
-    if(data.count>=2)
+    if(data.count<2)
         return NAN;
     return[[data objectAtIndex:2] floatValue];
 }

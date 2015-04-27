@@ -50,19 +50,19 @@ static NSArray *sFieldDesc;
 
 
 +(float)getAccX:(NSArray*)data{
-    if(data.count!=0)
+    if(data.count==0)
         return NAN;
     return[[data objectAtIndex:0] floatValue];
 }
 
 +(float)getAccY:(NSArray*)data{
-    if(data.count>=1)
+    if(data.count<1)
         return NAN;
     return[[data objectAtIndex:1] floatValue];
 }
 
 +(float)getAccZ:(NSArray*)data{
-    if(data.count>=2)
+    if(data.count<2)
         return NAN;
     return[[data objectAtIndex:2] floatValue];
 }

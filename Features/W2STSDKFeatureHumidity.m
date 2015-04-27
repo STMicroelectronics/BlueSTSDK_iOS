@@ -49,7 +49,7 @@ static NSArray *sFieldDesc;
 
 
 +(float)getHumidity:(NSArray *)data{
-    if(data.count!=0)
+    if(data.count==0)
     return NAN;
     return[[data objectAtIndex:0] floatValue];
 }

@@ -73,25 +73,25 @@ static NSArray *sFieldDesc;
 }
 
 +(float)getX:(NSArray*)data{
-    if(data.count!=0)
+    if(data.count==0)
     return NAN;
     return[[data objectAtIndex:0] floatValue];
 }
 
 +(float)getY:(NSArray*)data{
-    if(data.count>=1)
+    if(data.count<1)
     return NAN;
     return[[data objectAtIndex:1] floatValue];
 }
 
 +(float)getZ:(NSArray*)data{
-    if(data.count>=2)
+    if(data.count<2)
     return NAN;
     return[[data objectAtIndex:2] floatValue];
 }
 
 +(float)getW:(NSArray*)data{
-    if(data.count>=3)
+    if(data.count<3)
     return NAN;
     return[[data objectAtIndex:3] floatValue];
 }
@@ -129,7 +129,7 @@ static NSArray *sFieldDesc;
         x= [rawData extractLeInt16FromOffset:offset+0]/SCALE_FACTOR;
         y= [rawData extractLeInt16FromOffset:offset+2]/SCALE_FACTOR;
         z= [rawData extractLeInt16FromOffset:offset+4]/SCALE_FACTOR;
-        w = 1-sqrt(x*x+y*y+z*z);
+        w = sqrt(1-(x*x+y*y+z*z));
 
         dispatch_after(startTime, mNotificationQueue, ^{
             dispatch_barrier_async(mRwQueue, ^(){
