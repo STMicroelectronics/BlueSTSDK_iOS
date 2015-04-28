@@ -139,38 +139,38 @@ typedef struct {
 
 @interface W2STSDKCommand : NSObject
 
-@property (weak, nonatomic) W2STSDKNode *node;
-@property (assign, nonatomic) W2STSDKCommandFrame_t ctrlFrame;
+@property (weak, nonatomic) W2STSDKNode *node __deprecated;
+@property (assign, nonatomic) W2STSDKCommandFrame_t ctrlFrame __deprecated;
 //@property (assign, readonly) W2STSDKCommandRegister_t reg;
 -(W2STSDKCommandRegister_t)getReg;
 
 -(NSData *)data;
 
-+(W2STSDKCommandRegister_t)registerAtIndex:(NSUInteger)index;
-+(W2STSDKCommandRegister_t)registerAtAddress:(NSUInteger)address memory:(W2STSDKCommandMemory_e)memory;
++(W2STSDKCommandRegister_t)registerAtIndex:(NSUInteger)index __deprecated;
++(W2STSDKCommandRegister_t)registerAtAddress:(NSUInteger)address memory:(W2STSDKCommandMemory_e)memory __deprecated;
 
--(id)initWithData:(NSData *)data len:(NSUInteger)len offset:(NSUInteger)offset;
--(id)initWithData:(NSData *)data len:(NSUInteger)len;
--(id)initWithData:(NSData *)data;
--(id)initWithBytes:(const void *)bytes len:(NSUInteger)len offset:(NSUInteger)offset;
--(id)initWithBytes:(const void *)bytes len:(NSUInteger)len;
--(id)initWithCtrl:(W2STSDKCommandRegisterCtrl_t)ctrl addr:(W2STSDKCommandRegisterAddr_t)addr err:(W2STSDKCommandRegisterErr_t)err len:(W2STSDKCommandRegisterLen_t)len payload:(NSData *)payload;
--(id)initWithCtrl:(W2STSDKCommandRegisterCtrl_t)ctrl addr:(W2STSDKCommandRegisterAddr_t)addr err:(W2STSDKCommandRegisterErr_t)err payload:(NSData *)payload;
--(void)configWithCtrl:(W2STSDKCommandRegisterCtrl_t)ctrl addr:(W2STSDKCommandRegisterAddr_t)addr err:(W2STSDKCommandRegisterErr_t)err len:(W2STSDKCommandRegisterLen_t)len payload:(NSData *)payload;
--(void)configWithCtrl:(W2STSDKCommandRegisterCtrl_t)ctrl addr:(W2STSDKCommandRegisterAddr_t)addr err:(W2STSDKCommandRegisterErr_t)err payload:(NSData *)payload;
--(void)configWithPayload:(NSData *)payload;
+-(id)initWithData:(NSData *)data len:(NSUInteger)len offset:(NSUInteger)offset __deprecated;
+-(id)initWithData:(NSData *)data len:(NSUInteger)len __deprecated;
+-(id)initWithData:(NSData *)data __deprecated;
+-(id)initWithBytes:(const void *)bytes len:(NSUInteger)len offset:(NSUInteger)offset __deprecated;
+-(id)initWithBytes:(const void *)bytes len:(NSUInteger)len __deprecated;
+-(id)initWithCtrl:(W2STSDKCommandRegisterCtrl_t)ctrl addr:(W2STSDKCommandRegisterAddr_t)addr err:(W2STSDKCommandRegisterErr_t)err len:(W2STSDKCommandRegisterLen_t)len payload:(NSData *)payload __deprecated;
+-(id)initWithCtrl:(W2STSDKCommandRegisterCtrl_t)ctrl addr:(W2STSDKCommandRegisterAddr_t)addr err:(W2STSDKCommandRegisterErr_t)err payload:(NSData *)payload __deprecated;
+-(void)configWithCtrl:(W2STSDKCommandRegisterCtrl_t)ctrl addr:(W2STSDKCommandRegisterAddr_t)addr err:(W2STSDKCommandRegisterErr_t)err len:(W2STSDKCommandRegisterLen_t)len payload:(NSData *)payload __deprecated;
+-(void)configWithCtrl:(W2STSDKCommandRegisterCtrl_t)ctrl addr:(W2STSDKCommandRegisterAddr_t)addr err:(W2STSDKCommandRegisterErr_t)err payload:(NSData *)payload __deprecated;
+-(void)configWithPayload:(NSData *)payload __deprecated;
 
-+(W2STSDKCommandRegisterCtrl_t)controlWithPending:(BOOL)pending eeprom:(BOOL)memory write:(BOOL)operation error:(BOOL)error ack:(BOOL)ack fragment:(BOOL)fragment;
++(W2STSDKCommandRegisterCtrl_t)controlWithPending:(BOOL)pending eeprom:(BOOL)memory write:(BOOL)operation error:(BOOL)error ack:(BOOL)ack fragment:(BOOL)fragment __deprecated;
 
-+(W2STSDKCommand *)createWithData:(NSData *)data len:(NSUInteger)len offset:(NSUInteger)offset;
-+(W2STSDKCommand *)createWithData:(NSData *)data len:(NSUInteger)len;
-+(W2STSDKCommand *)createWithData:(NSData *)data;
-+(W2STSDKCommand *)createWithBytes:(const void *)bytes len:(NSUInteger)len offset:(NSUInteger)offset;
-+(W2STSDKCommand *)createWithBytes:(const void *)bytes len:(NSUInteger)len;
++(W2STSDKCommand *)createWithData:(NSData *)data len:(NSUInteger)len offset:(NSUInteger)offset __deprecated;
++(W2STSDKCommand *)createWithData:(NSData *)data len:(NSUInteger)len __deprecated;
++(W2STSDKCommand *)createWithData:(NSData *)data __deprecated;
++(W2STSDKCommand *)createWithBytes:(const void *)bytes len:(NSUInteger)len offset:(NSUInteger)offset __deprecated;
++(W2STSDKCommand *)createWithBytes:(const void *)bytes len:(NSUInteger)len __deprecated;
 
-+(W2STSDKCommand *)createWithCtrl:(NSUInteger)ctrlvalue  addr:(NSUInteger)addr err:(NSUInteger)err payload:(NSData *)payload;
-+(W2STSDKCommand *)createWithCtrl:(NSUInteger)ctrlvalue  addr:(NSUInteger)addr err:(NSUInteger)err len:(NSUInteger)len payload:(NSData *)payload;
-+(W2STSDKCommand *)createWithReg:(W2STSDKCommandRegister_e)regEnum operation:(W2STSDKCommandOperation_e)operation payload:(NSData *)payload;
++(W2STSDKCommand *)createWithCtrl:(NSUInteger)ctrlvalue  addr:(NSUInteger)addr err:(NSUInteger)err payload:(NSData *)payload __deprecated;
++(W2STSDKCommand *)createWithCtrl:(NSUInteger)ctrlvalue  addr:(NSUInteger)addr err:(NSUInteger)err len:(NSUInteger)len payload:(NSData *)payload __deprecated;
++(W2STSDKCommand *)createWithReg:(W2STSDKCommandRegister_e)regEnum operation:(W2STSDKCommandOperation_e)operation payload:(NSData *)payload __deprecated;
 
 /*
 +(W2STSDKCommand *)create:(W2STSDKCommandOperation_e)operation name:(NSString *)name;
