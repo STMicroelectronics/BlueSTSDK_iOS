@@ -16,6 +16,10 @@
 #import "../Features/W2STSDKFeatureTemperature.h"
 #import "../Features/W2STSDKFEaturePressure.h"
 #import "../Features/W2STSDKFeatureMemsSensorFusionCompact.h"
+#import "../Features/W2STSDKFeatureLuminosity.h"
+#import "../Features/W2STSDKFeatureProximity.h"
+#import "../Features/W2STSDKFeatureBattery.h"
+
 #import "W2STSDKBleNodeDefines.h"
 #import "NSData+NumberConversion.h"
 
@@ -116,7 +120,11 @@ static NSDictionary *boardFeatureMap = nil;
                          @0x00040000: [W2STSDKFeatureTemperature class], //temperature
                          @0x00100000: [W2STSDKFeaturePressure class], //pressure
                          @0x00000080: [W2STSDKFeatureMemsSensorFusion class], //Mems sensor fusion
-                         @0x00000100: [W2STSDKFeatureMemsSensorFusionCompact class] //Mems sensor fusion compact
+                         @0x00000100: [W2STSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
+                         @0x01000000: [W2STSDKFeatureLuminosity class], //luminosity
+                         @0x02000000: [W2STSDKFeatureProximity class], //proximity
+                         @0x00020000: [W2STSDKFeatureBattery class] //battery
+
                          };
 
     wesuFeatureMap = @{
