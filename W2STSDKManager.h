@@ -11,7 +11,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
-#include "W2STSDKNode.h"
+@class W2STSDKNode;
+
 @protocol W2STSDKManagerDelegate;
 
 
@@ -36,7 +37,6 @@
 
 @end
 
-//protocol
 @protocol W2STSDKManagerDelegate <NSObject>
 @required
 - (void)manager:(W2STSDKManager *)manager didDiscoverNode:(W2STSDKNode *)node;

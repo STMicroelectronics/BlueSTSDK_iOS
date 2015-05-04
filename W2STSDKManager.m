@@ -8,7 +8,7 @@
 
 #import <CoreBluetooth/CBCentralManager.h>
 #import "W2STSDKManager.h"
-
+#import "W2STSDKNode.h"
 
 @interface W2STSDKManager()
 -(id)init;

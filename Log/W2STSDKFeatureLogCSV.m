@@ -7,7 +7,7 @@
 //
 
 #import "W2STSDKFeatureLogCSV.h"
-
+#import "W2STSDKNode.h"
 #import "../Features/W2STSDKFeatureField.h"
 
 @implementation W2STSDKFeatureLogCSV{

@@ -42,7 +42,15 @@
         [mDevice setNotifyValue:enable forCharacteristic:mErrChar];
     }
 }
-
+/*
+-(id<W2STSDKDebugOutputDelegate>)delegate{
+    id<W2STSDKDebugOutputDelegate> temp;
+    @synchronized(self){
+        temp =_delegate;
+    }
+    return temp;
+}
+ */
 
 
 //package method
