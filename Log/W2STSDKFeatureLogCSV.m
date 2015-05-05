@@ -14,7 +14,6 @@
     NSMutableDictionary *mCacheFileHandler;
 }
 
-
 -(id)init{
     self = [super init];
     mCacheFileHandler = [[NSMutableDictionary alloc] init];
@@ -55,7 +54,7 @@
     [out writeData: [temp dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
--(NSURL*) getDumpFileDirectoryUrl{
++(NSURL*) getDumpFileDirectoryUrl{
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *paths = [fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
     NSURL *documentsDirectory = [paths objectAtIndex:0];
@@ -69,7 +68,7 @@
     //else
    
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSURL *documentsDirectory = [self getDumpFileDirectoryUrl];
+    NSURL *documentsDirectory = [W2STSDKFeatureLogCSV getDumpFileDirectoryUrl];
     NSString *fileName = [NSString stringWithFormat:@"%@.csv",feature.name ];
     NSURL *fileUrl = [NSURL URLWithString:fileName relativeToURL:documentsDirectory];
 
@@ -107,8 +106,33 @@
     }
 }
 
++(NSArray*) getLogFiles{
+    NSError *error;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSURL *documentsDirectory = [W2STSDKFeatureLogCSV getDumpFileDirectoryUrl];
+    NSArray *files = [fileManager contentsOfDirectoryAtURL:documentsDirectory
+                               includingPropertiesForKeys:@[NSURLNameKey, NSURLIsDirectoryKey]
+                                                  options:(NSDirectoryEnumerationSkipsHiddenFiles |
+                                                          NSDirectoryEnumerationSkipsSubdirectoryDescendants)
+                                                    error:&error];
+    NSIndexSet *indexes = [files indexesOfObjectsPassingTest:
+                           ^BOOL (id obj, NSUInteger i, BOOL *stop) {
+                               NSURL *url = (NSURL*)obj;
+                               return [url.pathExtension isEqualToString:@"csv"];
+                           }];
+    return [files objectsAtIndexes:indexes];
+    
+}
 
-- (void)clean{
++(void) removeLogFiles{
+    NSArray *files = [W2STSDKFeatureLogCSV getLogFiles];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error;
+    for(NSURL *file in files){
+        [fileManager removeItemAtURL:file error:&error];
+        if(error)
+            NSLog(@"Error Removing the file %@ : %@",file.path,error.localizedDescription);
+    }//for
     
 }
 @end

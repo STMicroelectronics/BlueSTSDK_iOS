@@ -201,16 +201,15 @@ static dispatch_queue_t sNotificationQueue;
 -(void) disconnect{
     [self updateNodeStatus:W2STSDKNodeStateDisconnecting];
     mUserAskDisconnect=true;
-    //try a clean disconnect turning off all the notification
-    // -> remove all object form mNotifyFeature
-    for (W2STSDKFeature *f in mNotifyFeature){
-        [self disableNotification:f];
-    }//for
+    
     if(mFeatureCommand!=nil)
         [mPeripheral setNotifyValue:NO forCharacteristic:mFeatureCommand];
     
     //we remove the feature/char map since it must be rebuild evry time we connect
     [mCharFeatureMap removeAllObjects];
+    
+    //we close the connection so we remove all the notify characteristics
+    [mNotifyFeature removeAllObjects];
     
     [[W2STSDKManager sharedInstance]disconnect:mPeripheral];
 }

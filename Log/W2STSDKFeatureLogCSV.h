@@ -14,8 +14,9 @@
 @interface W2STSDKFeatureLogCSV : NSObject<W2STSDKFeatureLogDelegate>
 
 -(id)init;
--(void) clean;
 -(void) closeFiles;
 
++(NSArray*) getLogFiles;
++(void) removeLogFiles;
 
 @end
