@@ -44,11 +44,6 @@ static dispatch_queue_t sNotificationQueue;
     //when this array becames empty the node is connected
     NSMutableArray *mCharDiscoverServiceReq;
     
-    BOOL _notifiedReading __deprecated;
-    BOOL _connectAndReading __deprecated;
-    NSTimer *_readingBatteryStatusTimer __deprecated;;
-    BOOL _readingBatteryRequired __deprecated;
-    NSTimer *_readingRSSIStatusTimer __deprecated;
 }
 
 -(W2STSDKFeature*) buildFeatureFromClass:(Class)featureClass{
@@ -206,6 +201,17 @@ static dispatch_queue_t sNotificationQueue;
 -(void) disconnect{
     [self updateNodeStatus:W2STSDKNodeStateDisconnecting];
     mUserAskDisconnect=true;
+    //try a clean disconnect turning off all the notification
+    // -> remove all object form mNotifyFeature
+    for (W2STSDKFeature *f in mNotifyFeature){
+        [self disableNotification:f];
+    }//for
+    if(mFeatureCommand!=nil)
+        [mPeripheral setNotifyValue:NO forCharacteristic:mFeatureCommand];
+    
+    //we remove the feature/char map since it must be rebuild evry time we connect
+    [mCharFeatureMap removeAllObjects];
+    
     [[W2STSDKManager sharedInstance]disconnect:mPeripheral];
 }
 
@@ -372,11 +378,14 @@ didDiscoverCharacteristicsForService:(CBService *)service
            [mPeripheral setNotifyValue:YES forCharacteristic:mFeatureCommand];
         [self updateNodeStatus:W2STSDKNodeStateConnected];
     }
+    
+    /*
     //debug
     NSLog(@"Know Char:");
     for (W2STSDKCharacteristic *temp in mCharFeatureMap) {
         NSLog(@"Add Char %@",temp.characteristic.UUID.UUIDString);
     }
+    */
 }
 
 -(void)notifyCommandResponse:(NSData*)data{
@@ -434,6 +443,14 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
         [_debugConsole receiveCharacteristicsWriteUpdate:characteristic error:error];
     }
     
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral
+didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
+             error:(NSError *)error{
+    if(error)
+        NSLog(@"Error updating the char: %@ Erorr: %@",
+              characteristic.UUID.UUIDString,error.localizedDescription);
 }
 
 +(NSString*) stateToString:(W2STSDKNodeState)state{
