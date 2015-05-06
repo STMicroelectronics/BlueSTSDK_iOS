@@ -78,11 +78,11 @@ static NSArray *sFieldDesc;
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     
-    short hum= [rawData extractLeUInt16FromOffset:offset];
+    short temp= [rawData extractLeUInt16FromOffset:offset];
     
     dispatch_barrier_async(mRwQueue, ^(){
         mTimestamp = timestamp;
-        [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:(hum/10.0f)]];
+        [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:(temp/10.0f)]];
         
         [self notifyUpdate];
         [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 2)] data:[mFieldData copy]];

@@ -144,6 +144,4 @@ static dispatch_queue_t sNotificationQueue;
     return s;
 }
 
-//////////////////////// END NEW SDK///////////////////////////////////////////
-
 @end
