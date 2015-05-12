@@ -15,7 +15,7 @@
 #define FEATURE_NAME @"Proximity"
 #define FEATURE_UNIT @"mm"
 #define FEATURE_MIN @0
-#define FEATURE_MAX @1000
+#define FEATURE_MAX @350
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeUInt16
 #define FEATURE_OUT_OF_RANGE_VALUE 510
 static NSArray *sFieldDesc;
