@@ -290,10 +290,9 @@ static dispatch_queue_t sNotificationQueue;
 // CBPeriperalDelegate
 - (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral
                           error:(NSError *)error{
-    if(error!=nil){
+    if(error==nil){
         [self updateRssi:peripheral.RSSI];
     }else
-        //TODO CHANGE THE NODE STATUS?
         NSLog(@"Error Updating Rssi: %@ (%d)",error.description,error.code);
 }
 

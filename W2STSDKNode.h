@@ -95,6 +95,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 @protocol W2STSDKNodeBleConnectionParamDelegate <NSObject>
 @required
 - (void) node:(W2STSDKNode *)node didChangeRssi:(NSInteger)newRssi;
+@optional
 - (void) node:(W2STSDKNode *)node didChangeTxPower:(NSInteger)newPower;
 
 @end
