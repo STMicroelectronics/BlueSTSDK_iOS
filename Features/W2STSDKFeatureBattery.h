@@ -22,6 +22,8 @@ typedef NS_ENUM(NSInteger, W2STSDKFeatureBatteryStatus) {
 
 +(void)initialize;
 +(W2STSDKFeatureBatteryStatus)getBatteryStatus:(NSArray*)data;
++(NSString*)getBatteryStatusStr:(NSArray*)data;
+
 +(float)getBatteryLevel:(NSArray*)data;
 +(float)getBatteryVoltage:(NSArray*)data;
 +(float)getBatteryCurrent:(NSArray*)data;

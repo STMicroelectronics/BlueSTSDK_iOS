@@ -90,6 +90,22 @@ static NSArray *sFieldDesc;
     }
 }
 
++(NSString*)getBatteryStatusStr:(NSArray*)data{
+    switch ([W2STSDKFeatureBattery getBatteryStatus:data]){
+        case W2STSDKFeatureBatteryStatusLowBattery:
+            return @"Low battery";
+        case W2STSDKFeatureBatteryStatusDischarging:
+            return @"Discharging";
+        case W2STSDKFeatureBatteryStatusPluggedNotCharging:
+            return @"Plugged not charging";
+        case W2STSDKFeatureBatteryStatusCharging:
+            return @"Charging";
+        case W2STSDKFeatureBatteryStatusError:
+            return @"Error";
+    }//switch
+}//getBatteryStatusStr
+
+
 +(float)getBatteryLevel:(NSArray*)data{
     if(data.count==0)
         return NAN;
