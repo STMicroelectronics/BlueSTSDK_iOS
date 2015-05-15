@@ -91,13 +91,12 @@ static dispatch_queue_t sNotificationQueue;
     mPeripheral=peripheral;
     mPeripheral.delegate=self;
     _state=W2STSDKNodeStateIdle;
-    _name = peripheral.name;
     _tag = peripheral.identifier.UUIDString;
     W2STSDKBleAdvertiseParser *parser = [[W2STSDKBleAdvertiseParser alloc]
                         initWithAdvertise:advertisementData];
     [self buildAvailableFeatures: parser.featureMap maskFeatureMap:parser.featureMaskMap];
     _type = parser.nodeType;
-
+    _name = parser.name;
     [self updateTxPower: parser.txPower];
     
     [self updateRssi:rssi];
