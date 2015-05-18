@@ -104,6 +104,7 @@
     while ((f = [enumerator nextObject])) {
         [f closeFile];
     }
+    [mCacheFileHandler removeAllObjects];
 }
 
 +(NSArray*) getLogFiles{
