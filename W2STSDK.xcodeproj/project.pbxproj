@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		662D8BD81B0B6C88006B7538 /* W2STSDKNodeFake.h in Headers */ = {isa = PBXBuildFile; fileRef = 662D8BD61B0B6C88006B7538 /* W2STSDKNodeFake.h */; };
+		662D8BD91B0B6C88006B7538 /* W2STSDKNodeFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 662D8BD71B0B6C88006B7538 /* W2STSDKNodeFake.m */; };
 		665241F61B0B1BB100931F93 /* W2STSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 665241F51B0B1BB100931F93 /* W2STSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		665241FC1B0B1BB100931F93 /* W2STSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665241F01B0B1BB100931F93 /* W2STSDK.framework */; };
 		665242031B0B1BB100931F93 /* W2STSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 665242021B0B1BB100931F93 /* W2STSDKTests.m */; };
@@ -78,6 +80,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		662D8BD61B0B6C88006B7538 /* W2STSDKNodeFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = W2STSDKNodeFake.h; sourceTree = "<group>"; };
+		662D8BD71B0B6C88006B7538 /* W2STSDKNodeFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = W2STSDKNodeFake.m; sourceTree = "<group>"; };
 		665241F01B0B1BB100931F93 /* W2STSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = W2STSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		665241F41B0B1BB100931F93 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		665241F51B0B1BB100931F93 /* W2STSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = W2STSDK.h; sourceTree = "<group>"; };
@@ -203,6 +207,8 @@
 				6652421D1B0B1C0800931F93 /* W2STSDKNode.h */,
 				665242811B0B1E7800931F93 /* W2STSDKNode_prv.h */,
 				6652421E1B0B1C0800931F93 /* W2STSDKNode.m */,
+				662D8BD61B0B6C88006B7538 /* W2STSDKNodeFake.h */,
+				662D8BD71B0B6C88006B7538 /* W2STSDKNodeFake.m */,
 				665241F51B0B1BB100931F93 /* W2STSDK.h */,
 				665241F31B0B1BB100931F93 /* Supporting Files */,
 			);
@@ -329,6 +335,7 @@
 				665242891B0B20AC00931F93 /* W2STSDKDebug_prv.h in Headers */,
 				665242771B0B1C1400931F93 /* W2STSDKBleNodeDefines.h in Headers */,
 				665242741B0B1C1400931F93 /* NSData+NumberConversion.h in Headers */,
+				662D8BD81B0B6C88006B7538 /* W2STSDKNodeFake.h in Headers */,
 				665242791B0B1C1400931F93 /* W2STSDKCharacteristic.h in Headers */,
 				665242761B0B1C1400931F93 /* W2STSDKBleAdvertiseParser.h in Headers */,
 				665241F61B0B1BB100931F93 /* W2STSDK.h in Headers */,
@@ -432,6 +439,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				665242261B0B1C0800931F93 /* W2STSDKManager.m in Sources */,
+				662D8BD91B0B6C88006B7538 /* W2STSDKNodeFake.m in Sources */,
 				665242241B0B1C0800931F93 /* W2STSDKFeature.m in Sources */,
 				665242571B0B1C1400931F93 /* W2STSDKFeatureAutoConfigurable.m in Sources */,
 				6652426B1B0B1C1400931F93 /* W2STSDKFeatureTemperature.m in Sources */,

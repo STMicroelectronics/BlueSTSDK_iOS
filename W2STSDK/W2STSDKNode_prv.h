@@ -27,7 +27,7 @@
  *  @return <#return value description#>
  */
 -(id) init :(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData;
-
+-(id) init;
 -(void)updateRssi:(NSNumber*)rssi;
 -(void)updateTxPower:(NSNumber*)txPower;
 -(void)completeConnection;

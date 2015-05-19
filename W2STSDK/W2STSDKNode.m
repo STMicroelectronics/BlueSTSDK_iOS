@@ -77,12 +77,12 @@ static dispatch_queue_t sNotificationQueue;
     }//for
 }
 
--(id)init:(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData{
+-(id)init{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sNotificationQueue = dispatch_queue_create("W2STNode", DISPATCH_QUEUE_CONCURRENT);
     });
-
+    
     
     mNodeStatusDelegates = [NSMutableSet set];
     mBleConnectionDelegates = [NSMutableSet set];
@@ -90,9 +90,15 @@ static dispatch_queue_t sNotificationQueue;
     mNotifyFeature = [NSMutableSet set];
     mFeatureCommand=nil;
     _debugConsole=nil;
+    _state=W2STSDKNodeStateIdle;
+    return self;
+}
+
+-(id)init:(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData{
+    self = [self init];
     mPeripheral=peripheral;
     mPeripheral.delegate=self;
-    _state=W2STSDKNodeStateIdle;
+
     _tag = peripheral.identifier.UUIDString;
     W2STSDKBleAdvertiseParser *parser = [[W2STSDKBleAdvertiseParser alloc]
                         initWithAdvertise:advertisementData];

@@ -1,0 +1,120 @@
+//
+//  W2STSDKNodeFake.m
+//  W2STSDK
+//
+//  Created by Giovanni Visentini on 19/05/15.
+//  Copyright (c) 2015 STCentralLab. All rights reserved.
+//
+
+#import "W2STSDKNode_prv.h"
+#import "W2STSDKNodeFake.h"
+
+#import "W2STSDKFeatureAcceleration.h"
+#import "W2STSDKFeatureBattery.h"
+#import "W2STSDKFeatureGyroscope.h"
+#import "W2STSDKFeatureHumidity.h"
+#import "W2STSDKFeatureLuminosity.h"
+#import "W2STSDKFeaturePressure.h"
+#import "W2STSDKFeatureProximity.h"
+#import "W2STSDKFeatureTemperature.h"
+
+
+@implementation W2STSDKNodeFake{
+    uint32_t timestamp;
+    NSMutableDictionary *notificationTimer;
+    NSArray *availableFeatures;
+    NSMutableDictionary *notifyFeatures;
+}
+
+@synthesize name = _name;
+@synthesize tag = _tag;
+@synthesize txPower = _txPower;
+
+
+
+
+-(id)init{
+    self = [super init];
+    timestamp=0;
+    _name=@"FakeNode";
+    _tag=@"012345678-1234-5678-0123-123456789ABCD";
+    _txPower=@100;
+    availableFeatures = @[
+                          [[W2STSDKFeatureAcceleration alloc] initWhitNode:self],
+                          [[W2STSDKFeatureBattery alloc] initWhitNode:self],
+                          [[W2STSDKFeatureHumidity alloc] initWhitNode:self],
+                          [[W2STSDKFeatureLuminosity alloc] initWhitNode:self],
+                          [[W2STSDKFeaturePressure alloc] initWhitNode:self],
+                          [[W2STSDKFeatureGyroscope alloc] initWhitNode:self],
+                          [[W2STSDKFeaturePressure alloc] initWhitNode:self],
+                          [[W2STSDKFeatureProximity alloc] initWhitNode:self],
+                          [[W2STSDKFeatureTemperature alloc] initWhitNode:self],
+                          ];
+    notifyFeatures = [NSMutableDictionary dictionary];
+    return self;
+}
+
+
+
+
+-(void)readRssi{
+    [super updateRssi: @(rand() % 100)];
+}
+
+-(NSArray*) getFeatures{
+    return availableFeatures;}
+
+-(NSData*) fakeData{
+    uint8_t data[20];
+    for(uint32_t i=0;i<20;i++){
+        data[i]=rand()%256;
+    }
+    return [NSData dataWithBytes:data length:20];
+}
+
+-(void)generateFakeFeatureNotification:(NSTimer *)timer{
+    W2STSDKFeature *feature = (W2STSDKFeature*)timer.userInfo;
+    [feature update:(timestamp++) data:[self fakeData] dataOffset:0];
+}
+
+-(BOOL)readFeature:(W2STSDKFeature *)feature{
+    [feature update:(timestamp++) data:[self fakeData] dataOffset:0];
+    return true;
+}
+
+-(BOOL)enableNotification:(W2STSDKFeature *)feature{
+    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                                      target:self
+                                                    selector:@selector(generateFakeFeatureNotification:)
+                                                    userInfo:feature
+                                                     repeats:YES];
+    [notifyFeatures setObject:timer forKey:feature.name];
+    return true;
+}
+
+-(BOOL)disableNotification:(W2STSDKFeature *)feature{
+    NSTimer *timer = [notifyFeatures objectForKey:feature.name];
+    if(timer==nil)
+        return false;
+    [timer invalidate];
+    [notifyFeatures removeObjectForKey:feature.name];
+    return true;
+}
+
+-(BOOL)isEnableNotification:(W2STSDKFeature *)feature{
+    return [notifyFeatures objectForKey:feature.name]!=nil;
+}
+
+-(void)connect{
+    [super updateNodeStatus:W2STSDKNodeStateConnecting];
+    //[NSThread sleepForTimeInterval:0.2];
+    [super updateNodeStatus:W2STSDKNodeStateConnected];
+}
+
+-(void)disconnect{
+    [super updateNodeStatus:W2STSDKNodeStateDisconnecting];
+    //[NSThread sleepForTimeInterval:0.2];
+    [super updateNodeStatus:W2STSDKNodeStateIdle];
+}
+
+@end

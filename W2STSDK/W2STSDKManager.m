@@ -11,6 +11,7 @@
 
 #import "W2STSDKManager_prv.h"
 #import "W2STSDKNode_prv.h"
+#import "W2STSDKNodeFake.h"
 
 @interface W2STSDKManager()<CBCentralManagerDelegate>
 @end
@@ -86,6 +87,16 @@
         }
     //if timeoutMs
     [self performSelector:@selector(discoveryStop) withObject:nil afterDelay:delay];
+#if (TARGET_IPHONE_SIMULATOR)
+    
+    W2STSDKNode *fakeNode = [[W2STSDKNodeFake alloc] init];
+    W2STSDKNode *node = [self nodeWithTag:fakeNode.tag];
+    if(node == nil){
+        [mDiscoveryedNode addObject:fakeNode];
+        [self notifyNewNode:fakeNode];
+    }
+
+#endif
 }
 
 -(void) discoveryStop{
