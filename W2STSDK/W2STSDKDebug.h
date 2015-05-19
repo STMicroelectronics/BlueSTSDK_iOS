@@ -18,16 +18,13 @@
 @interface W2STSDKDebug : NSObject
 
 @property (readonly,strong) W2STSDKNode* node;
-@property (weak) id<W2STSDKDebugOutputDelegate> delegate;
+@property (nonatomic,weak,setter=setDelegate:,getter=getDelegate) id<W2STSDKDebugOutputDelegate> delegate;
 
 -(id) initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
          termChart:(CBCharacteristic*)termChar
           errChart:(CBCharacteristic*)errChar;
 -(void) writeMessage:(NSString*)msg;
 
-//package method
--(void)receiveCharacteristicsWriteUpdate:(CBCharacteristic*)termChar error:(NSError*)error;
--(void)receiveCharacteristicsUpdate:(CBCharacteristic*)termChar;
 @end
 
 @protocol W2STSDKDebugOutputDelegate

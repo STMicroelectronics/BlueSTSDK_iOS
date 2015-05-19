@@ -34,17 +34,19 @@
     [mDevice writeValue:tempData forCharacteristic:mTermChar type:CBCharacteristicWriteWithResponse];
 }
 
--(id<W2STSDKDebugOutputDelegate>) delegate{
+@synthesize delegate = _delegate;
+
+-(id<W2STSDKDebugOutputDelegate>) getDelegate{
     id<W2STSDKDebugOutputDelegate> ret=nil;
     @synchronized(self){
-        ret = self.delegate;
+        ret = _delegate;
     }
     return ret;
 }
 
 -(void) setDelegate:(id<W2STSDKDebugOutputDelegate>)delegate{
     @synchronized(self){
-        self.delegate=delegate;
+        _delegate=delegate;
         BOOL enable = delegate!=nil;
         [mDevice setNotifyValue:enable forCharacteristic:mTermChar];
         [mDevice setNotifyValue:enable forCharacteristic:mErrChar];
