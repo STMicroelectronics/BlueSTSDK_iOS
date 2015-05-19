@@ -9,22 +9,36 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CBCentralManager.h>
 
-#import "W2STSDKManager.h"
+#import "W2STSDKManager_prv.h"
 #import "W2STSDKNode_prv.h"
 
-@interface W2STSDKManager()
--(id)init;
--(void)notifyNewNode:(W2STSDKNode*)node;
--(void)changeDiscoveryStatus:(BOOL)newStatus;
--(void)notifyConnectionError:(CBPeripheral*)peripheral error:(NSError*)error;
+@interface W2STSDKManager()<CBCentralManagerDelegate>
 @end
 
 @implementation W2STSDKManager{
+    /**
+     *  true if the manager is scanning for a new nodes
+     */
     BOOL mIsScanning;
+    
+    /**
+     *  queue to use for do delegate callback
+     */
     dispatch_queue_t mNotificationQueue;
-     //TODO ADD LOOK
+    
+    /**
+     *  set of W2STSDKManagerDelegate
+     */
     NSMutableSet *mManagerListener;
+    
+    /**
+     *  set with the discovered nodes, of type W2STSDKNode
+     */
     NSMutableSet *mDiscoveryedNode;
+    
+    /**
+     *  system ble manager
+     */
     CBCentralManager * mCBCentralManager;
 }
 
@@ -38,6 +52,11 @@
     return this;
 }
 
+/**
+ *  initialize the private variables
+ *
+ *  @return instance of a class W2STSDKManager
+ */
 -(id)init {
     self = [super init];
 
@@ -57,19 +76,16 @@
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
                              [NSNumber numberWithBool:YES],
                              CBCentralManagerScanOptionAllowDuplicatesKey, nil];
-    //NSDictionary *options = nil;
     
     [mCBCentralManager scanForPeripheralsWithServices:nil options:options];
     [self changeDiscoveryStatus:true];
-    if(timeoutMs>0){
-        NSTimeInterval delay = 1.0f; //def value
+    NSTimeInterval delay = W2STSDKMANAGER_DEFAULT_SCANING_TIMEOUT_S;
+    if(timeoutMs>0)
         if (timeoutMs >= 0 && timeoutMs <= 60000) { //max 60 sec
             delay = (NSTimeInterval)((double)timeoutMs / 1000.0f);
         }
-        
-        [self performSelector:@selector(discoveryStop) withObject:nil afterDelay:delay];
-    }//if
-    
+    //if timeoutMs
+    [self performSelector:@selector(discoveryStop) withObject:nil afterDelay:delay];
 }
 
 -(void) discoveryStop{
@@ -97,6 +113,11 @@
     return mIsScanning;
 }
 
+/**
+ *  call all the delegate for notify a manager status change
+ *
+ *  @param newStatus new manager status
+ */
 -(void)changeDiscoveryStatus:(BOOL)newStatus{
     mIsScanning=newStatus;
     //notify the new status to the other listeners
@@ -104,15 +125,20 @@
         dispatch_async(mNotificationQueue, ^{
             [delegate manager:self didChangeDiscovery:newStatus];
         });
-    }
+    }//for
 }
 
+/**
+ *  call all the delegate for notify the discovery of a new node
+ *
+ *  @param node new discovered node
+ */
 -(void)notifyNewNode:(W2STSDKNode *)node{
     for (id<W2STSDKManagerDelegate> delegate in mManagerListener) {
         dispatch_async(mNotificationQueue, ^{
             [delegate manager:self didDiscoverNode:node];
         });
-    }
+    }//for
 }
 
 -(W2STSDKNode *)nodeWithName:(NSString *)name{
@@ -147,7 +173,7 @@
      advertisementData:(NSDictionary *)advertisementData
                   RSSI:(NSNumber *)RSSI{
     NSString *tag = peripheral.identifier.UUIDString;
-    NSLog(@"Discover: %@",peripheral.name);
+
     W2STSDKNode *node = [self nodeWithTag:tag];
     if(node == nil){
         @try {

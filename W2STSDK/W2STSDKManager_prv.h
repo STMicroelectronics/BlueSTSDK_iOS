@@ -11,13 +11,26 @@
 
 #include "W2STSDKManager.h"
 
-@interface W2STSDKManager 
+/**
+ *  private method
+ */
+@interface W2STSDKManager(Prv)
 
-/////////package function//////////////
+/**
+ *  start a connection with a ble preipheral
+ *
+ *  @param peripheral device to connect
+ */
 -(void)connect:(CBPeripheral*)peripheral;
+
+
+/**
+ *  close the connection with a ble peripheral
+ *
+ *  @param peripheral device to disconnect
+ */
 -(void)disconnect:(CBPeripheral*)peripheral;
 
 @end
-
 
 #endif

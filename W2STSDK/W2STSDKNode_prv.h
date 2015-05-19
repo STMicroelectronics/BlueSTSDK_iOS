@@ -11,7 +11,22 @@
 
 #include "W2STSDKNode.h"
 
+/**
+ * private method of the node class
+ */
 @interface W2STSDKNode(Prv)
+
+/**
+ *  create a new node, if the node doesn't has a correct advertise this method will
+ * throw an exception
+ *
+ *  @param peripheral        ble perigperal that
+ *  @param rssi              advertise rssi
+ *  @param advertisementData data in the advertise
+ *
+ *  @return <#return value description#>
+ */
+-(id) init :(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData;
 
 -(void)updateRssi:(NSNumber*)rssi;
 -(void)updateTxPower:(NSNumber*)txPower;

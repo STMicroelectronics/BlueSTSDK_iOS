@@ -8,16 +8,17 @@
 
 /////////////new sdk///////////////////
 
-#import "W2STSDKNode.h"
-#import "W2STSDKFeature.h"
-#import "W2STSDKDebug.h"
+#import "W2STSDKManager_prv.h"
+#import "W2STSDKNode_prv.h"
+#import "W2STSDKFeature_prv.h"
+#import "W2STSDKDebug_prv.h"
 
 #import "Util/W2STSDKCharacteristic.h"
 #import "Util/W2STSDKBleAdvertiseParser.h"
 #import "Util/W2STSDKBleNodeDefines.h"
 #import "util/NSData+NumberConversion.h"
 
-@interface W2STSDKNode()
+@interface W2STSDKNode()<CBPeripheralDelegate>
 -(void)buildAvailableFeatures:(featureMask_t)mask maskFeatureMap:(NSDictionary*)maskFeatureMap;
 
 -(W2STSDKFeature*) buildFeatureFromClass:(Class)featureClass;
@@ -215,7 +216,7 @@ static dispatch_queue_t sNotificationQueue;
 }
 
 -(void)connectionError:(NSError*)error{
-    NSLog(@"Error Node:%@ %@ (%d)",self.name,error.description,error.code);
+    NSLog(@"Error Node:%@ %@ (%ld)",self.name,error.description,(long)error.code);
    [self updateNodeStatus:W2STSDKNodeStateDead];
 }
 
@@ -293,7 +294,7 @@ static dispatch_queue_t sNotificationQueue;
     if(error==nil){
         [self updateRssi:peripheral.RSSI];
     }else
-        NSLog(@"Error Updating Rssi: %@ (%d)",error.description,error.code);
+        NSLog(@"Error Updating Rssi: %@ (%ld)",error.description,(long)error.code);
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral
@@ -354,7 +355,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
                 featureMask_t featureMask = [W2STSDKFeatureCharacteristics extractFeatureMask:c.UUID];
                 NSMutableArray *charFeature = [[NSMutableArray alloc] initWithCapacity:1];
                 for(NSNumber *mask in mMaskToFeature.allKeys ){
-                    featureMask_t temp = mask.unsignedIntegerValue;
+                    featureMask_t temp = (featureMask_t) mask.unsignedIntegerValue;
                     if((temp & featureMask)!=0){
                         W2STSDKFeature *f = [mMaskToFeature objectForKey:mask];
                         [f setEnabled:true];

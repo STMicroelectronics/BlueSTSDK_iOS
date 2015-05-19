@@ -120,7 +120,7 @@ static NSArray *sFieldDesc;
 
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
 
-    const uint32_t nQuat = (rawData.length-offset)/6;
+    const uint32_t nQuat = (((uint32_t)rawData.length)-offset)/6;
     const int64_t quatDelay = QUATERNION_DELAY_MS/nQuat;
     
     float x,y,z,w;

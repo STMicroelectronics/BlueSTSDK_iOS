@@ -25,7 +25,7 @@
     for(W2STSDKCharacteristic *temp in CharFeatureArray){
         if ([temp.features containsObject:feature]){
             [candidateChar addObject:temp.characteristic];
-            [nCharFeatures addObject: [NSNumber numberWithUnsignedInt: temp.features.count]];
+            [nCharFeatures addObject: [NSNumber numberWithUnsignedInt:(uint32_t) temp.features.count]];
         }//if
     }//for
     if(candidateChar.count == 0)
@@ -36,7 +36,7 @@
         uint32_t maxNFeature =0;
         CBCharacteristic const* bestChar = nil;
         for(uint32_t i=0;i<candidateChar.count;i++){
-            uint32_t currentFeature =[[nCharFeatures objectAtIndex:i] unsignedIntegerValue];
+            uint32_t currentFeature =(uint32_t)[nCharFeatures objectAtIndex:i];
             if(maxNFeature < currentFeature){
                 maxNFeature = currentFeature;
                 bestChar = [candidateChar objectAtIndex:i];
