@@ -14,8 +14,8 @@
 
 #define FEATURE_NAME @"Proximity"
 #define FEATURE_UNIT @"mm"
-#define FEATURE_MIN @0
-#define FEATURE_MAX @350
+#define FEATURE_MIN 0
+#define FEATURE_MAX 350
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeUInt16
 #define FEATURE_OUT_OF_RANGE_VALUE 510
 static NSArray *sFieldDesc;
@@ -32,8 +32,8 @@ static NSArray *sFieldDesc;
                       [W2STSDKFeatureField  createWithName:FEATURE_NAME
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       nil];
     }//if
     
@@ -82,7 +82,7 @@ static NSArray *sFieldDesc;
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     
-    short distance = [rawData extractLeUInt16FromOffset:offset];
+    uint16_t distance = [rawData extractLeUInt16FromOffset:offset];
     
     dispatch_barrier_async(mRwQueue, ^(){
         mTimestamp = timestamp;
@@ -92,6 +92,22 @@ static NSArray *sFieldDesc;
         [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 2)] data:[mFieldData copy]];
     });
     return 2;
+}
+
+@end
+
+
+#import "../W2STSDKFeature+fake.h"
+
+@implementation W2STSDKFeatureProximity (fake)
+
+-(NSData*) generateFakeData{
+    NSMutableData *data = [NSMutableData dataWithCapacity:2];
+    
+    int16_t temp = FEATURE_MIN + rand()%((FEATURE_MAX-FEATURE_MIN));
+    [data appendBytes:&temp length:2];
+    
+    return data;
 }
 
 @end

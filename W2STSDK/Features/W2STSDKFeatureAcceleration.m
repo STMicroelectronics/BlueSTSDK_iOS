@@ -13,8 +13,8 @@
 
 #define FEATURE_NAME @"Acceleration"
 #define FEATURE_UNIT @"mg"
-#define FEATURE_MIN @-2000
-#define FEATURE_MAX @2000
+#define FEATURE_MIN -2000
+#define FEATURE_MAX 2000
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeFloat
 
 static NSArray *sFieldDesc;
@@ -31,18 +31,18 @@ static NSArray *sFieldDesc;
                   [W2STSDKFeatureField  createWithName: @"AccX"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                   [W2STSDKFeatureField  createWithName: @"AccY"
                                                   unit:FEATURE_UNIT
                                                   type:FEATURE_TYPE
-                                                   min:FEATURE_MIN
-                                                   max:FEATURE_MAX ],
+                                                   min:@FEATURE_MIN
+                                                   max:@FEATURE_MAX ],
                   [W2STSDKFeatureField  createWithName: @"AccZ"
                                                   unit:FEATURE_UNIT
                                                   type:FEATURE_TYPE
-                                                   min:FEATURE_MIN
-                                                   max:FEATURE_MAX ],
+                                                   min:@FEATURE_MIN
+                                                   max:@FEATURE_MAX ],
                    nil];
     }
 
@@ -98,10 +98,10 @@ static NSArray *sFieldDesc;
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     
-    short accX,accY,accZ;
-    accX= [rawData extractLeUInt16FromOffset:offset];
-    accY= [rawData extractLeUInt16FromOffset:offset+2];
-    accZ= [rawData extractLeUInt16FromOffset:offset+4];
+    int16_t accX,accY,accZ;
+    accX= [rawData extractLeInt16FromOffset:offset];
+    accY= [rawData extractLeInt16FromOffset:offset+2];
+    accZ= [rawData extractLeInt16FromOffset:offset+4];
     
     dispatch_barrier_async(mRwQueue, ^(){
         mTimestamp = timestamp;
@@ -116,3 +116,25 @@ static NSArray *sFieldDesc;
 }
 
 @end
+
+#import "../W2STSDKFeature+fake.h"
+
+@implementation W2STSDKFeatureAcceleration (fake)
+
+-(NSData*) generateFakeData{
+    NSMutableData *data = [NSMutableData dataWithCapacity:6];
+
+    int16_t temp = FEATURE_MIN + rand()%(FEATURE_MAX-FEATURE_MIN);
+    [data appendBytes:&temp length:2];
+
+    temp = FEATURE_MIN + rand()%(FEATURE_MAX-FEATURE_MIN);
+    [data appendBytes:&temp length:2];
+    
+    temp = FEATURE_MIN + rand()%(FEATURE_MAX-FEATURE_MIN);
+    [data appendBytes:&temp length:2];
+    
+    return data;
+}
+
+@end
+

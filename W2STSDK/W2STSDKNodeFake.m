@@ -9,6 +9,8 @@
 #import "W2STSDKNode_prv.h"
 #import "W2STSDKNodeFake.h"
 
+#import "W2STSDKFeature+fake.h"
+
 #import "W2STSDKFeatureAcceleration.h"
 #import "W2STSDKFeatureBattery.h"
 #import "W2STSDKFeatureGyroscope.h"
@@ -17,6 +19,7 @@
 #import "W2STSDKFeaturePressure.h"
 #import "W2STSDKFeatureProximity.h"
 #import "W2STSDKFeatureTemperature.h"
+#import "W2STSDKFeatureMemsSensorFusion.h"
 
 
 @implementation W2STSDKNodeFake{
@@ -29,8 +32,6 @@
 @synthesize name = _name;
 @synthesize tag = _tag;
 @synthesize txPower = _txPower;
-
-
 
 
 -(id)init{
@@ -49,6 +50,8 @@
                           [[W2STSDKFeaturePressure alloc] initWhitNode:self],
                           [[W2STSDKFeatureProximity alloc] initWhitNode:self],
                           [[W2STSDKFeatureTemperature alloc] initWhitNode:self],
+                          [[W2STSDKFeatureMemsSensorFusion alloc] initWhitNode:self],
+                          [[W2STSDKFeatureMemsSensorFusionCompact alloc] initWhitNode:self]
                           ];
     notifyFeatures = [NSMutableDictionary dictionary];
     return self;
@@ -64,21 +67,15 @@
 -(NSArray*) getFeatures{
     return availableFeatures;}
 
--(NSData*) fakeData{
-    uint8_t data[20];
-    for(uint32_t i=0;i<20;i++){
-        data[i]=rand()%256;
-    }
-    return [NSData dataWithBytes:data length:20];
-}
+
 
 -(void)generateFakeFeatureNotification:(NSTimer *)timer{
     W2STSDKFeature *feature = (W2STSDKFeature*)timer.userInfo;
-    [feature update:(timestamp++) data:[self fakeData] dataOffset:0];
+    [feature update:(timestamp++) data:[feature generateFakeData] dataOffset:0];
 }
 
 -(BOOL)readFeature:(W2STSDKFeature *)feature{
-    [feature update:(timestamp++) data:[self fakeData] dataOffset:0];
+    [feature update:(timestamp++) data:[feature generateFakeData] dataOffset:0];
     return true;
 }
 

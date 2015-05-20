@@ -155,7 +155,7 @@ static NSArray *sFieldDesc;
 
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
-    float percentage =  [rawData extractLeInt16FromOffset:offset]/10.0f;
+    float percentage =  [rawData extractLeUInt16FromOffset:offset]/10.0f;
     //the data arrive in mV we store it in V
     float voltage = [rawData extractLeInt16FromOffset:offset+2]/1000.0f;
     float current = [rawData extractLeInt16FromOffset:offset+4];
@@ -174,3 +174,28 @@ static NSArray *sFieldDesc;
 }
 
 @end
+
+
+#import "../W2STSDKFeature+fake.h"
+
+@implementation W2STSDKFeatureBattery (fake)
+
+-(NSData*) generateFakeData{
+    NSMutableData *data = [NSMutableData dataWithCapacity:7];
+    
+    int16_t temp = rand()%1000;
+    [data appendBytes:&temp length:2];
+    
+    temp = rand()%10000;
+    [data appendBytes:&temp length:2];
+    
+    temp = rand()%10;
+    [data appendBytes:&temp length:2];
+    
+    uint8_t state= rand()%4;
+    [data appendBytes:&state length:1];
+    return data;
+}
+
+@end
+

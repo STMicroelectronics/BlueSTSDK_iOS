@@ -15,8 +15,8 @@
 
 #define FEATURE_NAME @"Magnetometer"
 #define FEATURE_UNIT @"mGa"
-#define FEATURE_MIN @-2000
-#define FEATURE_MAX @2000
+#define FEATURE_MIN -2000
+#define FEATURE_MAX 2000
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeFloat
 
 static NSArray *sFieldDesc;
@@ -33,18 +33,18 @@ static NSArray *sFieldDesc;
                       [W2STSDKFeatureField  createWithName: @"MagX"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       [W2STSDKFeatureField  createWithName: @"MagY"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       [W2STSDKFeatureField  createWithName: @"MagZ"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       nil];
     }
     
@@ -100,10 +100,10 @@ static NSArray *sFieldDesc;
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     
-    short magX,magY,magZ;
-    magX= [rawData extractLeUInt16FromOffset:offset];
-    magY= [rawData extractLeUInt16FromOffset:offset+2];
-    magZ= [rawData extractLeUInt16FromOffset:offset+4];
+    int16_t magX,magY,magZ;
+    magX= [rawData extractLeInt16FromOffset:offset];
+    magY= [rawData extractLeInt16FromOffset:offset+2];
+    magZ= [rawData extractLeInt16FromOffset:offset+4];
     
     dispatch_barrier_async(mRwQueue, ^(){
         mTimestamp = timestamp;
@@ -115,6 +115,27 @@ static NSArray *sFieldDesc;
         [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 6)] data:[mFieldData copy]];
     });
     return 6;
+}
+
+@end
+
+#import "../W2STSDKFeature+fake.h"
+
+@implementation W2STSDKFeatureMagnetometer (fake)
+
+-(NSData*) generateFakeData{
+    NSMutableData *data = [NSMutableData dataWithCapacity:6];
+    
+    int16_t temp = FEATURE_MIN + rand()%(FEATURE_MAX-FEATURE_MIN);
+    [data appendBytes:&temp length:2];
+    
+    temp = FEATURE_MIN + rand()%(FEATURE_MAX-FEATURE_MIN);
+    [data appendBytes:&temp length:2];
+    
+    temp = FEATURE_MIN + rand()%(FEATURE_MAX-FEATURE_MIN);
+    [data appendBytes:&temp length:2];
+    
+    return data;
 }
 
 @end

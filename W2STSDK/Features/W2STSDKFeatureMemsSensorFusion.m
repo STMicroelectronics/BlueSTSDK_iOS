@@ -13,8 +13,8 @@
 
 #define FEATURE_NAME @"MemsSensorFusion"
 #define FEATURE_UNIT @""
-#define FEATURE_MIN @-1.0f
-#define FEATURE_MAX @1.0
+#define FEATURE_MIN -1.0f
+#define FEATURE_MAX 1.0
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeFloat
 
 static NSArray *sFieldDesc;
@@ -31,23 +31,23 @@ static NSArray *sFieldDesc;
                       [W2STSDKFeatureField  createWithName: @"x"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       [W2STSDKFeatureField  createWithName: @"y"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       [W2STSDKFeatureField  createWithName: @"z"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       [W2STSDKFeatureField  createWithName: @"w"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       
                       nil];
     }
@@ -130,6 +130,39 @@ static NSArray *sFieldDesc;
         [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 6)] data:[mFieldData copy]];
     });
     return 6;
+}
+
+@end
+
+
+#import "../W2STSDKFeature+fake.h"
+
+#define N_DECIMAL 100
+@implementation W2STSDKFeatureMemsSensorFusion (fake)
+
+-(NSData*) generateFakeData{
+    NSMutableData *data = [NSMutableData dataWithCapacity:12];
+    
+    float x = FEATURE_MIN*N_DECIMAL + rand()%((int)((FEATURE_MAX-FEATURE_MIN)*N_DECIMAL));
+    
+    float y= FEATURE_MIN*N_DECIMAL + rand()%((int)((FEATURE_MAX-FEATURE_MIN)*N_DECIMAL));
+    
+    float z = FEATURE_MIN*N_DECIMAL + rand()%((int)((FEATURE_MAX-FEATURE_MIN)*N_DECIMAL));
+
+    float w = FEATURE_MIN*N_DECIMAL + rand()%((int)((FEATURE_MAX-FEATURE_MIN)*N_DECIMAL));
+    
+    const float norm = sqrtf(x*x+y*y+z*z+w*w);
+    
+    x/=norm;
+    y/=norm;
+    z/=norm;
+    w/=norm;
+    
+    [data appendBytes:&x length:4];
+    [data appendBytes:&y length:4];
+    [data appendBytes:&z length:4];
+    [data appendBytes:&w length:4];
+    return data;
 }
 
 @end

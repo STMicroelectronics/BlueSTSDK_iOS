@@ -14,8 +14,8 @@
 #define FEATURE_NAME @"Temperature"
  // census degree
 #define FEATURE_UNIT @"\u2103"
-#define FEATURE_MIN @0
-#define FEATURE_MAX @100
+#define FEATURE_MIN 0
+#define FEATURE_MAX 100
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeFloat
 
 static NSArray *sFieldDesc;
@@ -32,8 +32,8 @@ static NSArray *sFieldDesc;
                       [W2STSDKFeatureField  createWithName: FEATURE_NAME
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       nil];
     }
     
@@ -78,7 +78,7 @@ static NSArray *sFieldDesc;
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     
-    short temp= [rawData extractLeUInt16FromOffset:offset];
+    int16_t temp= [rawData extractLeInt16FromOffset:offset];
     
     dispatch_barrier_async(mRwQueue, ^(){
         mTimestamp = timestamp;
@@ -88,6 +88,21 @@ static NSArray *sFieldDesc;
         [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 2)] data:[mFieldData copy]];
     });
     return 2;
+}
+
+@end
+
+#import "../W2STSDKFeature+fake.h"
+
+@implementation W2STSDKFeatureTemperature (fake)
+
+-(NSData*) generateFakeData{
+    NSMutableData *data = [NSMutableData dataWithCapacity:2];
+    
+    int16_t temp = FEATURE_MIN*10 + rand()%((FEATURE_MAX-FEATURE_MIN)*10);
+    [data appendBytes:&temp length:2];
+    
+    return data;
 }
 
 @end

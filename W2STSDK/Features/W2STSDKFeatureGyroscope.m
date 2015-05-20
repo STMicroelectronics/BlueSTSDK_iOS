@@ -14,8 +14,8 @@
 
 #define FEATURE_NAME @"Gyroscope"
 #define FEATURE_UNIT @"dps"
-#define FEATURE_MIN @-2000
-#define FEATURE_MAX @2000
+#define FEATURE_MIN -2000
+#define FEATURE_MAX 2000
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeFloat
 
 static NSArray *sFieldDesc;
@@ -32,18 +32,18 @@ static NSArray *sFieldDesc;
                       [W2STSDKFeatureField  createWithName: @"GyroX"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       [W2STSDKFeatureField  createWithName: @"GyroY"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       [W2STSDKFeatureField  createWithName: @"GyroZ"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       nil];
     }
     
@@ -99,10 +99,10 @@ static NSArray *sFieldDesc;
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     
-    short gyroX,gyroY,gyroZ;
-    gyroX= [rawData extractLeUInt16FromOffset:offset];
-    gyroY= [rawData extractLeUInt16FromOffset:offset+2];
-    gyroZ= [rawData extractLeUInt16FromOffset:offset+4];
+    int16_t gyroX,gyroY,gyroZ;
+    gyroX= [rawData extractLeInt16FromOffset:offset];
+    gyroY= [rawData extractLeInt16FromOffset:offset+2];
+    gyroZ= [rawData extractLeInt16FromOffset:offset+4];
     
     dispatch_barrier_async(mRwQueue, ^(){
         mTimestamp = timestamp;
@@ -114,6 +114,27 @@ static NSArray *sFieldDesc;
         [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 6)] data:[mFieldData copy]];
     });
     return 6;
+}
+
+@end
+
+#import "../W2STSDKFeature+fake.h"
+
+@implementation W2STSDKFeatureGyroscope (fake)
+
+-(NSData*) generateFakeData{
+    NSMutableData *data = [NSMutableData dataWithCapacity:6];
+    
+    int16_t temp = FEATURE_MIN + rand()%(FEATURE_MAX-FEATURE_MIN);
+    [data appendBytes:&temp length:2];
+    
+    temp = FEATURE_MIN + rand()%(FEATURE_MAX-FEATURE_MIN);
+    [data appendBytes:&temp length:2];
+    
+    temp = FEATURE_MIN + rand()%(FEATURE_MAX-FEATURE_MIN);
+    [data appendBytes:&temp length:2];
+    
+    return data;
 }
 
 @end

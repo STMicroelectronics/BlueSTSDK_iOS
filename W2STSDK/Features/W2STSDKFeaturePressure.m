@@ -15,8 +15,8 @@
 #define FEATURE_NAME @"Pressure"
 // census degree
 #define FEATURE_UNIT @"mBar"
-#define FEATURE_MIN @0
-#define FEATURE_MAX @100
+#define FEATURE_MIN 0
+#define FEATURE_MAX 100
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeFloat
 
 static NSArray *sFieldDesc;
@@ -33,8 +33,8 @@ static NSArray *sFieldDesc;
                       [W2STSDKFeatureField  createWithName: FEATURE_NAME
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
-                                                       min:FEATURE_MIN
-                                                       max:FEATURE_MAX ],
+                                                       min:@FEATURE_MIN
+                                                       max:@FEATURE_MAX ],
                       nil];
     }
     
@@ -89,6 +89,21 @@ static NSArray *sFieldDesc;
         [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 4)] data:[mFieldData copy]];
     });
     return 2;
+}
+
+@end
+
+#import "../W2STSDKFeature+fake.h"
+
+@implementation W2STSDKFeaturePressure (fake)
+
+-(NSData*) generateFakeData{
+    NSMutableData *data = [NSMutableData dataWithCapacity:4];
+    
+    int32_t temp = FEATURE_MIN*100 + rand()%((FEATURE_MAX-FEATURE_MIN)*100);
+    [data appendBytes:&temp length:4];
+    
+    return data;
 }
 
 @end
