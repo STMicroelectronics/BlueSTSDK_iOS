@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreBluetooth/CBCentralManager.h>
+#import <CoreBluetooth/CoreBluetooth.h>
 
 #import "W2STSDKManager_prv.h"
 #import "W2STSDKNode_prv.h"

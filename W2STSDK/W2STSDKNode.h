@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 STMicroelectronics. All rights reserved.
 //
 
-#ifndef W2STApp_W2STSDKNode_h
-#define W2STApp_W2STSDKNode_h
+#ifndef W2STSDK_W2STSDKNode_h
+#define W2STSDK_W2STSDKNode_h
 
 #import <Foundation/Foundation.h>
 #import "W2STSDKManager.h"
@@ -20,11 +20,11 @@
  */
 typedef NS_ENUM(NSInteger, W2STSDKNodeMode){
     /**
-     *  enter in the update mode trought the usb port
+     *  enter in the update mode trougth the usb port
      */
     W2STSDKNodeModeUSB_DFU,
     /**
-     *  enter in the update mode trought the ble connection
+     *  enter in the update mode trougth the ble connection
      */
     W2STSDKNodeModeOTA_BLE_DFU,
     /**
@@ -54,7 +54,7 @@ typedef NS_ENUM(NSInteger, W2STSDKNodeState){
      */
     W2STSDKNodeStateConnected     = 3,
     /**
-     *  disconnection in progres
+     *  disconnection in proggres
      */
     W2STSDKNodeStateDisconnecting = 4,
     /**
@@ -76,7 +76,7 @@ typedef NS_ENUM(NSInteger, W2STSDKNodeState){
  */
 typedef NS_ENUM(NSInteger, W2STSDKNodeType){
     /**
-     *  unknow board
+     *  unknown board
      */
     W2STSDKNodeTypeGeneric      = 0x00,
     /**
@@ -108,7 +108,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  */
 @property (assign, nonatomic) W2STSDKNodeType type;
 /**
- *  node name, is not garanteed that this string is unique
+ *  node name, is not guaranteed that this string is unique
  */
 @property (retain, readonly) NSString *name;
 /**
@@ -116,7 +116,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  */
 @property (retain, readonly) NSString *tag;
 /**
- *  date when we recive the last rssi value
+ *  date when we receive the last rssi value
  */
 @property (readonly) NSDate *rssiLastUpdate;
 /**
@@ -137,7 +137,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @param state enum with the current board status
  *
- *  @return a sring rappresentation of the enum value
+ *  @return a string reppresentation of the enum value
  */
 +(NSString*) stateToString:(W2STSDKNodeState)state;
 
@@ -157,7 +157,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 
 /**
  *  get the available node feature, there is a feature for each bit set in the advertise,
- *  if the corrispective characteristics is not find in the node the feature is not enabled
+ *  if the correspective characteristics is not find in the node the feature is not enabled
  *
  *  @return array of W2STSDKFeature that
  */
@@ -165,7 +165,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 
 /**
  *  request to update the rssi value, when the answere package arrive a notification
- *  trought the W2STSDKNodeBleConnectionParamDelegate is send
+ *  trougth the W2STSDKNodeBleConnectionParamDelegate is send
  */
 -(void) readRssi;
 
@@ -193,13 +193,14 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  */
 -(BOOL) readFeature:(W2STSDKFeature*)feature;
 /**
- *  tell if you enable the notification for this paricular feature
+ *  tell if you enable the notification for this particular feature
  *
  *  @param feature feature
  *
  *  @return true if you enable the notification for this feature
  */
 -(BOOL) isEnableNotification:(W2STSDKFeature*)feature;
+
 /**
  *  enable the notification for a particular feature, the feature will manage to notify you the new value
  *
@@ -216,7 +217,6 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @return true if the request is send correctly
  */
 -(BOOL) disableNotification:(W2STSDKFeature*)feature;
-
 
 @end
 
@@ -237,7 +237,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 @end
 
 /**
- *  protocol used by the node for notify a change in the ble connetion paramiters
+ *  protocol used by the node for notify a change in the ble connection parameters
  */
 @protocol W2STSDKNodeBleConnectionParamDelegate <NSObject>
 
@@ -246,7 +246,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  notify to the user a new rssi value
  *
  *  @param node    node that has a new rssi value
- *  @param newRssi new rssi value for the nodezs
+ *  @param newRssi new rssi value for the nodes
  */
 - (void) node:(W2STSDKNode *)node didChangeRssi:(NSInteger)newRssi;
 

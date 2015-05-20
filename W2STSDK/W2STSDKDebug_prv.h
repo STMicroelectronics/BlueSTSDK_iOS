@@ -12,7 +12,20 @@
 
 @interface W2STSDKDebug(Prv)
 
+/**
+ *  package method, called when CBPeripheral finish to write the data to an
+ * debug characteristic
+ *
+ *  @param termChar characteristics where we write the data
+ *  @param error    if !=nil error happen during the write
+ */
 -(void)receiveCharacteristicsWriteUpdate:(CBCharacteristic*)termChar error:(NSError*)error;
+
+/**
+ *  package method, called by the CBPeripheral receive an update from the debug service
+ *
+ *  @param termChar updated characteristics
+ */
 -(void)receiveCharacteristicsUpdate:(CBCharacteristic*)termChar;
 
 @end

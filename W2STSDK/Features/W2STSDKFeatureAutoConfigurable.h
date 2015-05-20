@@ -20,13 +20,6 @@
 -(void) addFeatureConfigurationDelegate:(id<W2STSDKFeatureAutoConfigurableDelegate>)delegate;
 -(void) removeFeatureConfigurationDelegate:(id<W2STSDKFeatureAutoConfigurableDelegate>)delegate;
 
-
-//protected method
--(id) initWhitNode: (W2STSDKNode*)node name:(NSString*)name;
--(void) parseCommandResponseWithTimestamp:(uint32_t)timestamp
-                                 commandType:(uint8_t)commandType
-                                        data:(NSData*)data;
-
 @end
 
 @protocol  W2STSDKFeatureAutoConfigurableDelegate <NSObject>

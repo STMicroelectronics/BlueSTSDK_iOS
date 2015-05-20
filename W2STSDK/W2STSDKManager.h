@@ -9,7 +9,7 @@
 #define W2STSDK_W2STSDKManager_h
 
 #import <Foundation/Foundation.h>
-#import <CoreBluetooth/CoreBluetooth.h>
+
 
 @class W2STSDKNode;
 
@@ -79,7 +79,7 @@
 
 /**
  *  search in the discovered node the one that has a particular name,
- *    the node is not unique so we will return the first node tha match the name
+ *    the node is not unique so we will return the first node the match the name
  *
  *  @param name node name to search
  *
@@ -92,12 +92,12 @@
  *
  *  @param tag tag to search
  *
- *  @return a node with that tag or nil if the node doesn't exsist
+ *  @return a node with that tag or nil if the node doesn't exist
  */
 -(W2STSDKNode *)nodeWithTag:(NSString *)tag;
 
 /**
- *  get the singleton instance of the managaer
+ *  get the singleton instance of the manager
  *
  *  @return instance of the W2STSDKManager
  */
@@ -108,10 +108,10 @@
 @protocol W2STSDKManagerDelegate <NSObject>
 @required
 /**
- *  function called when a new node is discoverd
+ *  function called when a new node is discovered
  *
- *  @param manager manager that discoverd the node (the manger is a singleton, 
- *    so this paramiter is only for have a consisten method sign with the others delegate)
+ *  @param manager manager that discovered the node (the manger is a singleton,
+ *    so this parameter is only for have a consistent method sign with the others delegate)
  *  @param node new node discovered
  */
 - (void)manager:(W2STSDKManager *)manager didDiscoverNode:(W2STSDKNode *)node;
@@ -119,9 +119,9 @@
 /**
  *  function called when the status of the manager change
  *
- *  @param manager manager that discoverd the node (the manger is a singleton,
- *    so this paramiter is only for have a consisten method sign with the others delegate)
- *  @param enable  true if the mangare star a scann process, false if it end the scanning
+ *  @param manager manager that discovered the node (the manger is a singleton,
+ *    so this parameter is only for have a consistent method sign with the others delegate)
+ *  @param enable  true if the manger start a scan process, false if it end the scanning
  */
 - (void)manager:(W2STSDKManager *)manager didChangeDiscovery:(BOOL)enable;
 @end

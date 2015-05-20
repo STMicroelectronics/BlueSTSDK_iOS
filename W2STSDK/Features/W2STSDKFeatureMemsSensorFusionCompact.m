@@ -7,7 +7,7 @@
 //
 
 #import "../Util/NSData+NumberConversion.h"
-
+#import "W2STSDKFeature_prv.h"
 #import "W2STSDKFeatureMemsSensorFusionCompact.h"
 #import "W2STSDKFeatureField.h"
 

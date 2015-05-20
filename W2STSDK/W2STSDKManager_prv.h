@@ -9,6 +9,7 @@
 #ifndef W2STSDK_W2STSDKManager_prv_h
 #define W2STSDK_W2STSDKManager_prv_h
 
+#include <CoreBluetooth/CBPeripheral.h>
 #include "W2STSDKManager.h"
 
 /**
@@ -17,7 +18,7 @@
 @interface W2STSDKManager(Prv)
 
 /**
- *  start a connection with a ble preipheral
+ *  start a connection with a ble peripheral
  *
  *  @param peripheral device to connect
  */

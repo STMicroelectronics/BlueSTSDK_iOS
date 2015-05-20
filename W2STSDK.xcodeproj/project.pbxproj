@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		662D8BD81B0B6C88006B7538 /* W2STSDKNodeFake.h in Headers */ = {isa = PBXBuildFile; fileRef = 662D8BD61B0B6C88006B7538 /* W2STSDKNodeFake.h */; };
+		66105DA31B0CC7190050E399 /* W2STSDKFeature+fake.h in Headers */ = {isa = PBXBuildFile; fileRef = 66C9E6571B0C67380091CFD0 /* W2STSDKFeature+fake.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		662D8BD81B0B6C88006B7538 /* W2STSDKNodeFake.h in Headers */ = {isa = PBXBuildFile; fileRef = 662D8BD61B0B6C88006B7538 /* W2STSDKNodeFake.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		662D8BD91B0B6C88006B7538 /* W2STSDKNodeFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 662D8BD71B0B6C88006B7538 /* W2STSDKNodeFake.m */; };
 		665241F61B0B1BB100931F93 /* W2STSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 665241F51B0B1BB100931F93 /* W2STSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		665241FC1B0B1BB100931F93 /* W2STSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665241F01B0B1BB100931F93 /* W2STSDK.framework */; };
@@ -294,11 +295,11 @@
 			children = (
 				6652424C1B0B1C1400931F93 /* NSData+NumberConversion.h */,
 				6652424D1B0B1C1400931F93 /* NSData+NumberConversion.m */,
-				6652424E1B0B1C1400931F93 /* W2STSDKBleAdvertiseParser.h */,
 				6652424F1B0B1C1400931F93 /* W2STSDKBleNodeDefines.h */,
 				665242501B0B1C1400931F93 /* W2STSDKBleNodeDefines.m */,
 				665242511B0B1C1400931F93 /* W2STSDKCharacteristic.h */,
 				665242521B0B1C1400931F93 /* W2STSDKCharacteristic.m */,
+				6652424E1B0B1C1400931F93 /* W2STSDKBleAdvertiseParser.h */,
 				665242531B0B1C1400931F93 /* W2STSTDKBleAdvertiseParser.m */,
 			);
 			path = Util;
@@ -335,10 +336,11 @@
 				665242841B0B1F5400931F93 /* W2STSDKFeature_prv.h in Headers */,
 				665242871B0B202500931F93 /* W2STSDKManager_prv.h in Headers */,
 				665242891B0B20AC00931F93 /* W2STSDKDebug_prv.h in Headers */,
+				66105DA31B0CC7190050E399 /* W2STSDKFeature+fake.h in Headers */,
 				665242771B0B1C1400931F93 /* W2STSDKBleNodeDefines.h in Headers */,
 				665242741B0B1C1400931F93 /* NSData+NumberConversion.h in Headers */,
-				662D8BD81B0B6C88006B7538 /* W2STSDKNodeFake.h in Headers */,
 				665242791B0B1C1400931F93 /* W2STSDKCharacteristic.h in Headers */,
+				662D8BD81B0B6C88006B7538 /* W2STSDKNodeFake.h in Headers */,
 				665242761B0B1C1400931F93 /* W2STSDKBleAdvertiseParser.h in Headers */,
 				665241F61B0B1BB100931F93 /* W2STSDK.h in Headers */,
 			);

@@ -10,9 +10,7 @@
 #import "W2STSDKFeature_prv.h"
 #import "W2STSDKFeatureField.h"
 
-
 @interface W2STSDKFeature()
-
 @end
 
 static dispatch_queue_t sNotificationQueue;
@@ -20,7 +18,6 @@ static dispatch_queue_t sNotificationQueue;
 @implementation W2STSDKFeature{
     NSMutableSet *mFeatureDelegates;
     NSMutableSet *mFeatureLogDelegates;
-
 }
 
 -(id) initWhitNode: (W2STSDKNode*)node{
@@ -145,6 +142,21 @@ static dispatch_queue_t sNotificationQueue;
         }
     }//for
     return s;
+}
+
+@end
+
+
+#include "W2STSDKFeature+fake.h"
+
+@implementation W2STSDKFeature(fake)
+
+-(NSData*) generateFakeData{
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must overide %@ in a subclass]",
+                                           NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
+    return nil;
 }
 
 @end

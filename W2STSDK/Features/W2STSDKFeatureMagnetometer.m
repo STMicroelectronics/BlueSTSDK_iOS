@@ -7,6 +7,7 @@
 //
 
 #include <math.h>
+#import "W2STSDKFeature_prv.h"
 #import "W2STSDKFeatureMagnetometer.h"
 #import "W2STSDKFeatureField.h"
 

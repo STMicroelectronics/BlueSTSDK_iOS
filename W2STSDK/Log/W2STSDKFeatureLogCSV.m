@@ -11,6 +11,10 @@
 #import "../Features/W2STSDKFeatureField.h"
 
 @implementation W2STSDKFeatureLogCSV{
+    /**
+     *  dictionary where we store the pair W2STSDKFeature/NSFileHandle for be able
+     * to use the same log with multiple feature
+     */
     NSMutableDictionary *mCacheFileHandler;
 }
 
@@ -20,6 +24,12 @@
     return self;
 }
 
+/**
+ *  print the csv header
+ *
+ *  @param out handle where write the data
+ *  @param f   feature that we will log in the file
+ */
 -(void) printHeader:(NSFileHandle*)out feature:(W2STSDKFeature*)f{
     NSArray *fields = [f getFieldsDesc];
     NSMutableString *line = [NSMutableString stringWithString:@"NodeName,RawData,"];
@@ -30,11 +40,17 @@
     [line appendString:@"\n"];
     
     [out writeData: [line dataUsingEncoding:NSUTF8StringEncoding]];
-    
 }
 
+/**
+ *  print an array of byte in a exadecimal format
+ *
+ *  @param out  file where write the data
+ *  @param data array of byte to write
+ */
 -(void) storeBlobData:(NSFileHandle*)out data:(NSData*)data{
     NSMutableString *temp = [NSMutableString string];
+    //for each block in the data append the exadecimal value to the string
     [data enumerateByteRangesUsingBlock:^(const void *bytes,
                                           NSRange byteRange,
                                           BOOL *stop) {
@@ -45,6 +61,12 @@
     [out writeData: [temp dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
+/**
+ *  print the data exported by the feature
+ *
+ *  @param out  file where write the data
+ *  @param data array of NSNumber to print
+ */
 -(void) storeFeatureData:(NSFileHandle*)out data:(NSArray*)data{
     NSMutableString *temp = [NSMutableString string];
     for(NSNumber *n in data){
@@ -54,6 +76,11 @@
     [out writeData: [temp dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
+/**
+ *  return the position of the app document directory
+ *
+ *  @return position of the document directory
+ */
 +(NSURL*) getDumpFileDirectoryUrl{
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *paths = [fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
@@ -61,6 +88,14 @@
     return documentsDirectory;
 }
 
+/**
+ *  create/open a new file or retrive the already opened one to be used for log 
+ *  the feature data
+ *
+ *  @param feature feature that we will log in the file
+ *
+ *  @return file where log the data
+ */
 -(NSFileHandle*) openDumpFileForFeature:(W2STSDKFeature*)feature{
     NSFileHandle *temp = [mCacheFileHandler valueForKey:feature.name];
     if(temp!=nil)
@@ -84,10 +119,10 @@
 }
 
 - (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw data:(NSArray*)data{
-    static char coma=',';
-    @synchronized(self){
-        NSFileHandle *file = [self openDumpFileForFeature:feature];
-
+    static const char coma=',';
+ 
+    NSFileHandle *file = [self openDumpFileForFeature:feature];
+    @synchronized(file){
         [file writeData: [feature.parentNode.name dataUsingEncoding:NSUTF8StringEncoding]];
         [file writeData:[NSData dataWithBytes:&coma length:1]];
         if(raw!=nil){

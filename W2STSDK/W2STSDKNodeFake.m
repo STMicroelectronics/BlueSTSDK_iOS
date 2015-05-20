@@ -9,6 +9,7 @@
 #import "W2STSDKNode_prv.h"
 #import "W2STSDKNodeFake.h"
 
+#import "W2STSDKFeature_prv.h"
 #import "W2STSDKFeature+fake.h"
 
 #import "W2STSDKFeatureAcceleration.h"

@@ -14,7 +14,7 @@
 //  Copyright (c) 2015 STMicroelectronics. All rights reserved.
 //
 #include <math.h>
-
+#import "W2STSDKFeature_prv.h"
 #import "W2STSDKFeatureHumidity.h"
 #import "W2STSDKFeatureField.h"
 

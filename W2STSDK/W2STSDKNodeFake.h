@@ -11,16 +11,16 @@
 @interface W2STSDKNodeFake : W2STSDKNode
 
 
-@property (retain, readonly) NSString *name;
+//@property (retain, readonly) NSString *name;
 /**
  *  unique string that identify the node
  */
-@property (retain, readonly) NSString *tag;
+//@property (retain, readonly) NSString *tag;
 
 /**
  *  tx power used from the board
  */
-@property (retain, readonly) NSNumber *txPower;
+//@property (retain, readonly) NSNumber *txPower;
 
 
 -(id)init;

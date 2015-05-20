@@ -6,7 +6,8 @@
 //  Copyright (c) 2015 STMicroelectronics. All rights reserved.
 //
 
-#import "W2STSDKFeatureAutoConfigurable_prv.h"
+#import "W2STSDKFeature_prv.h"
+#import "W2STSDKFeatureAutoConfigurable.h"
 #import "../Util/NSData+NumberConversion.h"
 
 /**
