@@ -97,7 +97,7 @@ static NSArray *sFieldDesc;
         case W2STSDKFeatureBatteryStatusDischarging:
             return @"Discharging";
         case W2STSDKFeatureBatteryStatusPluggedNotCharging:
-            return @"Plugged not charging";
+            return @"Plugged";
         case W2STSDKFeatureBatteryStatusCharging:
             return @"Charging";
         case W2STSDKFeatureBatteryStatusError:

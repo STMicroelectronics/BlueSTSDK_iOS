@@ -12,6 +12,7 @@
 #import "W2STSDKFeature+fake.h"
 
 #import "W2STSDKFeatureAcceleration.h"
+#import "W2STSDKFeatureMagnetometer.h"
 #import "W2STSDKFeatureBattery.h"
 #import "W2STSDKFeatureGyroscope.h"
 #import "W2STSDKFeatureHumidity.h"
@@ -42,6 +43,7 @@
     _txPower=@100;
     availableFeatures = @[
                           [[W2STSDKFeatureAcceleration alloc] initWhitNode:self],
+                          [[W2STSDKFeatureMagnetometer alloc] initWhitNode:self],
                           [[W2STSDKFeatureBattery alloc] initWhitNode:self],
                           [[W2STSDKFeatureHumidity alloc] initWhitNode:self],
                           [[W2STSDKFeatureLuminosity alloc] initWhitNode:self],
