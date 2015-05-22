@@ -34,9 +34,10 @@
     return [uuid.data extractBeUInt32FromOffset:0];
 }
 
-+(bool) isFeatureCharacteristics:(CBUUID*)uuid{
-    return [ uuid.UUIDString hasSuffix:COMMON_FEATURE_UUID];
++(bool) isFeatureCharacteristics:(CBCharacteristic*) c{
+    return [ c.UUID.UUIDString hasSuffix:COMMON_FEATURE_UUID];
 }
+
 @end
 
 #define CONFIG_SERVICE_ID "000F"

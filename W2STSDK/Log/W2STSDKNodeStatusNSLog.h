@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "W2STSDKNode.h"
 
+/**
+ *  print on the NSLog console when a node change his status
+ */
 @interface W2STSDKNodeStatusNSLog : NSObject<W2STSDKNodeStateDelegate>
 
 @end

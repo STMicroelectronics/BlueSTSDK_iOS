@@ -8,18 +8,37 @@
 
 #import "W2STSDKFeature.h"
 
+/**
+ * feature that contains the data of an accelerometer
+ *
+ */
 @interface W2STSDKFeatureAcceleration : W2STSDKFeature
 
-+(void)initialize;
+/**
+ *  return the x component of the acceleration
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return acceleration in the x axis
+ */
 +(float)getAccX:(NSArray*)data;
+
+/**
+ *  return the y component of the acceleration
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return acceleration in the y axis
+ */
 +(float)getAccY:(NSArray*)data;
+
+/**
+ *  return the z component of the acceleration
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return acceleration in the z axis
+ */
 +(float)getAccZ:(NSArray*)data;
-
--(id) initWhitNode:(W2STSDKNode *)node;
-
-//abstract method
--(NSArray*) getFieldsDesc;
--(NSArray*) getFieldsData;
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 @end

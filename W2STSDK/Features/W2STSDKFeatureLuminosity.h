@@ -8,15 +8,20 @@
 
 #import "W2STSDKFeature.h"
 
+/**
+ *  this feature contains the data from a luminosity sensor
+ *  Note: since the luminosity and the proximity come from the same sensor this
+ * two feature can't be used at the same time
+ */
 @interface W2STSDKFeatureLuminosity : W2STSDKFeature
-+(void)initialize;
+
+/**
+ *  luminosity value
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return luminosity value
+ */
 +(uint16_t)getLuminosity:(NSArray*)data;
-
--(id) initWhitNode:(W2STSDKNode *)node;
-
-//abstract method
--(NSArray*) getFieldsDesc;
--(NSArray*) getFieldsData;
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 @end

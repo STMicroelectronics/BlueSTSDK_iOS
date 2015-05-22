@@ -19,12 +19,34 @@ typedef NS_ENUM(NSInteger, W2STSDKFeatureFieldType) {
     W2STSDKFeatureFieldTypeInt8,
 };
 
+/**
+ *  this class describe a feature data field
+ */
 @interface W2STSDKFeatureField : NSObject
 
+/**
+ *  field name
+ */
 @property (readonly) NSString *name;
+
+/**
+ *  data unit for the field
+ */
 @property (readonly) NSString *unit;
+
+/**
+ *  minimum field value
+ */
 @property (readonly) NSNumber *min;
+
+/**
+ *  maximum field value
+ */
 @property (readonly) NSNumber *max;
+
+/**
+ *  type used for store the field value
+ */
 @property (readonly) W2STSDKFeatureFieldType type;
 
 +(W2STSDKFeatureField*)createWithName:(NSString *)name

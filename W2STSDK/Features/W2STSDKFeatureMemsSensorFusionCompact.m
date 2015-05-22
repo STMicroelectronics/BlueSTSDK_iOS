@@ -18,6 +18,9 @@
 #define FEATURE_MAX 1.0
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeFloat
 
+
+//since we receve a 3 quaternion at times, we notify to the user a new quaternion
+// each 30ms
 #define QUATERNION_DELAY_MS 30
 #define SCALE_FACTOR 10000.0f
 
@@ -63,7 +66,7 @@ static NSArray *sFieldDesc;
 -(id) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
     mNotificationQueue = dispatch_queue_create("W2STSDKFeatureMemsSensorFusionCompactNotification",
-                                               DISPATCH_QUEUE_CONCURRENT);
+                                               DISPATCH_QUEUE_SERIAL);
     mRwQueue = dispatch_queue_create("W2STSDKFeatureMemsSensorFusionCompactNotificationRwQueue",
                                      DISPATCH_QUEUE_CONCURRENT);
     mFieldData = [NSMutableArray arrayWithObjects:@0,@0,@0,@0, nil];
@@ -131,6 +134,8 @@ static NSArray *sFieldDesc;
         z= [rawData extractLeInt16FromOffset:offset+4]/SCALE_FACTOR;
         w = sqrt(1-(x*x+y*y+z*z));
 
+        //since we recevive 3 quaternions at times, we delay the feature update
+        // -> we put the task that do that in a serial queue
         dispatch_after(startTime, mNotificationQueue, ^{
             dispatch_barrier_async(mRwQueue, ^(){
                 mTimestamp = timestamp;

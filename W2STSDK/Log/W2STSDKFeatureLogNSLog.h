@@ -10,6 +10,9 @@
 
 #import "W2STSDKFeature.h"
 
+/**
+ *  dump the feature data on the NSLog consoles
+ */
 @interface W2STSDKFeatureLogNSLog : NSObject<W2STSDKFeatureLogDelegate>
 
 @end

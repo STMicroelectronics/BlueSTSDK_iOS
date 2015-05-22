@@ -40,12 +40,11 @@
             if(maxNFeature < currentFeature){
                 maxNFeature = currentFeature;
                 bestChar = [candidateChar objectAtIndex:i];
-            }
-        }
+            } //if
+        }//for
         return bestChar;
-    }
+    }//if else
 }
-
 
 
 -(id) initWithChar:(CBCharacteristic*)charact features:(NSArray*)features{

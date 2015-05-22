@@ -37,6 +37,7 @@
 static NSArray *sFieldDesc;
 
 @implementation W2STSDKFeatureBattery{
+    
     NSMutableArray *mFieldData;
     uint32_t mTimestamp;
     dispatch_queue_t mRwQueue;

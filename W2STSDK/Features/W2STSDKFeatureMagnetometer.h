@@ -8,18 +8,36 @@
 
 #import "W2STSDKFeature.h"
 
+/**
+ *  export the data from a magnetometer sensor
+ */
 @interface W2STSDKFeatureMagnetometer : W2STSDKFeature
 
-+(void)initialize;
+/**
+ *  extract the magnetometer value of the X axis
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return magetometer value of the x axis
+ */
 +(float)getMagX:(NSArray*)data;
+
+/**
+ *  extract the magnetometer value of the y axis
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return magetometer value of the y axis
+ */
 +(float)getMagY:(NSArray*)data;
+
+/**
+ *  extract the magnetometer value of the z axis
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return magetometer value of the z axis
+ */
 +(float)getMagZ:(NSArray*)data;
-
--(id) initWhitNode:(W2STSDKNode *)node;
-
-//abstract method
--(NSArray*) getFieldsDesc;
--(NSArray*) getFieldsData;
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 @end

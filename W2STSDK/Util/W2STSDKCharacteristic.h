@@ -11,13 +11,53 @@
 
 #import "../W2STSDKFeature.h"
 
+/**
+ *  a single ble characteristics can contains more than one feature, 
+ * this class help to map a ble characteristics with its features
+ */
 @interface W2STSDKCharacteristic : NSObject
 
+/**
+ *  ble characteristics associated with this object
+ */
 @property(strong,nonatomic,readonly) CBCharacteristic* characteristic;
+
+/**
+ *  array of class that extend W2STSDKFeatrue that the characteristics export
+ */
 @property(strong,nonatomic,readonly) NSArray* features;
 
+/**
+ *  create a new characateristc manage by the sdk
+ *
+ *  @param charac   ble characteristic
+ *  @param features array of W2STSDKFeature that are exported by this characteristic
+ *
+ *  @return object of type W2STSDKCharacteristic
+ */
 -(id) initWithChar:(CBCharacteristic*)charac features:(NSArray*)features;
 
-+(NSArray*) getFeaturesFromChar:(CBCharacteristic const*)characteristic in:(NSArray*)CharFeatureArray;
-+(CBCharacteristic*) getCharFromFeature:(W2STSDKFeature*)feature in:(NSArray*)CharFeatureArray;
+/**
+ *  find the features manage by a ble characteristic
+ *
+ *  @param characteristic   characteristic that we are serching
+ *  @param CharFeatureArray array of W2STSDKCharacteristic where search
+ *
+ *  @return array W2STSDKFeature exported by that characteristic
+ */
++(NSArray*) getFeaturesFromChar:(CBCharacteristic const*)characteristic
+                             in:(NSArray*)CharFeatureArray;
+
+/**
+ *  find the characteristics that export a particular feature, if the feature is
+ * exported by multiple characteristic we will return the characteristic that export
+ * more features
+ *
+ *  @param feature          feature to search
+ *  @param CharFeatureArray array of W2STSDKCharacteristic where search
+ *
+ *  @return ble characteristic that export that feature
+ */
++(CBCharacteristic*) getCharFromFeature:(W2STSDKFeature*)feature
+                                     in:(NSArray*)CharFeatureArray;
 @end

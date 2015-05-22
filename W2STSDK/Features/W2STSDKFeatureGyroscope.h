@@ -8,18 +8,37 @@
 
 #import "W2STSDKFeature.h"
 
+/**
+ * Feature that contains the data from a gyroscope sensor
+ */
 @interface W2STSDKFeatureGyroscope : W2STSDKFeature
 
-+(void)initialize;
+/**
+ *  gyroscope data in the x Axis
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return  gyroscope data in the x Axis
+ */
 +(float)getGyroX:(NSArray*)data;
+
+/**
+ *  gyroscope data in the y Axis
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return  gyroscope data in the y Axis
+ */
 +(float)getGyroY:(NSArray*)data;
+
+/**
+ *  gyroscope data in the z Axis
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return  gyroscope data in the z Axis
+ */
 +(float)getGyroZ:(NSArray*)data;
 
--(id) initWhitNode:(W2STSDKNode *)node;
-
-//abstract method
--(NSArray*) getFieldsDesc;
--(NSArray*) getFieldsData;
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 @end

@@ -8,21 +8,17 @@
 
 #import <W2STSDK/W2STSDK.h>
 
+/**
+ * this class overwrite the node method for avoid to use the bluethoot connection
+ * and generate fake datas
+ */
 @interface W2STSDKNodeFake : W2STSDKNode
 
-
-//@property (retain, readonly) NSString *name;
 /**
- *  unique string that identify the node
+ *  create a fake W2STSDKNode that doesn't use the bluethoot
+ *
+ *  @return pointer to a W2STSDK
  */
-//@property (retain, readonly) NSString *tag;
-
-/**
- *  tx power used from the board
- */
-//@property (retain, readonly) NSNumber *txPower;
-
-
 -(id)init;
 
 @end

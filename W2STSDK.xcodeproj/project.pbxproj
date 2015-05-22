@@ -144,7 +144,6 @@
 		665242861B0B1FEE00931F93 /* W2STSDKManager_prv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = W2STSDKManager_prv.h; sourceTree = "<group>"; };
 		665242881B0B207100931F93 /* W2STSDKDebug_prv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = W2STSDKDebug_prv.h; sourceTree = "<group>"; };
 		6652428A1B0B20FB00931F93 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
-		669A36FA1B0B286A003FD4F7 /* W2STSDKFeatureAutoConfigurable_prv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = W2STSDKFeatureAutoConfigurable_prv.h; sourceTree = "<group>"; };
 		66C9E6571B0C67380091CFD0 /* W2STSDKFeature+fake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "W2STSDKFeature+fake.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -249,7 +248,6 @@
 				6652422A1B0B1C1400931F93 /* W2STSDKFeatureAcceleration.h */,
 				6652422B1B0B1C1400931F93 /* W2STSDKFeatureAcceleration.m */,
 				6652422C1B0B1C1400931F93 /* W2STSDKFeatureAutoConfigurable.h */,
-				669A36FA1B0B286A003FD4F7 /* W2STSDKFeatureAutoConfigurable_prv.h */,
 				6652422D1B0B1C1400931F93 /* W2STSDKFeatureAutoConfigurable.m */,
 				6652422E1B0B1C1400931F93 /* W2STSDKFeatureBattery.h */,
 				6652422F1B0B1C1400931F93 /* W2STSDKFeatureBattery.m */,

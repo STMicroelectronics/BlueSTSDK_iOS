@@ -23,9 +23,15 @@
  */
 #define FEATURE_COMMAND_GET_CONFIGURATION_STATUS 0xFF
 
+/**
+ *  queue used for notify things to the delegate
+ */
 static dispatch_queue_t sNotificationQueue;
 
 @implementation W2STSDKFeatureAutoConfigurable{
+    /**
+     *  Set of delegate where notify the change on the confuguration
+     */
     NSMutableSet *mFeatureAutoConfDelegates;
 }
 
@@ -42,7 +48,9 @@ static dispatch_queue_t sNotificationQueue;
     return self;
 }
 
-
+/**
+ *  notify to all the registered delegate that the configuration process starts
+ */
 -(void)notifyAutoConfStart{
     for (id<W2STSDKFeatureAutoConfigurableDelegate> delegate in mFeatureAutoConfDelegates) {
         if( [delegate respondsToSelector:@selector(didAutoConfigurationStart:)]){
@@ -50,9 +58,15 @@ static dispatch_queue_t sNotificationQueue;
                 [delegate didAutoConfigurationStart: self];
             });
         }//if
-    }
+    }//for
 }
 
+/**
+ *  notify to all the registered delegate that the configuration process has a 
+ *  new status
+ *
+ *  @param status new configuation status
+ */
 -(void)notifyAutoConfStopWithStatus:(int32_t)status{
     for (id<W2STSDKFeatureAutoConfigurableDelegate> delegate in mFeatureAutoConfDelegates) {
          if( [delegate respondsToSelector:@selector(didConfigurationFinished:status:)]){
@@ -60,9 +74,14 @@ static dispatch_queue_t sNotificationQueue;
                  [delegate didConfigurationFinished:self status:status];
              });
          }//if
-    }
+    }//for
 }
 
+/**
+ *  notify to all the registered delegate that the config
+ *
+ *  @param newStatus <#newStatus description#>
+ */
 -(void) notifyAutoConfChangeStatus:(int32_t)newStatus{
     for (id<W2STSDKFeatureAutoConfigurableDelegate> delegate in mFeatureAutoConfDelegates) {
         if( [delegate respondsToSelector:@selector(didAutoConfigurationChange:status:)]){
@@ -70,7 +89,7 @@ static dispatch_queue_t sNotificationQueue;
                 [delegate didAutoConfigurationChange:self status:newStatus];
             });
         }//if
-    }
+    }//for
 }
 
 -(BOOL) startAutoConfiguration{
@@ -81,13 +100,11 @@ static dispatch_queue_t sNotificationQueue;
 }
     
 -(BOOL) requestAutoConfigurationStatus{
-    BOOL sendMessage = [self sendCommand:FEATURE_COMMAND_GET_CONFIGURATION_STATUS data:nil];
-    return sendMessage;
+    return [self sendCommand:FEATURE_COMMAND_GET_CONFIGURATION_STATUS data:nil];
 }
     
 -(BOOL) stopAutoConfiguration{
-    BOOL sendMessage = [self sendCommand:FEATURE_COMMAND_STOP_CONFIGURATION data:nil];
-    return sendMessage;
+    return [self sendCommand:FEATURE_COMMAND_STOP_CONFIGURATION data:nil];
 }
 
 -(void) addFeatureConfigurationDelegate:(id<W2STSDKFeatureAutoConfigurableDelegate>)delegate{
@@ -98,15 +115,23 @@ static dispatch_queue_t sNotificationQueue;
     [mFeatureAutoConfDelegates removeObject:delegate];
 }
 
+/**
+ *  this function is called when the node rensponse to a command, for this feature
+ * it extarct the status and call the correct delegate. if the status is 100 the
+ * feature is considered configurated and the stop signal is send
+ *
+ *  @param timestamp   package id
+ *  @param commandType command type
+ *  @param data        command data
+ */
 -(void) parseCommandResponseWithTimestamp:(uint32_t)timestamp
                                  commandType:(uint8_t)commandType
                                         data:(NSData*)data{
     uint8_t status = [data extractUInt8FromOffset:0];
     if(commandType == FEATURE_COMMAND_STOP_CONFIGURATION){
         [self notifyAutoConfStopWithStatus:status];
-        if(status==100){
+        if(status==100)
             _isConfigurated=YES;
-        }
     }else if(commandType == FEATURE_COMMAND_GET_CONFIGURATION_STATUS){
         [self notifyAutoConfChangeStatus:status];
         if(status==100){
@@ -114,11 +139,12 @@ static dispatch_queue_t sNotificationQueue;
             [self notifyAutoConfStopWithStatus:status];
         }else if (status==0){
             _isConfigurated=NO;
-        }
+        }//if eelse
     }else
+        //if is an unknow command call the super method
         [super parseCommandResponseWithTimestamp:timestamp
                                         commandType:commandType
                                                data:data];
-}
+}//parseCommandResponseWithTimestamp
 
 @end

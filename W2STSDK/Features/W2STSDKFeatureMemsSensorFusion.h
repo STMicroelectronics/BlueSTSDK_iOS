@@ -8,17 +8,46 @@
 
 #import "W2STSDKFeatureAutoConfigurable.h"
 
+/**
+ *  this feature export the quaternuion data that are computed on the node
+ *  using the accelerometer, gyroscope and magnetometer data
+ */
 @interface W2STSDKFeatureMemsSensorFusion : W2STSDKFeatureAutoConfigurable
-+(void)initialize;
+
+/**
+ *  extract the x quaternion component
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return x quaternion component
+ */
 +(float)getX:(NSArray*)data;
+
+/**
+ *  extract the y quaternion component
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return y quaternion component
+ */
 +(float)getY:(NSArray*)data;
+
+/**
+ *  extract the z quaternion component
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return z quaternion component
+ */
 +(float)getZ:(NSArray*)data;
+
+/**
+ *  extract the w quaternion component
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return w quaternion component
+ */
 +(float)getW:(NSArray*)data;
 
--(id) initWhitNode:(W2STSDKNode *)node;
-
-//abstract method
--(NSArray*) getFieldsDesc;
--(NSArray*) getFieldsData;
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 @end

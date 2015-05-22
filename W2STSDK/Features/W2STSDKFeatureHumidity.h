@@ -8,16 +8,18 @@
 
 #import "W2STSDKFeature.h"
 
+/**
+ *  feature that contains the data from an humidity sensor
+ */
 @interface W2STSDKFeatureHumidity : W2STSDKFeature
 
-+(void)initialize;
+/**
+ *  % of humidity extracted by the sensor
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return % of humidity extracted by the sensor
+ */
 +(float)getHumidity:(NSArray*)data;
-
--(id) initWhitNode:(W2STSDKNode *)node;
-
-//abstract method
--(NSArray*) getFieldsDesc;
--(NSArray*) getFieldsData;
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 @end

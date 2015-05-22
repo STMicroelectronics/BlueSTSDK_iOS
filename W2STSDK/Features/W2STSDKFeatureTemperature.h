@@ -8,15 +8,18 @@
 
 #import "W2STSDKFeature.h"
 
+/**
+ * export the data from a temperature sensor
+ */
 @interface W2STSDKFeatureTemperature : W2STSDKFeature
-+(void)initialize;
+
+/**
+ *  extract the temperature value
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return temperature value
+ */
 +(float)getTemperature:(NSArray*)data;
-
--(id) initWhitNode:(W2STSDKNode *)node;
-
-//abstract method
--(NSArray*) getFieldsDesc;
--(NSArray*) getFieldsData;
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 @end

@@ -17,7 +17,6 @@
     return temp;
 }
 
-
 -(uint16_t) extractLeUInt16FromOffset:(NSUInteger)offset{
     NSRange range = NSMakeRange(offset, 2);
     uint16_t temp;
@@ -28,7 +27,6 @@
 -(int16_t) extractLeInt16FromOffset:(NSUInteger)offset{
     return (int16_t)[self extractLeUInt16FromOffset:offset];
 }
-
 
 -(uint32_t) extractBeUInt32FromOffset:(NSUInteger)offset{
     NSRange range = NSMakeRange(offset, 4);
@@ -43,7 +41,6 @@
     return beInt;
 }
 
-
 -(int32_t) extractLeInt32FromOffset:(NSUInteger)offset{
     NSRange range = NSMakeRange(offset, 4);
     int32_t temp;
@@ -57,7 +54,6 @@
     [self getBytes:&temp range:range];
     return temp;
 }
-
 
 @end
 

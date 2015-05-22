@@ -357,7 +357,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
         }//for
     }else{
         for (CBCharacteristic *c in service.characteristics) {            
-            if ([W2STSDKFeatureCharacteristics isFeatureCharacteristics: c.UUID]){
+            if ([W2STSDKFeatureCharacteristics isFeatureCharacteristics: c]){
                 featureMask_t featureMask = [W2STSDKFeatureCharacteristics extractFeatureMask:c.UUID];
                 NSMutableArray *charFeature = [[NSMutableArray alloc] initWithCapacity:1];
                 for(NSNumber *mask in mMaskToFeature.allKeys ){

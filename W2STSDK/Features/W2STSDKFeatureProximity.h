@@ -8,14 +8,27 @@
 
 #import "W2STSDKFeature.h"
 
-@interface W2STSDKFeatureProximity : W2STSDKFeature
-+(void)initialize;
-+(uint16_t)getProximityDistance:(NSArray*)data;
-+(uint16_t)outOfRangeValue;
--(id) initWhitNode:(W2STSDKNode *)node;
 
-//abstract method
--(NSArray*) getFieldsDesc;
--(NSArray*) getFieldsData;
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
+/**
+ *  feature that export the data from a proximity sensor, since this can be the
+ * same luminosity sensor, using both feature at the same time can not be possible
+ */
+@interface W2STSDKFeatureProximity : W2STSDKFeature
+
+/**
+ *  proximity value or out of range value
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return proximity value or out of range
+ */
++(uint16_t)getProximityDistance:(NSArray*)data;
+
+/**
+ *  is a special value returned when the sensor detect an object out of its range
+ *
+ *  @return sensor out of range values
+ */
++(uint16_t)outOfRangeValue;
+
 @end
