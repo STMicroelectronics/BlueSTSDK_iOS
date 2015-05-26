@@ -27,7 +27,9 @@
 @property (readonly,strong) W2STSDKNode* node;
 
 /**
- *  delegate used for notify new message in the console
+ *  delegate used for notify new message in the console, when you set a delegate
+ * we will automaticaly enable the notification for the out/error message
+ * for disable the noditification set a nil delegete
  */
 @property (nonatomic,weak,setter=setDelegate:,getter=getDelegate) id<W2STSDKDebugOutputDelegate> delegate;
 

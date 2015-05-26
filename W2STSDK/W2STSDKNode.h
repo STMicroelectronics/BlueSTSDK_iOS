@@ -1,8 +1,8 @@
 //
 //  W2STSDKNode.h
-//  W2STSDK-CB
+//  W2STSDK
 //
-//  Created by Antonino Raucea on 18/03/14.
+//  Created by Giovanni Visentini on 21/04/15.
 //  Copyright (c) 2014 STMicroelectronics. All rights reserved.
 //
 

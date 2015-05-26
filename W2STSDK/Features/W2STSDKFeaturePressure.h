@@ -8,15 +8,19 @@
 
 #import "W2STSDKFeature.h"
 
+/**
+ *  feature that export the data from a pressure sensor
+ */
 @interface W2STSDKFeaturePressure : W2STSDKFeature
-+(void)initialize;
+
+/**
+ *  pressure value
+ *
+ *  @param data data returned by getFieldsData
+ *
+ *  @return pressure value
+ */
 +(float)getPressure:(NSArray*)data;
 
--(id) initWhitNode:(W2STSDKNode *)node;
-
-//abstract method
--(NSArray*) getFieldsDesc;
--(NSArray*) getFieldsData;
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 @end

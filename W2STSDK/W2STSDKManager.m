@@ -87,16 +87,17 @@
         }
     //if timeoutMs
     [self performSelector:@selector(discoveryStop) withObject:nil afterDelay:delay];
-#if (TARGET_IPHONE_SIMULATOR)
     
+    //if we are running in a simulator we create a fake node for show random numbers
+#if (TARGET_IPHONE_SIMULATOR)
     W2STSDKNode *fakeNode = [[W2STSDKNodeFake alloc] init];
     W2STSDKNode *node = [self nodeWithTag:fakeNode.tag];
     if(node == nil){
         [mDiscoveryedNode addObject:fakeNode];
         [self notifyNewNode:fakeNode];
     }
-
 #endif
+    
 }
 
 -(void) discoveryStop{
@@ -178,7 +179,13 @@
     [mCBCentralManager cancelPeripheralConnection:peripheral];
 }
 
-/////////////////////// CBCentralManagerDelegate///////////////////////////////
+#pragma mark - CBCentralManagerDelegate
+
+/**
+ * if the peripheral has a valid advertise we build a new node and notify the discovery
+ * otherwise we skip it
+ * if the node is already discovered we update its rssi value
+ */
 - (void)centralManager:(CBCentralManager *)central
  didDiscoverPeripheral:(CBPeripheral *)peripheral
      advertisementData:(NSDictionary *)advertisementData
@@ -198,9 +205,12 @@
        
     }else{
         [node updateRssi:RSSI];
-    }
+    }//if-else
 }
 
+/**
+ * when the system stop the discovery process we notify it to the user
+ */
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central{
     CBCentralManagerState state = [central state];
     if(state!=CBCentralManagerStatePoweredOn){
@@ -210,29 +220,43 @@
     }
 }
 
+/**
+ * when the peripheral is connected we call the method completeconnection of the
+ * node class
+ */
 - (void)centralManager:(CBCentralManager *)central
   didConnectPeripheral:(CBPeripheral *)peripheral{
     NSString *tag = peripheral.identifier.UUIDString;
     W2STSDKNode *node = [self nodeWithTag:tag];
-    if(node == nil) //we did not handle this periferal
+    if(node == nil) //we did not handle this peripheral
         return;
     [node completeConnection];
 }
 
+/**
+ * when a connection fail we call the method connectionError of the node class
+ */
 -(void)notifyConnectionError:(CBPeripheral*)peripheral error:(NSError*)error{
     NSString *tag = peripheral.identifier.UUIDString;
     W2STSDKNode *node = [self nodeWithTag:tag];
-    if(node == nil) //we did not handle this periferal
+    if(node == nil) //we did not handle this peripheral
         return;
     [node connectionError:error];
 }
 
+/**
+ * when a connection fail we call the method connectionError of the node class
+ */
 - (void)centralManager:(CBCentralManager *)central
 didFailToConnectPeripheral:(CBPeripheral *)peripheral
                  error:(NSError *)error{
     [self notifyConnectionError:peripheral error:error];
 }
 
+/**
+ * when the peripheral is disconnected we call the method completeDisconnection of the
+ * node class
+ */
 - (void)centralManager:(CBCentralManager *)central
 didDisconnectPeripheral:(CBPeripheral *)peripheral
                  error:(NSError *)error{

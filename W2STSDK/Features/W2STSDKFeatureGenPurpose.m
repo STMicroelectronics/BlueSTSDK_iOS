@@ -1,34 +1,36 @@
 //
-//  W2STFeaturePressure.m
-//  W2STApp
+//  W2STSDKFeatureGenPurpose.m
+//  W2STSDK
 //
-//  Created by Giovanni Visentini on 10/04/15.
-//  Copyright (c) 2015 STMicroelectronics. All rights reserved.
+//  Created by Giovanni Visentini on 25/05/15.
+//  Copyright (c) 2015 STCentralLab. All rights reserved.
 //
 
+#import <CoreBluetooth/CBUUID.h>
+
 #import "W2STSDKFeature_prv.h"
-#import "W2STSDKFeaturePressure.h"
+#import "W2STSDKFeatureGenPurpose.h"
 
 #import "W2STSDKFeatureField.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Pressure"
-#define FEATURE_UNIT @"mBar"
+#define FEATURE_NAME @"General Purpose"
+#define FEATURE_UNIT @"RawData"
 #define FEATURE_MIN 0
-#define FEATURE_MAX 100
-#define FEATURE_TYPE W2STSDKFeatureFieldTypeFloat
+#define FEATURE_MAX 255
+#define FEATURE_TYPE W2STSDKFeatureFieldTypeUInt8
 
 static NSArray *sFieldDesc;
 
-@implementation W2STSDKFeaturePressure{
+@implementation W2STSDKFeatureGenPurpose{
     NSMutableArray *mFieldData;
     uint32_t mTimestamp;
     dispatch_queue_t mRwQueue;
 }
 
 +(void)initialize{
-    if(self == [W2STSDKFeaturePressure class]){
+    if(self == [W2STSDKFeatureGenPurpose class]){
         sFieldDesc = [[NSArray alloc] initWithObjects:
                       [W2STSDKFeatureField  createWithName: FEATURE_NAME
                                                       unit:FEATURE_UNIT
@@ -40,19 +42,21 @@ static NSArray *sFieldDesc;
     
 }
 
-
-+(float)getPressure:(NSArray *)data{
-    if(data.count==0)
-    return NAN;
-    return[[data objectAtIndex:0] floatValue];
++(NSData*) getRawData:(NSArray*)data{
+    NSMutableData *rawData = [NSMutableData dataWithCapacity:data.count];
+    
+    for( NSNumber *n in data){
+        uint8_t temp = [n unsignedCharValue];
+        [rawData appendBytes:&temp length:1];
+//        [rawData appendBytes:&temp length:1];
+    }//for
+    return rawData;
 }
 
-
--(id) initWhitNode:(W2STSDKNode *)node{
-    self = [super initWhitNode:node name:FEATURE_NAME];
-    mRwQueue = dispatch_queue_create("W2STSDKFeaturePressure", DISPATCH_QUEUE_CONCURRENT);
-    mFieldData = [NSMutableArray arrayWithObjects:@0, nil];
-    mTimestamp=0;
+-(id)initWhitNode:(W2STSDKNode *)node characteristics:(CBCharacteristic*)c{
+    NSString *name = [NSString stringWithFormat:@"GenPurpose: %@",c.UUID.UUIDString];
+    self = [super initWhitNode:node name:name];
+    _characteristics=c;
     return self;
 }
 
@@ -77,33 +81,24 @@ static NSArray *sFieldDesc;
 }
 
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+
+    NSMutableArray *tempData = [NSMutableArray arrayWithCapacity:rawData.length-offset];
     
-    
-    int32_t press= [rawData extractLeInt32FromOffset:offset];
+    for(uint32_t i=offset ; i< rawData.length ; i++){
+        uint8_t temp = [rawData extractUInt8FromOffset:i];
+        [tempData addObject: [NSNumber numberWithUnsignedChar:temp]];
+    }//for
     
     dispatch_barrier_async(mRwQueue, ^(){
         mTimestamp = timestamp;
-        [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:(press/100.0f)]];
+        mFieldData = tempData;
         
         [self notifyUpdate];
         [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 4)] data:[mFieldData copy]];
     });
-    return 2;
+    return (uint32_t)(rawData.length-offset);
 }
 
 @end
 
-#import "../W2STSDKFeature+fake.h"
 
-@implementation W2STSDKFeaturePressure (fake)
-
--(NSData*) generateFakeData{
-    NSMutableData *data = [NSMutableData dataWithCapacity:4];
-    
-    int32_t temp = FEATURE_MIN*100 + rand()%((FEATURE_MAX-FEATURE_MIN)*100);
-    [data appendBytes:&temp length:4];
-    
-    return data;
-}
-
-@end

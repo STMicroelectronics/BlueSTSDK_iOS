@@ -10,13 +10,25 @@
 #import "W2STSDKFeature_prv.h"
 #import "W2STSDKFeatureField.h"
 
+#define DECIMAL_POSITION 2
+
 @interface W2STSDKFeature()
 @end
 
+/**
+ *  cuncurrent queue used for notify the update in different threads
+ */
 static dispatch_queue_t sNotificationQueue;
 
 @implementation W2STSDKFeature{
+    /**
+     *  set of delegate where notify the feature update
+     */
     NSMutableSet *mFeatureDelegates;
+    
+    /**
+     *  set of delegate where log the feature update
+     */
     NSMutableSet *mFeatureLogDelegates;
 }
 
@@ -131,8 +143,8 @@ static dispatch_queue_t sNotificationQueue;
     NSArray *fields = [self getFieldsDesc];
     NSArray *datas = [self getFieldsData ];
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
-    [formatter setPositiveFormat:@"0.##"];
-    [formatter setNegativeFormat:@"0.##"];
+    [formatter setMaximumFractionDigits:DECIMAL_POSITION];
+    [formatter setMinimumFractionDigits:DECIMAL_POSITION];
     for (int i = 0; i < fields.count; i++) {
         W2STSDKFeatureField *field =(W2STSDKFeatureField*)[fields objectAtIndex:i];
         NSNumber *data = (NSNumber*)[datas objectAtIndex:i];

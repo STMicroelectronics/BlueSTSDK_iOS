@@ -39,6 +39,18 @@ typedef uint32_t featureMask_t;
  *  @return true if the characteristics can be manage by this sdk
  */
 +(bool) isFeatureCharacteristics:(CBCharacteristic*) c;
+
+/**
+ *  tell if a characteristics has a valid uudi for be banage by this sdk as a 
+ *  general pourpose characteristics
+ *
+ *  @param c characteristic to test
+ *
+ *  @return true if the characteristics can be manage by this sdk as general purpose characteristics
+ */
++(bool) isFeatureGeneralPurposeCharacteristics:(CBCharacteristic*) c;
+
+
 @end
 
 /**

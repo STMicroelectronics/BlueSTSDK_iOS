@@ -68,6 +68,8 @@
 		665242871B0B202500931F93 /* W2STSDKManager_prv.h in Headers */ = {isa = PBXBuildFile; fileRef = 665242861B0B1FEE00931F93 /* W2STSDKManager_prv.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		665242891B0B20AC00931F93 /* W2STSDKDebug_prv.h in Headers */ = {isa = PBXBuildFile; fileRef = 665242881B0B207100931F93 /* W2STSDKDebug_prv.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6652428B1B0B20FB00931F93 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6652428A1B0B20FB00931F93 /* CoreFoundation.framework */; };
+		66C4A3C41B13689C00990DC0 /* W2STSDKFeatureGenPurpose.h in Headers */ = {isa = PBXBuildFile; fileRef = 66C4A3C21B13689C00990DC0 /* W2STSDKFeatureGenPurpose.h */; };
+		66C4A3C51B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C4A3C31B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,6 +146,8 @@
 		665242861B0B1FEE00931F93 /* W2STSDKManager_prv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = W2STSDKManager_prv.h; sourceTree = "<group>"; };
 		665242881B0B207100931F93 /* W2STSDKDebug_prv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = W2STSDKDebug_prv.h; sourceTree = "<group>"; };
 		6652428A1B0B20FB00931F93 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		66C4A3C21B13689C00990DC0 /* W2STSDKFeatureGenPurpose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = W2STSDKFeatureGenPurpose.h; sourceTree = "<group>"; };
+		66C4A3C31B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = W2STSDKFeatureGenPurpose.m; sourceTree = "<group>"; };
 		66C9E6571B0C67380091CFD0 /* W2STSDKFeature+fake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "W2STSDKFeature+fake.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -271,6 +275,8 @@
 				665242411B0B1C1400931F93 /* W2STSDKFeatureTemperature.m */,
 				665242421B0B1C1400931F93 /* W2STSDKFeatureMagnetometer.h */,
 				665242431B0B1C1400931F93 /* W2STSDKFeatureMagnetometer.m */,
+				66C4A3C21B13689C00990DC0 /* W2STSDKFeatureGenPurpose.h */,
+				66C4A3C31B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -332,6 +338,7 @@
 				6652425A1B0B1C1400931F93 /* W2STSDKFeatureField.h in Headers */,
 				665242821B0B1EEC00931F93 /* W2STSDKNode_prv.h in Headers */,
 				665242841B0B1F5400931F93 /* W2STSDKFeature_prv.h in Headers */,
+				66C4A3C41B13689C00990DC0 /* W2STSDKFeatureGenPurpose.h in Headers */,
 				665242871B0B202500931F93 /* W2STSDKManager_prv.h in Headers */,
 				665242891B0B20AC00931F93 /* W2STSDKDebug_prv.h in Headers */,
 				66105DA31B0CC7190050E399 /* W2STSDKFeature+fake.h in Headers */,
@@ -463,6 +470,7 @@
 				6652427B1B0B1C1400931F93 /* W2STSTDKBleAdvertiseParser.m in Sources */,
 				6652425F1B0B1C1400931F93 /* W2STSDKFeatureHumidity.m in Sources */,
 				6652427A1B0B1C1400931F93 /* W2STSDKCharacteristic.m in Sources */,
+				66C4A3C51B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m in Sources */,
 				6652426D1B0B1C1400931F93 /* W2STSDKFeatureMagnetometer.m in Sources */,
 				6652425B1B0B1C1400931F93 /* W2STSDKFeatureField.m in Sources */,
 			);

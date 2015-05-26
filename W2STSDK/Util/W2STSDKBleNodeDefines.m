@@ -25,7 +25,7 @@
 
 #define COMMON_CHAR_UUID @"-11E1-AC36-0002A5D5C51B"
 #define COMMON_FEATURE_UUID @"-0001" COMMON_CHAR_UUID
-
+#define COMMON_GP_FEATURE_UUID @"-0003" COMMON_CHAR_UUID
 #define COMMON_SERVICE_UUID "-11E1-9AB4-0002A5D5C51B"
 
 @implementation W2STSDKFeatureCharacteristics
@@ -36,6 +36,10 @@
 
 +(bool) isFeatureCharacteristics:(CBCharacteristic*) c{
     return [ c.UUID.UUIDString hasSuffix:COMMON_FEATURE_UUID];
+}
+
++(bool) isFeatureGeneralPurposeCharacteristics:(CBCharacteristic*) c{
+    return [ c.UUID.UUIDString hasSuffix:COMMON_GP_FEATURE_UUID];
 }
 
 @end

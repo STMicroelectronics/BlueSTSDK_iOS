@@ -14,13 +14,20 @@
 
 @interface W2STSDKBleAdvertiseParser()
 
--(W2STSDKNodeType) getNodeType:(unsigned char) type;
-
 @end
 
 @implementation W2STSDKBleAdvertiseParser
 
--(W2STSDKNodeType) getNodeType:(unsigned char) type {
+
+/**
+ *  convert an uint8_t into a W2STSDKNodeType value
+ *
+ *  @param type board type number
+ *
+ *  @return equvalent type in the W2STSDKNodeType or an exception is the input is 
+ *  a valid type
+ */
+-(W2STSDKNodeType) getNodeType:(uint8_t) type {
     if (type==0x00)
         return W2STSDKNodeTypeGeneric;
     if (type == 0x01)

@@ -11,9 +11,25 @@
 #import "Util/W2STSDKBleNodeDefines.h"
 
 @implementation W2STSDKDebug{
+    /**
+     *  device that will send the information
+     */
     CBPeripheral *mDevice;
+    
+    /**
+     *  characteristic where we will read the stdout message
+     */
     CBCharacteristic* mTermChar;
+    
+    /**
+     *  characteristics where we will read the error message
+     */
     CBCharacteristic* mErrChar;
+    
+    /**
+     *  fifo structure that will contain the message that we will send until 
+     *  we don't have a write ack
+     */
     NSMutableArray *mWriteMessageQueue;
 }
 
@@ -54,6 +70,7 @@
 }
 
 //package method
+
 -(void)receiveCharacteristicsWriteUpdate:(CBCharacteristic*)termChar error:(NSError *)error{
     if(self.delegate == nil)
         return;
@@ -63,6 +80,7 @@
         [self.delegate debug:self didStdInSend: temp error:error];
     }
 }
+
 -(void)receiveCharacteristicsUpdate:(CBCharacteristic*)termChar{
     if(self.delegate == nil)
         return;
