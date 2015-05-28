@@ -30,17 +30,17 @@ static NSArray *sFieldDesc;
 +(void)initialize{
     if(self == [W2STSDKFeatureAcceleration class]){
     sFieldDesc = [[NSArray alloc] initWithObjects:
-                  [W2STSDKFeatureField  createWithName: @"AccX"
+                  [W2STSDKFeatureField  createWithName: @"X"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
                                                        min:@FEATURE_MIN
                                                        max:@FEATURE_MAX ],
-                  [W2STSDKFeatureField  createWithName: @"AccY"
+                  [W2STSDKFeatureField  createWithName: @"Y"
                                                   unit:FEATURE_UNIT
                                                   type:FEATURE_TYPE
                                                    min:@FEATURE_MIN
                                                    max:@FEATURE_MAX ],
-                  [W2STSDKFeatureField  createWithName: @"AccZ"
+                  [W2STSDKFeatureField  createWithName: @"Z"
                                                   unit:FEATURE_UNIT
                                                   type:FEATURE_TYPE
                                                    min:@FEATURE_MIN

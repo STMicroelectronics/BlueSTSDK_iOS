@@ -143,8 +143,8 @@ static dispatch_queue_t sNotificationQueue;
     NSArray *fields = [self getFieldsDesc];
     NSArray *datas = [self getFieldsData ];
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
-    [formatter setMaximumFractionDigits:DECIMAL_POSITION];
-    [formatter setMinimumFractionDigits:DECIMAL_POSITION];
+    [formatter setPositiveFormat:@" #0.00"];
+    [formatter setNegativeFormat:@"-#0.00"];
     for (int i = 0; i < fields.count; i++) {
         W2STSDKFeatureField *field =(W2STSDKFeatureField*)[fields objectAtIndex:i];
         NSNumber *data = (NSNumber*)[datas objectAtIndex:i];

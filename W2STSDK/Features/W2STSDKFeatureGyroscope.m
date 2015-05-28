@@ -31,17 +31,17 @@ static NSArray *sFieldDesc;
 +(void)initialize{
     if(self == [W2STSDKFeatureGyroscope class]){
         sFieldDesc = [[NSArray alloc] initWithObjects:
-                      [W2STSDKFeatureField  createWithName: @"GyroX"
+                      [W2STSDKFeatureField  createWithName: @"X"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
                                                        min:@FEATURE_MIN
                                                        max:@FEATURE_MAX ],
-                      [W2STSDKFeatureField  createWithName: @"GyroY"
+                      [W2STSDKFeatureField  createWithName: @"Y"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
                                                        min:@FEATURE_MIN
                                                        max:@FEATURE_MAX ],
-                      [W2STSDKFeatureField  createWithName: @"GyroZ"
+                      [W2STSDKFeatureField  createWithName: @"Z"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
                                                        min:@FEATURE_MIN
