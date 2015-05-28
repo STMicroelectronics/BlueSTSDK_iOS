@@ -55,6 +55,7 @@ static NSArray *sFieldDesc;
 
 -(id)initWhitNode:(W2STSDKNode *)node characteristics:(CBCharacteristic*)c{
     NSString *name = [NSString stringWithFormat:@"GenPurpose: %@",c.UUID.UUIDString];
+    mRwQueue = dispatch_queue_create("W2STSDKFeatureMag", DISPATCH_QUEUE_CONCURRENT);
     self = [super initWhitNode:node name:name];
     _characteristics=c;
     return self;
@@ -94,9 +95,22 @@ static NSArray *sFieldDesc;
         mFieldData = tempData;
         
         [self notifyUpdate];
-        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 4)] data:[mFieldData copy]];
+        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, rawData.length-offset)]
+                          data:[mFieldData copy]];
     });
     return (uint32_t)(rawData.length-offset);
+}
+
+
+-(NSString*) description{
+    NSMutableString *s = [NSMutableString stringWithString:@"Ts:"];
+    [s appendFormat:@"%d ",[self getTimestamp] ];
+    NSArray *datas = [self getFieldsData ];
+    [s appendString:@"Data: "];
+    for (NSNumber *n in datas) {
+       [s appendFormat:@" %X ",[n unsignedCharValue]];
+    }//for
+    return s;
 }
 
 @end
