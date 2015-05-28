@@ -54,7 +54,7 @@ static NSArray *sFieldDesc;
 }
 
 -(id)initWhitNode:(W2STSDKNode *)node characteristics:(CBCharacteristic*)c{
-    NSString *name = [NSString stringWithFormat:@"GenPurpose: %@",c.UUID.UUIDString];
+    NSString *name = [NSString stringWithFormat:@"GenPurpose_%@",c.UUID.UUIDString];
     mRwQueue = dispatch_queue_create("W2STSDKFeatureMag", DISPATCH_QUEUE_CONCURRENT);
     self = [super initWhitNode:node name:name];
     _characteristics=c;
