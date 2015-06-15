@@ -70,6 +70,14 @@
 		6652428B1B0B20FB00931F93 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6652428A1B0B20FB00931F93 /* CoreFoundation.framework */; };
 		66C4A3C41B13689C00990DC0 /* W2STSDKFeatureGenPurpose.h in Headers */ = {isa = PBXBuildFile; fileRef = 66C4A3C21B13689C00990DC0 /* W2STSDKFeatureGenPurpose.h */; };
 		66C4A3C51B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C4A3C31B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m */; };
+		EA01F0151B2F1BE800B35152 /* W2STSDKCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F00D1B2F1BE800B35152 /* W2STSDKCommand.h */; };
+		EA01F0161B2F1BE800B35152 /* W2STSDKCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F00E1B2F1BE800B35152 /* W2STSDKCommand.m */; };
+		EA01F0171B2F1BE800B35152 /* W2STSDKConfigControl.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F00F1B2F1BE800B35152 /* W2STSDKConfigControl.h */; };
+		EA01F0181B2F1BE800B35152 /* W2STSDKConfigControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F0101B2F1BE800B35152 /* W2STSDKConfigControl.m */; };
+		EA01F0191B2F1BE800B35152 /* W2STSDKRegister.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F0111B2F1BE800B35152 /* W2STSDKRegister.h */; };
+		EA01F01A1B2F1BE800B35152 /* W2STSDKRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F0121B2F1BE800B35152 /* W2STSDKRegister.m */; };
+		EA01F01B1B2F1BE800B35152 /* W2STSDKRegisterDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F0131B2F1BE800B35152 /* W2STSDKRegisterDefines.h */; };
+		EA01F01C1B2F1BE800B35152 /* W2STSDKRegisterDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F0141B2F1BE800B35152 /* W2STSDKRegisterDefines.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -149,6 +157,14 @@
 		66C4A3C21B13689C00990DC0 /* W2STSDKFeatureGenPurpose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = W2STSDKFeatureGenPurpose.h; sourceTree = "<group>"; };
 		66C4A3C31B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = W2STSDKFeatureGenPurpose.m; sourceTree = "<group>"; };
 		66C9E6571B0C67380091CFD0 /* W2STSDKFeature+fake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "W2STSDKFeature+fake.h"; sourceTree = "<group>"; };
+		EA01F00D1B2F1BE800B35152 /* W2STSDKCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = W2STSDKCommand.h; path = Config/W2STSDKCommand.h; sourceTree = "<group>"; };
+		EA01F00E1B2F1BE800B35152 /* W2STSDKCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = W2STSDKCommand.m; path = Config/W2STSDKCommand.m; sourceTree = "<group>"; };
+		EA01F00F1B2F1BE800B35152 /* W2STSDKConfigControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = W2STSDKConfigControl.h; path = Config/W2STSDKConfigControl.h; sourceTree = "<group>"; };
+		EA01F0101B2F1BE800B35152 /* W2STSDKConfigControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = W2STSDKConfigControl.m; path = Config/W2STSDKConfigControl.m; sourceTree = "<group>"; };
+		EA01F0111B2F1BE800B35152 /* W2STSDKRegister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = W2STSDKRegister.h; path = Config/W2STSDKRegister.h; sourceTree = "<group>"; };
+		EA01F0121B2F1BE800B35152 /* W2STSDKRegister.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = W2STSDKRegister.m; path = Config/W2STSDKRegister.m; sourceTree = "<group>"; };
+		EA01F0131B2F1BE800B35152 /* W2STSDKRegisterDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = W2STSDKRegisterDefines.h; path = Config/W2STSDKRegisterDefines.h; sourceTree = "<group>"; };
+		EA01F0141B2F1BE800B35152 /* W2STSDKRegisterDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = W2STSDKRegisterDefines.m; path = Config/W2STSDKRegisterDefines.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +213,7 @@
 		665241F21B0B1BB100931F93 /* W2STSDK */ = {
 			isa = PBXGroup;
 			children = (
+				EA01F00C1B2F1B6500B35152 /* Config */,
 				665242291B0B1C1400931F93 /* Features */,
 				665242441B0B1C1400931F93 /* Log */,
 				6652424B1B0B1C1400931F93 /* Util */,
@@ -309,6 +326,21 @@
 			path = Util;
 			sourceTree = "<group>";
 		};
+		EA01F00C1B2F1B6500B35152 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				EA01F00D1B2F1BE800B35152 /* W2STSDKCommand.h */,
+				EA01F00E1B2F1BE800B35152 /* W2STSDKCommand.m */,
+				EA01F00F1B2F1BE800B35152 /* W2STSDKConfigControl.h */,
+				EA01F0101B2F1BE800B35152 /* W2STSDKConfigControl.m */,
+				EA01F0111B2F1BE800B35152 /* W2STSDKRegister.h */,
+				EA01F0121B2F1BE800B35152 /* W2STSDKRegister.m */,
+				EA01F0131B2F1BE800B35152 /* W2STSDKRegisterDefines.h */,
+				EA01F0141B2F1BE800B35152 /* W2STSDKRegisterDefines.m */,
+			);
+			name = Config;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -327,6 +359,7 @@
 				665242541B0B1C1400931F93 /* W2STSDKFeatureAcceleration.h in Headers */,
 				665242681B0B1C1400931F93 /* W2STSDKFeatureProximity.h in Headers */,
 				665242601B0B1C1400931F93 /* W2STSDKFeatureLuminosity.h in Headers */,
+				EA01F01B1B2F1BE800B35152 /* W2STSDKRegisterDefines.h in Headers */,
 				665242581B0B1C1400931F93 /* W2STSDKFeatureBattery.h in Headers */,
 				665242661B0B1C1400931F93 /* W2STSDKFeaturePressure.h in Headers */,
 				6652425C1B0B1C1400931F93 /* W2STSDKFeatureGyroscope.h in Headers */,
@@ -340,7 +373,9 @@
 				665242841B0B1F5400931F93 /* W2STSDKFeature_prv.h in Headers */,
 				66C4A3C41B13689C00990DC0 /* W2STSDKFeatureGenPurpose.h in Headers */,
 				665242871B0B202500931F93 /* W2STSDKManager_prv.h in Headers */,
+				EA01F0151B2F1BE800B35152 /* W2STSDKCommand.h in Headers */,
 				665242891B0B20AC00931F93 /* W2STSDKDebug_prv.h in Headers */,
+				EA01F0191B2F1BE800B35152 /* W2STSDKRegister.h in Headers */,
 				66105DA31B0CC7190050E399 /* W2STSDKFeature+fake.h in Headers */,
 				665242771B0B1C1400931F93 /* W2STSDKBleNodeDefines.h in Headers */,
 				665242741B0B1C1400931F93 /* NSData+NumberConversion.h in Headers */,
@@ -348,6 +383,7 @@
 				662D8BD81B0B6C88006B7538 /* W2STSDKNodeFake.h in Headers */,
 				665242761B0B1C1400931F93 /* W2STSDKBleAdvertiseParser.h in Headers */,
 				665241F61B0B1BB100931F93 /* W2STSDK.h in Headers */,
+				EA01F0171B2F1BE800B35152 /* W2STSDKConfigControl.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,6 +487,8 @@
 				662D8BD91B0B6C88006B7538 /* W2STSDKNodeFake.m in Sources */,
 				665242241B0B1C0800931F93 /* W2STSDKFeature.m in Sources */,
 				665242571B0B1C1400931F93 /* W2STSDKFeatureAutoConfigurable.m in Sources */,
+				EA01F0161B2F1BE800B35152 /* W2STSDKCommand.m in Sources */,
+				EA01F01A1B2F1BE800B35152 /* W2STSDKRegister.m in Sources */,
 				6652426B1B0B1C1400931F93 /* W2STSDKFeatureTemperature.m in Sources */,
 				665242731B0B1C1400931F93 /* W2STSDKNodeStatusNSLog.m in Sources */,
 				665242671B0B1C1400931F93 /* W2STSDKFeaturePressure.m in Sources */,
@@ -463,6 +501,7 @@
 				665242221B0B1C0800931F93 /* W2STSDKDebug.m in Sources */,
 				665242691B0B1C1400931F93 /* W2STSDKFeatureProximity.m in Sources */,
 				665242631B0B1C1400931F93 /* W2STSDKFeatureMemsSensorFusion.m in Sources */,
+				EA01F01C1B2F1BE800B35152 /* W2STSDKRegisterDefines.m in Sources */,
 				6652425D1B0B1C1400931F93 /* W2STSDKFeatureGyroscope.m in Sources */,
 				665242281B0B1C0800931F93 /* W2STSDKNode.m in Sources */,
 				665242651B0B1C1400931F93 /* W2STSDKFeatureMemsSensorFusionCompact.m in Sources */,
@@ -472,6 +511,7 @@
 				6652427A1B0B1C1400931F93 /* W2STSDKCharacteristic.m in Sources */,
 				66C4A3C51B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m in Sources */,
 				6652426D1B0B1C1400931F93 /* W2STSDKFeatureMagnetometer.m in Sources */,
+				EA01F0181B2F1BE800B35152 /* W2STSDKConfigControl.m in Sources */,
 				6652425B1B0B1C1400931F93 /* W2STSDKFeatureField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
