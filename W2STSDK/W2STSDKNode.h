@@ -11,8 +11,10 @@
 
 #import <Foundation/Foundation.h>
 #import "W2STSDKManager.h"
+//#import "W2STSDKConfigControl.h"
 
 @class W2STSDKDebug;
+@class W2STSDKConfigControl;
 @class W2STSDKFeature;
 
 /**
@@ -127,6 +129,10 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  object that we can use for access to the debug console
  */
 @property (retain, readonly) W2STSDKDebug *debugConsole;
+/**
+ *  object that we can use for access to the config node
+ */
+@property (retain, readonly) W2STSDKConfigControl *configControl;
 /**
  *  tx power used from the board
  */

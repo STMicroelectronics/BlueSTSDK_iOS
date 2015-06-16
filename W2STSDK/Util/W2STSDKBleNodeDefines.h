@@ -103,6 +103,13 @@ typedef uint32_t featureMask_t;
 +(CBUUID*) serviceUuid;
 
 /**
+ *  uuid of the config control characteristic, the user can modify the register values
+ *
+ *  @return uuid of the command characteristic
+ */
++(CBUUID*) configControlUuid;
+
+/**
  *  uuid of the command characteristic, the user can send command and receive the
  * response from this characteristic
  *

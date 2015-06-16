@@ -78,6 +78,7 @@
 		EA01F01A1B2F1BE800B35152 /* W2STSDKRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F0121B2F1BE800B35152 /* W2STSDKRegister.m */; };
 		EA01F01B1B2F1BE800B35152 /* W2STSDKRegisterDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F0131B2F1BE800B35152 /* W2STSDKRegisterDefines.h */; };
 		EA01F01C1B2F1BE800B35152 /* W2STSDKRegisterDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F0141B2F1BE800B35152 /* W2STSDKRegisterDefines.m */; };
+		EA01F01E1B305A8800B35152 /* W2STSDKCommand_prv.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F01D1B305A8800B35152 /* W2STSDKCommand_prv.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -165,6 +166,7 @@
 		EA01F0121B2F1BE800B35152 /* W2STSDKRegister.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = W2STSDKRegister.m; path = Config/W2STSDKRegister.m; sourceTree = "<group>"; };
 		EA01F0131B2F1BE800B35152 /* W2STSDKRegisterDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = W2STSDKRegisterDefines.h; path = Config/W2STSDKRegisterDefines.h; sourceTree = "<group>"; };
 		EA01F0141B2F1BE800B35152 /* W2STSDKRegisterDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = W2STSDKRegisterDefines.m; path = Config/W2STSDKRegisterDefines.m; sourceTree = "<group>"; };
+		EA01F01D1B305A8800B35152 /* W2STSDKCommand_prv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = W2STSDKCommand_prv.h; path = Config/W2STSDKCommand_prv.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -329,6 +331,7 @@
 		EA01F00C1B2F1B6500B35152 /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				EA01F01D1B305A8800B35152 /* W2STSDKCommand_prv.h */,
 				EA01F00D1B2F1BE800B35152 /* W2STSDKCommand.h */,
 				EA01F00E1B2F1BE800B35152 /* W2STSDKCommand.m */,
 				EA01F00F1B2F1BE800B35152 /* W2STSDKConfigControl.h */,
@@ -377,6 +380,7 @@
 				665242891B0B20AC00931F93 /* W2STSDKDebug_prv.h in Headers */,
 				EA01F0191B2F1BE800B35152 /* W2STSDKRegister.h in Headers */,
 				66105DA31B0CC7190050E399 /* W2STSDKFeature+fake.h in Headers */,
+				EA01F01E1B305A8800B35152 /* W2STSDKCommand_prv.h in Headers */,
 				665242771B0B1C1400931F93 /* W2STSDKBleNodeDefines.h in Headers */,
 				665242741B0B1C1400931F93 /* NSData+NumberConversion.h in Headers */,
 				665242791B0B1C1400931F93 /* W2STSDKCharacteristic.h in Headers */,
