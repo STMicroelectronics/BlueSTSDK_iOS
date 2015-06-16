@@ -139,6 +139,7 @@ static dispatch_queue_t sNotificationQueue;
     mNotifyFeature = [NSMutableSet set];
     mFeatureCommand=nil;
     _debugConsole=nil;
+    _configControl=nil;
     _state=W2STSDKNodeStateIdle;
     return self;
 }
@@ -427,6 +428,32 @@ didDiscoverServices:(NSError *)error{
 }
 
 /**
+ *  create a debug object
+ *
+ *  @param service ble service that contains the ble characteristics for the debug
+ *
+ *  @return object to use for access to the stderr/out/in stream
+ */
+-(W2STSDKConfigControl *) buildConfigService:(CBService*)service {
+    
+    CBCharacteristic *configcontrolchar=nil;
+    for(CBCharacteristic *c in service.characteristics) {
+        if([c.UUID isEqual:W2STSDKServiceConfig.configControlUuid]){
+            configcontrolchar = c;
+        } else if ([c.UUID isEqual:W2STSDKServiceConfig.configControlUuid]) {
+            mFeatureCommand = c; //to compatibility with previous code
+        }
+    }//for
+//    if(configcontrolchar!=nil){
+//      return [[W2STSDKConfigControl alloc] initWithNode:self
+//                                                 device:mPeripheral
+//                                     configControlChart:configcontrolchar];
+    
+    //}
+    return nil;
+}
+
+/**
  *  create a feature from a valid characteristics
  *
  *  @param c characteristic that will export one or more features
@@ -484,11 +511,15 @@ didDiscoverCharacteristicsForService:(CBService *)service
     if( [[service UUID] isEqual:[W2STSDKServiceDebug serviceUuid]]  ){
         _debugConsole = [self buildDebugService:service];
     }else if( [[service UUID] isEqual:[W2STSDKServiceConfig serviceUuid]]  ){
-        NSLog(@"Config Service Discoverd");
-        for (CBCharacteristic *c in service.characteristics) {
-            if ([c.UUID isEqual: [W2STSDKServiceConfig featureCommandUuid]])
-                mFeatureCommand = c;
-        }//for
+        NSLog(@"Config Service Discovered");
+        
+        _configControl = [self buildConfigService:service];
+        
+        //AR the association has been moved in the buildConfigService
+//        for (CBCharacteristic *c in service.characteristics) {
+//            if ([c.UUID isEqual: [W2STSDKServiceConfig featureCommandUuid]])
+//                mFeatureCommand = c;
+//        }//for
     }else{
         for (CBCharacteristic *c in service.characteristics) {            
             if ([W2STSDKFeatureCharacteristics isFeatureCharacteristics: c]){

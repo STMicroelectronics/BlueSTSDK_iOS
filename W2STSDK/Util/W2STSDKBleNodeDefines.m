@@ -45,21 +45,32 @@
 @end
 
 #define CONFIG_SERVICE_ID "000F"
-#define CONFIG_SERICE_UUID @"00000000-"CONFIG_SERVICE_ID COMMON_SERVICE_UUID
+#define CONFIG_SERVICE_UUID @"00000000-"CONFIG_SERVICE_ID COMMON_SERVICE_UUID
+#define CONFIG_CONTROL_CHAR_UUID @"00000001-"CONFIG_SERVICE_ID COMMON_CHAR_UUID
 #define COMMAND_CONFIG_CHAR_UUID @"00000002-"CONFIG_SERVICE_ID COMMON_CHAR_UUID
 
 @implementation W2STSDKServiceConfig
 +(CBUUID*) serviceUuid{
     static CBUUID *service = nil;
     if(service==nil)
-        service=[CBUUID UUIDWithString:CONFIG_SERICE_UUID ];
+        service=[CBUUID UUIDWithString:CONFIG_SERVICE_UUID ];
     return service;
+}
++(CBUUID*) configControlUuid{
+    static CBUUID *configControl =nil;
+    if(configControl ==nil)
+        configControl = [CBUUID UUIDWithString: CONFIG_CONTROL_CHAR_UUID];
+    return configControl;
 }
 +(CBUUID*) featureCommandUuid{
     static CBUUID *commandFeature =nil;
     if(commandFeature ==nil)
         commandFeature = [CBUUID UUIDWithString: COMMAND_CONFIG_CHAR_UUID];
     return commandFeature;
+}
++(bool) isConfigCharacteristics:(CBCharacteristic*) c {
+    return [c.UUID isEqual: W2STSDKServiceConfig.configControlUuid] ||
+        [c.UUID isEqual: W2STSDKServiceConfig.featureCommandUuid];
 }
 @end
 
