@@ -41,6 +41,7 @@ static dispatch_queue_t sNotificationQueue;
 }
 
 -(id) initWhitNode: (W2STSDKNode*)node name:(NSString *)name{
+    self = [super init];
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sNotificationQueue = dispatch_queue_create("W2STSDKFeature", DISPATCH_QUEUE_CONCURRENT);

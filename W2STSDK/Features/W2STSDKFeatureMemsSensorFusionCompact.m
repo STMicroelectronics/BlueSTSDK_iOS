@@ -179,7 +179,6 @@ static NSArray *sFieldDesc;
         x/=norm;
         y/=norm;
         z/=norm;
-        w/=norm;
     
         int16_t xFix = (int16_t)(x*SCALE_FACTOR);
         int16_t yFix = (int16_t)(y*SCALE_FACTOR);
