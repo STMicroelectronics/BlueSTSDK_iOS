@@ -102,11 +102,11 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 /**
  *  current board status
  */
-@property (assign, nonatomic) W2STSDKNodeState state;
+@property (assign, nonatomic,readonly) W2STSDKNodeState state;
 /**
  *  board type
  */
-@property (assign, nonatomic) W2STSDKNodeType type;
+@property (assign, nonatomic,readonly) W2STSDKNodeType type;
 /**
  *  node name, is not guaranteed that this string is unique
  */
