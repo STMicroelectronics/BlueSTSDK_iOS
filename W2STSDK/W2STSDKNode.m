@@ -150,11 +150,14 @@ static dispatch_queue_t sNotificationQueue;
     mPeripheral.delegate=self;
 
     _tag = peripheral.identifier.UUIDString;
+
     W2STSDKBleAdvertiseParser *parser = [[W2STSDKBleAdvertiseParser alloc]
                         initWithAdvertise:advertisementData];
     [self buildAvailableFeatures: parser.featureMap maskFeatureMap:parser.featureMaskMap];
+
     _type = parser.nodeType;
     _name = parser.name;
+    _address = parser.address;
     [self updateTxPower: parser.txPower];
     
     [self updateRssi:rssi];

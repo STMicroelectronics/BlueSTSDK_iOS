@@ -114,6 +114,10 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  */
 @property (retain, readonly) NSString *name;
 /**
+ *  node address, if available in the advertise
+ */
+@property (retain, readonly) NSString *address;
+/**
  *  unique string that identify the node
  */
 @property (retain, readonly) NSString *tag;

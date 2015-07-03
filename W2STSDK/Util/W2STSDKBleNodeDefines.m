@@ -123,11 +123,16 @@
 @end
 
 @implementation W2STSDKBoardFeatureMap
+static NSDictionary *genericFeatureMap = nil;
 static NSDictionary *nucleoFeatureMap = nil;
 static NSDictionary *wesuFeatureMap = nil;
 static NSDictionary *boardFeatureMap = nil;
 +(void)initialize{
     if(self == [W2STSDKBoardFeatureMap class]){
+        
+        genericFeatureMap = @{
+                              
+                              };
     nucleoFeatureMap = @{
                          @0x00200000: [W2STSDKFeatureMagnetometer class], //mag
                          @0x00400000: [W2STSDKFeatureGyroscope class], //gyo
@@ -142,8 +147,11 @@ static NSDictionary *boardFeatureMap = nil;
                          @0x00020000: [W2STSDKFeatureBattery class] //battery
 
                          };
-
     wesuFeatureMap = @{
+                       @0x00020000: [W2STSDKFeatureBattery class], //battery
+                       @0x00040000: [W2STSDKFeatureTemperature class], //temperature
+                       @0x00080000: [W2STSDKFeatureHumidity class], //humidity
+                       @0x00100000: [W2STSDKFeaturePressure class], //pressure
                        @0x00200000: [W2STSDKFeatureMagnetometer class], //mag
                        @0x00400000: [W2STSDKFeatureGyroscope class], //gyo
                        @0x00800000: [W2STSDKFeatureAcceleration class], //acc
@@ -151,8 +159,9 @@ static NSDictionary *boardFeatureMap = nil;
                        };
         
     boardFeatureMap = @{
-                        @0x01:wesuFeatureMap,
-                        @0x80:nucleoFeatureMap
+                        @0x00: genericFeatureMap,
+                        @0x01: wesuFeatureMap,
+                        @0x80: nucleoFeatureMap
                         };
     }
 }

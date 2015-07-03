@@ -60,7 +60,7 @@
 		665242781B0B1C1400931F93 /* W2STSDKBleNodeDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = 665242501B0B1C1400931F93 /* W2STSDKBleNodeDefines.m */; };
 		665242791B0B1C1400931F93 /* W2STSDKCharacteristic.h in Headers */ = {isa = PBXBuildFile; fileRef = 665242511B0B1C1400931F93 /* W2STSDKCharacteristic.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6652427A1B0B1C1400931F93 /* W2STSDKCharacteristic.m in Sources */ = {isa = PBXBuildFile; fileRef = 665242521B0B1C1400931F93 /* W2STSDKCharacteristic.m */; };
-		6652427B1B0B1C1400931F93 /* W2STSTDKBleAdvertiseParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 665242531B0B1C1400931F93 /* W2STSTDKBleAdvertiseParser.m */; };
+		6652427B1B0B1C1400931F93 /* W2STSDKBleAdvertiseParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 665242531B0B1C1400931F93 /* W2STSDKBleAdvertiseParser.m */; };
 		6652427E1B0B1C3900931F93 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6652427D1B0B1C3900931F93 /* CoreBluetooth.framework */; };
 		665242801B0B1C4D00931F93 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6652427F1B0B1C4D00931F93 /* Foundation.framework */; };
 		665242821B0B1EEC00931F93 /* W2STSDKNode_prv.h in Headers */ = {isa = PBXBuildFile; fileRef = 665242811B0B1E7800931F93 /* W2STSDKNode_prv.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -147,7 +147,7 @@
 		665242501B0B1C1400931F93 /* W2STSDKBleNodeDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = W2STSDKBleNodeDefines.m; sourceTree = "<group>"; };
 		665242511B0B1C1400931F93 /* W2STSDKCharacteristic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = W2STSDKCharacteristic.h; sourceTree = "<group>"; };
 		665242521B0B1C1400931F93 /* W2STSDKCharacteristic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = W2STSDKCharacteristic.m; sourceTree = "<group>"; };
-		665242531B0B1C1400931F93 /* W2STSTDKBleAdvertiseParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = W2STSTDKBleAdvertiseParser.m; sourceTree = "<group>"; };
+		665242531B0B1C1400931F93 /* W2STSDKBleAdvertiseParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = W2STSDKBleAdvertiseParser.m; sourceTree = "<group>"; };
 		6652427D1B0B1C3900931F93 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		6652427F1B0B1C4D00931F93 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		665242811B0B1E7800931F93 /* W2STSDKNode_prv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = W2STSDKNode_prv.h; sourceTree = "<group>"; };
@@ -323,7 +323,7 @@
 				665242511B0B1C1400931F93 /* W2STSDKCharacteristic.h */,
 				665242521B0B1C1400931F93 /* W2STSDKCharacteristic.m */,
 				6652424E1B0B1C1400931F93 /* W2STSDKBleAdvertiseParser.h */,
-				665242531B0B1C1400931F93 /* W2STSTDKBleAdvertiseParser.m */,
+				665242531B0B1C1400931F93 /* W2STSDKBleAdvertiseParser.m */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -441,6 +441,7 @@
 				TargetAttributes = {
 					665241EF1B0B1BB100931F93 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = 9L4QA9SNQK;
 					};
 					665241FA1B0B1BB100931F93 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -510,7 +511,7 @@
 				665242281B0B1C0800931F93 /* W2STSDKNode.m in Sources */,
 				665242651B0B1C1400931F93 /* W2STSDKFeatureMemsSensorFusionCompact.m in Sources */,
 				665242551B0B1C1400931F93 /* W2STSDKFeatureAcceleration.m in Sources */,
-				6652427B1B0B1C1400931F93 /* W2STSTDKBleAdvertiseParser.m in Sources */,
+				6652427B1B0B1C1400931F93 /* W2STSDKBleAdvertiseParser.m in Sources */,
 				6652425F1B0B1C1400931F93 /* W2STSDKFeatureHumidity.m in Sources */,
 				6652427A1B0B1C1400931F93 /* W2STSDKCharacteristic.m in Sources */,
 				66C4A3C51B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m in Sources */,
@@ -626,6 +627,8 @@
 		665242071B0B1BB100931F93 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -636,6 +639,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -643,6 +647,8 @@
 		665242081B0B1BB100931F93 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -652,6 +658,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;

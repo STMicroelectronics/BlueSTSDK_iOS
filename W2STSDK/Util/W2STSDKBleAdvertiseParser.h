@@ -12,14 +12,26 @@
 #include "W2STSDKBleNodeDefines.h"
 #include "../W2STSDKNode.h"
 
-/*
- //not used since the address field is not exported by the corebluethoot framework
-typedef NS_ENUM(NSInteger, W2STSDKBLeAdvertiseAddressType) {
-    W2STSDKBLeAdvertiseAddressType_PUBLIC,
-    W2STSDKBLeAdvertiseAddressType_RANDOM,
-    W2STSDKBLeAdvertiseAddressType_UNKNOW
-};
-*/
+#define DEVICE_ID_GENERIC 0x00
+#define DEVICE_ID_WESU 0x01
+#define DEVICE_ID_L1DISCO 0x02
+#define DEVICE_ID_NUCLEO_BIT 0x80
+
+#define ADVERTISE_SIZE_COMPACT 6
+#define ADVERTISE_SIZE_FULL 12
+#define ADVERTISE_MAX_SIZE 20
+
+#define ADVERTISE_FIELD_POS_PROTOCOL 0
+#define ADVERTISE_FIELD_POS_DEVICE_ID 1
+#define ADVERTISE_FIELD_POS_FEATURE_MAP 2
+#define ADVERTISE_FIELD_POS_ADDRESS 6
+
+#define ADVERTISE_FIELD_SIZE_ADDRESS 6
+
+#define VERSION_CURRENT 0x01
+#define VERSION_CURRENT_MIN 0x01
+
+
 
 /**
  *  class that parse the ble advertise package
@@ -34,6 +46,10 @@ typedef NS_ENUM(NSInteger, W2STSDKBLeAdvertiseAddressType) {
  */
 @property (readonly) NSString *name;
 
+/**
+ *  version of the protocol
+ */
+@property (readonly) unsigned char protocolVersion;
 /**
  *  board id, tell the board type
  */
@@ -53,6 +69,11 @@ typedef NS_ENUM(NSInteger, W2STSDKBLeAdvertiseAddressType) {
  *  tell the board type
  */
 @property (readonly) W2STSDKNodeType nodeType;
+
+/**
+ *  address
+ */
+@property (readonly) NSString *address;
 
 -(id)initWithAdvertise:(NSDictionary*)advertisementData;
 
