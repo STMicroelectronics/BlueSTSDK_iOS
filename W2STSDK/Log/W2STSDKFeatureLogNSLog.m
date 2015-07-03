@@ -19,7 +19,7 @@
             [temp appendFormat:@"%02X", ((uint8_t*)bytes)[i]];
         }
     }];
-    NSLog(@"%@ Raw:%@ Data:%@",feature.name,temp,[feature description]);
+    NSLog(@"%@ ts:%d Raw:%@ Data:%@",feature.name,[feature getTimestamp],temp,[feature description]);
     
 }
 

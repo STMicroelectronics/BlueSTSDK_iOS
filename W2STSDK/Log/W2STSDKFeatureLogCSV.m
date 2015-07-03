@@ -32,7 +32,7 @@
  */
 -(void) printHeader:(NSFileHandle*)out feature:(W2STSDKFeature*)f{
     NSArray *fields = [f getFieldsDesc];
-    NSMutableString *line = [NSMutableString stringWithString:@"NodeName,RawData,"];
+    NSMutableString *line = [NSMutableString stringWithString:@"DeviceName,Timestamp,RawData,"];
     for (W2STSDKFeatureField *field in fields){
         [line appendString:field.name];
         [line appendString:@","];
@@ -118,6 +118,10 @@
     return temp;
 }
 
+-(void) storeTimeStamp:(uint32_t)timestamp{
+    
+}
+
 - (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw data:(NSArray*)data{
     static const char coma=',';
  
@@ -125,6 +129,8 @@
     @synchronized(file){
         [file writeData: [feature.parentNode.name dataUsingEncoding:NSUTF8StringEncoding]];
         [file writeData:[NSData dataWithBytes:&coma length:1]];
+        NSString *timeStampStr = [NSString stringWithFormat:@"%d",[feature getTimestamp]];
+        [file writeData: [timeStampStr dataUsingEncoding:NSUTF8StringEncoding]];
         if(raw!=nil){
             [self storeBlobData:file data:raw];
         }
