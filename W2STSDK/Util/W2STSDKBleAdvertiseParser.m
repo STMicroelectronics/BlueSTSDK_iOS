@@ -49,7 +49,7 @@
     _name = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
     _txPower = [advertisementData objectForKey:CBAdvertisementDataTxPowerLevelKey];
     NSData *rawData = [advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey];
-    NSInteger len = [rawData length];
+    const NSInteger len = [rawData length];
     
     if(len != ADVERTISE_SIZE_COMPACT && len != ADVERTISE_SIZE_FULL)
         @throw [NSException
@@ -57,23 +57,22 @@
                 reason:[NSString stringWithFormat:@"Manufactured data must be %d bytes or %d byte", ADVERTISE_SIZE_COMPACT, ADVERTISE_SIZE_FULL]
                 userInfo:nil];
     //else
-    unsigned char buffer[ADVERTISE_MAX_SIZE];
-    [rawData getBytes:buffer length:rawData.length];
-    _protocolVersion = buffer[ADVERTISE_FIELD_POS_PROTOCOL];
-    _deviceId = buffer[ADVERTISE_FIELD_POS_DEVICE_ID];
+    _protocolVersion = [rawData extractUInt8FromOffset:ADVERTISE_FIELD_POS_PROTOCOL];
+    _deviceId = [rawData extractUInt8FromOffset:ADVERTISE_FIELD_POS_DEVICE_ID];
     _nodeType = [self getNodeType: _deviceId];
     _featureMap = [rawData extractBeUInt32FromOffset:ADVERTISE_FIELD_POS_FEATURE_MAP];
 
-    _address = @"";
+    _address = nil;
     if (len == ADVERTISE_SIZE_FULL) {
-        NSMutableString * locaddress = [NSMutableString stringWithString:@""];
-        for(int i = ADVERTISE_FIELD_SIZE_ADDRESS - 1; i >= 0; i--)
-        {
-            NSInteger n = buffer[ADVERTISE_FIELD_POS_ADDRESS + i];
-            [locaddress appendString:[NSString stringWithFormat:(i == 0 ? @"%02X" : @"%02X:"), (unsigned char)n]];
-        }
-        _address = locaddress;
-    }
+        _address = [NSString stringWithFormat:@"%02X:%02X:%02X:%02X:%02X:%02X",
+                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+0],
+                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+1],
+                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+2],
+                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+3],
+                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+4],
+                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+5]
+                    ];
+    }//if
         
     return self;
 }
