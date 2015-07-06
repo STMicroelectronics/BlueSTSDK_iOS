@@ -29,22 +29,22 @@ static NSArray *sFieldDesc;
 +(void)initialize{
     if(self == [W2STSDKFeatureMemsSensorFusion class]){
         sFieldDesc = [[NSArray alloc] initWithObjects:
-                      [W2STSDKFeatureField  createWithName: @"x"
+                      [W2STSDKFeatureField  createWithName: @"qi"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
                                                        min:@FEATURE_MIN
                                                        max:@FEATURE_MAX ],
-                      [W2STSDKFeatureField  createWithName: @"y"
+                      [W2STSDKFeatureField  createWithName: @"qj"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
                                                        min:@FEATURE_MIN
                                                        max:@FEATURE_MAX ],
-                      [W2STSDKFeatureField  createWithName: @"z"
+                      [W2STSDKFeatureField  createWithName: @"qk"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
                                                        min:@FEATURE_MIN
                                                        max:@FEATURE_MAX ],
-                      [W2STSDKFeatureField  createWithName: @"w"
+                      [W2STSDKFeatureField  createWithName: @"qs"
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
                                                        min:@FEATURE_MIN
@@ -56,25 +56,25 @@ static NSArray *sFieldDesc;
 }
 
 
-+(float)getX:(NSArray*)data{
++(float)getQi:(NSArray*)data{
     if(data.count==0)
     return NAN;
     return[[data objectAtIndex:0] floatValue];
 }
 
-+(float)getY:(NSArray*)data{
++(float)getQj:(NSArray*)data{
     if(data.count<1)
     return NAN;
     return[[data objectAtIndex:1] floatValue];
 }
 
-+(float)getZ:(NSArray*)data{
++(float)getQk:(NSArray*)data{
     if(data.count<2)
     return NAN;
     return[[data objectAtIndex:2] floatValue];
 }
 
-+(float)getW:(NSArray*)data{
++(float)getQs:(NSArray*)data{
     if(data.count<3)
     return NAN;
     return[[data objectAtIndex:3] floatValue];

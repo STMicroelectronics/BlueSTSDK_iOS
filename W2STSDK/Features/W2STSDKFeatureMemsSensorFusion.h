@@ -21,7 +21,7 @@
  *
  *  @return x quaternion component
  */
-+(float)getX:(NSArray*)data;
++(float)getQi:(NSArray*)data;
 
 /**
  *  extract the y quaternion component
@@ -30,7 +30,7 @@
  *
  *  @return y quaternion component
  */
-+(float)getY:(NSArray*)data;
++(float)getQj:(NSArray*)data;
 
 /**
  *  extract the z quaternion component
@@ -39,7 +39,7 @@
  *
  *  @return z quaternion component
  */
-+(float)getZ:(NSArray*)data;
++(float)getQk:(NSArray*)data;
 
 /**
  *  extract the w quaternion component
@@ -48,6 +48,6 @@
  *
  *  @return w quaternion component
  */
-+(float)getW:(NSArray*)data;
++(float)getQs:(NSArray*)data;
 
 @end
