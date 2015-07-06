@@ -131,6 +131,7 @@
         [file writeData:[NSData dataWithBytes:&coma length:1]];
         NSString *timeStampStr = [NSString stringWithFormat:@"%d",[feature getTimestamp]];
         [file writeData: [timeStampStr dataUsingEncoding:NSUTF8StringEncoding]];
+        [file writeData:[NSData dataWithBytes:&coma length:1]];
         if(raw!=nil){
             [self storeBlobData:file data:raw];
         }
