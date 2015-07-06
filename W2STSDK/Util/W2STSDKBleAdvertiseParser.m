@@ -28,34 +28,53 @@
  *  a valid type
  */
 -(W2STSDKNodeType) getNodeType:(uint8_t) type {
-    if (type==0x00)
-        return W2STSDKNodeTypeGeneric;
-    if (type == 0x01)
-        return W2STSDKNodeTypeWeSU;
-    if (type == 0x02)
-        return W2STSDKNodeTypeL1_Discovery;
-    if (type >= 0x80 && type < 0xff)
-        return W2STSDKNodeTypeNucleo;
+    W2STSDKNodeType nodetype = W2STSDKNodeTypeGeneric;
+    if (type==DEVICE_ID_GENERIC)
+        nodetype = W2STSDKNodeTypeGeneric;
+    else if (type == DEVICE_ID_WESU)
+        nodetype =  W2STSDKNodeTypeWeSU;
+    else if (type == DEVICE_ID_L1DISCO)
+        nodetype =  W2STSDKNodeTypeL1_Discovery;
+    else if ((type & DEVICE_ID_NUCLEO_BIT) == DEVICE_ID_NUCLEO_BIT)
+        nodetype =  W2STSDKNodeTypeNucleo;
     else
         @throw [NSException
                 exceptionWithName:@"Invalid Manufactured data"
                 reason:@"Invalid Node Type"
                 userInfo:nil];
+    return nodetype;
 }
 
 -(id)initWithAdvertise:(NSDictionary *)advertisementData{
     _name = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
     _txPower = [advertisementData objectForKey:CBAdvertisementDataTxPowerLevelKey];
     NSData *rawData = [advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey];
-    if([rawData length]!=5)
+    NSInteger len = [rawData length];
+    
+    if(len != ADVERTISE_SIZE_COMPACT && len != ADVERTISE_SIZE_FULL)
         @throw [NSException
                 exceptionWithName:@"Invalid Manufactured data"
-                reason:@"Manufactured data must be 5byte"
+                reason:[NSString stringWithFormat:@"Manufactured data must be %d bytes or %d byte", ADVERTISE_SIZE_COMPACT, ADVERTISE_SIZE_FULL]
                 userInfo:nil];
     //else
-    _deviceId = *((unsigned char*)rawData.bytes);
+    unsigned char buffer[ADVERTISE_MAX_SIZE];
+    [rawData getBytes:buffer length:rawData.length];
+    _protocolVersion = buffer[ADVERTISE_FIELD_POS_PROTOCOL];
+    _deviceId = buffer[ADVERTISE_FIELD_POS_DEVICE_ID];
     _nodeType = [self getNodeType: _deviceId];
-    _featureMap = [rawData extractBeUInt32FromOffset:1];
+    _featureMap = [rawData extractBeUInt32FromOffset:ADVERTISE_FIELD_POS_FEATURE_MAP];
+
+    _address = @"";
+    if (len == ADVERTISE_SIZE_FULL) {
+        NSMutableString * locaddress = [NSMutableString stringWithString:@""];
+        for(int i = ADVERTISE_FIELD_SIZE_ADDRESS - 1; i >= 0; i--)
+        {
+            NSInteger n = buffer[ADVERTISE_FIELD_POS_ADDRESS + i];
+            [locaddress appendString:[NSString stringWithFormat:(i == 0 ? @"%02X" : @"%02X:"), (unsigned char)n]];
+        }
+        _address = locaddress;
+    }
+        
     return self;
 }
 

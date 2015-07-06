@@ -45,21 +45,32 @@
 @end
 
 #define CONFIG_SERVICE_ID "000F"
-#define CONFIG_SERICE_UUID @"00000000-"CONFIG_SERVICE_ID COMMON_SERVICE_UUID
+#define CONFIG_SERVICE_UUID @"00000000-"CONFIG_SERVICE_ID COMMON_SERVICE_UUID
+#define CONFIG_CONTROL_CHAR_UUID @"00000001-"CONFIG_SERVICE_ID COMMON_CHAR_UUID
 #define COMMAND_CONFIG_CHAR_UUID @"00000002-"CONFIG_SERVICE_ID COMMON_CHAR_UUID
 
 @implementation W2STSDKServiceConfig
 +(CBUUID*) serviceUuid{
     static CBUUID *service = nil;
     if(service==nil)
-        service=[CBUUID UUIDWithString:CONFIG_SERICE_UUID ];
+        service=[CBUUID UUIDWithString:CONFIG_SERVICE_UUID ];
     return service;
+}
++(CBUUID*) configControlUuid{
+    static CBUUID *configControl =nil;
+    if(configControl ==nil)
+        configControl = [CBUUID UUIDWithString: CONFIG_CONTROL_CHAR_UUID];
+    return configControl;
 }
 +(CBUUID*) featureCommandUuid{
     static CBUUID *commandFeature =nil;
     if(commandFeature ==nil)
         commandFeature = [CBUUID UUIDWithString: COMMAND_CONFIG_CHAR_UUID];
     return commandFeature;
+}
++(bool) isConfigCharacteristics:(CBCharacteristic*) c {
+    return [c.UUID isEqual: W2STSDKServiceConfig.configControlUuid] ||
+        [c.UUID isEqual: W2STSDKServiceConfig.featureCommandUuid];
 }
 @end
 
@@ -112,11 +123,16 @@
 @end
 
 @implementation W2STSDKBoardFeatureMap
+static NSDictionary *genericFeatureMap = nil;
 static NSDictionary *nucleoFeatureMap = nil;
 static NSDictionary *wesuFeatureMap = nil;
 static NSDictionary *boardFeatureMap = nil;
 +(void)initialize{
     if(self == [W2STSDKBoardFeatureMap class]){
+        
+        genericFeatureMap = @{
+                              
+                              };
     nucleoFeatureMap = @{
                          @0x00200000: [W2STSDKFeatureMagnetometer class], //mag
                          @0x00400000: [W2STSDKFeatureGyroscope class], //gyo
@@ -131,8 +147,11 @@ static NSDictionary *boardFeatureMap = nil;
                          @0x00020000: [W2STSDKFeatureBattery class] //battery
 
                          };
-
     wesuFeatureMap = @{
+                       @0x00020000: [W2STSDKFeatureBattery class], //battery
+                       @0x00040000: [W2STSDKFeatureTemperature class], //temperature
+                       @0x00080000: [W2STSDKFeatureHumidity class], //humidity
+                       @0x00100000: [W2STSDKFeaturePressure class], //pressure
                        @0x00200000: [W2STSDKFeatureMagnetometer class], //mag
                        @0x00400000: [W2STSDKFeatureGyroscope class], //gyo
                        @0x00800000: [W2STSDKFeatureAcceleration class], //acc
@@ -140,8 +159,9 @@ static NSDictionary *boardFeatureMap = nil;
                        };
         
     boardFeatureMap = @{
-                        @0x01:wesuFeatureMap,
-                        @0x80:nucleoFeatureMap
+                        @0x00: genericFeatureMap,
+                        @0x01: wesuFeatureMap,
+                        @0x80: nucleoFeatureMap
                         };
     }
 }

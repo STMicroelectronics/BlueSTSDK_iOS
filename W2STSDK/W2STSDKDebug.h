@@ -64,7 +64,7 @@
  *  @param debug class that receive the message
  *  @param msg   message
  */
--(void) debug:(W2STSDKDebug*)debug didStdOutRecived:(NSString*) msg;
+-(void) debug:(W2STSDKDebug*)debug didStdOutReceived:(NSString*) msg;
 
 /**
  *  called when we receive a message that the node write in the stderr stream
@@ -72,7 +72,7 @@
  *  @param debug class that receive the message
  *  @param msg   message
  */
--(void) debug:(W2STSDKDebug*)debug didStdErrRecived:(NSString*) msg;
+-(void) debug:(W2STSDKDebug*)debug didStdErrReceived:(NSString*) msg;
 
 /**
  *  called when we successfully send a message to the node stdin

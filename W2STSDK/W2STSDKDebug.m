@@ -86,9 +86,9 @@
         return;
     NSString *temp = [[NSString alloc]initWithData:termChar.value encoding:NSUTF8StringEncoding];
     if([termChar.UUID isEqual:W2STSDKServiceDebug.termUuid]){
-        [self.delegate debug:self didStdOutRecived: temp];
+        [self.delegate debug:self didStdOutReceived: temp];
     }else if([termChar.UUID isEqual:W2STSDKServiceDebug.stdErrUuid]){
-        [self.delegate debug:self didStdErrRecived: temp];
+        [self.delegate debug:self didStdErrReceived: temp];
     }
 }
 @end
