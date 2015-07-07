@@ -443,7 +443,7 @@ didDiscoverServices:(NSError *)error{
     for(CBCharacteristic *c in service.characteristics) {
         if([c.UUID isEqual:W2STSDKServiceConfig.configControlUuid]){
             configcontrolchar = c;
-        } else if ([c.UUID isEqual:W2STSDKServiceConfig.configControlUuid]) {
+        } else if ([c.UUID isEqual:W2STSDKServiceConfig.featureCommandUuid]) {
             mFeatureCommand = c; //to compatibility with previous code
         }
     }//for
