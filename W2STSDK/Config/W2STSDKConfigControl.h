@@ -12,16 +12,18 @@
 #import <CoreBluetooth/CBPeripheral.h>
 #import <CoreBluetooth/CBCharacteristic.h>
 
-#import "W2STSDKNode.h"
 #import "W2STSDKCommand.h"
+#import "W2STSDKNode.h"
 
 @interface W2STSDKConfigControl : NSObject
 
 /**
  *  node that export this config
  */
-@property (readonly,strong) W2STSDKNode* node;
+@property (readonly,strong) W2STSDKNode *node;
 
++(id)configControlWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
+        configControlChart:(CBCharacteristic*)configControlChar;
 -(id)initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device configControlChart:(CBCharacteristic*)configControlChar;
 -(void)read:(W2STSDKCommand *)cmd;
 -(void)write:(W2STSDKCommand *)cmd;

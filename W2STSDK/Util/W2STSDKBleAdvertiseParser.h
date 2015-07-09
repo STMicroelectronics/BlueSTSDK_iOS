@@ -21,6 +21,9 @@
 #define ADVERTISE_SIZE_FULL 12
 #define ADVERTISE_MAX_SIZE 20
 
+#define ADVERTISE_SIZE_LEGACY1 3
+#define ADVERTISE_SIZE_LEGACY2 5
+
 #define ADVERTISE_FIELD_POS_PROTOCOL 0
 #define ADVERTISE_FIELD_POS_DEVICE_ID 1
 #define ADVERTISE_FIELD_POS_FEATURE_MAP 2
@@ -28,18 +31,10 @@
 
 #define ADVERTISE_FIELD_SIZE_ADDRESS 6
 
-#define VERSION_CURRENT 0x01
-#define VERSION_CURRENT_MIN 0x01
-
-
-
 /**
  *  class that parse the ble advertise package
  */
 @interface W2STSDKBleAdvertiseParser : NSObject
-
-//@property (readonly) W2STSDKBLeAdvertiseAddressType type; //not present in the dictionary advertise
-//@property (readonly) NSString *address; //not present in the dictionary advertise
 
 /**
  *  board name
@@ -74,6 +69,8 @@
  *  address
  */
 @property (readonly) NSString *address;
+
++(id)advertiseParserWithAdvertise:(NSDictionary *)advertisementData;
 
 -(id)initWithAdvertise:(NSDictionary*)advertisementData;
 

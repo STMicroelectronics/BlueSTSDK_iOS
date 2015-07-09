@@ -5,7 +5,7 @@
 //  Copyright (c) 2015 STMicroelectronics. All rights reserved.
 //
 
-#import "W2STSDKConfigControl.h"
+#import "W2STSDKConfigControl_prv.h"
 
 
 /**
@@ -35,6 +35,10 @@ static dispatch_queue_t sNotificationQueue;
     NSMutableSet *mConfigControlDelegates;
 }
 
++(id)configControlWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
+configControlChart:(CBCharacteristic*)configControlChar {
+    return [[W2STSDKConfigControl alloc] initWithNode:node device:device configControlChart:configControlChar];
+}
 -(id)initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
          configControlChart:(CBCharacteristic*)configControlChar {
     static dispatch_once_t onceToken;
@@ -42,6 +46,7 @@ static dispatch_queue_t sNotificationQueue;
         sNotificationQueue = dispatch_queue_create("W2STConfigControl", DISPATCH_QUEUE_CONCURRENT);
     });
     
+    self = [super init];
     _node=node;
     mConfigControlChar=configControlChar;
     mDevice=device;

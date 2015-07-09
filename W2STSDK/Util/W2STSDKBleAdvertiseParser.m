@@ -44,6 +44,9 @@
                 userInfo:nil];
     return nodetype;
 }
++(id)advertiseParserWithAdvertise:(NSDictionary *)advertisementData {
+    return [[W2STSDKBleAdvertiseParser alloc] initWithAdvertise:advertisementData];
+}
 
 -(id)initWithAdvertise:(NSDictionary *)advertisementData{
     _name = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
@@ -51,29 +54,52 @@
     NSData *rawData = [advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey];
     const NSInteger len = [rawData length];
     
-    if(len != ADVERTISE_SIZE_COMPACT && len != ADVERTISE_SIZE_FULL)
-        @throw [NSException
-                exceptionWithName:@"Invalid Manufactured data"
-                reason:[NSString stringWithFormat:@"Manufactured data must be %d bytes or %d byte", ADVERTISE_SIZE_COMPACT, ADVERTISE_SIZE_FULL]
-                userInfo:nil];
-    //else
-    _protocolVersion = [rawData extractUInt8FromOffset:ADVERTISE_FIELD_POS_PROTOCOL];
-    _deviceId = [rawData extractUInt8FromOffset:ADVERTISE_FIELD_POS_DEVICE_ID];
-    _nodeType = [self getNodeType: _deviceId];
-    _featureMap = [rawData extractBeUInt32FromOffset:ADVERTISE_FIELD_POS_FEATURE_MAP];
+    //AR Changed to allow to show also the not supported boards
+    //    if(len != ADVERTISE_SIZE_COMPACT && len != ADVERTISE_SIZE_FULL)
+    //        @throw [NSException
+    //                exceptionWithName:@"Invalid Manufactured data"
+    //                reason:[NSString stringWithFormat:@"Manufactured data must be %d bytes or %d byte", ADVERTISE_SIZE_COMPACT, ADVERTISE_SIZE_FULL]
+    //                userInfo:nil];
 
+    //initialization
+    _featureMap = 0x00;
+    _protocolVersion = PROTOCOL_VERSION_NOT_AVAILABLE;
     _address = nil;
-    if (len == ADVERTISE_SIZE_FULL) {
-        _address = [NSString stringWithFormat:@"%02X:%02X:%02X:%02X:%02X:%02X",
+    _deviceId = DEVICE_ID_GENERIC;
+    _nodeType = [self getNodeType: _deviceId];
+    
+    //check the size and otherwise check if a legacy version
+    if (len != ADVERTISE_SIZE_COMPACT && len != ADVERTISE_SIZE_FULL)
+    {
+        if (len == ADVERTISE_SIZE_LEGACY1)
+        {
+            _protocolVersion = PROTOCOL_VERSION_LEGACY1;
+        }
+        else if (len == ADVERTISE_SIZE_LEGACY2)
+        {
+            _protocolVersion = PROTOCOL_VERSION_LEGACY1;
+        }
+        return self;
+    }
+
+    _protocolVersion = [rawData extractUInt8FromOffset:ADVERTISE_FIELD_POS_PROTOCOL];
+    if ([W2STSDKNode checkProtocolVersion:_protocolVersion]) {
+        _deviceId = [rawData extractUInt8FromOffset:ADVERTISE_FIELD_POS_DEVICE_ID];
+        _nodeType = [self getNodeType: _deviceId];
+        _featureMap = [rawData extractBeUInt32FromOffset:ADVERTISE_FIELD_POS_FEATURE_MAP];
+        
+        if (len == ADVERTISE_SIZE_FULL) {
+            _address = [NSString stringWithFormat:@"%02X:%02X:%02X:%02X:%02X:%02X",
                         [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+0],
                         [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+1],
                         [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+2],
                         [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+3],
                         [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+4],
                         [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+5]
-                    ];
-    }//if
-        
+                        ];
+        }//if len check
+    }//if protocol check
+    
     return self;
 }
 

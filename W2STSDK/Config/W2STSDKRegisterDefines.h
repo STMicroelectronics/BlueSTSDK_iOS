@@ -82,6 +82,6 @@ typedef NS_ENUM(NSInteger, W2STSDKRegisterName_e) {
 };
 
 +(W2STSDKRegister *) lookUpWithRegisterName:(W2STSDKRegisterName_e)name;
-
++(NSDictionary *)registers;
 @end
 #endif //W2STSDKRegisterDefines_h

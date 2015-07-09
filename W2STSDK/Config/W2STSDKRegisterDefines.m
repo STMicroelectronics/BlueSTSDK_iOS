@@ -187,8 +187,11 @@ static NSDictionary * mapRegisters = nil;
  * @return the relative register if exist else null
  */
 +(W2STSDKRegister *) lookUpWithRegisterName:(W2STSDKRegisterName_e)name {
-    return nil; // (W2STSDKRegister *)mapRegisters[name];
+    NSNumber * key = [NSNumber numberWithInt:name];
+    return (W2STSDKRegister *)mapRegisters[key];
 }
-
++(NSDictionary *)registers {
+    return mapRegisters;
+}
 @end
 

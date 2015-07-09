@@ -35,7 +35,7 @@
     /**
      *  set with the discovered nodes, of type W2STSDKNode
      */
-    NSMutableSet *mDiscoveryedNode;
+    NSMutableSet *mDiscoveredNode;
     
     /**
      *  system ble manager
@@ -61,7 +61,7 @@
 -(id)init {
     self = [super init];
 
-    mDiscoveryedNode = [[NSMutableSet alloc] init];
+    mDiscoveredNode = [[NSMutableSet alloc] init];
     mManagerListener = [[NSMutableSet alloc] init];
     mCBCentralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     mNotificationQueue = dispatch_queue_create("W2STSDKManager", DISPATCH_QUEUE_CONCURRENT);
@@ -106,11 +106,11 @@
 }
 
 -(void)resetDiscovery {
-    [mDiscoveryedNode removeAllObjects];
+    [mDiscoveredNode removeAllObjects];
 }
 
 -(NSArray*) nodes{
-    return [mDiscoveryedNode allObjects];
+    return [mDiscoveredNode allObjects];
 }
 
 -(void)addDelegate:(id<W2STSDKManagerDelegate>)delegate {
@@ -154,7 +154,7 @@
 }
 
 -(W2STSDKNode *)nodeWithName:(NSString *)name{
-    for (W2STSDKNode *node in mDiscoveryedNode) {
+    for (W2STSDKNode *node in mDiscoveredNode) {
         if ([name isEqual: node.name]) {
             return node;
         }
@@ -163,7 +163,7 @@
 }
 
 -(W2STSDKNode *)nodeWithTag:(NSString *)tag{
-    for (W2STSDKNode *node in mDiscoveryedNode) {
+    for (W2STSDKNode *node in mDiscoveredNode) {
         if ([tag isEqual: node.tag]) {
             return node;
         }
@@ -197,8 +197,14 @@
         @try {
             node = [[W2STSDKNode alloc] init:peripheral rssi:RSSI
                                    advertise:advertisementData];
-            [mDiscoveryedNode addObject:node];
-            [self notifyNewNode:node];
+            
+            //AR changed, in the previous version a not supported board was discarded to n exception
+            //now we create the node, but without feature
+            if ([node isSupported])
+            {
+                [mDiscoveredNode addObject:node];
+                [self notifyNewNode:node];
+            }
         }
         @catch (NSException *exception) {//not a valid advertise -> avoid to add it
         }
