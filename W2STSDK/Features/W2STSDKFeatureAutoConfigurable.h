@@ -11,8 +11,8 @@
 @protocol W2STSDKFeatureAutoConfigurableDelegate;
 
 /**
- *  extend a feature adding the possibility to have a self configuration routine
- * that run on the node. this routine can be start/stop or query by this type of
+ * Extend a feature adding the possibility to have a self configuration routine
+ * that run on the node. This routine can be start/stop or query by this type of
  * feature.
  *
  */
@@ -33,7 +33,7 @@
 /**
  *  request the status of the configuration process, the status is an int between
  * 0 and 100.
- * the status is notify using the didAutoConfigurationChange delegate callback
+ * The status is notify using the didAutoConfigurationChange delegate callback
  *
  *  @return true if the message is correctly send
  */
@@ -48,8 +48,7 @@
 
 /**
  *  register a delegate for this feature
- * 
- * Note that the callback are done by an concurrent queue
+ * <p> Note that the callback are done by an concurrent queue </p>
  *
  *  @param delegate object where notify the configuration change
  */
@@ -65,7 +64,7 @@
 @end
 
 /**
- *  protocol used for notify the change configuration change
+ *  Protocol used for notify the change configuration change
  */
 @protocol  W2STSDKFeatureAutoConfigurableDelegate <NSObject>
 

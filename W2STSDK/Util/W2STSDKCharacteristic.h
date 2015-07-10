@@ -12,23 +12,23 @@
 #import "../W2STSDKFeature.h"
 
 /**
- *  a single ble characteristics can contains more than one feature, 
- * this class help to map a ble characteristics with its features
+ *  A single ble characteristic can contains more than one feature, 
+ * this class help to map a ble characteristic with its features
  */
 @interface W2STSDKCharacteristic : NSObject
 
 /**
- *  ble characteristics associated with this object
+ *  ble characteristic associated with this object
  */
 @property(strong,nonatomic,readonly) CBCharacteristic* characteristic;
 
 /**
- *  array of class that extend W2STSDKFeatrue that the characteristics export
+ *  array of class that extend \link{W2STSDKFeature} that the characteristic export
  */
 @property(strong,nonatomic,readonly) NSArray* features;
 
 /**
- *  create a new characateristc manage by the sdk
+ *  create a new characteristic manage by the sdk
  *
  *  @param charac   ble characteristic
  *  @param features array of W2STSDKFeature that are exported by this characteristic
@@ -49,7 +49,7 @@
                              in:(NSArray*)CharFeatureArray;
 
 /**
- *  find the characteristics that export a particular feature, if the feature is
+ *  find the characteristic that export a particular feature, if the feature is
  * exported by multiple characteristic we will return the characteristic that export
  * more features
  *

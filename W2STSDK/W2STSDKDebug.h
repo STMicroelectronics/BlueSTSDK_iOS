@@ -17,7 +17,7 @@
 @protocol W2STSDKDebugOutputDelegate;
 
 /**
- *  class that permit to read and write from the debug node console
+ *  Class that permit to read and write from the debug node console
  */
 @interface W2STSDKDebug : NSObject
 
@@ -29,14 +29,14 @@
 /**
  *  delegate used for notify new message in the console, when you set a delegate
  * we will automaticaly enable the notification for the out/error message
- * for disable the noditification set a nil delegete
+ * for disable the noditification set it to nil
  */
 @property (nonatomic,weak,setter=setDelegate:,getter=getDelegate) id<W2STSDKDebugOutputDelegate> delegate;
 
 /**
  *  create a debug console
  *
- *  @param node     node that export the
+ *  @param node     node that export the debug console
  *  @param device   device associated to the node
  *  @param termChar characteristic where write and read the console message
  *  @param errChar  characteristic where receive the error messages
@@ -56,6 +56,7 @@
 
 @end
 
+/** Protocol used for notify an console update */
 @protocol W2STSDKDebugOutputDelegate
 @required
 /**
@@ -79,8 +80,7 @@
  *
  *  @param debug class that send the message
  *  @param msg   message send
- *  @param error if present an error with the reason why the sending fail
- */
+ *  @param error if present, it is the reason why message was not send */
 -(void) debug:(W2STSDKDebug*)debug didStdInSend:(NSString*) msg error:(NSError*)error;
 @end
 
