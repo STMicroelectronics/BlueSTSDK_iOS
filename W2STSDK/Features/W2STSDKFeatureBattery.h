@@ -8,7 +8,6 @@
 
 #import "W2STSDKFeature.h"
 
-
 typedef NS_ENUM(NSInteger, W2STSDKFeatureBatteryStatus) {
     //the battery has a level below the 10%
     W2STSDKFeatureBatteryStatusLowBattery  =0x00,

@@ -34,12 +34,9 @@
 
 
 /**
- *  class that parse the ble advertise package
+ *  Class that parse the ble advertise package
  */
 @interface W2STSDKBleAdvertiseParser : NSObject
-
-//@property (readonly) W2STSDKBLeAdvertiseAddressType type; //not present in the dictionary advertise
-//@property (readonly) NSString *address; //not present in the dictionary advertise
 
 /**
  *  board name
@@ -75,6 +72,11 @@
  */
 @property (readonly) NSString *address;
 
+/**
+ * parse the advertise data returned by the system
+ * @param advertisementData ble advertise data
+ * @throw an exception if the vendor specific field isn't compatible with the W2ST protocol
+ */
 -(id)initWithAdvertise:(NSDictionary*)advertisementData;
 
 /**

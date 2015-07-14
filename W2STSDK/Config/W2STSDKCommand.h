@@ -21,8 +21,11 @@
  */
 @interface W2STSDKCommand : NSObject
 
+/** TODO ADD DOC*/
 @property (retain, nonatomic) W2STSDKRegister * registerField;
+/** TODO ADD DOC*/
 @property (assign, nonatomic) W2STSDKRegisterTarget_e target;
+/** TODO ADD DOC*/
 @property (retain, nonatomic) NSData * data;
 
 /**

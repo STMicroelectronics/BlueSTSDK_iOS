@@ -12,9 +12,6 @@
 
 #define DECIMAL_POSITION 2
 
-@interface W2STSDKFeature()
-@end
-
 /**
  *  cuncurrent queue used for notify the update in different threads
  */

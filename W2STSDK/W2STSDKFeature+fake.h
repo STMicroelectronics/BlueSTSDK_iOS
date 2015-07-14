@@ -12,13 +12,14 @@
 #import "W2STSDKFeature.h"
 
 /**
- *  extend the feature for be able to generate fake data to be uesed in the ios 
+ * Extend the feature for be able to generate fake data to be uesed in the ios 
  * emulator
  */
 @interface W2STSDKFeature (fake)
 
 /**
- *  abstract method,
+ *  <b>abstract method</b>, you have to overwrite this method if you want 
+ *  enable the possibility to use a fake feature into the ios emulator
  *
  *  @return data that will be passed to the updateFeature for trigger a fake feature update
  */
