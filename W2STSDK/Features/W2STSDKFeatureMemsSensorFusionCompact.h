@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 STMicroelectronics. All rights reserved.
 //
 
-#import "W2STSDKFeatureAutoConfigurable.h"
+#import "W2STSDKFeatureMemsSensorFusion.h"
 
 /**
  *  this feature export the quaternuion data that are computed on the node
@@ -14,7 +14,7 @@
  *  in this case the quaternion are sended with a low precision and 3 quaternion
  * each package. in this way we can reach an hight frame rate.
  */
-@interface W2STSDKFeatureMemsSensorFusionCompact : W2STSDKFeatureAutoConfigurable
+@interface W2STSDKFeatureMemsSensorFusionCompact : W2STSDKFeatureMemsSensorFusion
 
 
 /**
