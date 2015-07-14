@@ -394,6 +394,8 @@ static dispatch_queue_t sNotificationQueue;
 didDiscoverServices:(NSError *)error{
     if([self isConnected]) //we already run this method one time
         return;
+    if(error!=nil)
+       [self updateNodeStatus:W2STSDKNodeStateUnreachable];
     /*
     we store all the service in an array, when we recevie the characteristics
     of a service we remove from the array in a way to avoid to scan multiple time
@@ -506,9 +508,10 @@ didDiscoverCharacteristicsForService:(CBService *)service
     if(![mCharDiscoverServiceReq containsObject:service])
         return;
     
-    if (error && [error code] != 0) {
-        NSLog(@"Error %@\n", error);
-        return ;
+    if(error){
+        NSLog(@"Error discovering the service: %@ Erorr: %@",
+              service.UUID.UUIDString,error.localizedDescription);
+        [self updateNodeStatus:W2STSDKNodeStateUnreachable];
     }
     
     if( [[service UUID] isEqual:[W2STSDKServiceDebug serviceUuid]]  ){
@@ -600,10 +603,10 @@ didDiscoverCharacteristicsForService:(CBService *)service
 didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error {
     
-    //check if an error is notified
-    if (error != nil && [error code] != 0) {
-        NSLog(@"UUID: %@ Error: %@\n", characteristic.UUID.UUIDString, error);
-        return ;
+    if(error){
+        NSLog(@"Error updating the char: %@ Erorr: %@",
+              characteristic.UUID.UUIDString,error.localizedDescription);
+        [self updateNodeStatus:W2STSDKNodeStateLost];
     }
     
     [self characteristicUpdate:characteristic];
@@ -612,6 +615,11 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
 - (void)peripheral:(CBPeripheral *)peripheral
 didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error{
+    if(error){
+        NSLog(@"Error writing the char: %@ Erorr: %@",
+              characteristic.UUID.UUIDString,error.localizedDescription);
+        [self updateNodeStatus:W2STSDKNodeStateLost];
+    }
     
     if ([characteristic.UUID isEqual: [W2STSDKServiceDebug termUuid]] &&
         _debugConsole!=nil){
@@ -623,9 +631,11 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 - (void)peripheral:(CBPeripheral *)peripheral
 didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error{
-    if(error)
+    if(error){
         NSLog(@"Error updating the char: %@ Erorr: %@",
               characteristic.UUID.UUIDString,error.localizedDescription);
+        [self updateNodeStatus:W2STSDKNodeStateLost];
+    }
 }
 
 +(NSString*) stateToString:(W2STSDKNodeState)state{
