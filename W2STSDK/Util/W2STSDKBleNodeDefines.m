@@ -72,10 +72,16 @@
     return [c.UUID isEqual: W2STSDKServiceConfig.configControlUuid] ||
         [c.UUID isEqual: W2STSDKServiceConfig.featureCommandUuid];
 }
++(bool) isConfigControlCharacteristic:(CBCharacteristic*) c {
+    return [c.UUID isEqual: W2STSDKServiceConfig.configControlUuid];
+}
++(bool) isConfigFeatureCommandCharacteristic:(CBCharacteristic*) c {
+    return [c.UUID isEqual: W2STSDKServiceConfig.featureCommandUuid];
+}
 @end
 
 #define DEBUG_SERVICE_ID "000E"
-#define DEBUG_SERICE_UUID @"00000000-"DEBUG_SERVICE_ID COMMON_SERVICE_UUID
+#define DEBUG_SERVICE_UUID @"00000000-"DEBUG_SERVICE_ID COMMON_SERVICE_UUID
 #define TEMR_DEBUG_CHAR_UUID @"00000001-"DEBUG_SERVICE_ID COMMON_CHAR_UUID
 #define STDERR_DEBUG_CHAR_UUID @"00000002-"DEBUG_SERVICE_ID COMMON_CHAR_UUID
 
@@ -83,7 +89,7 @@
 +(CBUUID*) serviceUuid{
     static CBUUID *service = nil;
     if(service==nil)
-        service=[CBUUID UUIDWithString:DEBUG_SERICE_UUID ];
+        service=[CBUUID UUIDWithString:DEBUG_SERVICE_UUID ];
     return service;
 }
 +(CBUUID*) stdErrUuid{

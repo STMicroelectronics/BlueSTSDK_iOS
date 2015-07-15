@@ -14,8 +14,8 @@
 
 @interface W2STSDKConfigControl(prv)
 
--(void)notifyRead:(NSData *)data;
--(void)notifyWrite:(NSData *)data success:(BOOL)success;
+-(void)characteristicsUpdate:(CBCharacteristic *)characteristic;
+-(void)characteristicsWriteUpdate:(CBCharacteristic *)characteristic success:(bool)success;
 
 @end
 

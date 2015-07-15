@@ -19,6 +19,7 @@
  * side persistent and session.
  */
 typedef NS_ENUM(NSInteger, W2STSDKRegisterName_e) {
+    W2STSDK_REGISTER_NAME_NONE,
     
     /*Mandatory registers*/
     W2STSDK_REGISTER_NAME_FW_VER,
@@ -82,6 +83,9 @@ typedef NS_ENUM(NSInteger, W2STSDKRegisterName_e) {
 };
 
 +(W2STSDKRegister *) lookUpWithRegisterName:(W2STSDKRegisterName_e)name;
++(W2STSDKRegister *) lookUpRegisterWithAddress:(NSInteger)address target:(W2STSDKRegisterTarget_e)target;
++(W2STSDKRegisterName_e) lookUpRegisterNameWithAddress:(NSInteger)address target:(W2STSDKRegisterTarget_e)target;
 
++(NSDictionary *)registers;
 @end
 #endif //W2STSDKRegisterDefines_h

@@ -11,6 +11,7 @@
 #import "W2STSDKFeature_prv.h"
 #import "W2STSDKFeatureGenPurpose.h"
 #import "W2STSDKDebug_prv.h"
+#import "W2STSDKConfigControl_prv.h"
 
 #import "Util/W2STSDKCharacteristic.h"
 #import "Util/W2STSDKBleAdvertiseParser.h"
@@ -151,19 +152,22 @@ static dispatch_queue_t sNotificationQueue;
 
     _tag = peripheral.identifier.UUIDString;
 
-    W2STSDKBleAdvertiseParser *parser = [[W2STSDKBleAdvertiseParser alloc]
-                        initWithAdvertise:advertisementData];
+    W2STSDKBleAdvertiseParser *parser = [W2STSDKBleAdvertiseParser
+                                         advertiseParserWithAdvertise:advertisementData];
     [self buildAvailableFeatures: parser.featureMap maskFeatureMap:parser.featureMaskMap];
-
+    
     _type = parser.nodeType;
     _name = parser.name;
     _address = parser.address;
+    _protocolVersion = parser.protocolVersion;
+    
     [self updateTxPower: parser.txPower];
     
     [self updateRssi:rssi];
     //NSLog(@"create Node: name: %@ type: %x feature: %d",_name,_type,parser.featureMap);
     return self;
 }
+
 
 -(void) addBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate{
     [mBleConnectionDelegates addObject:delegate];
@@ -402,7 +406,7 @@ didDiscoverServices:(NSError *)error{
     the same service */
     mCharDiscoverServiceReq = [NSMutableArray arrayWithArray: peripheral.services];
     for (CBService *service in peripheral.services) {
-        NSLog(@"Discover Service: %@",service.UUID.UUIDString);
+        NSLog(@"Discovered Service: %@",service.UUID.UUIDString);
         [peripheral discoverCharacteristics:nil forService:service];
     }
 }
@@ -424,12 +428,7 @@ didDiscoverServices:(NSError *)error{
             err = c;
         }//if-else-if
     }//for
-    if(term!=nil && err!=nil){
-        return [[W2STSDKDebug alloc]initWithNode:self device:mPeripheral
-                                       termChart:term errChart:err];
-    
-    }//else
-    return nil;
+    return term == nil || err == nil ? nil : [[W2STSDKDebug alloc] initWithNode:self device:mPeripheral termChart:term errChart:err];
 }
 
 /**
@@ -450,12 +449,10 @@ didDiscoverServices:(NSError *)error{
         }
     }//for
 //    if(configcontrolchar!=nil){
-//      return [[W2STSDKConfigControl alloc] initWithNode:self
-//                                                 device:mPeripheral
-//                                     configControlChart:configcontrolchar];
+//      return [;
     
     //}
-    return nil;
+    return configcontrolchar == nil ? nil : [W2STSDKConfigControl configControlWithNode:self device:mPeripheral configControlChart:configcontrolchar];
 }
 
 /**
@@ -514,10 +511,13 @@ didDiscoverCharacteristicsForService:(CBService *)service
         [self updateNodeStatus:W2STSDKNodeStateUnreachable];
     }
     
+    NSLog(@"Service: %@", service.UUID.UUIDString);
+    for (CBCharacteristic *c in service.characteristics) {
+        NSLog(@" - Char: %@", c.UUID.UUIDString);
+    }
     if( [[service UUID] isEqual:[W2STSDKServiceDebug serviceUuid]]  ){
         _debugConsole = [self buildDebugService:service];
     }else if( [[service UUID] isEqual:[W2STSDKServiceConfig serviceUuid]]  ){
-        NSLog(@"Config Service Discovered");
         
         _configControl = [self buildConfigService:service];
         
@@ -582,10 +582,13 @@ didDiscoverCharacteristicsForService:(CBService *)service
     if([characteristics isEqual: mFeatureCommand]){
         [self notifyCommandResponse: characteristics.value];
         return;
-    }else if(_debugConsole!=nil &&
+    } else if(_debugConsole!=nil &&
              [W2STSDKServiceDebug isDebugCharacteristics:characteristics]){
         [_debugConsole receiveCharacteristicsUpdate:characteristics];
         return;
+    } else if(_configControl!=nil &&
+             [W2STSDKServiceConfig isConfigControlCharacteristic:characteristics]){
+        [_configControl characteristicsUpdate:characteristics];
     }//else
     
     NSData *newData = characteristics.value;
@@ -611,7 +614,6 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
     
     [self characteristicUpdate:characteristic];
 }
-
 - (void)peripheral:(CBPeripheral *)peripheral
 didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error{
@@ -624,8 +626,11 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     if ([characteristic.UUID isEqual: [W2STSDKServiceDebug termUuid]] &&
         _debugConsole!=nil){
         [_debugConsole receiveCharacteristicsWriteUpdate:characteristic error:error];
-    }
-    
+    } else if(_configControl!=nil &&
+              [W2STSDKServiceConfig isConfigControlCharacteristic:characteristic]){
+        [_configControl characteristicsWriteUpdate:characteristic success:(error == nil)];
+    }//else
+
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral

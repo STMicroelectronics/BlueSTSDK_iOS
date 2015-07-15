@@ -11,7 +11,6 @@
 
 #import <Foundation/Foundation.h>
 #import "W2STSDKManager.h"
-//#import "W2STSDKConfigControl.h"
 
 @class W2STSDKDebug;
 @class W2STSDKConfigControl;
@@ -118,6 +117,10 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  */
 @property (retain, readonly) NSString *address;
 /**
+ *  version of the protocol
+ */
+@property (readonly) unsigned char protocolVersion;
+/**
  *  unique string that identify the node
  */
 @property (retain, readonly) NSString *tag;
@@ -136,7 +139,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 /**
  *  object that we can use for access to the config node
  */
-@property (retain, readonly) W2STSDKConfigControl *configControl;
+@property (readonly) W2STSDKConfigControl *configControl;
 /**
  *  tx power used from the board
  */
@@ -150,7 +153,6 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @return a string reppresentation of the enum value
  */
 +(NSString*) stateToString:(W2STSDKNodeState)state;
-
 
 -(void) addBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate;
 -(void) removeBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate;

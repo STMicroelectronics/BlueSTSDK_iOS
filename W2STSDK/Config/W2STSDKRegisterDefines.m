@@ -116,10 +116,10 @@ static NSDictionary * mapRegisters = nil;
 //
 +(void)initializeMapRegisters {
     mapRegisters = @{
-                     HASHMAP_ITEM(W2STSDK_REGISTER_NAME_FW_VER                  , 0x00, 2, W2STSDK_REGISTER_ACCESS_R   , W2STSDK_REGISTER_TARGET_BOTH       ),
+                     HASHMAP_ITEM(W2STSDK_REGISTER_NAME_FW_VER                  , 0x00, 1, W2STSDK_REGISTER_ACCESS_R   , W2STSDK_REGISTER_TARGET_BOTH       ),
                      HASHMAP_ITEM(W2STSDK_REGISTER_NAME_LED_CONFIG              , 0x02, 1, W2STSDK_REGISTER_ACCESS_RW  , W2STSDK_REGISTER_TARGET_BOTH       ),
                      HASHMAP_ITEM(W2STSDK_REGISTER_NAME_BLE_LOC_NAME            , 0x03, 8, W2STSDK_REGISTER_ACCESS_RW  , W2STSDK_REGISTER_TARGET_PERSISTENT ),
-                     HASHMAP_ITEM(W2STSDK_REGISTER_NAME_BLE_PUB_ADDR            , 0x0B, 8, W2STSDK_REGISTER_ACCESS_RW  , W2STSDK_REGISTER_TARGET_PERSISTENT ),
+                     HASHMAP_ITEM(W2STSDK_REGISTER_NAME_BLE_PUB_ADDR            , 0x0B, 3, W2STSDK_REGISTER_ACCESS_RW  , W2STSDK_REGISTER_TARGET_PERSISTENT ),
     
                      HASHMAP_ITEM(W2STSDK_REGISTER_NAME_BATTERY_LEVEL           , 0x03, 1, W2STSDK_REGISTER_ACCESS_R   , W2STSDK_REGISTER_TARGET_SESSION    ),
                      HASHMAP_ITEM(W2STSDK_REGISTER_NAME_BATTERY_VOLTAGE         , 0x04, 2, W2STSDK_REGISTER_ACCESS_R   , W2STSDK_REGISTER_TARGET_SESSION    ),
@@ -187,8 +187,43 @@ static NSDictionary * mapRegisters = nil;
  * @return the relative register if exist else null
  */
 +(W2STSDKRegister *) lookUpWithRegisterName:(W2STSDKRegisterName_e)name {
-    return nil; // (W2STSDKRegister *)mapRegisters[name];
+    if (mapRegisters == nil) {
+        [W2STSDKRegisterDefines initializeMapRegisters];
+    }
+    NSNumber * key = [NSNumber numberWithInteger:name];
+    return (W2STSDKRegister *)mapRegisters[key];
 }
-
++(W2STSDKRegister *) lookUpRegisterWithAddress:(NSInteger)address target:(W2STSDKRegisterTarget_e)target {
+    if (mapRegisters == nil) {
+        [W2STSDKRegisterDefines initializeMapRegisters];
+    }
+    W2STSDKRegister *reg_target = nil;
+    for(W2STSDKRegister *reg in mapRegisters) {
+        if (reg.address == address && ((reg.target & target) == target))
+        {
+            reg_target = reg;
+            break;
+        }
+    }
+    return reg_target;
+}
++(W2STSDKRegisterName_e) lookUpRegisterNameWithAddress:(NSInteger)address target:(W2STSDKRegisterTarget_e)target {
+    if (mapRegisters == nil) {
+        [W2STSDKRegisterDefines initializeMapRegisters];
+    }
+    NSNumber *key_target = [NSNumber numberWithInteger:W2STSDK_REGISTER_NAME_NONE];
+    for(NSNumber *key in [mapRegisters allKeys] ) {
+        W2STSDKRegister *reg = (W2STSDKRegister *)mapRegisters[key];
+        if (reg.address == address && ((reg.target & target) == target))
+        {
+            key_target = key;
+            break;
+        }
+    }
+    return (W2STSDKRegisterName_e)[key_target integerValue];
+}
++(NSDictionary *)registers {
+    return mapRegisters;
+}
 @end
 

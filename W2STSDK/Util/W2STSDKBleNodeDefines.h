@@ -116,6 +116,33 @@ typedef uint32_t featureMask_t;
  *  @return uuid of the command characteristic
  */
 +(CBUUID*) featureCommandUuid;
+
+/**
+ *  tell if the characteristics is a valid characteristics for the config service
+ *
+ *  @param c characteristic to test
+ *
+ *  @return true if it is valid
+ */
++(bool) isConfigCharacteristics:(CBCharacteristic*) c;
+
+/**
+ *  tell if the characteristics is the config control characteristics
+ *
+ *  @param c characteristic to test
+ *
+ *  @return true if it is valid
+ */
++(bool) isConfigControlCharacteristic:(CBCharacteristic*) c;
+
+/**
+ *  tell if the characteristics is the feature command characteristics
+ *
+ *  @param c characteristic to test
+ *
+ *  @return true if it is valid
+ */
++(bool) isConfigFeatureCommandCharacteristic:(CBCharacteristic*) c;
 @end
 
 /**
@@ -141,12 +168,12 @@ typedef uint32_t featureMask_t;
 
 /**
  *  for each board type contains a map for of pair featureMask_t and corrisponding 
- *  feature class
+ *  \link{ W2STSDKFeature } class
  */
 @interface W2STSDKBoardFeatureMap : NSObject
 
 /**
- *  return a map of type <boardId, map<featureMask_t, Feature class> >
+ *  return a map of type <boardId, map<featureMask_t, \link{ W2STSDKFeature }> >
  *  from this data you can undestand what class will be manage a specifc characteristics
  *
  *  @return map needed for buil a feature class that manage a specific characteristics
