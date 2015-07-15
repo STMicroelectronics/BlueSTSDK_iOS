@@ -16,8 +16,8 @@
 
 #define FEATURE_NAME @"Gyroscope"
 #define FEATURE_UNIT @"dps"
-#define FEATURE_MIN (1<<15)
-#define FEATURE_MAX (-1<<15)
+#define FEATURE_MIN (-1<<15)
+#define FEATURE_MAX (1<<15)
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeFloat
 
 static NSArray *sFieldDesc;
