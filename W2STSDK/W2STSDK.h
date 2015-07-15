@@ -32,4 +32,7 @@
 #import "W2STSDKFeatureLogNSLog.h"
 #import "W2STSDKNodeStatusNSLog.h"
 
-//#import "W2STSDKConfigControl.h"
+#import "W2STSDKConfigControl.h"
+#import "W2STSDKRegister.h"
+#import "W2STSDKRegisterDefines.h"
+#import "W2STSDKCommand.h"

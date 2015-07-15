@@ -116,6 +116,33 @@ typedef uint32_t featureMask_t;
  *  @return uuid of the command characteristic
  */
 +(CBUUID*) featureCommandUuid;
+
+/**
+ *  tell if the characteristics is a valid characteristics for the config service
+ *
+ *  @param c characteristic to test
+ *
+ *  @return true if it is valid
+ */
++(bool) isConfigCharacteristics:(CBCharacteristic*) c;
+
+/**
+ *  tell if the characteristics is the config control characteristics
+ *
+ *  @param c characteristic to test
+ *
+ *  @return true if it is valid
+ */
++(bool) isConfigControlCharacteristic:(CBCharacteristic*) c;
+
+/**
+ *  tell if the characteristics is the feature command characteristics
+ *
+ *  @param c characteristic to test
+ *
+ *  @return true if it is valid
+ */
++(bool) isConfigFeatureCommandCharacteristic:(CBCharacteristic*) c;
 @end
 
 /**
