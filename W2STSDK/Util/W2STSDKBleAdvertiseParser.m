@@ -90,12 +90,12 @@
         
         if (len == ADVERTISE_SIZE_FULL) {
             _address = [NSString stringWithFormat:@"%02X:%02X:%02X:%02X:%02X:%02X",
-                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+0],
-                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+1],
-                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+2],
-                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+3],
+                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+5],
                         [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+4],
-                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+5]
+                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+3],
+                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+2],
+                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+1],
+                        [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+0]
                         ];
         }//if len check
     }//if protocol check

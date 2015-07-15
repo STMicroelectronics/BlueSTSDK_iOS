@@ -66,6 +66,7 @@
     self.address = address;
     self.access = access;
     self.size = size;
+    self.target = target;
     
     return self;
 }
@@ -110,7 +111,7 @@
                         (write ? 0x20 : 0x00) |                     //Write or Read operation
                         (ack ? 0x08 : 0x00));                       //Ack required
     pheader->addr = (unsigned char) self.address;
-    pheader->len  = (unsigned char) 0;
+    pheader->err  = (unsigned char) 0;
     pheader->len  = (unsigned char) self.size;
 }
 
@@ -125,7 +126,7 @@
     if (W2STSDK_REGISTER_ACCESS_IsReadable(self.access)) {
         unsigned char buffer[sizeof(W2STSDKRegisterHeader_t)];
         W2STSDKRegisterHeader_t * pheader = (W2STSDKRegisterHeader_t *)buffer;
-        [self setHeader:pheader target:target write:NO ack:NO];
+        [self setHeader:pheader target:target write:NO ack:YES];
         data = [NSData dataWithBytes:buffer length:sizeof(buffer)];
     }
     return data;
@@ -183,14 +184,22 @@
 +(BOOL)getHeaderFromData:(NSData *)data header:(W2STSDKRegisterHeader_t *)pheader {
     BOOL ret = NO;
     if (pheader) {
-        W2STSDK_REGISTER_HEADER_Init(pheader);
+        //W2STSDK_REGISTER_HEADER_Init(pheader);
         if (data && data.length >= 4) {
-            [data getBytes:(void *)pheader length:sizeof(W2STSDKRegisterHeader_t)];
+            unsigned char buffer[data.length];
+            [data getBytes:(void *)buffer length:4];
+            
+            pheader->ctrl = buffer[0];
+            pheader->addr = buffer[1];
+            pheader->err = buffer[2];
+            pheader->len = buffer[3];
+            
             ret = YES;
         }
     }
     return ret;
 }
+
 /**
  * Get the Target of the received register
  * @param data received from the device
@@ -264,4 +273,33 @@
     return res ? header.len : -1;
 }
 
+-(NSString *)description {
+    NSString *accessstr = @"NN";
+    switch(self.access)
+    {
+        case W2STSDK_REGISTER_ACCESS_R:
+            accessstr = @"R ";
+            break;
+        case W2STSDK_REGISTER_ACCESS_W:
+            accessstr = @"W ";
+            break;
+        case W2STSDK_REGISTER_ACCESS_RW:
+            accessstr = @"RW";
+            break;
+    }
+    NSString *targetstr = @"-";
+    switch(self.target)
+    {
+        case W2STSDK_REGISTER_TARGET_PERSISTENT:
+            targetstr = @"P";
+            break;
+        case W2STSDK_REGISTER_TARGET_SESSION:
+            targetstr = @"S";
+            break;
+        case W2STSDK_REGISTER_TARGET_BOTH:
+            targetstr = @"B";
+            break;
+    }
+    return [NSString stringWithFormat:@"Addr:%0.2X A:%@ T:%@ S:%d",(unsigned char)self.address, accessstr, targetstr, (unsigned char)self.size];
+}
 @end

@@ -585,10 +585,13 @@ didDiscoverCharacteristicsForService:(CBService *)service
     if([characteristics isEqual: mFeatureCommand]){
         [self notifyCommandResponse: characteristics.value];
         return;
-    }else if(_debugConsole!=nil &&
+    } else if(_debugConsole!=nil &&
              [W2STSDKServiceDebug isDebugCharacteristics:characteristics]){
         [_debugConsole receiveCharacteristicsUpdate:characteristics];
         return;
+    } else if(_configControl!=nil &&
+             [W2STSDKServiceConfig isConfigControlCharacteristic:characteristics]){
+        [_configControl characteristicsUpdate:characteristics];
     }//else
     
     NSData *newData = characteristics.value;
@@ -614,7 +617,6 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
     
     [self characteristicUpdate:characteristic];
 }
-
 - (void)peripheral:(CBPeripheral *)peripheral
 didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error{
@@ -622,8 +624,11 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
     if ([characteristic.UUID isEqual: [W2STSDKServiceDebug termUuid]] &&
         _debugConsole!=nil){
         [_debugConsole receiveCharacteristicsWriteUpdate:characteristic error:error];
-    }
-    
+    } else if(_configControl!=nil &&
+              [W2STSDKServiceConfig isConfigControlCharacteristic:characteristic]){
+        [_configControl characteristicsWriteUpdate:characteristic success:(error == nil)];
+    }//else
+
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral
