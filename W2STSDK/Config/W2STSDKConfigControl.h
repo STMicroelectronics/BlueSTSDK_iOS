@@ -24,8 +24,6 @@
  */
 @property (readonly,strong) W2STSDKNode *node;
 
-@property (nonatomic,weak,setter=setDelegate:,getter=getDelegate) id<W2STSDKConfigControlDelegate> delegate;
-
 +(id)configControlWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
         configControlChart:(CBCharacteristic*)configControlChar;
 -(id)initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device configControlChart:(CBCharacteristic*)configControlChar;
