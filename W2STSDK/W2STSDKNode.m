@@ -18,7 +18,7 @@
 #import "Util/W2STSDKBleNodeDefines.h"
 #import "util/NSData+NumberConversion.h"
 
-@interface W2STSDKNode()<CBPeripheralDelegate>
+@interface W2STSDKNode<CBPeripheralDelegate>
 @end
 
 /**

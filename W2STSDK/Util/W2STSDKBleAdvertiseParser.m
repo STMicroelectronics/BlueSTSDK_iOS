@@ -11,11 +11,6 @@
 #import "W2STSDKBleAdvertiseParser.h"
 #import "NSData+NumberConversion.h"
 
-
-@interface W2STSDKBleAdvertiseParser()
-
-@end
-
 @implementation W2STSDKBleAdvertiseParser
 
 

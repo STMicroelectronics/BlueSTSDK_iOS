@@ -31,6 +31,7 @@
 
 #define ADVERTISE_FIELD_SIZE_ADDRESS 6
 
+
 /**
  *  class that parse the ble advertise package
  */
@@ -72,6 +73,11 @@
 
 +(id)advertiseParserWithAdvertise:(NSDictionary *)advertisementData;
 
+/**
+ * parse the advertise data returned by the system
+ * @param advertisementData ble advertise data
+ * @throw an exception if the vendor specific field isn't compatible with the W2ST protocol
+ */
 -(id)initWithAdvertise:(NSDictionary*)advertisementData;
 
 /**

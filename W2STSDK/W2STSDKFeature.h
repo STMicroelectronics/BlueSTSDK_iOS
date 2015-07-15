@@ -16,13 +16,14 @@
 @class W2STSDKNode;
 
 /**
- *  This class represent some set of data that a node can export, you can read
- * the feature value or register a delegate for have notification when the node
- * will update the values
- * Node that all the notification will be summited in a concurrent queue,
- * so it will be run in a concurrent thread
- *
- * this class is abstract, you have to extend it and implement the missing function
+ *  This class represent some set of data that a node can export.
+ * <p>You can read the feature value or register a delegate for have 
+ * notification when the node will update the values </p>
+ * <p>Node that all the notification will be submited in a concurrent queue,
+ * so the callback will be run in a concurrent thread </p>
+ * <p>
+ * This class is abstract, you have to extend it and implement the missing function
+ * </p>
  */
 @interface W2STSDKFeature : NSObject
 
@@ -49,9 +50,9 @@
 @property (readonly) NSDate* lastUpdate;
 
 /**
- *  print a string with all the data present in this feature
+ *  create a string with all the data present in this feature
  *
- *  @return <#return value description#>
+ *  @return string rappresenting the current feature data
  */
 -(NSString*) description;
 
@@ -88,8 +89,8 @@
 -(void) removeFeatureLoggerDelegate:(id<W2STSDKFeatureLogDelegate>)delegate;
 
 /**
- *  abstract method, build a feature that is exported by the node
- *
+ *  <b>abstract method</b>, build a feature that is exported by the node
+ *  <p>it is an abstract method, you have to overwrite it </p>
  *  @param node node that export this feature
  *
  *  @return pointer to a feature
@@ -97,7 +98,7 @@
 -(id) initWhitNode: (W2STSDKNode*)node;
 
 /**
- *  abstract method, retrun an array of NSNumber with the data exported by the feature
+ * <b>abstract method</b>, retrun an array of NSNumber with the data exported by the feature
  * note that the returned data is a copy of the internal state for avoid ghost update
  *
  *  @return array of NSNumber
@@ -105,7 +106,7 @@
 -(NSArray*) getFieldsData;
 
 /**
- *  abstract method return an array of W2STSDKFeatureField that describe the data
+ * <b>abstract method</b>, return an array of W2STSDKFeatureField that describe the data
  * returned by the getFieldData function
  *
  *  @return array of W2STSDKFeatureField that describe the data exported by the feature
@@ -113,7 +114,7 @@
 -(NSArray*) getFieldsDesc;
 
 /**
- *  abstract method return the id of the last package received by this feature
+ * <b>abstract method</b>, return the id of the last package received by this feature
  *
  *  @return id of the last package received by this feature
  */
@@ -121,6 +122,7 @@
 
 @end
 
+/** Protocol used for notify that the feature data was updated */
 @protocol W2STSDKFeatureDelegate <NSObject>
 
 /**
@@ -133,6 +135,9 @@
 
 @end
 
+/**
+* Protocol used for log all the data received from a feature
+*/
 @protocol W2STSDKFeatureLogDelegate <NSObject>
 
 

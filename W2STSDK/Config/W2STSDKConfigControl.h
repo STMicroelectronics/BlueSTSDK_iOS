@@ -17,6 +17,7 @@
 
 @protocol W2STSDKConfigControlDelegate;
 
+/** TODO ADD DOC*/
 @interface W2STSDKConfigControl : NSObject
 
 /**
@@ -24,12 +25,14 @@
  */
 @property (readonly,strong) W2STSDKNode *node;
 
-@property (nonatomic,weak,setter=setDelegate:,getter=getDelegate) id<W2STSDKConfigControlDelegate> delegate;
 
+/** TODO ADD DOC*/
 +(id)configControlWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
         configControlChart:(CBCharacteristic*)configControlChar;
--(id)initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device configControlChart:(CBCharacteristic*)configControlChar;
+/** TODO ADD DOC*/-(id)initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device configControlChart:(CBCharacteristic*)configControlChar;
+/** TODO ADD DOC*/
 -(void)read:(W2STSDKCommand *)cmd;
+/** TODO ADD DOC*/
 -(void)write:(W2STSDKCommand *)cmd;
 
 -(void) addConfigDelegate:(id<W2STSDKConfigControlDelegate>)delegate;
@@ -37,11 +40,15 @@
 
 @end
 
+/** TODO ADD DOC*/
 @protocol W2STSDKConfigControlDelegate
 @required
+/** TODO ADD DOC*/
 -(void) configControl:(W2STSDKConfigControl *) configControl didRegisterReadResult:(W2STSDKCommand *)cmd error:(NSInteger)error;
+/** TODO ADD DOC*/
+-(void) configControl:(W2STSDKConfigControl *) configControl didRegisterWriteResult:(W2STSDKCommand *)cmd success:(BOOL)success;
+/** TODO ADD DOC*/
 -(void) configControl:(W2STSDKConfigControl *) configControl didRegisterWriteResult:(W2STSDKCommand *)cmd error:(NSInteger)error;
--(void) configControl:(W2STSDKConfigControl *) configControl didRequestResult:(W2STSDKCommand *)cmd success:(bool)success;
 @end
 
 #endif //W2STSDKConfigControl_h
