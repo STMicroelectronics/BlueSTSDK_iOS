@@ -18,7 +18,7 @@
 #import "Util/W2STSDKBleNodeDefines.h"
 #import "util/NSData+NumberConversion.h"
 
-@interface W2STSDKNode<CBPeripheralDelegate>
+@interface W2STSDKNode()<CBPeripheralDelegate>
 @end
 
 /**
@@ -167,12 +167,8 @@ static dispatch_queue_t sNotificationQueue;
     //NSLog(@"create Node: name: %@ type: %x feature: %d",_name,_type,parser.featureMap);
     return self;
 }
-+(bool) checkProtocolVersion:(unsigned char)ver {
-    return ver != PROTOCOL_VERSION_NOT_AVAILABLE && ver >= PROTOCOL_VERSION_CURRENT_MIN && ver <= PROTOCOL_VERSION_CURRENT;
-}
--(bool) isSupported {
-    return [W2STSDKNode checkProtocolVersion:_protocolVersion];
-}
+
+
 -(void) addBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate{
     [mBleConnectionDelegates addObject:delegate];
 }
@@ -230,11 +226,9 @@ static dispatch_queue_t sNotificationQueue;
 }
 
 -(void)connect{
-    if ([self isSupported]) {
-        mUserAskDisconnect=false;
-        [self updateNodeStatus:W2STSDKNodeStateConnecting];
-        [[W2STSDKManager sharedInstance]connect:mPeripheral];
-    }
+    mUserAskDisconnect=false;
+    [self updateNodeStatus:W2STSDKNodeStateConnecting];
+    [[W2STSDKManager sharedInstance]connect:mPeripheral];
 }
 
 -(void)completeConnection{

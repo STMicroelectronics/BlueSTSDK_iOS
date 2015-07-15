@@ -197,14 +197,9 @@
         @try {
             node = [[W2STSDKNode alloc] init:peripheral rssi:RSSI
                                    advertise:advertisementData];
-            
-            //AR changed, in the previous version a not supported board was discarded to n exception
-            //now we create the node, but without feature
-            if ([node isSupported])
-            {
+        
                 [mDiscoveredNode addObject:node];
                 [self notifyNewNode:node];
-            }
         }
         @catch (NSException *exception) {//not a valid advertise -> avoid to add it
         }

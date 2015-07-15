@@ -15,9 +15,9 @@
 #import "W2STSDKCommand.h"
 #import "W2STSDKNode.h"
 
+/** TODO ADD DOC*/
 @protocol W2STSDKConfigControlDelegate;
 
-/** TODO ADD DOC*/
 @interface W2STSDKConfigControl : NSObject
 
 /**
@@ -25,7 +25,8 @@
  */
 @property (readonly,strong) W2STSDKNode *node;
 
-/** TODO ADD DOC*/
++(id)configControlWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
+        configControlChart:(CBCharacteristic*)configControlChar;
 -(id)initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device configControlChart:(CBCharacteristic*)configControlChar;
 -(void)read:(W2STSDKCommand *)cmd;
 -(void)write:(W2STSDKCommand *)cmd;
@@ -40,8 +41,8 @@
 @required
 /** TODO ADD DOC*/
 -(void) configControl:(W2STSDKConfigControl *) configControl didRegisterReadResult:(W2STSDKCommand *)cmd error:(NSInteger)error;
-/** TODO ADD DOC*/
--(void) configControl:(W2STSDKConfigControl *) configControl didRegisterWriteResult:(W2STSDKCommand *)cmd success:(BOOL)success;
+-(void) configControl:(W2STSDKConfigControl *) configControl didRegisterWriteResult:(W2STSDKCommand *)cmd error:(NSInteger)error;
+-(void) configControl:(W2STSDKConfigControl *) configControl didRequestResult:(W2STSDKCommand *)cmd success:(bool)success;
 @end
 
 #endif //W2STSDKConfigControl_h
