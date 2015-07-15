@@ -46,9 +46,9 @@
 /** TODO ADD DOC*/
 -(void) configControl:(W2STSDKConfigControl *) configControl didRegisterReadResult:(W2STSDKCommand *)cmd error:(NSInteger)error;
 /** TODO ADD DOC*/
--(void) configControl:(W2STSDKConfigControl *) configControl didRegisterWriteResult:(W2STSDKCommand *)cmd success:(BOOL)success;
-/** TODO ADD DOC*/
 -(void) configControl:(W2STSDKConfigControl *) configControl didRegisterWriteResult:(W2STSDKCommand *)cmd error:(NSInteger)error;
+/** TODO ADD DOC*/
+-(void) configControl:(W2STSDKConfigControl *) configControl didRequestResult:(W2STSDKCommand *)cmd success:(BOOL)success;
 @end
 
 #endif //W2STSDKConfigControl_h
