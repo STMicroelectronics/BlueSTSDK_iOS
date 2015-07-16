@@ -93,7 +93,7 @@
     W2STSDKNode *fakeNode = [[W2STSDKNodeFake alloc] init];
     W2STSDKNode *node = [self nodeWithTag:fakeNode.tag];
     if(node == nil){
-        [mDiscoveryedNode addObject:fakeNode];
+        [mDiscoveredNode addObject:fakeNode];
         [self notifyNewNode:fakeNode];
     }
 #endif
