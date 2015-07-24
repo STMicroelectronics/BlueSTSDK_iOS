@@ -26,10 +26,12 @@
 
 static NSArray *sFieldDesc;
 
+@interface W2STSDKFeatureMemsSensorFusionCompact()
+    @property (atomic) NSArray *mFieldData;
+    @property (atomic) uint32_t mTimestamp;
+@end
+
 @implementation W2STSDKFeatureMemsSensorFusionCompact{
-    NSMutableArray *mFieldData;
-    uint32_t mTimestamp;
-    dispatch_queue_t mRwQueue;
     dispatch_queue_t mNotificationQueue;
 }
 
@@ -67,11 +69,8 @@ static NSArray *sFieldDesc;
     self = [super initWhitNode:node name:FEATURE_NAME];
     mNotificationQueue = dispatch_queue_create("W2STSDKFeatureMemsSensorFusionCompactNotification",
                                                DISPATCH_QUEUE_SERIAL);
-    mRwQueue = dispatch_queue_create("W2STSDKFeatureMemsSensorFusionCompactNotificationRwQueue",
-                                     DISPATCH_QUEUE_CONCURRENT);
-    mFieldData = [NSMutableArray arrayWithObjects:@0,@0,@0,@0, nil];
-    mTimestamp=0;
-
+    _mTimestamp=0;
+    _mFieldData=nil;
     return self;
 }
 
@@ -105,19 +104,11 @@ static NSArray *sFieldDesc;
 }
 
 -(NSArray*) getFieldsData{
-    __block NSArray *temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = [mFieldData copy];
-    });
-    return temp;
+    return self.mFieldData;
 }
 
 -(uint32_t) getTimestamp{
-    __block uint32_t temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = mTimestamp;
-    });
-    return temp;
+    return self.mTimestamp;
 }
 
 
@@ -133,20 +124,20 @@ static NSArray *sFieldDesc;
         y= [rawData extractLeInt16FromOffset:offset+2]/SCALE_FACTOR;
         z= [rawData extractLeInt16FromOffset:offset+4]/SCALE_FACTOR;
         w = sqrt(1-(x*x+y*y+z*z));
-
+        
+        NSArray *newData = [NSArray arrayWithObjects:[NSNumber numberWithFloat:x],
+                            [NSNumber numberWithFloat:y],
+                            [NSNumber numberWithFloat:z],
+                            [NSNumber numberWithFloat:w],
+                            nil];
+        
         //since we recevive 3 quaternions at times, we delay the feature update
         // -> we put the task that do that in a serial queue
         dispatch_after(startTime, mNotificationQueue, ^{
-            dispatch_barrier_async(mRwQueue, ^(){
-                mTimestamp = timestamp;
-                [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:x]];
-                [mFieldData replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:y]];
-                [mFieldData replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:z]];
-                [mFieldData replaceObjectAtIndex:3 withObject:[NSNumber numberWithFloat:w]];
+                self.mTimestamp = timestamp;
+                self.mFieldData = newData;
                 [self notifyUpdate];
-                [self logFeatureUpdate: [rawData subdataWithRange:NSMakeRange(offset, 6)] data:[mFieldData copy]];
-            });
-
+                [self logFeatureUpdate: [rawData subdataWithRange:NSMakeRange(offset, 6)] data:[newData copy]];
         });
         offset += 6;
         startTime = dispatch_time(startTime,quatDelay);
