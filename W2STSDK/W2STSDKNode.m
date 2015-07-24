@@ -578,7 +578,8 @@ didDiscoverCharacteristicsForService:(CBService *)service
  *  @param characteristics node characteristics that send a notify/read message
  */
 -(void)characteristicUpdate:(CBCharacteristic*)characteristics{
-    
+    static uint32_t nReset=0;
+    static uint16_t lastTs;
     if([characteristics isEqual: mFeatureCommand]){
         [self notifyCommandResponse: characteristics.value];
         return;
@@ -594,7 +595,12 @@ didDiscoverCharacteristicsForService:(CBService *)service
     NSData *newData = characteristics.value;
     NSArray *features = [W2STSDKCharacteristic getFeaturesFromChar:characteristics
                                                                 in:mCharFeatureMap];
-    uint32_t timestamp = [newData extractLeUInt16FromOffset: 0];
+
+    uint16_t timeStamp16 = [newData extractLeUInt16FromOffset: 0];
+    if(lastTs>((1<<16)-100) && lastTs > timeStamp16)
+        nReset++;
+    uint32_t timestamp = nReset * (1<<16) + timeStamp16;
+    lastTs=timeStamp16;
     uint32_t offset=2;
     for(W2STSDKFeature *f in features){
         offset += [f update:timestamp data:newData dataOffset:offset];

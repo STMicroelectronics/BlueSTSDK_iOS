@@ -122,7 +122,7 @@ static NSArray *sFieldDesc;
     self.mTimestamp = timestamp;
     self.mFieldData = newData;
     [self notifyUpdate];
-    [self logFeatureUpdate: [rawData subdataWithRange:NSMakeRange(offset, 6)] data:[newData copy]];
+    [self logFeatureUpdate: [rawData subdataWithRange:NSMakeRange(offset, 6)] data:newData];
     
     return 6;
 }
