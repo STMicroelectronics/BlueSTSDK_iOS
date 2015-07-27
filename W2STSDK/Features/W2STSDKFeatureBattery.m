@@ -170,7 +170,7 @@ static NSArray *sFieldDesc;
         [mFieldData replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:current]];
         [mFieldData replaceObjectAtIndex:3 withObject:[NSNumber numberWithUnsignedChar:status]];
         [self notifyUpdate];
-        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 7)] data:[mFieldData copy]];
+        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 7)] timestamp:timestamp data:[mFieldData copy]];
     });
     return 7;
 }

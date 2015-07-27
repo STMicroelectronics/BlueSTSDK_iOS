@@ -113,7 +113,8 @@ static NSArray *sFieldDesc;
         [mFieldData replaceObjectAtIndex:2 withObject:[NSNumber numberWithShort:magZ]];
         
         [self notifyUpdate];
-        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 6)] data:[mFieldData copy]];
+        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 6)]
+                          timestamp:timestamp data:[mFieldData copy]];
     });
     return 6;
 }

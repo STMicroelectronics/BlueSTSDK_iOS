@@ -80,6 +80,16 @@ static dispatch_queue_t sNotificationQueue;
     //when this array becomes empty the node is connected
     NSMutableArray *mCharDiscoverServiceReq;
     
+    /**
+     *  number of time tahat the ts has reset, the ts is reseted when we see a ts
+     * with a lower value after that the ts reach the valu 2^16-100
+     */
+    uint32_t mNReset;
+    
+    /** last raw ts received from the board, it is a numer between 0 and (2^16)-1
+     */
+    uint16_t mLastTs;
+    
 }
 
 /**
@@ -236,6 +246,8 @@ static dispatch_queue_t sNotificationQueue;
         [self updateNodeStatus:W2STSDKNodeStateUnreachable];
         return;
     }
+    mLastTs=0;
+    mNReset=0;
     //else
     [mPeripheral discoverServices:nil];
 }
@@ -578,8 +590,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
  *  @param characteristics node characteristics that send a notify/read message
  */
 -(void)characteristicUpdate:(CBCharacteristic*)characteristics{
-    static uint32_t nReset=0;
-    static uint16_t lastTs;
+    
     if([characteristics isEqual: mFeatureCommand]){
         [self notifyCommandResponse: characteristics.value];
         return;
@@ -597,10 +608,10 @@ didDiscoverCharacteristicsForService:(CBService *)service
                                                                 in:mCharFeatureMap];
 
     uint16_t timeStamp16 = [newData extractLeUInt16FromOffset: 0];
-    if(lastTs>((1<<16)-100) && lastTs > timeStamp16)
-        nReset++;
-    uint32_t timestamp = nReset * (1<<16) + timeStamp16;
-    lastTs=timeStamp16;
+    if(mLastTs>((1<<16)-100) && mLastTs > timeStamp16)
+        mNReset++;
+    uint32_t timestamp = mNReset * (1<<16) + timeStamp16;
+    mLastTs=timeStamp16;
     uint32_t offset=2;
     for(W2STSDKFeature *f in features){
         offset += [f update:timestamp data:newData dataOffset:offset];

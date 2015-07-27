@@ -137,7 +137,8 @@ static NSArray *sFieldDesc;
                 self.mTimestamp = timestamp;
                 self.mFieldData = newData;
                 [self notifyUpdate];
-                [self logFeatureUpdate: [rawData subdataWithRange:NSMakeRange(offset, 6)] data:newData];
+                [self logFeatureUpdate: [rawData subdataWithRange:NSMakeRange(offset, 6)]
+                             timestamp:timestamp data:newData];
         });
         offset += 6;
         startTime = dispatch_time(startTime,quatDelay);

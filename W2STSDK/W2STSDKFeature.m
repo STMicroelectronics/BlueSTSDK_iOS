@@ -117,10 +117,10 @@ static dispatch_queue_t sNotificationQueue;
     }//for
 }
 
--(void) logFeatureUpdate:(NSData*)rawData data:(NSArray*)data{
+-(void) logFeatureUpdate:(NSData*)rawData timestamp:(uint32_t)ts data:(NSArray*)data{
     for (id<W2STSDKFeatureLogDelegate> delegate in mFeatureLogDelegates) {
         dispatch_async(sNotificationQueue,^{
-            [delegate feature:self rawData:rawData data:data];
+            [delegate feature:self rawData:rawData timestamp:ts data:data];
         });
     }//for
 }

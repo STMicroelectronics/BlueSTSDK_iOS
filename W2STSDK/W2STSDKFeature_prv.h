@@ -39,7 +39,7 @@
  *  @param rawData raw data used for extract the new data
  *  @param data array of NSNumber extracted by raw data
  */
--(void) logFeatureUpdate:(NSData*)rawData data:(NSArray*)data;
+-(void) logFeatureUpdate:(NSData*)rawData timestamp:(uint32_t)ts data:(NSArray*)data;
 
 /**
  *  protected method, send a command to this feature

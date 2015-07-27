@@ -149,7 +149,7 @@
  *  @param data    array of NSNumber extracted by the raw data
  */
 @required
-- (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw data:(NSArray*)data;
+- (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw timestamp:(uint32_t)ts data:(NSArray*)data;
 @end
 
 #endif
