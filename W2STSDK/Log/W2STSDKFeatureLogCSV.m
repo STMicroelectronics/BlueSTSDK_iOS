@@ -122,21 +122,21 @@
     
 }
 
-- (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw timestamp:(uint32_t)ts data:(NSArray*)data{
+- (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw sample:(W2STSDKFeatureSample *)sample{
     static const char coma=',';
  
     NSFileHandle *file = [self openDumpFileForFeature:feature];
     @synchronized(file){
         [file writeData: [feature.parentNode.name dataUsingEncoding:NSUTF8StringEncoding]];
         [file writeData:[NSData dataWithBytes:&coma length:1]];
-        NSString *timeStampStr = [NSString stringWithFormat:@"%d",ts];
+        NSString *timeStampStr = [NSString stringWithFormat:@"%d",sample.timestamp];
         [file writeData: [timeStampStr dataUsingEncoding:NSUTF8StringEncoding]];
         [file writeData:[NSData dataWithBytes:&coma length:1]];
         if(raw!=nil){
             [self storeBlobData:file data:raw];
         }
         [file writeData:[NSData dataWithBytes:&coma length:1]];
-        [self storeFeatureData:file data:data];
+        [self storeFeatureData:file data:sample.data];
     }
 }
 

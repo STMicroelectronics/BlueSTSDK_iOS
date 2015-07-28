@@ -23,12 +23,8 @@
 
 static NSArray *sFieldDesc;
 
-@implementation W2STSDKFeatureGenPurpose{
-    NSMutableArray *mFieldData;
-    uint32_t mTimestamp;
-    dispatch_queue_t mRwQueue;
-}
-
+@implementation W2STSDKFeatureGenPurpose
+    
 +(void)initialize{
     if(self == [W2STSDKFeatureGenPurpose class]){
         sFieldDesc = [[NSArray alloc] initWithObjects:
@@ -42,10 +38,10 @@ static NSArray *sFieldDesc;
     
 }
 
-+(NSData*) getRawData:(NSArray*)data{
-    NSMutableData *rawData = [NSMutableData dataWithCapacity:data.count];
++(NSData*) getRawData:(W2STSDKFeatureSample*)sample{
+    NSMutableData *rawData = [NSMutableData dataWithCapacity:sample.data.count];
     
-    for( NSNumber *n in data){
+    for( NSNumber *n in sample.data){
         uint8_t temp = [n unsignedCharValue];
         [rawData appendBytes:&temp length:1];
 //        [rawData appendBytes:&temp length:1];
@@ -55,7 +51,7 @@ static NSArray *sFieldDesc;
 
 -(id)initWhitNode:(W2STSDKNode *)node characteristics:(CBCharacteristic*)c{
     NSString *name = [NSString stringWithFormat:@"GenPurpose_%@",c.UUID.UUIDString];
-    mRwQueue = dispatch_queue_create("W2STSDKFeatureMag", DISPATCH_QUEUE_CONCURRENT);
+
     self = [super initWhitNode:node name:name];
     _characteristics=c;
     return self;
@@ -65,21 +61,6 @@ static NSArray *sFieldDesc;
     return sFieldDesc;
 }
 
--(NSArray*) getFieldsData{
-    __block NSArray *temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = [mFieldData copy];
-    });
-    return temp;
-}
-
--(uint32_t) getTimestamp{
-    __block uint32_t temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = mTimestamp;
-    });
-    return temp;
-}
 
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
 
@@ -90,22 +71,23 @@ static NSArray *sFieldDesc;
         [tempData addObject: [NSNumber numberWithUnsignedChar:temp]];
     }//for
     
-    dispatch_barrier_async(mRwQueue, ^(){
-        mTimestamp = timestamp;
-        mFieldData = tempData;
-        
-        [self notifyUpdate];
-        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, rawData.length-offset)]
-                          timestamp:timestamp data:[mFieldData copy]];
-    });
+    W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:tempData];
+    
+    self.lastSample = sample;
+    
+    [self notifyUpdateWithSample:sample];
+    [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, rawData.length-offset)]
+                 sample:sample];
+
     return (uint32_t)(rawData.length-offset);
 }
 
 
 -(NSString*) description{
     NSMutableString *s = [NSMutableString stringWithString:@"Ts:"];
-    [s appendFormat:@"%d ",[self getTimestamp] ];
-    NSArray *datas = [self getFieldsData ];
+    W2STSDKFeatureSample *sample = self.lastSample;
+    [s appendFormat:@"%d ",sample.timestamp];
+    NSArray *datas = sample.data;
     [s appendString:@"Data: "];
     for (NSNumber *n in datas) {
        [s appendFormat:@" %X ",[n unsignedCharValue]];

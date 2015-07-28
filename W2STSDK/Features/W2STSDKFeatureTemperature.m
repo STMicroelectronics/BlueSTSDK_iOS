@@ -21,11 +21,7 @@
 
 static NSArray *sFieldDesc;
 
-@implementation W2STSDKFeatureTemperature{
-    NSMutableArray *mFieldData;
-    uint32_t mTimestamp;
-    dispatch_queue_t mRwQueue;
-}
+@implementation W2STSDKFeatureTemperature
 
 +(void)initialize{
     if(self == [W2STSDKFeatureTemperature class]){
@@ -41,18 +37,15 @@ static NSArray *sFieldDesc;
 }
 
 
-+(float)getTemperature:(NSArray *)data{
-    if(data.count==0)
-    return NAN;
-    return[[data objectAtIndex:0] floatValue];
++(float)getTemperature:(W2STSDKFeatureSample *)sample{
+    if(sample.data.count==0)
+        return NAN;
+    return[[sample.data objectAtIndex:0] floatValue];
 }
 
 
 -(id) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
-    mRwQueue = dispatch_queue_create("W2STSDKFeatureTemperature", DISPATCH_QUEUE_CONCURRENT);
-    mFieldData = [NSMutableArray arrayWithObjects:@0, nil];
-    mTimestamp=0;
     return self;
 }
 
@@ -60,36 +53,20 @@ static NSArray *sFieldDesc;
     return sFieldDesc;
 }
 
--(NSArray*) getFieldsData{
-    __block NSArray *temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = [mFieldData copy];
-    });
-    return temp;
-}
-
--(uint32_t) getTimestamp{
-    __block uint32_t temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = mTimestamp;
-    });
-    return temp;
-}
 
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     
     int16_t temp= [rawData extractLeInt16FromOffset:offset];
     
-    dispatch_barrier_async(mRwQueue, ^(){
-        mTimestamp = timestamp;
-        [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:(temp/10.0f)]];
-        
-        [self notifyUpdate];
-        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 2)]
-                     timestamp:timestamp data:[mFieldData copy]];
-    });
-    return 2;
+    NSArray *data = [NSArray arrayWithObject:[NSNumber numberWithFloat:temp/10.0f]];
+    W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
+    self.lastSample = sample;
+    [self notifyUpdateWithSample:sample];
+    [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 2)]
+                    sample:sample];
+    
+   return 2;
 }
 
 @end

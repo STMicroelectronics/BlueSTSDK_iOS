@@ -74,28 +74,28 @@ static NSArray *sFieldDesc;
     return self;
 }
 
-+(float)getQi:(NSArray*)data{
-    if(data.count==0)
-    return NAN;
-    return[[data objectAtIndex:0] floatValue];
++(float)getQi:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count==0)
+        return NAN;
+    return[[sample.data objectAtIndex:0] floatValue];
 }
 
-+(float)getQj:(NSArray*)data{
-    if(data.count<1)
-    return NAN;
-    return[[data objectAtIndex:1] floatValue];
++(float)getQj:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count<1)
+        return NAN;
+    return[[sample.data objectAtIndex:1] floatValue];
 }
 
-+(float)getQk:(NSArray*)data{
-    if(data.count<2)
-    return NAN;
-    return[[data objectAtIndex:2] floatValue];
++(float)getQk:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count<2)
+        return NAN;
+    return[[sample.data objectAtIndex:2] floatValue];
 }
 
-+(float)getQs:(NSArray*)data{
-    if(data.count<3)
-    return NAN;
-    return[[data objectAtIndex:3] floatValue];
++(float)getQs:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count<3)
+        return NAN;
+    return[[sample.data objectAtIndex:3] floatValue];
 }
 
 
@@ -130,15 +130,16 @@ static NSArray *sFieldDesc;
                             [NSNumber numberWithFloat:z],
                             [NSNumber numberWithFloat:w],
                             nil];
-        
+        W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:newData];
         //since we recevive 3 quaternions at times, we delay the feature update
         // -> we put the task that do that in a serial queue
         dispatch_after(startTime, mNotificationQueue, ^{
-                self.mTimestamp = timestamp;
-                self.mFieldData = newData;
-                [self notifyUpdate];
-                [self logFeatureUpdate: [rawData subdataWithRange:NSMakeRange(offset, 6)]
-                             timestamp:timestamp data:newData];
+            self.lastSample = sample;
+            
+            [self notifyUpdateWithSample:sample];
+            
+            [self logFeatureUpdate: [rawData subdataWithRange:NSMakeRange(offset, 6)]
+                            sample:sample];
         });
         offset += 6;
         startTime = dispatch_time(startTime,quatDelay);

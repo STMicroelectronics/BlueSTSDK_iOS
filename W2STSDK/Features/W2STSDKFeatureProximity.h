@@ -18,11 +18,11 @@
 /**
  *  proximity value or out of range value
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return proximity value or out of range
  */
-+(uint16_t)getProximityDistance:(NSArray*)data;
++(uint16_t)getProximityDistance:(W2STSDKFeatureSample*)data;
 
 /**
  *  is a special value returned when the sensor detect an object out of its range

@@ -17,28 +17,27 @@
 /**
  *  return the x component of the acceleration
  *
- *  @param data data returned by getFieldsData
- *
+ *  @param data sample read from the node
  *  @return acceleration in the x axis
  */
-+(float)getAccX:(NSArray*)data;
++(float)getAccX:(W2STSDKFeatureSample*)data;
 
 /**
  *  return the y component of the acceleration
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return acceleration in the y axis
  */
-+(float)getAccY:(NSArray*)data;
++(float)getAccY:(W2STSDKFeatureSample*)data;
 
 /**
  *  return the z component of the acceleration
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return acceleration in the z axis
  */
-+(float)getAccZ:(NSArray*)data;
++(float)getAccZ:(W2STSDKFeatureSample*)data;
 
 @end

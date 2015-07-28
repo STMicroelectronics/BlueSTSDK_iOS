@@ -16,10 +16,10 @@
 /**
  *  % of humidity extracted by the sensor
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return % of humidity extracted by the sensor
  */
-+(float)getHumidity:(NSArray*)data;
++(float)getHumidity:(W2STSDKFeatureSample*)data;
 
 @end

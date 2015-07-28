@@ -16,28 +16,28 @@
 /**
  *  extract the magnetometer value of the X axis
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return magetometer value of the x axis
  */
-+(float)getMagX:(NSArray*)data;
++(float)getMagX:(W2STSDKFeatureSample*)data;
 
 /**
  *  extract the magnetometer value of the y axis
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return magetometer value of the y axis
  */
-+(float)getMagY:(NSArray*)data;
++(float)getMagY:(W2STSDKFeatureSample*)data;
 
 /**
  *  extract the magnetometer value of the z axis
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return magetometer value of the z axis
  */
-+(float)getMagZ:(NSArray*)data;
++(float)getMagZ:(W2STSDKFeatureSample*)data;
 
 @end

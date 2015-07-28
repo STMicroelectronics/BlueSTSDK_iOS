@@ -9,7 +9,7 @@
 #import "W2STSDKFeatureLogNSLog.h"
 
 @implementation W2STSDKFeatureLogNSLog
-- (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw timestamp:(uint32_t)ts data:(NSArray*)data{
+- (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw sample:(W2STSDKFeatureSample *)sample{
     
     NSMutableString *temp = [NSMutableString string];
     [raw enumerateByteRangesUsingBlock:^(const void *bytes,
@@ -19,7 +19,7 @@
             [temp appendFormat:@"%02X", ((uint8_t*)bytes)[i]];
         }
     }];
-    NSLog(@"%@ ts:%d Raw:%@ Data:%@",feature.name,ts,temp,[feature description]);
+    NSLog(@"%@ ts:%d Raw:%@ Data:%@",feature.name,sample.timestamp,temp,[feature description]);
     
 }
 

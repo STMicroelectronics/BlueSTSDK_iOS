@@ -21,11 +21,7 @@
 
 static NSArray *sFieldDesc;
 
-@implementation W2STSDKFeatureAcceleration{
-    NSMutableArray *mFieldData;
-    uint32_t mTimestamp;
-    dispatch_queue_t mRwQueue;
-}
+@implementation W2STSDKFeatureAcceleration
 
 +(void)initialize{
     if(self == [W2STSDKFeatureAcceleration class]){
@@ -51,29 +47,26 @@ static NSArray *sFieldDesc;
 }
 
 
-+(float)getAccX:(NSArray*)data{
-    if(data.count==0)
++(float)getAccX:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count==0)
         return NAN;
-    return[[data objectAtIndex:0] floatValue];
+    return[[sample.data objectAtIndex:0] floatValue];
 }
 
-+(float)getAccY:(NSArray*)data{
-    if(data.count<1)
++(float)getAccY:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count<1)
         return NAN;
-    return[[data objectAtIndex:1] floatValue];
+    return[[sample.data objectAtIndex:1] floatValue];
 }
 
-+(float)getAccZ:(NSArray*)data{
-    if(data.count<2)
++(float)getAccZ:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count<2)
         return NAN;
-    return[[data objectAtIndex:2] floatValue];
+    return[[sample.data objectAtIndex:2] floatValue];
 }
 
 -(id) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
-    mRwQueue = dispatch_queue_create("W2STSDKFeatureAcc", DISPATCH_QUEUE_CONCURRENT);
-    mFieldData = [NSMutableArray arrayWithObjects:@0,@0,@0, nil];
-    mTimestamp=0;
     return self;
 }
 
@@ -81,21 +74,6 @@ static NSArray *sFieldDesc;
     return sFieldDesc;
 }
 
--(NSArray*) getFieldsData{
-    __block NSArray *temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = [mFieldData copy];
-    });
-    return temp;
-}
-
--(uint32_t) getTimestamp{
-    __block uint32_t temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = mTimestamp;
-    });
-    return temp;
-}
 
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
@@ -105,16 +83,20 @@ static NSArray *sFieldDesc;
     accY= [rawData extractLeInt16FromOffset:offset+2];
     accZ= [rawData extractLeInt16FromOffset:offset+4];
     
-    dispatch_barrier_async(mRwQueue, ^(){
-        mTimestamp = timestamp;
-        [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithShort:accX]];
-        [mFieldData replaceObjectAtIndex:1 withObject:[NSNumber numberWithShort:accY]];
-        [mFieldData replaceObjectAtIndex:2 withObject:[NSNumber numberWithShort:accZ]];
-        
-        [self notifyUpdate];
-        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 6)]
-                          timestamp:timestamp data:[mFieldData copy]];
-    });
+    NSArray *newData = [NSArray arrayWithObjects:[NSNumber numberWithFloat:accX],
+                        [NSNumber numberWithFloat:accY],
+                        [NSNumber numberWithFloat:accZ],
+                        nil];
+    
+    W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:newData];
+    
+    self.lastSample = sample;
+    
+    [self notifyUpdateWithSample:sample];
+    
+    [self logFeatureUpdate: [rawData subdataWithRange:NSMakeRange(offset, 6)]
+                    sample:sample];
+    
     return 6;
 }
 

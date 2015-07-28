@@ -17,37 +17,37 @@
 /**
  *  extract the x quaternion component
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return x quaternion component
  */
-+(float)getQi:(NSArray*)data;
++(float)getQi:(W2STSDKFeatureSample*)data;
 
 /**
  *  extract the y quaternion component
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return y quaternion component
  */
-+(float)getQj:(NSArray*)data;
++(float)getQj:(W2STSDKFeatureSample*)data;
 
 /**
  *  extract the z quaternion component
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return z quaternion component
  */
-+(float)getQk:(NSArray*)data;
++(float)getQk:(W2STSDKFeatureSample*)data;
 
 /**
  *  extract the w quaternion component
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return w quaternion component
  */
-+(float)getQs:(NSArray*)data;
++(float)getQs:(W2STSDKFeatureSample*)data;
 
 @end

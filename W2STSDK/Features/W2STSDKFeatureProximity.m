@@ -21,11 +21,7 @@
 #define FEATURE_OUT_OF_RANGE_VALUE 510
 static NSArray *sFieldDesc;
 
-@implementation W2STSDKFeatureProximity{
-    NSMutableArray *mFieldData;
-    uint32_t mTimestamp;
-    dispatch_queue_t mRwQueue;
-}
+@implementation W2STSDKFeatureProximity
 
 +(void)initialize{
     if(self == [W2STSDKFeatureProximity class]){
@@ -41,10 +37,10 @@ static NSArray *sFieldDesc;
 }
 
 
-+(uint16_t)getProximityDistance:(NSArray*)data{
-    if(data.count==0)
++(uint16_t)getProximityDistance:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count==0)
         return NAN;
-    return[[data objectAtIndex:0] intValue];
+    return[[sample.data objectAtIndex:0] intValue];
 }
 
 +(uint16_t)outOfRangeValue{
@@ -54,9 +50,6 @@ static NSArray *sFieldDesc;
 
 -(id) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
-    mRwQueue = dispatch_queue_create("W2STSDKFeatureProximity", DISPATCH_QUEUE_CONCURRENT);
-    mFieldData = [NSMutableArray arrayWithObjects:@0, nil];
-    mTimestamp=0;
     return self;
 }
 
@@ -64,35 +57,19 @@ static NSArray *sFieldDesc;
     return sFieldDesc;
 }
 
--(NSArray*) getFieldsData{
-    __block NSArray *temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = [mFieldData copy];
-    });
-    return temp;
-}
-
--(uint32_t) getTimestamp{
-    __block uint32_t temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = mTimestamp;
-    });
-    return temp;
-}
 
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     
     uint16_t distance = [rawData extractLeUInt16FromOffset:offset];
     
-    dispatch_barrier_async(mRwQueue, ^(){
-        mTimestamp = timestamp;
-        [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithShort:distance]];
-        
-        [self notifyUpdate];
-        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 2)]
-                          timestamp:timestamp data:[mFieldData copy]];
-    });
+    NSArray *data = [NSArray arrayWithObject:[NSNumber numberWithFloat:distance]];
+    W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
+    self.lastSample = sample;
+    [self notifyUpdateWithSample:sample];
+    [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 2)]
+                    sample:sample];
+    
     return 2;
 }
 

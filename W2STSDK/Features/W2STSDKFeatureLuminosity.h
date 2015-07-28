@@ -18,10 +18,10 @@
 /**
  *  luminosity value
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return luminosity value
  */
-+(uint16_t)getLuminosity:(NSArray*)data;
++(uint16_t)getLuminosity:(W2STSDKFeatureSample*)data;
 
 @end

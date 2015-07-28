@@ -16,11 +16,11 @@
 /**
  *  pressure value
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return pressure value
  */
-+(float)getPressure:(NSArray*)data;
++(float)getPressure:(W2STSDKFeatureSample*)data;
 
 
 @end

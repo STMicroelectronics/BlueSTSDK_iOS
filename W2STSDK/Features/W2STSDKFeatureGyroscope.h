@@ -16,29 +16,29 @@
 /**
  *  gyroscope data in the x Axis
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return  gyroscope data in the x Axis
  */
-+(float)getGyroX:(NSArray*)data;
++(float)getGyroX:(W2STSDKFeatureSample*)data;
 
 /**
  *  gyroscope data in the y Axis
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return  gyroscope data in the y Axis
  */
-+(float)getGyroY:(NSArray*)data;
++(float)getGyroY:(W2STSDKFeatureSample*)data;
 
 /**
  *  gyroscope data in the z Axis
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return  gyroscope data in the z Axis
  */
-+(float)getGyroZ:(NSArray*)data;
++(float)getGyroZ:(W2STSDKFeatureSample*)data;
 
 
 @end

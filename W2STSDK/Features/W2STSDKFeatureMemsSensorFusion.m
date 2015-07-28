@@ -20,11 +20,6 @@
 
 static NSArray *sFieldDesc;
 
-@interface W2STSDKFeatureMemsSensorFusion()
-    @property (atomic) NSArray *mFieldData;
-    @property (atomic) uint32_t mTimestamp;
-@end
-
 @implementation W2STSDKFeatureMemsSensorFusion
 
 +(void)initialize{
@@ -57,35 +52,32 @@ static NSArray *sFieldDesc;
 }
 
 
-+(float)getQi:(NSArray*)data{
-    if(data.count==0)
-    return NAN;
-    return[[data objectAtIndex:0] floatValue];
++(float)getQi:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count==0)
+        return NAN;
+    return[[sample.data objectAtIndex:0] floatValue];
 }
 
-+(float)getQj:(NSArray*)data{
-    if(data.count<1)
++(float)getQj:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count<1)
     return NAN;
-    return[[data objectAtIndex:1] floatValue];
+    return[[sample.data objectAtIndex:1] floatValue];
 }
 
-+(float)getQk:(NSArray*)data{
-    if(data.count<2)
++(float)getQk:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count<2)
     return NAN;
-    return[[data objectAtIndex:2] floatValue];
+    return[[sample.data objectAtIndex:2] floatValue];
 }
 
-+(float)getQs:(NSArray*)data{
-    if(data.count<3)
++(float)getQs:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count<3)
     return NAN;
-    return[[data objectAtIndex:3] floatValue];
+    return[[sample.data objectAtIndex:3] floatValue];
 }
 
 -(id) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
-   
-    _mFieldData = nil;
-    _mTimestamp = 0;
     return self;
 }
 
@@ -93,13 +85,6 @@ static NSArray *sFieldDesc;
     return sFieldDesc;
 }
 
--(NSArray*) getFieldsData{
-    return self.mFieldData;
-}
-
--(uint32_t) getTimestamp{
-    return self.mTimestamp;
-}
 
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
@@ -119,11 +104,15 @@ static NSArray *sFieldDesc;
                         [NSNumber numberWithFloat:z],
                         [NSNumber numberWithFloat:w],
                         nil];
-    self.mTimestamp = timestamp;
-    self.mFieldData = newData;
-    [self notifyUpdate];
+    
+    W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:newData];
+
+    self.lastSample = sample;
+    
+    [self notifyUpdateWithSample:sample];
+    
     [self logFeatureUpdate: [rawData subdataWithRange:NSMakeRange(offset, 6)]
-                      timestamp:timestamp data:newData];
+                    sample:sample];
     
     return 6;
 }

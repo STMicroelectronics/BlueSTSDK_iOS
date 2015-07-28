@@ -73,10 +73,10 @@ static NSArray *sFieldDesc;
 
 
 
-+(W2STSDKFeatureBatteryStatus)getBatteryStatus:(NSArray*)data{
-    if(data.count<3)
++(W2STSDKFeatureBatteryStatus)getBatteryStatus:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count<3)
         return NAN;
-    switch([[data objectAtIndex:3] unsignedCharValue]){
+    switch([[sample.data objectAtIndex:3] unsignedCharValue]){
         case 0x00:
             return W2STSDKFeatureBatteryStatusLowBattery;
         case 0x01:
@@ -92,8 +92,8 @@ static NSArray *sFieldDesc;
     }
 }
 
-+(NSString*)getBatteryStatusStr:(NSArray*)data{
-    switch ([W2STSDKFeatureBattery getBatteryStatus:data]){
++(NSString*)getBatteryStatusStr:(W2STSDKFeatureSample*)sample{
+    switch ([W2STSDKFeatureBattery getBatteryStatus:sample]){
         case W2STSDKFeatureBatteryStatusLowBattery:
             return @"Low battery";
         case W2STSDKFeatureBatteryStatusDischarging:
@@ -108,30 +108,27 @@ static NSArray *sFieldDesc;
 }//getBatteryStatusStr
 
 
-+(float)getBatteryLevel:(NSArray*)data{
-    if(data.count==0)
++(float)getBatteryLevel:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count==0)
         return NAN;
-    return[[data objectAtIndex:0] floatValue];
+    return[[sample.data objectAtIndex:0] floatValue];
 }
 
-+(float)getBatteryVoltage:(NSArray*)data{
-    if(data.count<1)
++(float)getBatteryVoltage:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count<1)
         return NAN;
-    return [[data objectAtIndex:1] floatValue];
+    return [[sample.data objectAtIndex:1] floatValue];
 }
 
-+(float)getBatteryCurrent:(NSArray*)data{
-    if(data.count<2)
++(float)getBatteryCurrent:(W2STSDKFeatureSample*)sample{
+    if(sample.data.count<2)
         return NAN;
-    return [[data objectAtIndex:2] floatValue];
+    return [[sample.data objectAtIndex:2] floatValue];
 }
 
 
 -(id) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
-    mRwQueue = dispatch_queue_create("W2STSDKFeatureBattery", DISPATCH_QUEUE_CONCURRENT);
-    mFieldData = [NSMutableArray arrayWithObjects:@0,@0,@0,@0, nil];
-    mTimestamp=0;
     return self;
 }
 
@@ -139,21 +136,6 @@ static NSArray *sFieldDesc;
     return sFieldDesc;
 }
 
--(NSArray*) getFieldsData{
-    __block NSArray *temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = [mFieldData copy];
-    });
-    return temp;
-}
-
--(uint32_t) getTimestamp{
-    __block uint32_t temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = mTimestamp;
-    });
-    return temp;
-}
 
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
@@ -163,15 +145,20 @@ static NSArray *sFieldDesc;
     float current = [rawData extractLeInt16FromOffset:offset+4];
     uint8_t status = [rawData extractUInt8FromOffset:offset+6];
     
-    dispatch_barrier_async(mRwQueue, ^(){
-        mTimestamp = timestamp;
-        [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:percentage]];
-        [mFieldData replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:voltage]];
-        [mFieldData replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:current]];
-        [mFieldData replaceObjectAtIndex:3 withObject:[NSNumber numberWithUnsignedChar:status]];
-        [self notifyUpdate];
-        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 7)] timestamp:timestamp data:[mFieldData copy]];
-    });
+    
+    NSArray *data = [NSArray arrayWithObjects:
+                        [NSNumber numberWithFloat:percentage],
+                        [NSNumber numberWithFloat:voltage],
+                        [NSNumber numberWithFloat:current],
+                        [NSNumber numberWithUnsignedChar:status],
+                        nil];
+    
+    W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
+    self.lastSample = sample;
+    [self notifyUpdateWithSample:sample];
+    [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 7)]
+                    sample:sample];
+
     return 7;
 }
 

@@ -29,47 +29,47 @@ typedef NS_ENUM(NSInteger, W2STSDKFeatureBatteryStatus) {
 /**
  *  current battery status
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return current battery status
  */
-+(W2STSDKFeatureBatteryStatus)getBatteryStatus:(NSArray*)data;
++(W2STSDKFeatureBatteryStatus)getBatteryStatus:(W2STSDKFeatureSample*)data;
 
 /**
  *  current battery status as a string
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return current battery status as a string
  */
-+(NSString*)getBatteryStatusStr:(NSArray*)data;
++(NSString*)getBatteryStatusStr:(W2STSDKFeatureSample*)data;
 
 /**
  *  current charge of percentage
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return battery percentage of charge
  */
-+(float)getBatteryLevel:(NSArray*)data;
++(float)getBatteryLevel:(W2STSDKFeatureSample*)data;
 
 /**
  *  current battery voltage
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return battery voltage in mV
  */
-+(float)getBatteryVoltage:(NSArray*)data;
++(float)getBatteryVoltage:(W2STSDKFeatureSample*)data;
 
 /**
  *  battery current, if positive the battery is charging, if negative is discharging
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return battery current in mA
  */
-+(float)getBatteryCurrent:(NSArray*)data;
++(float)getBatteryCurrent:(W2STSDKFeatureSample*)data;
 
 
 @end

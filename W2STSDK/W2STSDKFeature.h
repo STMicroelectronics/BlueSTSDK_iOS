@@ -15,6 +15,16 @@
 
 @class W2STSDKNode;
 
+
+@interface W2STSDKFeatureSample : NSObject
+    @property(readonly) uint32_t timestamp;
+    @property(readonly) NSArray *data;
+
++(W2STSDKFeatureSample*) sampleWithTimestamp:(uint32_t)timestamp data:(NSArray*)data;
+-(id) initWhitTimestamp: (uint32_t)timestamp data:(NSArray*)data;
+
+@end
+
 /**
  *  This class represent some set of data that a node can export.
  * <p>You can read the feature value or register a delegate for have 
@@ -48,6 +58,9 @@
  *  date of the last feature update
  */
 @property (readonly) NSDate* lastUpdate;
+
+@property (readonly,atomic) W2STSDKFeatureSample *lastSample;
+
 
 /**
  *  create a string with all the data present in this feature
@@ -103,7 +116,7 @@
  *
  *  @return array of NSNumber
  */
--(NSArray*) getFieldsData;
+-(NSArray*) getFieldsData __attribute__ ((deprecated));
 
 /**
  * <b>abstract method</b>, return an array of W2STSDKFeatureField that describe the data
@@ -118,7 +131,7 @@
  *
  *  @return id of the last package received by this feature
  */
--(uint32_t) getTimestamp;
+-(uint32_t) getTimestamp __attribute__ ((deprecated));
 
 @end
 
@@ -131,7 +144,7 @@
  *  @param feature feature that was updated
  */
 @required
-- (void)didUpdateFeature:(W2STSDKFeature *)feature;
+- (void)didUpdateFeature:(W2STSDKFeature *)feature sample:(W2STSDKFeatureSample*) sample;
 
 @end
 
@@ -149,7 +162,7 @@
  *  @param data    array of NSNumber extracted by the raw data
  */
 @required
-- (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw timestamp:(uint32_t)ts data:(NSArray*)data;
+- (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw sample:(W2STSDKFeatureSample*)sample;
 @end
 
 #endif

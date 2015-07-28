@@ -16,10 +16,10 @@
 /**
  *  extract the temperature value
  *
- *  @param data data returned by getFieldsData
+ *  @param data sample read from the node
  *
  *  @return temperature value
  */
-+(float)getTemperature:(NSArray*)data;
++(float)getTemperature:(W2STSDKFeatureSample*)data;
 
 @end

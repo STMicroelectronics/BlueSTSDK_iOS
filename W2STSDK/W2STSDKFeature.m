@@ -12,6 +12,27 @@
 
 #define DECIMAL_POSITION 2
 
+@interface W2STSDKFeature()
+    @property (readwrite,atomic) W2STSDKFeatureSample *lastSample;
+@end
+
+
+@implementation W2STSDKFeatureSample
+
++(W2STSDKFeatureSample*) sampleWithTimestamp:(uint32_t)timestamp data:(NSArray*)data{
+    return [[W2STSDKFeatureSample alloc] initWhitTimestamp: timestamp data:data];
+}
+
+-(id) initWhitTimestamp: (uint32_t)timestamp data:(NSArray*)data{
+    self = [super init];
+    _timestamp=timestamp;
+    _data=data;
+    return self;
+}
+
+@end
+
+
 /**
  *  cuncurrent queue used for notify the update in different threads
  */
@@ -109,18 +130,18 @@ static dispatch_queue_t sNotificationQueue;
     return 0;
 }
 
--(void) notifyUpdate{
+-(void) notifyUpdateWithSample:(W2STSDKFeatureSample *)sample{
     for (id<W2STSDKFeatureDelegate> delegate in mFeatureDelegates) {
         dispatch_async(sNotificationQueue,^{
-            [delegate didUpdateFeature:self];
+            [delegate didUpdateFeature:self sample:sample];
         });
     }//for
 }
 
--(void) logFeatureUpdate:(NSData*)rawData timestamp:(uint32_t)ts data:(NSArray*)data{
+-(void) logFeatureUpdate:(NSData*)rawData sample:(W2STSDKFeatureSample*)sample{
     for (id<W2STSDKFeatureLogDelegate> delegate in mFeatureLogDelegates) {
         dispatch_async(sNotificationQueue,^{
-            [delegate feature:self rawData:rawData timestamp:ts data:data];
+            [delegate feature:self rawData:rawData sample:sample];
         });
     }//for
 }
@@ -143,9 +164,10 @@ static dispatch_queue_t sNotificationQueue;
 
 -(NSString*) description{
     NSMutableString *s = [NSMutableString stringWithString:@"Ts:"];
-    [s appendFormat:@"%d ",[self getTimestamp] ];
+    W2STSDKFeatureSample *sample = self.lastSample;
+    [s appendFormat:@"%d ",sample.timestamp ];
     NSArray *fields = [self getFieldsDesc];
-    NSArray *datas = [self getFieldsData ];
+    NSArray *datas = sample.data;
     for (int i = 0; i < fields.count; i++) {
         W2STSDKFeatureField *field =(W2STSDKFeatureField*)[fields objectAtIndex:i];
         NSNumber *data = (NSNumber*)[datas objectAtIndex:i];

@@ -15,6 +15,9 @@
  * This interface contains the protected and packages method that can be used inside the sdk
  */
 @interface W2STSDKFeature(Prv)
+@property (readwrite,atomic) W2STSDKFeatureSample *lastSample;
+
+
 
 /**
  *  protected method, initialize a feature
@@ -30,7 +33,7 @@
  *  protected method, notify to all the register delegate that the feature has 
  * been updated
  */
--(void) notifyUpdate;
+-(void) notifyUpdateWithSample:(W2STSDKFeatureSample*)sample;
 
 /**
  *  protected method,notify to all the register delegate that a feature has been 
@@ -39,7 +42,7 @@
  *  @param rawData raw data used for extract the new data
  *  @param data array of NSNumber extracted by raw data
  */
--(void) logFeatureUpdate:(NSData*)rawData timestamp:(uint32_t)ts data:(NSArray*)data;
+-(void) logFeatureUpdate:(NSData*)rawData sample:(W2STSDKFeatureSample*)sample;
 
 /**
  *  protected method, send a command to this feature
