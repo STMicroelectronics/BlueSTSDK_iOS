@@ -80,6 +80,16 @@ static dispatch_queue_t sNotificationQueue;
     //when this array becomes empty the node is connected
     NSMutableArray *mCharDiscoverServiceReq;
     
+    /**
+     *  number of time tahat the ts has reset, the ts is reseted when we see a ts
+     * with a lower value after that the ts reach the valu 2^16-100
+     */
+    uint32_t mNReset;
+    
+    /** last raw ts received from the board, it is a numer between 0 and (2^16)-1
+     */
+    uint16_t mLastTs;
+    
 }
 
 /**
@@ -167,12 +177,8 @@ static dispatch_queue_t sNotificationQueue;
     //NSLog(@"create Node: name: %@ type: %x feature: %d",_name,_type,parser.featureMap);
     return self;
 }
-+(bool) checkProtocolVersion:(unsigned char)ver {
-    return ver != PROTOCOL_VERSION_NOT_AVAILABLE && ver >= PROTOCOL_VERSION_CURRENT_MIN && ver <= PROTOCOL_VERSION_CURRENT;
-}
--(bool) isSupported {
-    return [W2STSDKNode checkProtocolVersion:_protocolVersion];
-}
+
+
 -(void) addBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate{
     [mBleConnectionDelegates addObject:delegate];
 }
@@ -230,11 +236,9 @@ static dispatch_queue_t sNotificationQueue;
 }
 
 -(void)connect{
-    if ([self isSupported]) {
-        mUserAskDisconnect=false;
-        [self updateNodeStatus:W2STSDKNodeStateConnecting];
-        [[W2STSDKManager sharedInstance]connect:mPeripheral];
-    }
+    mUserAskDisconnect=false;
+    [self updateNodeStatus:W2STSDKNodeStateConnecting];
+    [[W2STSDKManager sharedInstance]connect:mPeripheral];
 }
 
 -(void)completeConnection{
@@ -242,6 +246,8 @@ static dispatch_queue_t sNotificationQueue;
         [self updateNodeStatus:W2STSDKNodeStateUnreachable];
         return;
     }
+    mLastTs=0;
+    mNReset=0;
     //else
     [mPeripheral discoverServices:nil];
 }
@@ -404,6 +410,8 @@ static dispatch_queue_t sNotificationQueue;
 didDiscoverServices:(NSError *)error{
     if([self isConnected]) //we already run this method one time
         return;
+    if(error!=nil)
+       [self updateNodeStatus:W2STSDKNodeStateUnreachable];
     /*
     we store all the service in an array, when we recevie the characteristics
     of a service we remove from the array in a way to avoid to scan multiple time
@@ -509,9 +517,10 @@ didDiscoverCharacteristicsForService:(CBService *)service
     if(![mCharDiscoverServiceReq containsObject:service])
         return;
     
-    if (error && [error code] != 0) {
-        NSLog(@"Error %@\n", error);
-        return ;
+    if(error){
+        NSLog(@"Error discovering the service: %@ Erorr: %@",
+              service.UUID.UUIDString,error.localizedDescription);
+        [self updateNodeStatus:W2STSDKNodeStateUnreachable];
     }
     
     NSLog(@"Service: %@", service.UUID.UUIDString);
@@ -597,7 +606,12 @@ didDiscoverCharacteristicsForService:(CBService *)service
     NSData *newData = characteristics.value;
     NSArray *features = [W2STSDKCharacteristic getFeaturesFromChar:characteristics
                                                                 in:mCharFeatureMap];
-    uint32_t timestamp = [newData extractLeUInt16FromOffset: 0];
+
+    uint16_t timeStamp16 = [newData extractLeUInt16FromOffset: 0];
+    if(mLastTs>((1<<16)-100) && mLastTs > timeStamp16)
+        mNReset++;
+    uint32_t timestamp = mNReset * (1<<16) + timeStamp16;
+    mLastTs=timeStamp16;
     uint32_t offset=2;
     for(W2STSDKFeature *f in features){
         offset += [f update:timestamp data:newData dataOffset:offset];
@@ -609,10 +623,10 @@ didDiscoverCharacteristicsForService:(CBService *)service
 didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error {
     
-    //check if an error is notified
-    if (error != nil && [error code] != 0) {
-        NSLog(@"UUID: %@ Error: %@\n", characteristic.UUID.UUIDString, error);
-        return ;
+    if(error){
+        NSLog(@"Error updating the char: %@ Erorr: %@",
+              characteristic.UUID.UUIDString,error.localizedDescription);
+        [self updateNodeStatus:W2STSDKNodeStateLost];
     }
     
     [self characteristicUpdate:characteristic];
@@ -620,6 +634,11 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
 - (void)peripheral:(CBPeripheral *)peripheral
 didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error{
+    if(error){
+        NSLog(@"Error writing the char: %@ Erorr: %@",
+              characteristic.UUID.UUIDString,error.localizedDescription);
+        [self updateNodeStatus:W2STSDKNodeStateLost];
+    }
     
     if ([characteristic.UUID isEqual: [W2STSDKServiceDebug termUuid]] &&
         _debugConsole!=nil){
@@ -634,9 +653,11 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 - (void)peripheral:(CBPeripheral *)peripheral
 didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error{
-    if(error)
+    if(error){
         NSLog(@"Error updating the char: %@ Erorr: %@",
               characteristic.UUID.UUIDString,error.localizedDescription);
+        [self updateNodeStatus:W2STSDKNodeStateLost];
+    }
 }
 
 +(NSString*) stateToString:(W2STSDKNodeState)state{

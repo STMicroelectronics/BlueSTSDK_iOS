@@ -12,28 +12,11 @@
 #include "W2STSDKBleNodeDefines.h"
 #include "../W2STSDKNode.h"
 
-#define DEVICE_ID_GENERIC 0x00
-#define DEVICE_ID_WESU 0x01
-#define DEVICE_ID_L1DISCO 0x02
-#define DEVICE_ID_NUCLEO_BIT 0x80
 
-#define ADVERTISE_SIZE_COMPACT 6
-#define ADVERTISE_SIZE_FULL 12
-#define ADVERTISE_MAX_SIZE 20
-
-#define ADVERTISE_SIZE_LEGACY1 3
-#define ADVERTISE_SIZE_LEGACY2 5
-
-#define ADVERTISE_FIELD_POS_PROTOCOL 0
-#define ADVERTISE_FIELD_POS_DEVICE_ID 1
-#define ADVERTISE_FIELD_POS_FEATURE_MAP 2
-#define ADVERTISE_FIELD_POS_ADDRESS 6
-
-#define ADVERTISE_FIELD_SIZE_ADDRESS 6
 
 
 /**
- *  class that parse the ble advertise package
+ *  Class that parse the ble advertise package
  */
 @interface W2STSDKBleAdvertiseParser : NSObject
 
@@ -71,6 +54,11 @@
  */
 @property (readonly) NSString *address;
 
+/**
+ * parse the advertise data returned by the system
+ * @param advertisementData ble advertise data
+ * @throw an exception if the vendor specific field isn't compatible with the W2ST protocol
+ */
 +(id)advertiseParserWithAdvertise:(NSDictionary *)advertisementData;
 
 /**

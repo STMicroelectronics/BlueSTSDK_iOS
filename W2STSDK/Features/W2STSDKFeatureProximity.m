@@ -90,7 +90,8 @@ static NSArray *sFieldDesc;
         [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithShort:distance]];
         
         [self notifyUpdate];
-        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 2)] data:[mFieldData copy]];
+        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 2)]
+                          timestamp:timestamp data:[mFieldData copy]];
     });
     return 2;
 }

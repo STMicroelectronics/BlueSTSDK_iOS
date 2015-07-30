@@ -20,11 +20,12 @@
 
 static NSArray *sFieldDesc;
 
-@implementation W2STSDKFeatureMemsSensorFusion{
-    NSMutableArray *mFieldData;
-    uint32_t mTimestamp;
-    dispatch_queue_t mRwQueue;
-}
+@interface W2STSDKFeatureMemsSensorFusion()
+    @property (atomic) NSArray *mFieldData;
+    @property (atomic) uint32_t mTimestamp;
+@end
+
+@implementation W2STSDKFeatureMemsSensorFusion
 
 +(void)initialize{
     if(self == [W2STSDKFeatureMemsSensorFusion class]){
@@ -82,9 +83,9 @@ static NSArray *sFieldDesc;
 
 -(id) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
-    mRwQueue = dispatch_queue_create("FeatureMemsSensorFusion", DISPATCH_QUEUE_CONCURRENT);
-    mFieldData = [NSMutableArray arrayWithObjects:@0,@0,@0,@0, nil];
-    mTimestamp=0;
+   
+    _mFieldData = nil;
+    _mTimestamp = 0;
     return self;
 }
 
@@ -93,19 +94,11 @@ static NSArray *sFieldDesc;
 }
 
 -(NSArray*) getFieldsData{
-    __block NSArray *temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = [mFieldData copy];
-    });
-    return temp;
+    return self.mFieldData;
 }
 
 -(uint32_t) getTimestamp{
-    __block uint32_t temp;
-    dispatch_sync(mRwQueue, ^(){
-        temp = mTimestamp;
-    });
-    return temp;
+    return self.mTimestamp;
 }
 
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
@@ -121,15 +114,17 @@ static NSArray *sFieldDesc;
     else
         w = sqrt(1-(x*x+y*y+z*z));
     
-    dispatch_barrier_async(mRwQueue, ^(){
-        mTimestamp = timestamp;
-        [mFieldData replaceObjectAtIndex:0 withObject:[NSNumber numberWithFloat:x]];
-        [mFieldData replaceObjectAtIndex:1 withObject:[NSNumber numberWithFloat:y]];
-        [mFieldData replaceObjectAtIndex:2 withObject:[NSNumber numberWithFloat:z]];
-        [mFieldData replaceObjectAtIndex:3 withObject:[NSNumber numberWithFloat:w]];
-        [self notifyUpdate];
-        [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 6)] data:[mFieldData copy]];
-    });
+    NSArray *newData = [NSArray arrayWithObjects:[NSNumber numberWithFloat:x],
+                        [NSNumber numberWithFloat:y],
+                        [NSNumber numberWithFloat:z],
+                        [NSNumber numberWithFloat:w],
+                        nil];
+    self.mTimestamp = timestamp;
+    self.mFieldData = newData;
+    [self notifyUpdate];
+    [self logFeatureUpdate: [rawData subdataWithRange:NSMakeRange(offset, 6)]
+                      timestamp:timestamp data:newData];
+    
     return 6;
 }
 

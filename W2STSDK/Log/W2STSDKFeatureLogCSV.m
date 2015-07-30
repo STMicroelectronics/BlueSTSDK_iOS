@@ -122,14 +122,14 @@
     
 }
 
-- (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw data:(NSArray*)data{
+- (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw timestamp:(uint32_t)ts data:(NSArray*)data{
     static const char coma=',';
  
     NSFileHandle *file = [self openDumpFileForFeature:feature];
     @synchronized(file){
         [file writeData: [feature.parentNode.name dataUsingEncoding:NSUTF8StringEncoding]];
         [file writeData:[NSData dataWithBytes:&coma length:1]];
-        NSString *timeStampStr = [NSString stringWithFormat:@"%d",[feature getTimestamp]];
+        NSString *timeStampStr = [NSString stringWithFormat:@"%d",ts];
         [file writeData: [timeStampStr dataUsingEncoding:NSUTF8StringEncoding]];
         [file writeData:[NSData dataWithBytes:&coma length:1]];
         if(raw!=nil){

@@ -12,12 +12,6 @@
 #import <Foundation/Foundation.h>
 #import "W2STSDKManager.h"
 
-#define PROTOCOL_VERSION_CURRENT 0x01
-#define PROTOCOL_VERSION_CURRENT_MIN 0x01
-#define PROTOCOL_VERSION_NOT_AVAILABLE 0xFF
-#define PROTOCOL_VERSION_LEGACY1 0xF1
-#define PROTOCOL_VERSION_LEGACY2 0xF2
-
 @class W2STSDKDebug;
 @class W2STSDKConfigControl;
 @class W2STSDKFeature;
@@ -160,8 +154,6 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  */
 +(NSString*) stateToString:(W2STSDKNodeState)state;
 
-+(bool) checkProtocolVersion:(unsigned char)ver;
--(bool) isSupported;
 -(void) addBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate;
 -(void) removeBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate;
 -(void) addNodeStatusDelegate:(id<W2STSDKNodeStateDelegate>)delegate;

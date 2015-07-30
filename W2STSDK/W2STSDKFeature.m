@@ -27,6 +27,8 @@ static dispatch_queue_t sNotificationQueue;
      *  set of delegate where log the feature update
      */
     NSMutableSet *mFeatureLogDelegates;
+    
+    NSNumberFormatter *mFormatter;
 }
 
 -(id) initWhitNode: (W2STSDKNode*)node{
@@ -43,7 +45,11 @@ static dispatch_queue_t sNotificationQueue;
     dispatch_once(&onceToken, ^{
         sNotificationQueue = dispatch_queue_create("W2STSDKFeature", DISPATCH_QUEUE_CONCURRENT);
     });
-    
+
+    mFormatter = [[NSNumberFormatter alloc]init];
+    [mFormatter setPositiveFormat:@" #0.00"];
+    [mFormatter setNegativeFormat:@"-#0.00"];
+
     
     mFeatureDelegates = [[NSMutableSet alloc] init];
     mFeatureLogDelegates = [[NSMutableSet alloc] init];
@@ -111,10 +117,10 @@ static dispatch_queue_t sNotificationQueue;
     }//for
 }
 
--(void) logFeatureUpdate:(NSData*)rawData data:(NSArray*)data{
+-(void) logFeatureUpdate:(NSData*)rawData timestamp:(uint32_t)ts data:(NSArray*)data{
     for (id<W2STSDKFeatureLogDelegate> delegate in mFeatureLogDelegates) {
         dispatch_async(sNotificationQueue,^{
-            [delegate feature:self rawData:rawData data:data];
+            [delegate feature:self rawData:rawData timestamp:ts data:data];
         });
     }//for
 }
@@ -140,13 +146,10 @@ static dispatch_queue_t sNotificationQueue;
     [s appendFormat:@"%d ",[self getTimestamp] ];
     NSArray *fields = [self getFieldsDesc];
     NSArray *datas = [self getFieldsData ];
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc]init];
-    [formatter setPositiveFormat:@" #0.00"];
-    [formatter setNegativeFormat:@"-#0.00"];
     for (int i = 0; i < fields.count; i++) {
         W2STSDKFeatureField *field =(W2STSDKFeatureField*)[fields objectAtIndex:i];
         NSNumber *data = (NSNumber*)[datas objectAtIndex:i];
-        [s appendFormat:@"%@: %@ ",field.name,[formatter stringFromNumber:data]];
+        [s appendFormat:@"%@: %@ ",field.name,[mFormatter stringFromNumber:data]];
         if(field.unit.length!=0){
             [s appendFormat:@"(%@) ", field.unit ];
         }
