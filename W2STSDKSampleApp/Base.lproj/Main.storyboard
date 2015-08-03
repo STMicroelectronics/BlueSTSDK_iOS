@@ -65,6 +65,7 @@
                     </navigationItem>
                     <connections>
                         <segue destination="tzT-ZW-Uha" kind="show" identifier="showConsoleViewSegue" id="LuQ-xI-g82"/>
+                        <segue destination="qeL-V1-qLl" kind="show" identifier="showSettingsViewSegue" id="Ma5-c6-BXZ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WSD-Lu-kI8" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -182,12 +183,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fjP-Wr-ulM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1368" y="1301"/>
+            <point key="canvasLocation" x="1317" y="1301"/>
         </scene>
         <!--Settings -->
         <scene sceneID="7Rr-qV-gvY">
             <objects>
-                <tableViewController id="qeL-V1-qLl" userLabel="Settings " customClass="W2STSettingsTableViewController" sceneMemberID="viewController">
+                <tableViewController id="qeL-V1-qLl" userLabel="Settings " customClass="SettingsTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="53" sectionHeaderHeight="10" sectionFooterHeight="10" id="XP7-vg-7ke">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -330,7 +331,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kcj-rC-cjc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2157" y="1399"/>
+            <point key="canvasLocation" x="2041" y="1301"/>
         </scene>
     </scenes>
 </document>

@@ -14,6 +14,7 @@
 		66123F971B6F5FCA00F1A3B3 /* board_generic.png in Resources */ = {isa = PBXBuildFile; fileRef = 66123F941B6F5FCA00F1A3B3 /* board_generic.png */; };
 		66123F981B6F5FCA00F1A3B3 /* board_nucleo.png in Resources */ = {isa = PBXBuildFile; fileRef = 66123F951B6F5FCA00F1A3B3 /* board_nucleo.png */; };
 		66123F991B6F5FCA00F1A3B3 /* board_wesu.png in Resources */ = {isa = PBXBuildFile; fileRef = 66123F961B6F5FCA00F1A3B3 /* board_wesu.png */; };
+		662B58821B6F87ED000F5072 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B58811B6F87ED000F5072 /* SettingsTableViewController.m */; };
 		664335861B6F6E42001B63DE /* ConsoleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664335851B6F6E42001B63DE /* ConsoleViewController.m */; };
 		66E7BF381B6F4C3B005CB59E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E7BF371B6F4C3B005CB59E /* main.m */; };
 		66E7BF3B1B6F4C3B005CB59E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E7BF3A1B6F4C3B005CB59E /* AppDelegate.m */; };
@@ -83,6 +84,8 @@
 		66123F941B6F5FCA00F1A3B3 /* board_generic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = board_generic.png; sourceTree = "<group>"; };
 		66123F951B6F5FCA00F1A3B3 /* board_nucleo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = board_nucleo.png; sourceTree = "<group>"; };
 		66123F961B6F5FCA00F1A3B3 /* board_wesu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = board_wesu.png; sourceTree = "<group>"; };
+		662B58801B6F87ED000F5072 /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
+		662B58811B6F87ED000F5072 /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		664335841B6F6E42001B63DE /* ConsoleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleViewController.h; sourceTree = "<group>"; };
 		664335851B6F6E42001B63DE /* ConsoleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsoleViewController.m; sourceTree = "<group>"; };
 		66E7BF321B6F4C3B005CB59E /* W2STSDKSampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = W2STSDKSampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -163,6 +166,8 @@
 				66123F8A1B6F53FF00F1A3B3 /* FeatureListTableViewController.m */,
 				664335841B6F6E42001B63DE /* ConsoleViewController.h */,
 				664335851B6F6E42001B63DE /* ConsoleViewController.m */,
+				662B58801B6F87ED000F5072 /* SettingsTableViewController.h */,
+				662B58811B6F87ED000F5072 /* SettingsTableViewController.m */,
 				66E7BF391B6F4C3B005CB59E /* AppDelegate.h */,
 				66E7BF3A1B6F4C3B005CB59E /* AppDelegate.m */,
 				66E7BF3C1B6F4C3B005CB59E /* ViewController.h */,
@@ -341,6 +346,7 @@
 				66123F8B1B6F53FF00F1A3B3 /* FeatureListTableViewController.m in Sources */,
 				66123F8F1B6F555B00F1A3B3 /* MBProgressHUD.m in Sources */,
 				66123F921B6F55FE00F1A3B3 /* DeviceTableViewCell.m in Sources */,
+				662B58821B6F87ED000F5072 /* SettingsTableViewController.m in Sources */,
 				66E7BF3E1B6F4C3B005CB59E /* ViewController.m in Sources */,
 				664335861B6F6E42001B63DE /* ConsoleViewController.m in Sources */,
 				66123F881B6F537C00F1A3B3 /* DevicesTableViewController.m in Sources */,

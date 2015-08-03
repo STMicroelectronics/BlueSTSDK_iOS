@@ -9,6 +9,7 @@
 #import "FeatureListTableViewController.h"
 
 #import "ConsoleViewController.h"
+#import "SettingsTableViewController.h"
 
 #import <W2STSDK/W2STSDKFeature.h>
 #import <W2STSDK/W2STSDKFeatureAutoConfigurable.h>
@@ -30,7 +31,6 @@
     UIAlertAction *mActionSettings;
     UIAlertController *mAlertController;
 
-    
     NSArray *mAvailableFeatures;
     
 }
@@ -94,11 +94,10 @@
         ConsoleViewController *dest = (ConsoleViewController*) [segue destinationViewController];
         dest.debugInterface = self.node.debugConsole;
     }//if
-    /*else if([segue.identifier isEqualToString:SHOW_SETTINGS_VIEW_SEGUE_NAME]){
+    else if([segue.identifier isEqualToString:SHOW_SETTINGS_VIEW_SEGUE_NAME]){
         SettingsTableViewController *dest = (SettingsTableViewController*)[segue destinationViewController];
         dest.configControl = self.node.configControl;
     }//if
-     */
 }
 
 #pragma mark - W2STSDKFeatureDelegate
