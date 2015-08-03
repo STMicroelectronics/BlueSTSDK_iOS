@@ -18,7 +18,6 @@
 		664335861B6F6E42001B63DE /* ConsoleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664335851B6F6E42001B63DE /* ConsoleViewController.m */; };
 		66E7BF381B6F4C3B005CB59E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E7BF371B6F4C3B005CB59E /* main.m */; };
 		66E7BF3B1B6F4C3B005CB59E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E7BF3A1B6F4C3B005CB59E /* AppDelegate.m */; };
-		66E7BF3E1B6F4C3B005CB59E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E7BF3D1B6F4C3B005CB59E /* ViewController.m */; };
 		66E7BF411B6F4C3B005CB59E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E7BF3F1B6F4C3B005CB59E /* Main.storyboard */; };
 		66E7BF431B6F4C3B005CB59E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E7BF421B6F4C3B005CB59E /* Images.xcassets */; };
 		66E7BF461B6F4C3B005CB59E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 66E7BF441B6F4C3B005CB59E /* LaunchScreen.xib */; };
@@ -93,8 +92,6 @@
 		66E7BF371B6F4C3B005CB59E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		66E7BF391B6F4C3B005CB59E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		66E7BF3A1B6F4C3B005CB59E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		66E7BF3C1B6F4C3B005CB59E /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		66E7BF3D1B6F4C3B005CB59E /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		66E7BF401B6F4C3B005CB59E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		66E7BF421B6F4C3B005CB59E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		66E7BF451B6F4C3B005CB59E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -170,8 +167,6 @@
 				662B58811B6F87ED000F5072 /* SettingsTableViewController.m */,
 				66E7BF391B6F4C3B005CB59E /* AppDelegate.h */,
 				66E7BF3A1B6F4C3B005CB59E /* AppDelegate.m */,
-				66E7BF3C1B6F4C3B005CB59E /* ViewController.h */,
-				66E7BF3D1B6F4C3B005CB59E /* ViewController.m */,
 				66123F8D1B6F555B00F1A3B3 /* MBProgressHUD.h */,
 				66123F8E1B6F555B00F1A3B3 /* MBProgressHUD.m */,
 				66123F931B6F5FCA00F1A3B3 /* Resources */,
@@ -347,7 +342,6 @@
 				66123F8F1B6F555B00F1A3B3 /* MBProgressHUD.m in Sources */,
 				66123F921B6F55FE00F1A3B3 /* DeviceTableViewCell.m in Sources */,
 				662B58821B6F87ED000F5072 /* SettingsTableViewController.m in Sources */,
-				66E7BF3E1B6F4C3B005CB59E /* ViewController.m in Sources */,
 				664335861B6F6E42001B63DE /* ConsoleViewController.m in Sources */,
 				66123F881B6F537C00F1A3B3 /* DevicesTableViewController.m in Sources */,
 				66E7BF3B1B6F4C3B005CB59E /* AppDelegate.m in Sources */,

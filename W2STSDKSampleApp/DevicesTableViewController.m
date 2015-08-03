@@ -17,7 +17,7 @@
 #import "FeatureListTableViewController.h"
 
 #define DEMO_SEGUE_ID @"OpenDemosView"
-//stop the discovery after 8s
+//stop the discovery after 10	s
 #define DISCOVERY_TIMEOUT (10*1000)
 #define ERROR_MSG_TIMEOUT (3.0)
 
@@ -68,7 +68,6 @@ W2STSDKNodeStateDelegate>
 /**
  *  start the discovery process, when the view is shown,
  *  we close the connection with all the previous discovered nodes
- *
  */
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -96,7 +95,7 @@ W2STSDKNodeStateDelegate>
 }
 
 /**
- *  function called each time the user click in the uibarbutton,
+ * function called each time the user click in the uibarbutton,
  * it change the status of the discovery
  */
 -(void) manageDiscoveryButton {
@@ -155,11 +154,15 @@ W2STSDKNodeStateDelegate>
 
 #pragma mark - Table view data source
 
+/**
+ *the table will have only 1 colum
+ */
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
     return 1;
 }
 
+/** one row for each node/device */
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     mNodes = [mManager nodes];
     return mNodes.count;
@@ -183,9 +186,8 @@ W2STSDKNodeStateDelegate>
     //get node index row
     W2STSDKNode *node = mNodes[indexPath.row];
     cell.boardName.text = node.name;
-    //AR show the protocol version and a star if not supported
-    //cell.boardName.text = [NSString stringWithFormat:([node isSupported] ? @"%@ 0x%0.2X" : @"%@ 0x%0.2X *"), node.name, node.protocolVersion];
     cell.boardDetails.text = (node.address == nil) ? node.tag : node.address;
+    
     switch(node.type){
         case W2STSDKNodeTypeNucleo:
             cell.boardImage.image = [UIImage imageNamed:@"board_nucleo.png"];
@@ -198,20 +200,26 @@ W2STSDKNodeStateDelegate>
         default:
             cell.boardImage.image = [UIImage imageNamed:@"board_generic.png"];
             break;
-    }
+    }//switch
     return cell;
-}
+}//cellForRowAtIndexPath
 
+/**
+ *  callback when the user select a row, we connect and start the demo for that particular node
+ *
+ *  @param tableView table selected by the user
+ *  @param indexPath row/col selected by the user
+ */
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     W2STSDKNode *node = mNodes[indexPath.row];
     [node addNodeStatusDelegate:self];
     [self showConnectionProgress:node];
-}
+}//didSelectRowAtIndexPath
 
 #pragma mark - W2STSDKNodeStatusDelegate
 
 /*
- *when the node complete the connection hide the view and do the segue for the demo
+ * When the node complete the connection hide the view and do the segue for the demo
  */
 - (void) node:(W2STSDKNode *)node didChangeState:(W2STSDKNodeState)newState
     prevState:(W2STSDKNodeState)prevState{
@@ -254,7 +262,7 @@ W2STSDKNodeStateDelegate>
 }
 
 /*
- * set the node to the demo view
+ * pass the selected node to the featureList controller
  */
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if (segue) {

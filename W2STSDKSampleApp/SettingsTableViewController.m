@@ -130,7 +130,7 @@
                                                    //perform a write
                                                    [self writeLocalName:((UITextField*)alert.textFields[0]).text];
                                                }];
-    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
+    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
                                                    handler:^(UIAlertAction * action) {
                                                        //nothing
                                                        [alert dismissViewControllerAnimated:YES completion:nil];
@@ -158,7 +158,7 @@
                                                    //perform a write
                                                    [self writePubblicAddress:((UITextField*)alert.textFields[0]).text];
                                                }];
-    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
+    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
                                                    handler:^(UIAlertAction * action) {
                                                        //nothing
                                                        [alert dismissViewControllerAnimated:YES completion:nil];
@@ -195,7 +195,7 @@
                                                         //perform a write
                                                         [self writeLedConfiguration:@"LED_USER_OFF"];
                                                     }];
-    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
+    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
                                                    handler:^(UIAlertAction * action) {
                                                        //nothing
                                                        [alert dismissViewControllerAnimated:YES completion:nil];
@@ -229,7 +229,7 @@
                                                         //perform a write
                                                         [self writeLowPowerMode:@"PWR_MODE_LOW_POWER_1"];
                                                     }];
-    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
+    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
                                                    handler:^(UIAlertAction * action) {
                                                        //nothing
                                                        [alert dismissViewControllerAnimated:YES completion:nil];
@@ -267,7 +267,7 @@
                                                         //perform a write
                                                         [self writeFWUpgrade:@"BOOT_OTA"];
                                                     }];
-    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
+    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
                                                    handler:^(UIAlertAction * action) {
                                                        //nothing
                                                        [alert dismissViewControllerAnimated:YES completion:nil];

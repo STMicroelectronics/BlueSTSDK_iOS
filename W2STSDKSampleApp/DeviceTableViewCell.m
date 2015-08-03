@@ -9,5 +9,5 @@
 #import "DeviceTableViewCell.h"
 
 @implementation DeviceTableViewCell
-
+//empty implementation there are no logic in this table cell
 @end
