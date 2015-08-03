@@ -13,5 +13,6 @@
 @interface FeatureListTableViewController : UITableViewController
 
 @property (retain) W2STSDKNode *node;
+- (IBAction)showPopupMenu:(UIBarButtonItem *)sender;
 
 @end

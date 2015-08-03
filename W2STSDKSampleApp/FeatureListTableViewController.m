@@ -8,24 +8,65 @@
 
 #import "FeatureListTableViewController.h"
 
+#import "ConsoleViewController.h"
+
 #import <W2STSDK/W2STSDKFeature.h>
 #import <W2STSDK/W2STSDKFeatureAutoConfigurable.h>
 #import <W2STSDK/W2STSDKFeatureField.h>
 
 #define DEFAULT_MESSAGE @"Click for enable the notification"
 
+#define SHOW_DEBUG_NAME @"Show console"
+#define SHOW_SETTINGS_NAME @"Show settings"
+#define OPEN_DEBUG_VIEW_SEGUE_NAME @"showConsoleViewSegue"
+#define SHOW_SETTINGS_VIEW_SEGUE_NAME @"showSettingsViewSegue"
+
 @interface FeatureListTableViewController() <W2STSDKFeatureDelegate,
     W2STSDKFeatureAutoConfigurableDelegate>
 @end
 
 @implementation FeatureListTableViewController{
+    UIAlertAction *mActionDebug;
+    UIAlertAction *mActionSettings;
+    UIAlertController *mAlertController;
+
+    
     NSArray *mAvailableFeatures;
+    
+}
+
+-(void)viewDidLoad{
+    [super viewDidLoad];
+    mAlertController = [UIAlertController
+                        alertControllerWithTitle:nil message:nil
+                        preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    mActionDebug = [UIAlertAction   actionWithTitle:SHOW_DEBUG_NAME
+                                              style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction *action) {
+                                                [self performSegueWithIdentifier:OPEN_DEBUG_VIEW_SEGUE_NAME
+                                                                          sender:mActionDebug];
+                                            }];
+    mActionSettings = [UIAlertAction   actionWithTitle:SHOW_SETTINGS_NAME
+                                                 style:UIAlertActionStyleDefault
+                                               handler:^(UIAlertAction *action) {
+                                                   [self performSegueWithIdentifier:SHOW_SETTINGS_VIEW_SEGUE_NAME
+                                                                             sender:mActionSettings];
+                                               }];
+    
+    
+    [mAlertController addAction:mActionDebug];
+    [mAlertController addAction:mActionSettings];
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     //TODO REMOVE THE DISABLED FEATURES
     mAvailableFeatures = [self.node getFeatures];
+    mActionDebug.enabled = (self.node.debugConsole!=nil);
+    mActionSettings.enabled = (self.node.configControl!=nil);
+
     [self.tableView reloadData];
 }
 
@@ -36,6 +77,29 @@
     }
 }
 
+-(IBAction)showPopupMenu:(UIBarButtonItem *)sender {
+    
+    UIPopoverPresentationController *popPresenter = [mAlertController
+                                                     popoverPresentationController];
+    popPresenter.barButtonItem=sender;
+    popPresenter.sourceView=self.view;
+    [self presentViewController:mAlertController animated:YES completion:nil];
+    
+}
+
+#pragma mark - Navigation
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if([segue.identifier isEqualToString:OPEN_DEBUG_VIEW_SEGUE_NAME]){
+        ConsoleViewController *dest = (ConsoleViewController*) [segue destinationViewController];
+        dest.debugInterface = self.node.debugConsole;
+    }//if
+    /*else if([segue.identifier isEqualToString:SHOW_SETTINGS_VIEW_SEGUE_NAME]){
+        SettingsTableViewController *dest = (SettingsTableViewController*)[segue destinationViewController];
+        dest.configControl = self.node.configControl;
+    }//if
+     */
+}
 
 #pragma mark - W2STSDKFeatureDelegate
 
@@ -135,5 +199,6 @@
     else
         NSLog(@"stdIn: %@",msg);
 }
+
 
 @end
