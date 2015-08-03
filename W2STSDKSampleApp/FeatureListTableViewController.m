@@ -147,7 +147,7 @@ W2STSDKFeatureAutoConfigurableDelegate,W2STSDKNodeStateDelegate>
  *
  *  @param feature feature that has new data
  */
-- (void)didUpdateFeature:(W2STSDKFeature *)feature{
+- (void)didUpdateFeature:(W2STSDKFeature *)feature sample:(W2STSDKFeatureSample *)sample{
     //find the cell to update
     NSUInteger index = [mAvailableFeatures indexOfObject:feature];
     NSIndexPath *cellIndex =[NSIndexPath indexPathForRow:index inSection: 0];
