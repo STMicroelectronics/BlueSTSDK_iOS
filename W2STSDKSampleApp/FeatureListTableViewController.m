@@ -17,6 +17,7 @@
 
 #define DEFAULT_MESSAGE @"Click for enable the notification"
 
+#define CANCEL_NAME @"Cancel"
 #define SHOW_DEBUG_NAME @"Show console"
 #define SHOW_SETTINGS_NAME @"Show settings"
 #define OPEN_DEBUG_VIEW_SEGUE_NAME @"showConsoleViewSegue"
@@ -75,6 +76,15 @@ W2STSDKFeatureAutoConfigurableDelegate,W2STSDKNodeStateDelegate>
     
     [mAlertController addAction:mActionConsole];
     [mAlertController addAction:mActionSettings];
+    
+    //on the iphone add the cancel button
+    if ( UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad ){
+        [mAlertController addAction:
+         [UIAlertAction actionWithTitle:CANCEL_NAME
+                                  style:UIAlertActionStyleCancel
+                                handler:nil]];
+    }
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated{
