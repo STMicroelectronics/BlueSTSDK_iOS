@@ -276,7 +276,7 @@ W2STSDKFeatureAutoConfigurableDelegate,W2STSDKNodeStateDelegate>
     dispatch_async(dispatch_get_main_queue(),^{
         [self.tableView beginUpdates];
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath: cellIndex];
-        if(feature.isConfigurated)
+        if(feature.isConfigured)
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         else
             cell.accessoryType = UITableViewCellAccessoryNone;
