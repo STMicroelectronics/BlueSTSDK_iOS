@@ -17,7 +17,9 @@
  * @param target field
  * @return instance of Register class
  */
-+(id)registerWithAddress:(NSInteger)address size:(NSInteger)size access:(W2STSDKRegisterAccess_e)access target:(W2STSDKRegisterTarget_e)target {
++(instancetype)registerWithAddress:(NSInteger)address size:(NSInteger)size
+                            access:(W2STSDKRegisterAccess_e)access
+                            target:(W2STSDKRegisterTarget_e)target {
     return [[W2STSDKRegister alloc] initWithAddress:address size:size access:access target:target];
 }
 
@@ -27,8 +29,11 @@
  * @param size field size
  * @return instance of Register class
  */
-+(id)registerWithAddress:(NSInteger)address size:(NSInteger)size {
-    return [[W2STSDKRegister alloc] initWithAddress:address size:size access:W2STSDK_REGISTER_ACCESS_RW target:W2STSDK_REGISTER_TARGET_BOTH];
++(instancetype)registerWithAddress:(NSInteger)address size:(NSInteger)size {
+    return [[W2STSDKRegister alloc] initWithAddress:address
+                                               size:size
+                                             access:W2STSDK_REGISTER_ACCESS_RW
+                                             target:W2STSDK_REGISTER_TARGET_BOTH];
 }
 
 /**
@@ -38,8 +43,11 @@
  * @param access field
  * @return instance of Register class
  */
-+(id)registerWithAddress:(NSInteger)address size:(NSInteger)size access:(W2STSDKRegisterAccess_e)access {
-    return [[W2STSDKRegister alloc] initWithAddress:address size:size access:access target:W2STSDK_REGISTER_TARGET_BOTH];
++(instancetype)registerWithAddress:(NSInteger)address size:(NSInteger)size
+                            access:(W2STSDKRegisterAccess_e)access {
+    return [[W2STSDKRegister alloc] initWithAddress:address size:size
+                                             access:access
+                                             target:W2STSDK_REGISTER_TARGET_BOTH];
 }
 
 /**
@@ -49,8 +57,11 @@
  * @param target field
  * @return instance of Register class
  */
-+(id)registerWithAddress:(NSInteger)address size:(NSInteger)size target:(W2STSDKRegisterTarget_e)target {
-    return [[W2STSDKRegister alloc] initWithAddress:address size:size access:W2STSDK_REGISTER_ACCESS_RW target:target];
++(instancetype)registerWithAddress:(NSInteger)address size:(NSInteger)size
+                            target:(W2STSDKRegisterTarget_e)target {
+    return [[W2STSDKRegister alloc] initWithAddress:address size:size
+                                             access:W2STSDK_REGISTER_ACCESS_RW
+                                             target:target];
 }
 
 /**
@@ -61,7 +72,9 @@
  * @param target field
  * @return instance of Register class
  */
--(id)initWithAddress:(NSInteger)address size:(NSInteger)size access:(W2STSDKRegisterAccess_e)access target:(W2STSDKRegisterTarget_e)target {
+-(instancetype)initWithAddress:(NSInteger)address size:(NSInteger)size
+                        access:(W2STSDKRegisterAccess_e)access
+                        target:(W2STSDKRegisterTarget_e)target {
     self = [[W2STSDKRegister alloc] init];
     self.address = address;
     self.access = access;
@@ -73,19 +86,19 @@
 
 /**
  * Instance creation for Register class from a buffer of data
- * @param data
+ * @param data buffer of data with all the information
  * @return instance of Register class
  */
-+(id)registerWithData:(NSData *)data {
++(instancetype)registerWithData:(NSData *)data {
     return [[W2STSDKRegister alloc] initWithData:data];
 }
 
 /**
  * Constructor for Register class from a buffer of data
- * @param data
+ * @param data array of byte with all the information
  * @return instance of Register class
  */
--(id)initWithData:(NSData *)data {
+-(instancetype)initWithData:(NSData *)data {
     return [W2STSDKRegister registerWithAddress:[W2STSDKRegister getAddressFromData:data]
                                            size:[W2STSDKRegister getSizeFromData:data]
                                          access:W2STSDK_REGISTER_ACCESS_RW
@@ -95,24 +108,26 @@
 
 /**
  * fill buffer header for the mode with proper write/read options and ack
- * @param header buffer to fill
+ * @param pHeader buffer to fill
  * @param target Target memory Persistent/Session
  * @param write write or read
  * @param ack ack required
  */
--(void)setHeader:(W2STSDKRegisterHeader_t *)pheader target:(W2STSDKRegisterTarget_e)target  write:(BOOL)write ack:(BOOL)ack {
+-(void)setHeader:(W2STSDKRegisterHeader_t *)pHeader
+          target:(W2STSDKRegisterTarget_e)target
+           write:(BOOL)write ack:(BOOL)ack {
     
-    if (!pheader) {
+    if (!pHeader) {
         return;
     }
-
-    pheader->ctrl = (unsigned char) (0x80 |                          //Exec op -- forced
-                        ((target == W2STSDK_REGISTER_TARGET_PERSISTENT) ? 0x40 : 0x00) | //target register session vs persistent
-                        (write ? 0x20 : 0x00) |                     //Write or Read operation
-                        (ack ? 0x08 : 0x00));                       //Ack required
-    pheader->addr = (unsigned char) self.address;
-    pheader->err  = (unsigned char) 0;
-    pheader->len  = (unsigned char) self.size;
+    
+    pHeader->ctrl = (unsigned char) (0x80 |                          //Exec op -- forced
+                                     ((target == W2STSDK_REGISTER_TARGET_PERSISTENT) ? 0x40 : 0x00) | //target register session vs persistent
+                                     (write ? 0x20 : 0x00) |                     //Write or Read operation
+                                     (ack ? 0x08 : 0x00));                       //Ack required
+    pHeader->addr = (unsigned char) self.address;
+    pHeader->err  = (unsigned char) 0;
+    pHeader->len  = (unsigned char) self.size;
 }
 
 /**
@@ -135,12 +150,13 @@
 /**
  * Get the buffer for write the register
  * @param target Mode Persistent/Session
- * @param payload data to write in the device register
+ * @param payloadData data to write in the device register
  *
  * @return the packet (buffer) to send to the device to write the register with the value
  * defined in the payload
  */
--(NSData *)toWritePacketWithTarget:(W2STSDKRegisterTarget_e)target payloadData:(NSData *)payloadData {
+-(NSData *)toWritePacketWithTarget:(W2STSDKRegisterTarget_e)target
+                       payloadData:(NSData *)payloadData {
     
     NSData * data = [NSData data];
     if (payloadData) {

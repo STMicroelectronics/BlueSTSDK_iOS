@@ -18,14 +18,15 @@
     NSMutableDictionary *mCacheFileHandler;
 }
 
--(id)init{
+-(instancetype)init{
     self = [super init];
-    mCacheFileHandler = [[NSMutableDictionary alloc] init];
+    mCacheFileHandler = [NSMutableDictionary dictionary];
     return self;
 }
 
 /**
- *  print the csv header
+ *  print the csv header: device name + time stamp + raw data + data type 
+ * exported by the feature
  *
  *  @param out handle where write the data
  *  @param f   feature that we will log in the file
@@ -40,7 +41,7 @@
     [line appendString:@"\n"];
     
     [out writeData: [line dataUsingEncoding:NSUTF8StringEncoding]];
-}
+}//printHeader
 
 /**
  *  print an array of byte in a exadecimal format
@@ -56,7 +57,7 @@
                                           BOOL *stop) {
         for (NSUInteger i = 0; i < byteRange.length; ++i) {
             [temp appendFormat:@"%02X", ((uint8_t*)bytes)[i]];
-        }
+        }//for
     }];
     [out writeData: [temp dataUsingEncoding:NSUTF8StringEncoding]];
 }
@@ -71,7 +72,7 @@
     NSMutableString *temp = [NSMutableString string];
     for(NSNumber *n in data){
         [temp appendFormat:@"%@,",n];
-    }
+    }//for
     [temp appendString:@"\n"];
     [out writeData: [temp dataUsingEncoding:NSUTF8StringEncoding]];
 }
@@ -97,31 +98,39 @@
  *  @return file where log the data
  */
 -(NSFileHandle*) openDumpFileForFeature:(W2STSDKFeature*)feature{
-    NSFileHandle *temp = [mCacheFileHandler valueForKey:feature.name];
-    if(temp!=nil)
+    //syncronize this function for be secure that we enter here one call at time,
+    //for avoid ghost update duplicate entry ecc..
+    @synchronized(mCacheFileHandler){
+        NSFileHandle *temp = [mCacheFileHandler valueForKey:feature.name];
+        if(temp!=nil)
+            return temp;
+        //else
+        
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSURL *documentsDirectory = [W2STSDKFeatureLogCSV getDumpFileDirectoryUrl];
+        NSString *fileName = [NSString stringWithFormat:@"%@.csv",feature.name ];
+        NSURL *fileUrl = [NSURL URLWithString:fileName relativeToURL:documentsDirectory];
+        
+        if(![fileManager fileExistsAtPath:fileUrl.path]){
+            [fileManager createFileAtPath:fileUrl.path contents:nil attributes:nil];
+        }
+        
+        NSError *error = [[NSError alloc]init];
+        temp = [NSFileHandle fileHandleForWritingToURL:fileUrl error:&error];
+        [self printHeader:temp feature:feature];
+        [mCacheFileHandler setValue:temp forKey:feature.name];
         return temp;
-    //else
-   
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSURL *documentsDirectory = [W2STSDKFeatureLogCSV getDumpFileDirectoryUrl];
-    NSString *fileName = [NSString stringWithFormat:@"%@.csv",feature.name ];
-    NSURL *fileUrl = [NSURL URLWithString:fileName relativeToURL:documentsDirectory];
-
-    if(![fileManager fileExistsAtPath:fileUrl.path]){
-        [fileManager createFileAtPath:fileUrl.path contents:nil attributes:nil];
-    }
-    
-    NSError *error = [[NSError alloc]init];
-    temp = [NSFileHandle fileHandleForWritingToURL:fileUrl error:&error];
-    [self printHeader:temp feature:feature];
-    [mCacheFileHandler setValue:temp forKey:feature.name];
-    return temp;
+    }//syncronized
 }
 
--(void) storeTimeStamp:(uint32_t)timestamp{
-    
-}
-
+/**
+ *  function called by the feature when it has new data, this function will store
+ * all the data inside a file in a csv format
+ *
+ *  @param feature feature that is update
+ *  @param raw     raw data unsed for update the feature, they can be nil
+ *  @param sample  data extracted by the feature
+ */
 - (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw sample:(W2STSDKFeatureSample *)sample{
     static const char coma=',';
  
@@ -134,30 +143,34 @@
         [file writeData:[NSData dataWithBytes:&coma length:1]];
         if(raw!=nil){
             [self storeBlobData:file data:raw];
-        }
+        }//if
         [file writeData:[NSData dataWithBytes:&coma length:1]];
         [self storeFeatureData:file data:sample.data];
     }
 }
 
 -(void) closeFiles{
-    NSEnumerator *enumerator = [mCacheFileHandler objectEnumerator];
-    NSFileHandle *f;
-    while ((f = [enumerator nextObject])) {
-        [f closeFile];
+    @synchronized(mCacheFileHandler){
+        NSEnumerator *enumerator = [mCacheFileHandler objectEnumerator];
+        NSFileHandle *f;
+        while ((f = [enumerator nextObject])) {
+            [f closeFile];
+        }//while
+        [mCacheFileHandler removeAllObjects];
     }
-    [mCacheFileHandler removeAllObjects];
 }
 
 +(NSArray*) getLogFiles{
     NSError *error;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *documentsDirectory = [W2STSDKFeatureLogCSV getDumpFileDirectoryUrl];
+    //get all the file in the directory
     NSArray *files = [fileManager contentsOfDirectoryAtURL:documentsDirectory
                                includingPropertiesForKeys:@[NSURLNameKey, NSURLIsDirectoryKey]
                                                   options:(NSDirectoryEnumerationSkipsHiddenFiles |
                                                           NSDirectoryEnumerationSkipsSubdirectoryDescendants)
                                                     error:&error];
+    //filter the files and keep only the ones with extenstion csv
     NSIndexSet *indexes = [files indexesOfObjectsPassingTest:
                            ^BOOL (id obj, NSUInteger i, BOOL *stop) {
                                NSURL *url = (NSURL*)obj;

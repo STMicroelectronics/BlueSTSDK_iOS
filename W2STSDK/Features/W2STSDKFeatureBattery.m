@@ -34,14 +34,13 @@
 #define FEATURE_STATIS_MAX @0xFF
 #define FEATURE_STATUS_MIN @0
 
+/**
+ * @memberof W2STSDKFeatureBattery
+ *  array with the description of field exported by the feature
+ */
 static NSArray *sFieldDesc;
 
-@implementation W2STSDKFeatureBattery{
-    
-    NSMutableArray *mFieldData;
-    uint32_t mTimestamp;
-    dispatch_queue_t mRwQueue;
-}
+@implementation W2STSDKFeatureBattery
 
 +(void)initialize{
     if(self == [W2STSDKFeatureBattery class]){
@@ -68,8 +67,7 @@ static NSArray *sFieldDesc;
                                                        max:FEATURE_STATUS_MIN ],
                       nil];
     }//if
-    
-}
+}//initialize
 
 
 
@@ -127,7 +125,7 @@ static NSArray *sFieldDesc;
 }
 
 
--(id) initWhitNode:(W2STSDKNode *)node{
+-(instancetype) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
     return self;
 }
@@ -136,8 +134,26 @@ static NSArray *sFieldDesc;
     return sFieldDesc;
 }
 
-
+/**
+*  read 3*int16+uint8 for build the battery value, create the new sample and
+* and notify it to the delegate
+*
+*  @param timestamp data time stamp
+*  @param rawData   array of byte send by the node
+*  @param offset    offset where we have to start reading the data
+*
+*  @throw exception if there are no 7 bytes available in the rawdata array
+*  @return number of read bytes
+*/
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+    
+    
+    if(rawData.length-offset < 7){
+        @throw [NSException
+                exceptionWithName:@"Invalid Battery data"
+                reason:@"The feature need 7 byte for extract the data"
+                userInfo:nil];
+    }//if
     
     float percentage =  [rawData extractLeUInt16FromOffset:offset]/10.0f;
     //the data arrive in mV we store it in V
@@ -147,18 +163,18 @@ static NSArray *sFieldDesc;
     
     
     NSArray *data = [NSArray arrayWithObjects:
-                        [NSNumber numberWithFloat:percentage],
-                        [NSNumber numberWithFloat:voltage],
-                        [NSNumber numberWithFloat:current],
-                        [NSNumber numberWithUnsignedChar:status],
-                        nil];
+                     [NSNumber numberWithFloat:percentage],
+                     [NSNumber numberWithFloat:voltage],
+                     [NSNumber numberWithFloat:current],
+                     [NSNumber numberWithUnsignedChar:status],
+                     nil];
     
     W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     self.lastSample = sample;
     [self notifyUpdateWithSample:sample];
     [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 7)]
                     sample:sample];
-
+    
     return 7;
 }
 

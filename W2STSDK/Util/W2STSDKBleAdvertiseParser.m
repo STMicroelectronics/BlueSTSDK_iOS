@@ -39,7 +39,7 @@
  *
  *  @param type board type number
  *
- *  @return equvalent type in the W2STSDKNodeType or an exception is the input is 
+ *  @return equivalent type in the W2STSDKNodeType or an exception is the input is
  *  a valid type
  */
 -(W2STSDKNodeType) getNodeType:(uint8_t) type {
@@ -59,29 +59,33 @@
                 userInfo:nil];
     return nodetype;
 }
-+(id)advertiseParserWithAdvertise:(NSDictionary *)advertisementData {
+
++(instancetype)advertiseParserWithAdvertise:(NSDictionary *)advertisementData {
     return [[W2STSDKBleAdvertiseParser alloc] initWithAdvertise:advertisementData];
 }
 
 
--(id)initWithAdvertise:(NSDictionary *)advertisementData{
+-(instancetype)initWithAdvertise:(NSDictionary *)advertisementData{
     _name = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
     _txPower = [advertisementData objectForKey:CBAdvertisementDataTxPowerLevelKey];
     NSData *rawData = [advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey];
     const NSInteger len = [rawData length];
     
     if(len != ADVERTISE_SIZE_COMPACT && len != ADVERTISE_SIZE_FULL)
-           @throw [NSException
-                   exceptionWithName:@"Invalid Manufactured data"
-                    reason:[NSString stringWithFormat:@"Manufactured data must be %d bytes or %d byte", ADVERTISE_SIZE_COMPACT, ADVERTISE_SIZE_FULL]
-                   userInfo:nil];
+        @throw [NSException
+                exceptionWithName:@"Invalid Manufactured data"
+                reason:[NSString stringWithFormat:@"Manufactured data must be %d bytes or %d byte",
+                            ADVERTISE_SIZE_COMPACT, ADVERTISE_SIZE_FULL]
+                userInfo:nil];
 
-    //initialization
+    //set the default value
     _featureMap = 0x00;
     _protocolVersion = PROTOCOL_VERSION_NOT_AVAILABLE;
     _address = nil;
     _deviceId = DEVICE_ID_GENERIC;
     _nodeType = [self getNodeType: _deviceId];
+    
+    //start to fill the value with the extracted values
     
     _protocolVersion = [rawData extractUInt8FromOffset:ADVERTISE_FIELD_POS_PROTOCOL];
     
@@ -97,7 +101,6 @@
     _featureMap = [rawData extractBeUInt32FromOffset:ADVERTISE_FIELD_POS_FEATURE_MAP];
     
     
-    
     if (len == ADVERTISE_SIZE_FULL) {
         _address = [NSString stringWithFormat:@"%02X:%02X:%02X:%02X:%02X:%02X",
                     [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+5],
@@ -106,7 +109,7 @@
                     [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+2],
                     [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+1],
                     [rawData extractUInt8FromOffset:ADVERTISE_FIELD_SIZE_ADDRESS+0]
-                ];
+                    ];
     }//if len check
     
     return self;

@@ -14,6 +14,7 @@
 /**
  *  A single ble characteristic can contains more than one feature, 
  * this class help to map a ble characteristic with its features
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKCharacteristic : NSObject
 
@@ -23,7 +24,7 @@
 @property(strong,nonatomic,readonly) CBCharacteristic* characteristic;
 
 /**
- *  array of class that extend \link{W2STSDKFeature} that the characteristic export
+ *  array of class that extend {@link W2STSDKFeature} that the characteristic export
  */
 @property(strong,nonatomic,readonly) NSArray* features;
 
@@ -40,7 +41,7 @@
 /**
  *  find the features manage by a ble characteristic
  *
- *  @param characteristic   characteristic that we are serching
+ *  @param characteristic   characteristic that we are searching
  *  @param CharFeatureArray array of W2STSDKCharacteristic where search
  *
  *  @return array W2STSDKFeature exported by that characteristic

@@ -9,6 +9,10 @@
 #import "W2STSDKNodeStatusNSLog.h"
 
 @implementation W2STSDKNodeStatusNSLog
+
+/**
+ *  print the node update on the NSLog console
+ */
 - (void) node:(W2STSDKNode *)node didChangeState:(W2STSDKNodeState)newState
     prevState:(W2STSDKNodeState)prevState{
 
@@ -16,7 +20,7 @@
           [W2STSDKNode stateToString: prevState],
           [W2STSDKNode stateToString: newState]);
 
-}
+}//didChangeState
 
 
 @end

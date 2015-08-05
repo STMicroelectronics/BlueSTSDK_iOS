@@ -8,21 +8,51 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, W2STSDKFeatureFieldType) {
-    W2STSDKFeatureFieldTypeFloat,
-    W2STSDKFeatureFieldTypeInt64,
-    W2STSDKFeatureFieldTypeUInt32,
-    W2STSDKFeatureFieldTypeInt32,
-    W2STSDKFeatureFieldTypeUInt16,
-    W2STSDKFeatureFieldTypeInt16,
-    W2STSDKFeatureFieldTypeUInt8,
-    W2STSDKFeatureFieldTypeInt8,
-};
+
 
 /**
- *  this class describe a feature data field
+ * This class describe a feature data field
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureField : NSObject
+
+/**
+ *  enum with the possible data type exported by a feature
+ */
+typedef NS_ENUM(NSInteger, W2STSDKFeatureFieldType){
+    /**
+     *  32bit float number ieee 754 format
+     */
+    W2STSDKFeatureFieldTypeFloat,
+    /**
+     *  64bit signed integer
+     */
+    W2STSDKFeatureFieldTypeInt64,
+    /**
+     *  32 bit unsigned integer
+     */
+    W2STSDKFeatureFieldTypeUInt32,
+    /**
+     *  32 bit signed integer
+     */
+    W2STSDKFeatureFieldTypeInt32,
+    /**
+     *  16bit unsigned integer
+     */
+    W2STSDKFeatureFieldTypeUInt16,
+    /**
+     *  16bit signed integer
+     */
+    W2STSDKFeatureFieldTypeInt16,
+    /**
+     *  8bit unsigned integer
+     */
+    W2STSDKFeatureFieldTypeUInt8,
+    /**
+     *  8bit signed integer
+     */
+    W2STSDKFeatureFieldTypeInt8,
+};
 
 /**
  *  field name
@@ -49,13 +79,35 @@ typedef NS_ENUM(NSInteger, W2STSDKFeatureFieldType) {
  */
 @property (readonly) W2STSDKFeatureFieldType type;
 
-+(W2STSDKFeatureField*)createWithName:(NSString *)name
+/**
+ *  instanziate an object of type W2STSDKFeatureFieldType
+ *
+ *  @param name field name
+ *  @param unit field unit
+ *  @param type numeric type used for store the field
+ *  @param min  field min value
+ *  @param max  field max value
+ *
+ *  @return object of type W2STSDKFeatureFieldType
+ */
++(instancetype)createWithName:(NSString *)name
                                      unit:(NSString*)unit
                                      type:(W2STSDKFeatureFieldType)type
                                       min:(NSNumber*)min
                                       max:(NSNumber*)max;
 
--(id) initWithName:(NSString *)name
+/**
+ *  initialize an object of type W2STSDKFeatureFieldType
+ *
+ *  @param name field name
+ *  @param unit field unit
+ *  @param type numeric type used for store the field
+ *  @param min  field min value
+ *  @param max  field max value
+ *
+ *  @return object of type W2STSDKFeatureFieldType
+ */
+-(instancetype) initWithName:(NSString *)name
               unit:(NSString*)unit
               type:(W2STSDKFeatureFieldType)type
                min:(NSNumber*)min

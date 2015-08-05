@@ -33,7 +33,7 @@
     NSMutableArray *mWriteMessageQueue;
 }
 
--(id) initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
+-(instancetype) initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
          termChart:(CBCharacteristic*)termChar
           errChart:(CBCharacteristic*)errChar{
     _node=node;
@@ -54,29 +54,37 @@
 
 -(id<W2STSDKDebugOutputDelegate>) getDelegate{
     id<W2STSDKDebugOutputDelegate> ret=nil;
+    //made the operation atomic
     @synchronized(self){
         ret = _delegate;
-    }
+    }//synchronized
     return ret;
-}
+}//getDelegate
 
+/**
+ *  set the new delegate and enable/disable the notification
+ */
 -(void) setDelegate:(id<W2STSDKDebugOutputDelegate>)delegate{
+    //made the operation atomic
     @synchronized(self){
         _delegate=delegate;
-        BOOL enable = delegate!=nil;
+        BOOL enable = delegate!=nil; //enable if !=nil, disable if ==nil
         [mDevice setNotifyValue:enable forCharacteristic:mTermChar];
         [mDevice setNotifyValue:enable forCharacteristic:mErrChar];
-    }
+    }//setDelegate
 }
 
-//package method
+#pragma mark - W2STSDKDebug(Prv)
 
--(void)receiveCharacteristicsWriteUpdate:(CBCharacteristic*)termChar error:(NSError *)error{
+-(void)receiveCharacteristicsWriteUpdate:(CBCharacteristic*)termChar
+                                   error:(NSError *)error{
     if(self.delegate == nil)
         return;
-    NSString *temp = mWriteMessageQueue.firstObject;
-    [mWriteMessageQueue removeObjectAtIndex:0];
+    //if the write comes from an our characteristics
     if([termChar.UUID isEqual:W2STSDKServiceDebug.termUuid]){
+        //remove the message from the queue and sent the callback
+        NSString *temp = mWriteMessageQueue.firstObject;
+        [mWriteMessageQueue removeObjectAtIndex:0];
         [self.delegate debug:self didStdInSend: temp error:error];
     }
 }

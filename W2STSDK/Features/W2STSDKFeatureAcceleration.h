@@ -9,8 +9,11 @@
 #import "W2STSDKFeature.h"
 
 /**
- * feature that contains the data of an accelerometer
- *
+ * Feature that contains the data of an accelerometer.
+ * \par
+ * The data exported are an array of 3 float component (x,y,z) with the acceleration
+ * on that axis
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureAcceleration : W2STSDKFeature
 

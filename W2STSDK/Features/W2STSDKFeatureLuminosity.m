@@ -19,6 +19,10 @@
 #define FEATURE_MAX 1000
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeUInt16
 
+/**
+ * @memberof W2STSDKFeatureLuminosity
+ *  array with the description of field exported by the feature
+ */
 static NSArray *sFieldDesc;
 
 @implementation W2STSDKFeatureLuminosity
@@ -43,7 +47,7 @@ static NSArray *sFieldDesc;
     return[[sample.data objectAtIndex:0] intValue];
 }
 
--(id) initWhitNode:(W2STSDKNode *)node{
+-(instancetype) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
     return self;
 }
@@ -52,15 +56,34 @@ static NSArray *sFieldDesc;
     return sFieldDesc;
 }
 
+
+/**
+ *  read int16 for build the luminosity value, create the new sample and
+ * and notify it to the delegate
+ *
+ *  @param timestamp data time stamp
+ *  @param rawData   array of byte send by the node
+ *  @param offset    offset where we have to start reading the data
+ *
+ *  @throw exception if there are no 2 bytes available in the rawdata array
+ *  @return number of read bytes
+ */
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
+    if(rawData.length-offset < 2){
+        @throw [NSException
+                exceptionWithName:@"Invalid Luminosity data"
+                reason:@"The feature need 2 byte for extract the data"
+                userInfo:nil];
+    }//if
     
     uint16_t lux = [rawData extractLeUInt16FromOffset:offset];
     
-    
     NSArray *data = [NSArray arrayWithObject:[NSNumber numberWithFloat:lux]];
-    W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
+    W2STSDKFeatureSample *sample =
+        [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     self.lastSample = sample;
+    
     [self notifyUpdateWithSample:sample];
     [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 2)]
                     sample:sample];

@@ -23,11 +23,27 @@
 #import "W2STSDKFeatureTemperature.h"
 #import "W2STSDKFeatureMemsSensorFusion.h"
 
+/**
+ *  @relates W2STSDKManager
+ *  a notification each 0.2s, 5 notifcation each second
+ */
+#define NOTIFICATION_TIME_INTERVAL 0.2f
 
 @implementation W2STSDKNodeFake{
+    /**
+     *  system timestamp
+     */
     uint32_t timestamp;
-    NSMutableDictionary *notificationTimer;
+    
+    /**
+     *  list of feature emulated by this node, a feature must implemtnt the methos
+     * inside the W2STSDKFeature(fake) class
+     */
     NSArray *availableFeatures;
+    
+    /**
+     *  link a feature name with a time that will triger the generation of new data
+     */
     NSMutableDictionary *notifyFeatures;
 }
 
@@ -36,7 +52,7 @@
 @synthesize txPower = _txPower;
 
 
--(id)init{
+-(instancetype)init{
     self = [super init];
     timestamp=0;
     _name=@"FakeNode";
@@ -58,20 +74,22 @@
                           ];
     notifyFeatures = [NSMutableDictionary dictionary];
     return self;
-}
-
-
-
+}//init
 
 -(void)readRssi{
     [super updateRssi: @(rand() % 100)];
-}
+}//readRssi
 
 -(NSArray*) getFeatures{
-    return availableFeatures;}
+    return availableFeatures;
+}//getFeatures
 
-
-
+/**
+ *  callback fired each time a timer expired, it generate and parse new data for
+ * the feature that arm the timer
+ *
+ *  @param timer timer that expire
+ */
 -(void)generateFakeFeatureNotification:(NSTimer *)timer{
     W2STSDKFeature *feature = (W2STSDKFeature*)timer.userInfo;
     [feature update:(timestamp++) data:[feature generateFakeData] dataOffset:0];
@@ -83,11 +101,14 @@
 }
 
 -(BOOL)enableNotification:(W2STSDKFeature *)feature{
-    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:0.5
+    //start a timer that fire each NOTIFICATION_TIME_INTERVAL seconds and call
+    // the function generateFakeFeatureNotification
+    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:NOTIFICATION_TIME_INTERVAL
                                                       target:self
                                                     selector:@selector(generateFakeFeatureNotification:)
                                                     userInfo:feature
                                                      repeats:YES];
+    
     [notifyFeatures setObject:timer forKey:feature.name];
     return true;
 }

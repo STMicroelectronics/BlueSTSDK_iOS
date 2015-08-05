@@ -10,6 +10,10 @@
 
 /**
  * Feature that contains the data from a gyroscope sensor
+ * \par
+ * The data exported are an array of 3 float component (x,y,z) with the gyroscope
+ * value on that axis
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureGyroscope : W2STSDKFeature
 

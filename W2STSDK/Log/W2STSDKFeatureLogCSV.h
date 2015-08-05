@@ -11,16 +11,17 @@
 #import "W2STSDKFeature.h"
 
 /**
- * class that implement the W2STSDKFeatureLogDelegate and store the data in a csv
+ * class that implement the {@link W2STSDKFeatureLogDelegate} and store the data in a csv
  * file with the same name of the feature.
- * it can be used for logging multiple feature, each feature has is file. the files
+ * it can be used for logging multiple feature, each feature has its file.The files
  * are keeped open for avoid multiple fopen/fclose.
- * call closeFiles when you stop the logging for avoid to keep open the resources
+ * @note Call closeFiles when you stop the logging for avoid to keep open the resources
  *
  * in the log file has the colum:
  *  - NodeName: name of the node that send the data
  *  - RawData: exadecimal version of the raw data used for extract the feature data
  *  a colum for each feature item
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureLogCSV : NSObject<W2STSDKFeatureLogDelegate>
 
@@ -29,7 +30,7 @@
  *
  *  @return pointer to the logger
  */
--(id)init;
+-(instancetype)init;
 
 /**
  *  close all the open files

@@ -11,14 +11,17 @@
 /**
  * this class overwrite the node method for avoid to use the bluethoot connection
  * and generate fake datas
+ * @note it is automaticaly created and add in the manager list if the application
+ * is run inside the emulator
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKNodeFake : W2STSDKNode
 
 /**
  *  create a fake W2STSDKNode that doesn't use the bluethoot
  *
- *  @return pointer to a W2STSDK
+ *  @return pointer to a W2STSDKNode
  */
--(id)init;
+-(instancetype)init;
 
 @end

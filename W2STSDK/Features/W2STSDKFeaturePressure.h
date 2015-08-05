@@ -9,7 +9,8 @@
 #import "W2STSDKFeature.h"
 
 /**
- *  feature that export the data from a pressure sensor
+ *  Feature that export the data from a pressure sensor
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeaturePressure : W2STSDKFeature
 

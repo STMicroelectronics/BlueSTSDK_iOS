@@ -13,7 +13,9 @@
 #include "W2STSDKManager.h"
 
 /**
- *  private method
+ *  private method of the class {@link W2STSDKManager} this method are used 
+ *  by the sdk
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKManager(Prv)
 

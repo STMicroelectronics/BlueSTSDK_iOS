@@ -11,7 +11,9 @@
 #import "W2STSDKFeature.h"
 
 /**
- *  dump the feature data on the NSLog consoles
+ * class that implement the {@link W2STSDKFeatureLogDelegate} and print on the NSLog
+ * stream the feature update
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureLogNSLog : NSObject<W2STSDKFeatureLogDelegate>
 

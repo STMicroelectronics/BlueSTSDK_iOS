@@ -24,14 +24,18 @@
 #define QUATERNION_DELAY_MS 30
 #define SCALE_FACTOR 10000.0f
 
+/**
+ * @memberof W2STSDKFeatureMemsSensorFusionCompact
+ *  array with the description of field exported by the feature
+ */
 static NSArray *sFieldDesc;
 
-@interface W2STSDKFeatureMemsSensorFusionCompact()
-    @property (atomic) NSArray *mFieldData;
-    @property (atomic) uint32_t mTimestamp;
-@end
 
 @implementation W2STSDKFeatureMemsSensorFusionCompact{
+    /**
+     *  internal queue used for notify in different moment the 3 quaternion that
+     * we receive with an update
+     */
     dispatch_queue_t mNotificationQueue;
 }
 
@@ -60,17 +64,14 @@ static NSArray *sFieldDesc;
                                                        max:@FEATURE_MAX ],
                       
                       nil];
-    }
-    
-}
+    }//if
+}//initialize
 
 
--(id) initWhitNode:(W2STSDKNode *)node{
+-(instancetype) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
     mNotificationQueue = dispatch_queue_create("W2STSDKFeatureMemsSensorFusionCompactNotification",
                                                DISPATCH_QUEUE_SERIAL);
-    _mTimestamp=0;
-    _mFieldData=nil;
     return self;
 }
 
@@ -98,22 +99,30 @@ static NSArray *sFieldDesc;
     return[[sample.data objectAtIndex:3] floatValue];
 }
 
-
 -(NSArray*) getFieldsDesc{
     return sFieldDesc;
 }
 
--(NSArray*) getFieldsData{
-    return self.mFieldData;
-}
-
--(uint32_t) getTimestamp{
-    return self.mTimestamp;
-}
-
-
+/**
+ * this update will consume all the data and extract a quaternion each 6 byte that
+ * are available create the new sample and and notify it to the delegate.
+ *
+ *  @param timestamp data time stamp
+ *  @param rawData   array of byte send by the node
+ *  @param offset    offset where we have to start reading the data
+ *
+ *  @throw exception if there are no almost 6 bytes available in the rawdata array
+ *  @return number of read bytes
+ */
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
-
+    
+    if(rawData.length-offset < 6){
+        @throw [NSException
+                exceptionWithName:@"Invalid SensorFunsionCompact data"
+                reason:@"The feature need almost 6 byte for extract the data"
+                userInfo:nil];
+    }//if
+    
     const uint32_t nQuat = (((uint32_t)rawData.length)-offset)/6;
     const int64_t quatDelay = QUATERNION_DELAY_MS/nQuat;
     
@@ -158,25 +167,25 @@ static NSArray *sFieldDesc;
     NSMutableData *data = [NSMutableData dataWithCapacity:18];
     
     for(int i=0 ; i< 3 ; i++){
-    
+        
         float x = FEATURE_MIN*N_DECIMAL + rand()%((int)((FEATURE_MAX-FEATURE_MIN)*N_DECIMAL));
-    
+        
         float y= FEATURE_MIN*N_DECIMAL + rand()%((int)((FEATURE_MAX-FEATURE_MIN)*N_DECIMAL));
-    
+        
         float z = FEATURE_MIN*N_DECIMAL + rand()%((int)((FEATURE_MAX-FEATURE_MIN)*N_DECIMAL));
-    
+        
         float w = FEATURE_MIN*N_DECIMAL + rand()%((int)((FEATURE_MAX-FEATURE_MIN)*N_DECIMAL));
-    
+        
         const float norm = sqrtf(x*x+y*y+z*z+w*w);
-    
+        
         x/=norm;
         y/=norm;
         z/=norm;
-    
+        
         int16_t xFix = (int16_t)(x*SCALE_FACTOR);
         int16_t yFix = (int16_t)(y*SCALE_FACTOR);
         int16_t zFix = (int16_t)(z*SCALE_FACTOR);
-
+        
         [data appendBytes:&xFix length:2];
         [data appendBytes:&yFix length:2];
         [data appendBytes:&zFix length:2];

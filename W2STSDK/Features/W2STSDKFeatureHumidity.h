@@ -9,7 +9,10 @@
 #import "W2STSDKFeature.h"
 
 /**
- *  feature that contains the data from an humidity sensor
+ * Feature that contains the data from an humidity sensor
+ * @par
+ * The data exported is the % of humidity
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureHumidity : W2STSDKFeature
 

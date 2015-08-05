@@ -20,6 +20,10 @@
 #define FEATURE_MAX 2000
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeFloat
 
+/**
+ * @memberof W2STSDKFeatureMagnetometer
+ *  array with the description of field exported by the feature
+ */
 static NSArray *sFieldDesc;
 
 @implementation W2STSDKFeatureMagnetometer
@@ -43,9 +47,8 @@ static NSArray *sFieldDesc;
                                                        min:@FEATURE_MIN
                                                        max:@FEATURE_MAX ],
                       nil];
-    }
-    
-}
+    }//if
+}//initialize
 
 
 +(float)getMagX:(W2STSDKFeatureSample*)sample{
@@ -66,7 +69,7 @@ static NSArray *sFieldDesc;
     return[[sample.data objectAtIndex:2] floatValue];
 }
 
--(id) initWhitNode:(W2STSDKNode *)node{
+-(instancetype) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
     return self;
 }
@@ -76,7 +79,25 @@ static NSArray *sFieldDesc;
 }
 
 
+/**
+ *  read 3*int16 for build the magnetometer value, create the new sample and
+ * and notify it to the delegate
+ *
+ *  @param timestamp data time stamp
+ *  @param rawData   array of byte send by the node
+ *  @param offset    offset where we have to start reading the data
+ *
+ *  @throw exception if there are no 6 bytes available in the rawdata array
+ *  @return number of read bytes
+ */
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+    
+    if(rawData.length-offset < 6){
+        @throw [NSException
+                exceptionWithName:@"Invalid Magnetometer data"
+                reason:@"The feature need 6 byte for extract the data"
+                userInfo:nil];
+    }//if
     
     
     int16_t magX,magY,magZ;

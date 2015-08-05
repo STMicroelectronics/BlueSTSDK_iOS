@@ -14,7 +14,8 @@
 #include "W2STSDKNode.h"
 
 /**
- * package method of the node class
+ * package method of the {@link W2STSDKNode} class
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKNode(Prv)
 
@@ -27,35 +28,40 @@
  *  @param advertisementData data in the advertise
  *
  *  @return class W2STSDKNode
+ *  @throw NSException if the ble advertise hasn't all the mandatory fields
  */
--(id) init :(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData;
+-(instancetype) init :(CBPeripheral *)peripheral rssi:(NSNumber*)rssi
+  advertise:(NSDictionary*)advertisementData;
 
 /**
- *  initialize the node without a periperal -> it will not be able to do anything
- * this function is needed if you want extend the node and keep using the delegate
- * system build by this class
+ *  initialize the node without a peripheral
+ * \note it will not be able to do anything this function is needed if you want
+ * extend the node and keep using the delegate system build by this class
  *
  *  @return semi functional node pointer
  */
--(id) init;
+-(instancetype) init;
 
 /**
- *  this method will update the rssi node value and notify the update to the delegates
+ *  this method will update the rssi node value and notify the update to
+ * the delegates
  *
  *  @param rssi new rssi values
  */
 -(void)updateRssi:(NSNumber*)rssi;
 
 /**
- *  this method will update the txPower of the node and notify the update to the delegates
+ *  this method will update the txPower of the node and notify the update to
+ * the delegates
  *
  *  @param txPower new tx power
  */
 -(void)updateTxPower:(NSNumber*)txPower;
 
 /**
- *  this method is called by the W2STSDKManager when the CBCentralManager complete the connection
- * with the peripheral, this method will start to request the node service and characteristics
+ *  this method is called by the W2STSDKManager when the CBCentralManager
+ * complete the connection with the peripheral, this method will start to request
+ * the node service and characteristics
  */
 -(void)completeConnection;
 

@@ -10,8 +10,10 @@
 
 
 /**
- *  feature that export the data from a proximity sensor, since this can be the
- * same luminosity sensor, using both feature at the same time can not be possible
+ *  feature that export the data from a proximity sensor.
+ * @note since this can be the same luminosity sensor, using both feature at
+ * the same time can not be possible
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureProximity : W2STSDKFeature
 

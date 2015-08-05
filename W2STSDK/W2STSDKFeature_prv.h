@@ -12,52 +12,64 @@
 #include "W2STSDKFeature.h"
 
 /**
- * This interface contains the protected and packages method that can be used inside the sdk
+ * This interface contains the protected and packages method that can be used
+ * inside the sdk
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeature(Prv)
+
+//we redefine the property for be read write, when the user see it in read only
 @property (readwrite,atomic) W2STSDKFeatureSample *lastSample;
 
-
-
 /**
- *  protected method, initialize a feature
- *
+ * @protected
+ *  initialize a feature
+ *  @par protected function
  *  @param node node that export the feature
  *  @param name name of the feature
  *
  *  @return pointer to the feature
  */
--(id) initWhitNode: (W2STSDKNode*)node name:(NSString*)name;
+-(instancetype) initWhitNode: (W2STSDKNode*)node name:(NSString*)name;
 
 /**
- *  protected method, notify to all the register delegate that the feature has 
- * been updated
+ *  @protected
+ * notify to all the registered delegate that the feature has update its data
+ 
+ *  @par protected function
+ *  @param sample new sample data that we want notify
  */
 -(void) notifyUpdateWithSample:(W2STSDKFeatureSample*)sample;
 
 /**
- *  protected method,notify to all the register delegate that a feature has been 
+ * @protected
+ *  notify to all the register delegate that a feature has been
  *  updated using some data
- *
+ 
+ *  @par protected function
  *  @param rawData raw data used for extract the new data
  *  @param data array of NSNumber extracted by raw data
  */
 -(void) logFeatureUpdate:(NSData*)rawData sample:(W2STSDKFeatureSample*)sample;
 
 /**
- *  protected method, send a command to this feature
+ *  @protected
+ * send a command to this feature using the command characteristics
  *
+ *  @par protected function
  *  @param commandType id of the command
  *  @param commandData optional data for the command
  *
  *  @return true if the command is correctly send to the node
  */
--(BOOL) sendCommand:(uint8_t)commandType data:(NSData*)commandData;
+-(bool) sendCommand:(uint8_t)commandType data:(NSData*)commandData;
 
 /**
- *  protected abstract method, parse a command response, the default 
- *  implementation is an empty method
+ * @protected
+ *  parse a command response, the default
+ *  implementation is an empty method 
  *
+ *  @par protected abstract function
  *  @param timestamp   response id
  *  @param commandType id of the command that generate the answer
  *  @param data        response data
@@ -67,8 +79,10 @@
                                      data:(NSData*)data;
 
 /**
- *  protected method, write a data into the feature
+ *  @protected
+ * write a data into the feature
  *
+ *  @par protected function
  *  @param data data to write into the feature
  */
 -(void)writeData:(NSData*)data;
@@ -76,14 +90,16 @@
 ///////package method////////////
 
 /**
- *  package method, change the feature status
- *
+ * @package
+ *  change the feature status
+ *  @par package function
  *  @param enabled true if the node has this feature
  */
 -(void) setEnabled:(bool)enabled;
 
 /**
- *  package method, this method is called by the CBPeriferal notify an update
+ *  This method is called by the CBPeriferal to notify an update
+ *  @par package function
  *
  *  @param timestamp  package id
  *  @param data      raw data received by the node

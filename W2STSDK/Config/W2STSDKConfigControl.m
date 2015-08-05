@@ -25,21 +25,16 @@ static dispatch_queue_t sNotificationQueue;
     CBCharacteristic* mConfigControlChar;
     
     /**
-     *  fifo structure that will contain the message that we will send until
-     *  we don't have a write ack
-     */
-    //NSMutableArray *mWriteMessageQueue;
-    /**
      *  set of delegate where notify changes in node status
      */
     NSMutableSet *mConfigControlDelegates;
 }
 
-+(id)configControlWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
-configControlChart:(CBCharacteristic*)configControlChar {
++(instancetype)configControlWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
+                  configControlChart:(CBCharacteristic*)configControlChar {
     return [[W2STSDKConfigControl alloc] initWithNode:node device:device configControlChart:configControlChar];
 }
--(id)initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
+-(instancetype)initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
          configControlChart:(CBCharacteristic*)configControlChar {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -84,7 +79,7 @@ configControlChart:(CBCharacteristic*)configControlChar {
     W2STSDKCommand * cmd = [W2STSDKCommand commandWithData:data];
     NSInteger error = [W2STSDKRegister getErrorFromData:data];
     bool readOperation = [W2STSDKRegister isReadOperationFromData:data];
-
+    
     for (id<W2STSDKConfigControlDelegate> delegate in mConfigControlDelegates) {
         dispatch_async(sNotificationQueue,^{
             if (readOperation) {
@@ -95,7 +90,7 @@ configControlChart:(CBCharacteristic*)configControlChar {
             }
         });
     }//for
-
+    
 }//characteristicsUpdate
 
 /**

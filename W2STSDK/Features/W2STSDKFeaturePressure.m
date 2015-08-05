@@ -19,6 +19,10 @@
 #define FEATURE_MAX 100
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeFloat
 
+/**
+ * @memberof W2STSDKFeaturePressure
+ *  array with the description of field exported by the feature
+ */
 static NSArray *sFieldDesc;
 
 @implementation W2STSDKFeaturePressure
@@ -32,9 +36,8 @@ static NSArray *sFieldDesc;
                                                        min:@FEATURE_MIN
                                                        max:@FEATURE_MAX ],
                       nil];
-    }
-    
-}
+    }//if
+}//initialize
 
 
 +(float)getPressure:(W2STSDKFeatureSample *)sample{
@@ -44,7 +47,7 @@ static NSArray *sFieldDesc;
 }
 
 
--(id) initWhitNode:(W2STSDKNode *)node{
+-(instancetype) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
     return self;
 }
@@ -54,14 +57,32 @@ static NSArray *sFieldDesc;
 }
 
 
+/**
+ *  read int32 for build the pressure value, create the new sample and
+ * and notify it to the delegate
+ *
+ *  @param timestamp data time stamp
+ *  @param rawData   array of byte send by the node
+ *  @param offset    offset where we have to start reading the data
+ *
+ *  @throw exception if there are no 4 bytes available in the rawdata array
+ *  @return number of read bytes
+ */
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
+    if(rawData.length-offset < 4){
+        @throw [NSException
+                exceptionWithName:@"Invalid Pressure data"
+                reason:@"The feature need almost 4 byte for extract the data"
+                userInfo:nil];
+    }//if
     
     int32_t press= [rawData extractLeInt32FromOffset:offset];
     
     NSArray *data = [NSArray arrayWithObject:[NSNumber numberWithFloat:press/100.0f]];
     W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     self.lastSample = sample;
+    
     [self notifyUpdateWithSample:sample];
     [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 4)]
                     sample:sample];

@@ -10,19 +10,28 @@
 #define W2STSDK_W2STSDKDebug_prv_h
 #include "W2STSDKDebug.h"
 
+
+/**
+ *  add package/private data to the W2STSDKDebug class
+ * @author STMicroelectronics - Central Labs.
+ */
 @interface W2STSDKDebug(Prv)
 
 /**
- *  package method, called when CBPeripheral finish to write the data to an
- * debug characteristic
+ * @package
+ * called when CBPeripheral finish to write the data to an debug characteristic
+ * @par package method
  *
  *  @param termChar characteristics where we write the data
  *  @param error    if !=nil error happen during the write
  */
--(void)receiveCharacteristicsWriteUpdate:(CBCharacteristic*)termChar error:(NSError*)error;
+-(void)receiveCharacteristicsWriteUpdate:(CBCharacteristic*)termChar
+                                   error:(NSError*)error;
 
 /**
- *  package method, called by the CBPeripheral receive an update from the debug service
+ * @package
+ * called by the CBPeripheral receive an update from the debug service
+ * @par package method
  *
  *  @param termChar updated characteristics
  */

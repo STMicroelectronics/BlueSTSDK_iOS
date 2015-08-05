@@ -2,7 +2,7 @@
 //  W2STSDKFeature.h
 //  W2STSDK-CB
 //
-//  Created by Antonino Raucea on 30/04/14.
+//  Created by Giovanni Visentini on 21/04/15.
 //  Copyright (c) 2014 STMicroelectronics. All rights reserved.
 //
 #ifndef W2STSDK_W2STSDKFeature_h
@@ -15,32 +15,62 @@
 
 @class W2STSDKNode;
 
-
+/**
+ *  Class that represent a sample data from a feature, it contains the data
+ * exported by the feature and the device timestamp.
+ * @author STMicroelectronics - Central Labs.
+ */
 @interface W2STSDKFeatureSample : NSObject
-    @property(readonly) uint32_t timestamp;
-    @property(readonly) NSArray *data;
+/**
+ *  device time stamp at the moment of the data acquisition
+ */
+@property(readonly) uint32_t timestamp;
 
-+(W2STSDKFeatureSample*) sampleWithTimestamp:(uint32_t)timestamp data:(NSArray*)data;
--(id) initWhitTimestamp: (uint32_t)timestamp data:(NSArray*)data;
+/**
+ *  array of NSNumber with the feature data
+ */
+@property(readonly,retain) NSArray *data;
+
+/**
+ *  build a W2STSDKFeatureSample
+ *
+ *  @param timestamp times stamp of the data acquisition
+ *  @param data      data exported by the feature
+ *
+ *  @return object that contains the data
+ */
++(instancetype) sampleWithTimestamp:(uint32_t)timestamp data:(NSArray*)data;
+
+/**
+ *  initialize a W2STSDKFeatureSample
+ *
+ *  @param timestamp times stamp of the data acquisition
+ *  @param data      data exported by the feature
+ *
+ *  @return object that contains the data
+ */
+-(instancetype) initWhitTimestamp: (uint32_t)timestamp data:(NSArray*)data;
 
 @end
 
 /**
  *  This class represent some set of data that a node can export.
- * <p>You can read the feature value or register a delegate for have 
- * notification when the node will update the values </p>
- * <p>Node that all the notification will be submited in a concurrent queue,
- * so the callback will be run in a concurrent thread </p>
- * <p>
- * This class is abstract, you have to extend it and implement the missing function
- * </p>
+ * \par
+ * You can read the feature value or register a delegate for have
+ * notification when the node will update the values
+ * \par
+ * Node that all the notification will be summited in a concurrent queue,
+ * so the callback will be run in a concurrent thread
+ * @note This class is abstract, you have to extend it and implement the missing function
+ * @author STMicroelectronics - Central Labs.
  */
+NS_CLASS_AVAILABLE(10_7, 5_0)
 @interface W2STSDKFeature : NSObject
 
 /**
- * if a node has in the advertise this feature the class is created but not enable,
- * it is enabled only if the is in the advertise and the node has the corrispective
- * characteristics
+ * if a node has in the advertise this feature the class is created but not enabled,
+ * it is enabled only if the is in the advertise and the node has the equivalent
+ * characteristic
  */
 @property(readonly) bool enabled;
 
@@ -55,23 +85,26 @@
 @property (readonly,retain,nonatomic) W2STSDKNode *parentNode;
 
 /**
- *  date of the last feature update
+ *  system time when we receive the last update
  */
 @property (readonly) NSDate* lastUpdate;
 
+/**
+ *  object that contains the last data received from the device
+ */
 @property (readonly,atomic) W2STSDKFeatureSample *lastSample;
 
 
 /**
  *  create a string with all the data present in this feature
  *
- *  @return string rappresenting the current feature data
+ *  @return string represent the current feature data
  */
 -(NSString*) description;
 
 /**
- *  register a new W2STSDKFeatureDelegate, this protocol is used for notify the
- * user that the feature was updated
+ *  register a new {@link W2STSDKFeatureDelegate}, this protocol is used for 
+ * notify the user that the feature was updated
  *
  *  @param delegate class where do the callback for notify an update
  */
@@ -85,8 +118,8 @@
 -(void) removeFeatureDelegate:(id<W2STSDKFeatureDelegate>)delegate;
 
 /**
- *  register a new W2STSDKFeatureLogDelegate this protocol will be called when
- * the feature is updated and will contain the raw data used for extract the 
+ *  register a new {@link W2STSDKFeatureLogDelegate} this protocol will be called when
+ * the feature is updated and will contain the raw data used for extract the
  * data and the parsed data, is used for logging all the data that comes from the
  * node
  *
@@ -103,35 +136,23 @@
 
 /**
  *  <b>abstract method</b>, build a feature that is exported by the node
- *  <p>it is an abstract method, you have to overwrite it </p>
+ *  @note it is an abstract method, you have to overwrite it!
  *  @param node node that export this feature
  *
  *  @return pointer to a feature
  */
--(id) initWhitNode: (W2STSDKNode*)node;
+-(instancetype) initWhitNode: (W2STSDKNode*)node;
+
 
 /**
- * <b>abstract method</b>, retrun an array of NSNumber with the data exported by the feature
- * note that the returned data is a copy of the internal state for avoid ghost update
- *
- *  @return array of NSNumber
- */
--(NSArray*) getFieldsData __attribute__ ((deprecated));
-
-/**
- * <b>abstract method</b>, return an array of W2STSDKFeatureField that describe the data
- * returned by the getFieldData function
- *
+ * <b>abstract method</b>, return an array of {@link W2STSDKFeatureField} that
+ * describe the data inside the array {@link W2STSDKFeatureSample::data}
+ *  @note it is an abstract method, you have to overwrite it!
+ 
  *  @return array of W2STSDKFeatureField that describe the data exported by the feature
  */
 -(NSArray*) getFieldsDesc;
 
-/**
- * <b>abstract method</b>, return the id of the last package received by this feature
- *
- *  @return id of the last package received by this feature
- */
--(uint32_t) getTimestamp __attribute__ ((deprecated));
 
 @end
 
@@ -142,6 +163,7 @@
  *  method called every time we have new data from this feature
  *
  *  @param feature feature that was updated
+ *  @param sample  last data read from the feature
  */
 @required
 - (void)didUpdateFeature:(W2STSDKFeature *)feature sample:(W2STSDKFeatureSample*) sample;
@@ -149,8 +171,8 @@
 @end
 
 /**
-* Protocol used for log all the data received from a feature
-*/
+ * Protocol used for log all the data received from a feature
+ */
 @protocol W2STSDKFeatureLogDelegate <NSObject>
 
 
@@ -159,7 +181,7 @@
  *
  *  @param feature feature that was updated
  *  @param raw     raw data used for extract the data for this feature
- *  @param data    array of NSNumber extracted by the raw data
+ *  @param sample  data extracted by the feature
  */
 @required
 - (void)feature:(W2STSDKFeature *)feature rawData:(NSData*)raw sample:(W2STSDKFeatureSample*)sample;

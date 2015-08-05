@@ -9,7 +9,9 @@
 #import "W2STSDKFeature.h"
 
 /**
- * export the data from a temperature sensor
+ * Export the data from a temperature sensor
+ * @author STMicroelectronics - Central Labs.
+
  */
 @interface W2STSDKFeatureTemperature : W2STSDKFeature
 

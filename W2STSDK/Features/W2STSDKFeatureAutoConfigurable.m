@@ -35,7 +35,7 @@ static dispatch_queue_t sNotificationQueue;
     NSMutableSet *mFeatureAutoConfDelegates;
 }
 
--(id) initWhitNode: (W2STSDKNode*)node name:(NSString*)name{
+-(instancetype) initWhitNode: (W2STSDKNode*)node name:(NSString*)name{
     self = [super initWhitNode:node name:name];
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -43,7 +43,7 @@ static dispatch_queue_t sNotificationQueue;
                                                    DISPATCH_QUEUE_CONCURRENT);
     });
     
-    _isConfigurated=NO;
+    _isConfigured=NO;
     mFeatureAutoConfDelegates = [NSMutableSet set];
     return self;
 }
@@ -80,7 +80,7 @@ static dispatch_queue_t sNotificationQueue;
 /**
  *  notify to all the registered delegate that the config
  *
- *  @param newStatus <#newStatus description#>
+ *  @param newStatus new confuguarion status
  */
 -(void) notifyAutoConfChangeStatus:(int32_t)newStatus{
     for (id<W2STSDKFeatureAutoConfigurableDelegate> delegate in mFeatureAutoConfDelegates) {
@@ -131,14 +131,14 @@ static dispatch_queue_t sNotificationQueue;
     if(commandType == FEATURE_COMMAND_STOP_CONFIGURATION){
         [self notifyAutoConfStopWithStatus:status];
         if(status==100)
-            _isConfigurated=YES;
+            _isConfigured=YES;
     }else if(commandType == FEATURE_COMMAND_GET_CONFIGURATION_STATUS){
         [self notifyAutoConfChangeStatus:status];
         if(status==100){
-            _isConfigurated=YES;
+            _isConfigured=YES;
             [self notifyAutoConfStopWithStatus:status];
         }else if (status==0){
-            _isConfigurated=NO;
+            _isConfigured=NO;
         }//if eelse
     }else
         //if is an unknow command call the super method

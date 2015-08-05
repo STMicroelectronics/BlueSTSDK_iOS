@@ -18,7 +18,8 @@
 typedef uint32_t featureMask_t;
 
 /**
- *  utils function for manage the the feature characateristics
+ *  Utils function for manage the the feature characteristic
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureCharacteristics : NSObject
 /**
@@ -41,7 +42,7 @@ typedef uint32_t featureMask_t;
 +(bool) isFeatureCharacteristics:(CBCharacteristic*) c;
 
 /**
- *  tell if a characteristics has a valid uudi for be banage by this sdk as a 
+ *  tell if a characteristics has a valid uudi for be manage by this sdk as a
  *  general pourpose characteristics
  *
  *  @param c characteristic to test
@@ -151,32 +152,32 @@ typedef uint32_t featureMask_t;
 @interface W2STSDKServices : NSObject
 
 /**
- *  class with the utility funcion for the debug service
+ *  class with the utility function for the debug service
  *
  *  @return class with the utility function for the debug service
  */
 +(W2STSDKServiceDebug*) debugService;
 
 /**
- *  class with the utility funciton for the configuration service
+ *  class with the utility function for the configuration service
  *
- *  @return class with the utility funciton for the configuration service
+ *  @return class with the utility function for the configuration service
  */
 +(W2STSDKServiceConfig*) configService;
 
 @end
 
 /**
- *  for each board type contains a map for of pair featureMask_t and corrisponding 
- *  \link{ W2STSDKFeature } class
+ *  for each board type contains a map for of pair featureMask_t the linked
+ *  {@link W2STSDKFeature } class
  */
 @interface W2STSDKBoardFeatureMap : NSObject
 
 /**
- *  return a map of type <boardId, map<featureMask_t, \link{ W2STSDKFeature }> >
- *  from this data you can undestand what class will be manage a specifc characteristics
+ *  return a map of type <boardId, map<{@link featureMask_t}, {@link W2STSDKFeature }> >
+ *  from this data you can understand what class will be manage a specific characteristics
  *
- *  @return map needed for buil a feature class that manage a specific characteristics
+ *  @return map needed for build a feature class that manage a specific characteristics
  */
 +(NSDictionary*) boardFeatureMap;
 

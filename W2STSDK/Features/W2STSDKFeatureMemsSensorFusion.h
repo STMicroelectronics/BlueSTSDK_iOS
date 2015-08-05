@@ -9,8 +9,13 @@
 #import "W2STSDKFeatureAutoConfigurable.h"
 
 /**
- *  this feature export the quaternuion data that are computed on the node
+ *  The feature export the quaternuion data that are computed on the node
  *  using the accelerometer, gyroscope and magnetometer data
+ * @par
+ * the data are the quaternion component: the vector comonents (qi,qj,qk)
+ * and the scalar component qs, the quaternion is normalized
+ * @note this feature is autoconfigurable for calibrate the magnetometer data
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureMemsSensorFusion : W2STSDKFeatureAutoConfigurable
 

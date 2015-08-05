@@ -14,10 +14,7 @@
 @interface W2STSDKRegisterDefines : NSObject
 
 /**
- * This enum contains the registers name the suffix __XY represent the target available for that
- * registers P = Persistent, S=Session, if both are specified the register is available in both
- * side persistent and session.
- */
+ * This enum contains the registers name */
 typedef NS_ENUM(NSInteger, W2STSDKRegisterName_e) {
     W2STSDK_REGISTER_NAME_NONE,
     
@@ -82,10 +79,35 @@ typedef NS_ENUM(NSInteger, W2STSDKRegisterName_e) {
     W2STSDK_REGISTER_NAME_SW_CALIBRATION_STATUS
 };
 
+/**
+ * Lookup the register through the name
+ * @param name name of the register
+ *
+ * @return the register if exist otherwise nil
+ */
 +(W2STSDKRegister *) lookUpWithRegisterName:(W2STSDKRegisterName_e)name;
+/**
+ * Lookup the register through the name
+ * @param address address of the register
+ * @param target target of the register
+ *
+ * @return the register if exist otherwise nil
+ */
 +(W2STSDKRegister *) lookUpRegisterWithAddress:(NSInteger)address target:(W2STSDKRegisterTarget_e)target;
+/**
+ * Lookup the register through the name
+ * @param address address of the register
+ * @param target target of the register
+ *
+ * @return the register name if exist, otherwise W2STSDK_REGISTER_NAME_NONE
+ */
 +(W2STSDKRegisterName_e) lookUpRegisterNameWithAddress:(NSInteger)address target:(W2STSDKRegisterTarget_e)target;
 
+/**
+ * Get the list of available registers
+ *
+ * @return a dictionary with all registers
+ */
 +(NSDictionary *)registers;
 @end
 #endif //W2STSDKRegisterDefines_h

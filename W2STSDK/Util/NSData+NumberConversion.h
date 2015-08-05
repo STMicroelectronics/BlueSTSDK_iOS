@@ -9,8 +9,10 @@
 #import <Foundation/Foundation.h>
 
 /**
- *  add to the NSData class the method for convert a little/big entian byte array
+ *  Add to the NSData class the method for convert a little endian byte array
  *  to numbers
+ *
+ * @author STMicroelectronics - Central Labs.
  */
 @interface NSData(NumberConversion)
 

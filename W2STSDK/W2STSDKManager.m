@@ -2,7 +2,7 @@
 //  W2STSDKManager.m
 //  W2STSDK-CB
 //
-//  Created by Antonino Raucea on 02/04/14.
+//  Created by Giovanni Visentini on 21/04/15.
 //  Copyright (c) 2014 STMicroelectronics. All rights reserved.
 //
 
@@ -20,10 +20,10 @@
     /**
      *  true if the manager is scanning for a new nodes
      */
-    BOOL mIsScanning;
+    bool mIsScanning;
     
     /**
-     *  queue to use for do delegate callback
+     *  concurrent queue to use for do callback
      */
     dispatch_queue_t mNotificationQueue;
     
@@ -44,7 +44,7 @@
 }
 
 
-+(W2STSDKManager *)sharedInstance {
++(instancetype)sharedInstance {
     static W2STSDKManager *this = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -60,18 +60,18 @@
  */
 -(id)init {
     self = [super init];
-
-    mDiscoveredNode = [[NSMutableSet alloc] init];
-    mManagerListener = [[NSMutableSet alloc] init];
+    
+    mDiscoveredNode = [NSMutableSet set];
+    mManagerListener = [NSMutableSet set];
     mCBCentralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     mNotificationQueue = dispatch_queue_create("W2STSDKManager", DISPATCH_QUEUE_CONCURRENT);
-
+    
     return self;
 }
 
 -(void) discoveryStart{
     [self discoveryStart:-1];
-}
+}//discoveryStart
 
 -(void) discoveryStart:(int)timeoutMs{
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -81,10 +81,9 @@
     [mCBCentralManager scanForPeripheralsWithServices:nil options:options];
     [self changeDiscoveryStatus:true];
     NSTimeInterval delay = W2STSDKMANAGER_DEFAULT_SCANING_TIMEOUT_S;
-    if(timeoutMs>0)
-        if (timeoutMs >= 0 && timeoutMs <= 60000) { //max 60 sec
-            delay = (NSTimeInterval)((double)timeoutMs / 1000.0f);
-        }
+    if(timeoutMs>0 && timeoutMs <= 60000) { //max 60 sec
+        delay = (NSTimeInterval)((double)timeoutMs / 1000.0f);
+    }
     //if timeoutMs
     [self performSelector:@selector(discoveryStop) withObject:nil afterDelay:delay];
     
@@ -93,12 +92,11 @@
     W2STSDKNode *fakeNode = [[W2STSDKNodeFake alloc] init];
     W2STSDKNode *node = [self nodeWithTag:fakeNode.tag];
     if(node == nil){
-        [mDiscoveredNode addObject:fakeNode];
-        [self notifyNewNode:fakeNode];
-    }
+        
+        [self addAndNotifyNewNode:fakeNode];
+    }//if
 #endif
-    
-}
+}//discoveryStart
 
 -(void) discoveryStop{
     [mCBCentralManager stopScan];
@@ -126,7 +124,7 @@
 }
 
 /**
- *  call all the delegate for notify a manager status change
+ *  change the status and call all the delegate for notify a manager status change
  *
  *  @param newStatus new manager status
  */
@@ -138,46 +136,49 @@
             [delegate manager:self didChangeDiscovery:newStatus];
         });
     }//for
-}
+}//changeDiscoveryStatus
 
 /**
- *  call all the delegate for notify the discovery of a new node
+ *  add a new node and call all the delegate for notify the discovery of a new node
  *
  *  @param node new discovered node
  */
--(void)notifyNewNode:(W2STSDKNode *)node{
+-(void)addAndNotifyNewNode:(W2STSDKNode *)node{
+    [mDiscoveredNode addObject:node];
     for (id<W2STSDKManagerDelegate> delegate in mManagerListener) {
         dispatch_async(mNotificationQueue, ^{
             [delegate manager:self didDiscoverNode:node];
         });
     }//for
-}
+}//addAndNotifyNewNode
 
 -(W2STSDKNode *)nodeWithName:(NSString *)name{
     for (W2STSDKNode *node in mDiscoveredNode) {
         if ([name isEqual: node.name]) {
             return node;
-        }
-    }
+        }//if
+    }//for
     return nil;
-}
+}//nodeWithName
 
 -(W2STSDKNode *)nodeWithTag:(NSString *)tag{
     for (W2STSDKNode *node in mDiscoveredNode) {
         if ([tag isEqual: node.tag]) {
             return node;
-        }
-    }
+        }//if
+    }//for
     return nil;
-}
+}//nodeWithTag
+
+#pragma mark - W2STSDKManager(prv)
 
 -(void)connect:(CBPeripheral*)peripheral{
     [mCBCentralManager connectPeripheral:peripheral options:nil];
-}
+}//connect
 
 -(void)disconnect:(CBPeripheral*)peripheral{
     [mCBCentralManager cancelPeripheralConnection:peripheral];
-}
+}//disconnect
 
 #pragma mark - CBCentralManagerDelegate
 
@@ -191,19 +192,17 @@
      advertisementData:(NSDictionary *)advertisementData
                   RSSI:(NSNumber *)RSSI{
     NSString *tag = peripheral.identifier.UUIDString;
-
+    
     W2STSDKNode *node = [self nodeWithTag:tag];
     if(node == nil){
         @try {
             node = [[W2STSDKNode alloc] init:peripheral rssi:RSSI
                                    advertise:advertisementData];
-        
-                [mDiscoveredNode addObject:node];
-                [self notifyNewNode:node];
+            [self addAndNotifyNewNode:node];
         }
         @catch (NSException *exception) {//not a valid advertise -> avoid to add it
         }
-       
+        
     }else{
         [node updateRssi:RSSI];
     }//if-else
@@ -218,12 +217,12 @@
         [self changeDiscoveryStatus:false];
     }else{
         [self changeDiscoveryStatus:true];
-    }
-}
+    }//if-else
+}//centralManagerDidUpdateState
 
 /**
- * when the peripheral is connected we call the method completeconnection of the
- * node class
+ * when the peripheral is connected we call the method
+ * {@link W2STSDKNode#completeConnection} of the node class
  */
 - (void)centralManager:(CBCentralManager *)central
   didConnectPeripheral:(CBPeripheral *)peripheral{
@@ -232,10 +231,11 @@
     if(node == nil) //we did not handle this peripheral
         return;
     [node completeConnection];
-}
+}//didConnectPeripheral
 
 /**
- * when a connection fail we call the method connectionError of the node class
+ * when a connection fail we call the method {@link W2STSDKNode#connectionError:}
+ * of the node class
  */
 -(void)notifyConnectionError:(CBPeripheral*)peripheral error:(NSError*)error{
     NSString *tag = peripheral.identifier.UUIDString;
@@ -243,28 +243,30 @@
     if(node == nil) //we did not handle this peripheral
         return;
     [node connectionError:error];
-}
+}//notifyConnectionError
 
 /**
- * when a connection fail we call the method connectionError of the node class
+ * when a connection fail we call the method {@link W2STSDKNode#connectionError:}
+ * of the node class
  */
 - (void)centralManager:(CBCentralManager *)central
 didFailToConnectPeripheral:(CBPeripheral *)peripheral
                  error:(NSError *)error{
     [self notifyConnectionError:peripheral error:error];
-}
+}//didFailToConnectPeripheral
 
 /**
- * when the peripheral is disconnected we call the method completeDisconnection of the
- * node class
+ * when the peripheral is disconnected we call the method 
+ * {@link W2STSDKNode#completeDisconnection:} of the node class
  */
 - (void)centralManager:(CBCentralManager *)central
 didDisconnectPeripheral:(CBPeripheral *)peripheral
                  error:(NSError *)error{
     NSString *tag = peripheral.identifier.UUIDString;
     W2STSDKNode *node = [self nodeWithTag:tag];
-    if(node == nil) //we did not handle this periferal
+    if(node == nil) //we did not handle this peripheral
         return;
     [node completeDisconnection:error];
-}
+}//didDisconnectPeripheral
+
 @end

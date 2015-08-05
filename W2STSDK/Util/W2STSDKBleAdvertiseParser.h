@@ -12,10 +12,9 @@
 #include "W2STSDKBleNodeDefines.h"
 #include "../W2STSDKNode.h"
 
-
-
 /**
  *  Class that parse the ble advertise package
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKBleAdvertiseParser : NSObject
 
@@ -49,21 +48,28 @@
 @property (readonly) W2STSDKNodeType nodeType;
 
 /**
- *  address
+ *  address, can be nil if not present in the advertise
  */
 @property (readonly) NSString *address;
 
 /**
  * parse the advertise data returned by the system
  * @param advertisementData ble advertise data
- * @throw an exception if the vendor specific field isn't compatible with the W2ST protocol
+ * @throw an exception if the vendor specific field isn't compatible with 
+ * the W2ST protocol
  */
-+(id)advertiseParserWithAdvertise:(NSDictionary *)advertisementData;
-
--(id)initWithAdvertise:(NSDictionary*)advertisementData;
++(instancetype)advertiseParserWithAdvertise:(NSDictionary *)advertisementData;
 
 /**
- *  map of <featureMask_t,W2STSDKFeature>, this can be used for undestand what
+ * parse the advertise data returned by the system
+ * @param advertisementData ble advertise data
+ * @throw an exception if the vendor specific field isn't compatible with the 
+ * W2ST protocol
+ */
+-(instancetype)initWithAdvertise:(NSDictionary*)advertisementData;
+
+/**
+ *  map of <{@link featureMask_t},W2STSDKFeature>, this can be used for understand what
  * feature a ble characteristic export
  *
  *  @return map of <featureMask_t,W2STSDKFeature>

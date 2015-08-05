@@ -10,6 +10,10 @@
 
 /**
  *  export the data from a magnetometer sensor
+ * \par
+ * The data exported are an array of 3 float component (x,y,z) with the magnetometer
+ * information on that axis
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureMagnetometer : W2STSDKFeature
 

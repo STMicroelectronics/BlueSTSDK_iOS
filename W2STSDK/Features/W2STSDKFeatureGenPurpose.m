@@ -21,6 +21,10 @@
 #define FEATURE_MAX 255
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeUInt8
 
+/**
+ * @memberof W2STSDKFeatureGenPurpose
+ *  array with the description of field exported by the feature
+ */
 static NSArray *sFieldDesc;
 
 @implementation W2STSDKFeatureGenPurpose
@@ -34,9 +38,8 @@ static NSArray *sFieldDesc;
                                                        min:@FEATURE_MIN
                                                        max:@FEATURE_MAX ],
                       nil];
-    }
-    
-}
+    }//if
+}//initialize
 
 +(NSData*) getRawData:(W2STSDKFeatureSample*)sample{
     NSMutableData *rawData = [NSMutableData dataWithCapacity:sample.data.count];
@@ -44,12 +47,11 @@ static NSArray *sFieldDesc;
     for( NSNumber *n in sample.data){
         uint8_t temp = [n unsignedCharValue];
         [rawData appendBytes:&temp length:1];
-//        [rawData appendBytes:&temp length:1];
     }//for
     return rawData;
 }
 
--(id)initWhitNode:(W2STSDKNode *)node characteristics:(CBCharacteristic*)c{
+-(instancetype)initWhitNode:(W2STSDKNode *)node characteristics:(CBCharacteristic*)c{
     NSString *name = [NSString stringWithFormat:@"GenPurpose_%@",c.UUID.UUIDString];
 
     self = [super initWhitNode:node name:name];
@@ -62,6 +64,15 @@ static NSArray *sFieldDesc;
 }
 
 
+/**
+ *  read all the available byte and generate the sample and notify to the delegate
+ *
+ *  @param timestamp data time stamp
+ *  @param rawData   array of byte send by the node
+ *  @param offset    offset where we have to start reading the data
+ *
+ *  @return number of read bytes
+ */
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
 
     NSMutableArray *tempData = [NSMutableArray arrayWithCapacity:rawData.length-offset];
@@ -71,7 +82,8 @@ static NSArray *sFieldDesc;
         [tempData addObject: [NSNumber numberWithUnsignedChar:temp]];
     }//for
     
-    W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:tempData];
+    W2STSDKFeatureSample *sample =
+        [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:tempData];
     
     self.lastSample = sample;
     

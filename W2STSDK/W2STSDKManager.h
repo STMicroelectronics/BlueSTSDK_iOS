@@ -2,7 +2,7 @@
 //  W2STSDKManager.h
 //  W2STSDK-CB
 //
-//  Created by Antonino Raucea on 02/04/14.
+//  Created by Giovanni Visentini on 21/04/15.
 //  Copyright (c) 2014 STMicroelectronics. All rights reserved.
 //
 #ifndef W2STSDK_W2STSDKManager_h
@@ -15,17 +15,23 @@
 
 @protocol W2STSDKManagerDelegate;
 
-
+/**
+ * \relates W2STSDKManager
+ *  Default scan time
+ */
 #define W2STSDKMANAGER_DEFAULT_SCANING_TIMEOUT_S 1.0f
 
 /**
- *  Class that permit to discover new node that are compatible with the w2stsdk
+ *  Class that permit to discover new node that are compatible with the W2STSDK
  *  protocol
+ * @author STMicroelectronics - Central Labs.
  */
+NS_CLASS_AVAILABLE(10_7, 5_0)
 @interface W2STSDKManager : NSObject
 
 /**
- *  start a discovery process, it will stop after few seconds
+ *  start a discovery process, it will stop after 
+ * {@link W2STSDKMANAGER_DEFAULT_SCANING_TIMEOUT_S} seconds
  */
 -(void)discoveryStart;
 
@@ -47,7 +53,7 @@
  *
  *  you can register multiple delegate, the call back will be done in a concurrent queue
  *
- *  @param delegate class that implement the W2STSDKManagerDelegate protocol
+ *  @param delegate class that implement the {@link W2STSDKManagerDelegate} protocol
  */
 -(void)addDelegate:(id<W2STSDKManagerDelegate>)delegate;
 
@@ -61,7 +67,7 @@
 /**
  *  get all the discovered nodes
  *
- *  @return array of W2STSDKNode with all the discovery nodes
+ *  @return array of {@link W2STSDKNode} with all the discovered nodes
  */
 -(NSArray *) nodes;
 
@@ -73,13 +79,13 @@
 -(BOOL) isDiscovering;
 
 /**
- *  remove all the dicovered nodes
+ *  remove all the discovered nodes
  */
 -(void) resetDiscovery;
 
 /**
  *  search in the discovered node the one that has a particular name,
- *    the node is not unique so we will return the first node the match the name
+ *  @note the node name is not unique so we will return the first node that match the name
  *
  *  @param name node name to search
  *
@@ -101,10 +107,14 @@
  *
  *  @return instance of the W2STSDKManager
  */
-+ (W2STSDKManager *)sharedInstance;
++ (instancetype)sharedInstance;
 
 @end
 
+/**
+ *  Delegate interface, used for notify change in the manager state or the 
+ *  discover of a new compatible node
+ */
 @protocol W2STSDKManagerDelegate <NSObject>
 @required
 /**
@@ -121,7 +131,7 @@
  *
  *  @param manager manager that discovered the node (the manger is a singleton,
  *    so this parameter is only for have a consistent method sign with the others delegate)
- *  @param enable  true if the manger start a scan process, false if it end the scanning
+ *  @param enable true if the manger start a scan process, false if it end the scanning
  */
 - (void)manager:(W2STSDKManager *)manager didChangeDiscovery:(BOOL)enable;
 @end

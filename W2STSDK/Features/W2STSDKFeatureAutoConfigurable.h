@@ -15,13 +15,14 @@
  * that run on the node. This routine can be start/stop or query by this type of
  * feature.
  *
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureAutoConfigurable : W2STSDKFeature
 
 /**
- *  true if the feature is configurated
+ *  true if the feature is configured
  */
-@property(readonly) BOOL isConfigurated;
+@property(readonly) BOOL isConfigured;
 
 /**
  *  run the self configuration routine in the node
@@ -48,7 +49,7 @@
 
 /**
  *  register a delegate for this feature
- * <p> Note that the callback are done by an concurrent queue </p>
+ *  @note the callback are done by an concurrent queue
  *
  *  @param delegate object where notify the configuration change
  */

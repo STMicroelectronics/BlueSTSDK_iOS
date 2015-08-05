@@ -14,13 +14,15 @@
 /**
  * Extend the feature for be able to generate fake data to be uesed in the ios 
  * emulator
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeature (fake)
 
 /**
  *  <b>abstract method</b>, you have to overwrite this method if you want 
  *  enable the possibility to use a fake feature into the ios emulator
- *
+ *  @note it is an abstract method, you have to overwrite it!
+ 
  *  @return data that will be passed to the updateFeature for trigger a fake feature update
  */
 -(NSData*) generateFakeData;

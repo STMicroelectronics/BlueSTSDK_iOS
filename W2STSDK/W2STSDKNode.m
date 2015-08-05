@@ -18,7 +18,7 @@
 #import "Util/W2STSDKBleNodeDefines.h"
 #import "util/NSData+NumberConversion.h"
 
-@interface W2STSDKNode()<CBPeripheralDelegate>
+@interface W2STSDKNode() <CBPeripheralDelegate>
 @end
 
 /**
@@ -40,7 +40,7 @@ static dispatch_queue_t sNotificationQueue;
     CBPeripheral *mPeripheral;
     
     /**
-     *  set of delegate where notify changes in the ble connection paramiters
+     *  set of delegate where notify changes in the ble connection parameters
      */
     NSMutableSet *mBleConnectionDelegates;
     
@@ -50,28 +50,28 @@ static dispatch_queue_t sNotificationQueue;
     NSMutableSet *mNodeStatusDelegates;
     
     /**
-     *  connect a bitmask with the build feature
+     *  map the feature  bitmask with the build feature
      */
     NSMutableDictionary *mMaskToFeature;
     
     /**
-     *  array of W2STSDKCharacteristics it contans the mapping between
-     * CBCharacteristics and W2STSDKFeatrure
+     *  array of W2STSDKCharacteristics it contains the mapping between
+     * CBCharacteristics and {@link W2STSDKFeature}
      */
     NSMutableArray *mCharFeatureMap;
     
     /**
-     *  array of W2STSDKFeature that the node export
+     *  array of {@link W2STSDKFeature} that the node export
      */
     NSMutableArray *mAvailableFeature;
     
     /**
-     *  set of W2STSDKFeature that are currently in notify mode
+     *  set of {@link W2STSDKFeature} that are currently in notify mode
      */
     NSMutableSet *mNotifyFeature;
     
     /**
-     *  true if the user ask to disconnect, it is used for understend if we lost
+     *  true if the user ask to disconnect, it is used for understand if we lost
      * the connection with the node
      */
     BOOL mUserAskDisconnect;
@@ -81,12 +81,14 @@ static dispatch_queue_t sNotificationQueue;
     NSMutableArray *mCharDiscoverServiceReq;
     
     /**
-     *  number of time tahat the ts has reset, the ts is reseted when we see a ts
-     * with a lower value after that the ts reach the valu 2^16-100
+     * Number of time that the ts has reset.
+     * The ts is reseted when we see a ts with a lower value after that the ts
+     * reach the value (2^16)-100
      */
     uint32_t mNReset;
     
-    /** last raw ts received from the board, it is a numer between 0 and (2^16)-1
+    /**
+     *last raw ts received from the board, it is a number between 0 and (2^16)-1
      */
     uint16_t mLastTs;
     
@@ -107,7 +109,7 @@ static dispatch_queue_t sNotificationQueue;
 
 /**
  * from the bitmask in the advertise message and the dictionary that map a 
- * bitmask to a feature class inizialize the mAvvailableFeature and the
+ * bitmask to a feature class initialize the mAvvailableFeature and the
  * mMaskToFeature array
  *
  *  @param mask           bitmask from the advertise, tell us what feature are present in the node
@@ -116,16 +118,16 @@ static dispatch_queue_t sNotificationQueue;
  */
 -(void)buildAvailableFeatures:(featureMask_t)mask maskFeatureMap:(NSDictionary*)maskFeatureMap{
     uint32_t nBit = 8*sizeof(featureMask_t);
-    mAvailableFeature = [[NSMutableArray alloc] initWithCapacity:nBit];
-    mMaskToFeature = [[NSMutableDictionary alloc] initWithCapacity:nBit];
+    mAvailableFeature = [NSMutableArray arrayWithCapacity:nBit];
+    mMaskToFeature = [NSMutableDictionary dictionaryWithCapacity:nBit];
     if(maskFeatureMap==nil)
         return;
     for (uint32_t i=0; i<nBit; i++) {
         featureMask_t test = 1<<i;
-        if((mask & test)!=0){
+        if((mask & test)!=0){ //we select a bit in the mask
             NSNumber *temp =[NSNumber numberWithUnsignedInt:test];
             Class featureClass = [maskFeatureMap objectForKey: temp];
-            if(featureClass!=nil){
+            if(featureClass!=nil){ //if exist a feature link to that bit
                 W2STSDKFeature *f = [self buildFeatureFromClass:featureClass];
                 if(f!=nil){
                     [mAvailableFeature addObject:f];
@@ -138,7 +140,9 @@ static dispatch_queue_t sNotificationQueue;
     }//for
 }
 
--(id)init{
+
+-(instancetype)init{
+    self = [super init];
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sNotificationQueue = dispatch_queue_create("W2STNode", DISPATCH_QUEUE_CONCURRENT);
@@ -155,7 +159,8 @@ static dispatch_queue_t sNotificationQueue;
     return self;
 }
 
--(id)init:(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData{
+
+-(instancetype)init:(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData{
     self = [self init];
     mPeripheral=peripheral;
     mPeripheral.delegate=self;
@@ -181,17 +186,19 @@ static dispatch_queue_t sNotificationQueue;
 
 -(void) addBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate{
     [mBleConnectionDelegates addObject:delegate];
-}
+}//addBleConnectionParamiterDelegate
+
 -(void) removeBleConnectionParamiterDelegate:(id<W2STSDKNodeBleConnectionParamDelegate>)delegate{
     [mBleConnectionDelegates removeObject:delegate];
-}
+}//removeBleConnectionParamiterDelegate
 
 -(void) addNodeStatusDelegate:(id<W2STSDKNodeStateDelegate>)delegate{
     [mNodeStatusDelegates addObject:delegate];
-}
+}//addNodeStatusDelegate
+
 -(void) removeNodeStatusDelegate:(id<W2STSDKNodeStateDelegate>)delegate{
     [mNodeStatusDelegates removeObject:delegate];
-}
+}//removeNodeStatusDelegate
 
 -(void) updateRssi:(NSNumber *)rssi{
     _RSSI=rssi;
@@ -201,7 +208,7 @@ static dispatch_queue_t sNotificationQueue;
             [delegate node:self didChangeRssi:rssi.integerValue];
         });
     }//for
-}
+}//updateRssi
 
 -(void) updateTxPower:(NSNumber *)txPower{
     _txPower=txPower;
@@ -210,15 +217,15 @@ static dispatch_queue_t sNotificationQueue;
             [delegate node:self didChangeTxPower:txPower.integerValue];
         });
     }//for
-}
+}//updateTxPower
 
 - (BOOL) equals:(W2STSDKNode *)node{
     return [_tag isEqualToString:node.tag];
-}
+}//equals
 
 -(void)readRssi{
     [mPeripheral readRSSI];
-}
+}//readRssi
 
 -(void) updateNodeStatus:(W2STSDKNodeState)newState{
     W2STSDKNodeState oldState = _state;
@@ -228,34 +235,33 @@ static dispatch_queue_t sNotificationQueue;
             [delegate node:self didChangeState:newState prevState:oldState];
         });
     }//for
-}
+}//updateNodeStatus
 
 -(NSArray*) getFeatures{
     return mAvailableFeature;
-
-}
+}//getFeatures
 
 -(void)connect{
     mUserAskDisconnect=false;
     [self updateNodeStatus:W2STSDKNodeStateConnecting];
     [[W2STSDKManager sharedInstance]connect:mPeripheral];
-}
+}//connect
 
 -(void)completeConnection{
     if(mPeripheral.state !=	CBPeripheralStateConnected){
         [self updateNodeStatus:W2STSDKNodeStateUnreachable];
         return;
-    }
+    }//if
     mLastTs=0;
     mNReset=0;
     //else
     [mPeripheral discoverServices:nil];
-}
+}//completeConnection
 
 
 - (BOOL) isConnected{
     return self.state==W2STSDKNodeStateConnected;
-}
+}//isConnected
 
 
 -(void)completeDisconnection:(NSError*)error{
@@ -266,13 +272,12 @@ static dispatch_queue_t sNotificationQueue;
         }else{
             NSLog(@"Node: %@ Error: %@",_name,[error debugDescription]);
             [self updateNodeStatus:W2STSDKNodeStateDead];
-        }
+        }//if else error==nil
     }else{
         NSLog(@"Node: %@ Error: %@",_name,[error debugDescription]);
         [self updateNodeStatus:W2STSDKNodeStateUnreachable];
-    }
-    
-}
+    }//if else
+}//completeDisconnection
 
 -(void) disconnect{
     [self updateNodeStatus:W2STSDKNodeStateDisconnecting];
@@ -288,12 +293,12 @@ static dispatch_queue_t sNotificationQueue;
     [mNotifyFeature removeAllObjects];
     
     [[W2STSDKManager sharedInstance]disconnect:mPeripheral];
-}
+}//disconnect
 
 -(void)connectionError:(NSError*)error{
     NSLog(@"Error Node:%@ %@ (%ld)",self.name,error.description,(long)error.code);
    [self updateNodeStatus:W2STSDKNodeStateDead];
-}
+}//connectionError
 
 /**
  *  find the CBCharacteristics that we can use for read/write a feature
@@ -316,12 +321,12 @@ static dispatch_queue_t sNotificationQueue;
         return false;
     [mPeripheral readValueForCharacteristic:c];
     return true;
-}
+}//readFeature
 
 
 -(BOOL) isEnableNotification:(W2STSDKFeature*)feature{
     return [mNotifyFeature containsObject:feature];
-}
+}//isEnableNotification
 
 -(BOOL) enableNotification:(W2STSDKFeature*)feature{
     if(![feature enabled])
@@ -333,7 +338,7 @@ static dispatch_queue_t sNotificationQueue;
     [mPeripheral setNotifyValue:YES forCharacteristic:c];
     [mNotifyFeature addObject:feature];
     return true;
-}
+}//enableNotification
 
 -(BOOL) disableNotification:(W2STSDKFeature*)feature{
     if(![feature enabled])
@@ -344,7 +349,7 @@ static dispatch_queue_t sNotificationQueue;
     [mPeripheral setNotifyValue:NO forCharacteristic:c];
     [mNotifyFeature removeObject:feature];
     return true;
-}
+}//disableNotification
 
 /**
  *  pack the data for be send to as command to a feature
@@ -361,23 +366,30 @@ static dispatch_queue_t sNotificationQueue;
     [msg appendBytes:&mask length:4];
     [msg appendData:data];
     return msg;
-}
+}//prepareMessageWithMask
+
 
 -(BOOL)sendCommandMessageToFeature:(W2STSDKFeature*)feature type:(uint8_t)commandType
                      data:(NSData*) commandData{
     if(mFeatureCommand==nil)
         return false;
+    //the general purpose feature can not receive command
     if([feature isKindOfClass:W2STSDKFeatureGenPurpose.class])
         return false;
     
+    //find the characteristic link with the feature
     CBCharacteristic *featureChar = [W2STSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
     if(featureChar==nil)
         return false;
+    
+    //extract the feature bit mask
     featureMask_t featureMask = [W2STSDKFeatureCharacteristics extractFeatureMask:featureChar.UUID];
+    //compose the message
     NSData *msg = [W2STSDKNode prepareMessageWithMask:featureMask type:commandType data:commandData];
+    //send it
     [mPeripheral writeValue:msg forCharacteristic:mFeatureCommand type:CBCharacteristicWriteWithoutResponse];
     return true;
-}
+}//sendCommandMessageToFeature
 
 -(BOOL)writeDataToFeature:(W2STSDKFeature *)feature data:(NSData *)data{
     CBCharacteristic *featureChar=[self extractCharacteristicsFromFeature:feature];
@@ -387,8 +399,7 @@ static dispatch_queue_t sNotificationQueue;
     
     [mPeripheral writeValue:data forCharacteristic:featureChar type:CBCharacteristicWriteWithoutResponse];
     return true;
-}
-
+}//writeDataToFeature
 
 #pragma mark - CBPeripheralDelegate
 /**
@@ -400,28 +411,30 @@ static dispatch_queue_t sNotificationQueue;
         [self updateRssi:peripheral.RSSI];
     }else
         NSLog(@"Error Updating Rssi: %@ (%ld)",error.description,(long)error.code);
-}
+}//peripheralDidUpdateRSSI
 
 /**
- * we discover the serivces during the first connection, for each service we 
+ * we discover the services during the first connection, for each service we
  * request also to discover the characteristics
  */
 - (void)peripheral:(CBPeripheral *)peripheral
 didDiscoverServices:(NSError *)error{
+    
     if([self isConnected]) //we already run this method one time
         return;
+    
     if(error!=nil)
        [self updateNodeStatus:W2STSDKNodeStateUnreachable];
     /*
-    we store all the service in an array, when we recevie the characteristics
-    of a service we remove from the array in a way to avoid to scan multiple time
-    the same service */
+    we store all the service in an array, when we receive the characteristics
+    of a service we remove the service from the array in a way to avoid to scan 
+     multiple time the same service */
     mCharDiscoverServiceReq = [NSMutableArray arrayWithArray: peripheral.services];
     for (CBService *service in peripheral.services) {
         NSLog(@"Discovered Service: %@",service.UUID.UUIDString);
         [peripheral discoverCharacteristics:nil forService:service];
-    }
-}
+    }//for
+}//didDiscoverServices
 
 /**
  *  create a debug object
@@ -440,8 +453,13 @@ didDiscoverServices:(NSError *)error{
             err = c;
         }//if-else-if
     }//for
-    return term == nil || err == nil ? nil : [[W2STSDKDebug alloc] initWithNode:self device:mPeripheral termChart:term errChart:err];
-}
+    //if both the characteristics are present build the debug object
+    if(term == nil || err == nil)
+        return nil;
+    else
+        return [[W2STSDKDebug alloc] initWithNode:self device:mPeripheral
+                                        termChart:term errChart:err];
+}//buildDebugService
 
 /**
  *  create a debug object
@@ -460,15 +478,15 @@ didDiscoverServices:(NSError *)error{
             mFeatureCommand = c; //to compatibility with previous code
         }
     }//for
-//    if(configcontrolchar!=nil){
-//      return [;
-    
-    //}
-    return configcontrolchar == nil ? nil : [W2STSDKConfigControl configControlWithNode:self device:mPeripheral configControlChart:configcontrolchar];
-}
+    if(configcontrolchar!=nil){
+      return [W2STSDKConfigControl configControlWithNode:self device:mPeripheral
+                                      configControlChart:configcontrolchar];
+    }else
+        return nil;
+}//buildConfigService
 
 /**
- *  create a feature from a valid characteristics
+ *  From a characteristic extract the exported features. That feature will be enabled
  *
  *  @param c characteristic that will export one or more features
  */
@@ -484,12 +502,12 @@ didDiscoverServices:(NSError *)error{
         }//if
     }//for
     
-    if(charFeature.count != 0){
+    if(charFeature.count != 0){ //if we found some feature save it
         W2STSDKCharacteristic* temp = [[W2STSDKCharacteristic alloc]
                                        initWithChar:c features:charFeature];
         [mCharFeatureMap addObject: temp];
     }//if
-}
+}//buildKnowFeatureFromChar
 
 /**
  *  build a general purpose feature from a valid characteristics
@@ -503,41 +521,36 @@ didDiscoverServices:(NSError *)error{
     W2STSDKCharacteristic* temp = [[W2STSDKCharacteristic alloc]
                                    initWithChar:c features:[NSArray arrayWithObjects:f,nil]];
     [mCharFeatureMap addObject: temp];
-}
+}//buildGeneraPurposeFeatureFromChar
 
 /**
- * if the service is know we build the corrispective object, otherwise we scan
+ * if the service is know we build the link object, otherwise we scan
  * the characteristics searching an uuid compatible with the sdk
  */
 - (void)peripheral:(CBPeripheral *)peripheral
 didDiscoverCharacteristicsForService:(CBService *)service
              error:(NSError *)error {
+
+    if(error){
+        NSLog(@"Error discovering the service: %@ Error: %@",
+              service.UUID.UUIDString,error.localizedDescription);
+        [self updateNodeStatus:W2STSDKNodeStateUnreachable];
+        return;
+    }
     
     //we already see this service -> return
     if(![mCharDiscoverServiceReq containsObject:service])
         return;
     
-    if(error){
-        NSLog(@"Error discovering the service: %@ Erorr: %@",
-              service.UUID.UUIDString,error.localizedDescription);
-        [self updateNodeStatus:W2STSDKNodeStateUnreachable];
-    }
+    //NSLog(@"Service: %@", service.UUID.UUIDString);
+    //for (CBCharacteristic *c in service.characteristics) {
+    //    NSLog(@" - Char: %@", c.UUID.UUIDString);
+    //}
     
-    NSLog(@"Service: %@", service.UUID.UUIDString);
-    for (CBCharacteristic *c in service.characteristics) {
-        NSLog(@" - Char: %@", c.UUID.UUIDString);
-    }
     if( [[service UUID] isEqual:[W2STSDKServiceDebug serviceUuid]]  ){
         _debugConsole = [self buildDebugService:service];
     }else if( [[service UUID] isEqual:[W2STSDKServiceConfig serviceUuid]]  ){
-        
         _configControl = [self buildConfigService:service];
-        
-        //AR the association has been moved in the buildConfigService
-//        for (CBCharacteristic *c in service.characteristics) {
-//            if ([c.UUID isEqual: [W2STSDKServiceConfig featureCommandUuid]])
-//                mFeatureCommand = c;
-//        }//for
     }else{
         for (CBCharacteristic *c in service.characteristics) {            
             if ([W2STSDKFeatureCharacteristics isFeatureCharacteristics: c]){
@@ -553,7 +566,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
         if(mFeatureCommand!=nil)
            [mPeripheral setNotifyValue:YES forCharacteristic:mFeatureCommand];
         [self updateNodeStatus:W2STSDKNodeStateConnected];
-    }
+    }//if
     
     /*
     //debug
@@ -565,7 +578,8 @@ didDiscoverCharacteristicsForService:(CBService *)service
 }
 
 /**
- *  parse the response byte stream and pass the data to the feature
+ * call when we receive a message in the config characteristics, this method will
+ * parse the response byte stream and notify it on the correct feature
  *
  *  @param data response data from the node
  */
@@ -574,6 +588,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
     uint32_t timestamp =[data extractLeUInt16FromOffset: 0];
     uint32_t featureMask = [data extractBeUInt32FromOffset:2];
     uint8_t commandType = [data extractUInt8FromOffset:6];
+    
     NSData *resp = [data subdataWithRange:NSMakeRange(7, data.length-7)];
     
     W2STSDKFeature *f = [mMaskToFeature objectForKey: [NSNumber numberWithUnsignedInt:featureMask]];
@@ -581,7 +596,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
         [f parseCommandResponseWithTimestamp:timestamp commandType:commandType
                                        data: resp];
     else
-        NSLog(@"Receve a response for the feature %X that is not handle by this node",featureMask);
+        NSLog(@"Receive a response for the feature %X that is not handle by this node",featureMask);
 }
 
 /**
@@ -601,44 +616,61 @@ didDiscoverCharacteristicsForService:(CBService *)service
     } else if(_configControl!=nil &&
              [W2STSDKServiceConfig isConfigControlCharacteristic:characteristics]){
         [_configControl characteristicsUpdate:characteristics];
+        return;
     }//else
     
     NSData *newData = characteristics.value;
     NSArray *features = [W2STSDKCharacteristic getFeaturesFromChar:characteristics
                                                                 in:mCharFeatureMap];
 
+    if(features==nil){
+        NSLog(@"Receive a notification for a characteristics that isn't handle by the sdk");
+        return;
+    }//if
+    
+    //extract the timestamp and add the offset for extend the ts from 16bit to 32
     uint16_t timeStamp16 = [newData extractLeUInt16FromOffset: 0];
     if(mLastTs>((1<<16)-100) && mLastTs > timeStamp16)
         mNReset++;
     uint32_t timestamp = mNReset * (1<<16) + timeStamp16;
     mLastTs=timeStamp16;
-    uint32_t offset=2;
+    
+    uint32_t offset=2; // =2 since we already read 2 byte for the timestamp
     for(W2STSDKFeature *f in features){
         offset += [f update:timestamp data:newData dataOffset:offset];
-    }
+    }//for
+    
+}//characteristicUpdate
 
-}
-
+/**
+ *  Call when a characteristic is read or notify
+ */
 - (void)peripheral:(CBPeripheral *)peripheral
 didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error {
     
     if(error){
-        NSLog(@"Error updating the char: %@ Erorr: %@",
+        NSLog(@"Error updating the char: %@ Error: %@",
               characteristic.UUID.UUIDString,error.localizedDescription);
         [self updateNodeStatus:W2STSDKNodeStateLost];
-    }
+        return;
+    }//if
     
     [self characteristicUpdate:characteristic];
-}
+}//didUpdateValueForCharacteristic
+
+/**
+ * Call where a message is write to a characteristics, this function will route
+ * the notification to the object that request the write
+ */
 - (void)peripheral:(CBPeripheral *)peripheral
 didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error{
     if(error){
-        NSLog(@"Error writing the char: %@ Erorr: %@",
+        NSLog(@"Error writing the char: %@ Error: %@",
               characteristic.UUID.UUIDString,error.localizedDescription);
         [self updateNodeStatus:W2STSDKNodeStateLost];
-    }
+    }//if
     
     if ([characteristic.UUID isEqual: [W2STSDKServiceDebug termUuid]] &&
         _debugConsole!=nil){
@@ -648,17 +680,21 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
         [_configControl characteristicsWriteUpdate:characteristic success:(error == nil)];
     }//else
 
-}
+}//didWriteValueForCharacteristic
 
+/**
+ * call when we change the notification state of a characteristics. 
+ * It change the node status if there is some error
+ */
 - (void)peripheral:(CBPeripheral *)peripheral
 didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error{
     if(error){
-        NSLog(@"Error updating the char: %@ Erorr: %@",
+        NSLog(@"Error updating the char: %@ Error: %@",
               characteristic.UUID.UUIDString,error.localizedDescription);
         [self updateNodeStatus:W2STSDKNodeStateLost];
-    }
-}
+    }//if
+}//didUpdateNotificationStateForCharacteristic
 
 +(NSString*) stateToString:(W2STSDKNodeState)state{
     switch (state) {
@@ -680,8 +716,8 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
             return @"Unreachable";
         default:
             return@"Invalid Enum value";
-    }
-}
+    }//switch
+}//stateToString
 
 
 @end

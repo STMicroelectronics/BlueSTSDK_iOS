@@ -9,9 +9,12 @@
 #import "W2STSDKFeature.h"
 
 /**
- *  this feature contains the data from a luminosity sensor
- *  Note: since the luminosity and the proximity come from the same sensor this
+ *  This feature contains the data from a luminosity sensor
+ * @par
+ *  the data is the liminosity in lux read from the sensor
+ *  @note since the luminosity and the proximity come from the same sensor this
  * two feature can't be used at the same time
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureLuminosity : W2STSDKFeature
 

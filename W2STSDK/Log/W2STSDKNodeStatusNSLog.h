@@ -10,7 +10,9 @@
 #import "W2STSDKNode.h"
 
 /**
- *  print on the NSLog console when a node change his status
+ * class that implement the {@link W2STSDKNodeStateDelegate} and print on the NSLog
+ * stream the node status update
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKNodeStatusNSLog : NSObject<W2STSDKNodeStateDelegate>
 

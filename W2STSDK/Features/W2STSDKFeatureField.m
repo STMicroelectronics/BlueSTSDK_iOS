@@ -10,7 +10,7 @@
 
 @implementation W2STSDKFeatureField
 
-+(W2STSDKFeatureField *)createWithName:(NSString *)name
++(instancetype)createWithName:(NSString *)name
                                   unit:(NSString *)unit
                                   type:(W2STSDKFeatureFieldType)type
                                    min:(NSNumber *)min
@@ -24,7 +24,7 @@
 }
 
 
--(id) initWithName:(NSString *)name
+-(instancetype) initWithName:(NSString *)name
               unit:(NSString*)unit
               type:(W2STSDKFeatureFieldType)type
                min:(NSNumber*)min

@@ -8,23 +8,40 @@
 
 #import "W2STSDKFeature.h"
 
-typedef NS_ENUM(NSInteger, W2STSDKFeatureBatteryStatus) {
-    //the battery has a level below the 10%
-    W2STSDKFeatureBatteryStatusLowBattery  =0x00,
-    //the battery is discharging
-    W2STSDKFeatureBatteryStatusDischarging =0x01,
-    //the battery is plugged, but is already charged
-    W2STSDKFeatureBatteryStatusPluggedNotCharging =0x02,
-    //the battery is charging
-    W2STSDKFeatureBatteryStatusCharging =0x03,
-    //error state/battery not present
-    W2STSDKFeatureBatteryStatusError =0xFF
-};
-
 /**
- *  this feature export the from the battery information from expansion board
+ * this feature export the from the battery information from expansion board
+ * \par
+ * The data exported are an array of 3 float component (% of charge,voltage,current)
+ * and the buttery status as an enum value
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureBattery : W2STSDKFeature
+
+/**
+ * Enumeration that contains the battery status
+ */
+typedef NS_ENUM(NSInteger, W2STSDKFeatureBatteryStatus){
+    /**
+     *  The battery has a level below the 10%
+     */
+    W2STSDKFeatureBatteryStatusLowBattery  =0x00,
+    /**
+     *  The battery is discharging
+     */
+    W2STSDKFeatureBatteryStatusDischarging =0x01,
+    /**
+     *  The battery is plugged, but is already charged
+     */
+    W2STSDKFeatureBatteryStatusPluggedNotCharging =0x02,
+    /**
+     *  the battery is charging
+     */
+    W2STSDKFeatureBatteryStatusCharging =0x03,
+    /**
+     *  error state/battery not present
+     */
+     W2STSDKFeatureBatteryStatusError =0xFF
+};
 
 /**
  *  current battery status

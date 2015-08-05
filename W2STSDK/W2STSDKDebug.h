@@ -18,7 +18,9 @@
 
 /**
  *  Class that permit to read and write from the debug node console
+ * @author STMicroelectronics - Central Labs.
  */
+NS_CLASS_AVAILABLE(10_7, 5_0)
 @interface W2STSDKDebug : NSObject
 
 /**
@@ -28,8 +30,8 @@
 
 /**
  *  delegate used for notify new message in the console, when you set a delegate
- * we will automaticaly enable the notification for the out/error message
- * for disable the noditification set it to nil
+ * we will automatically enable the notification for the out/error message
+ * for disable the notification set it to nil
  */
 @property (nonatomic,weak,setter=setDelegate:,getter=getDelegate) id<W2STSDKDebugOutputDelegate> delegate;
 
@@ -43,7 +45,7 @@
  *
  *  @return pointer to a W2STSDKDebug class
  */
--(id) initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
+-(instancetype) initWithNode:(W2STSDKNode *)node device:(CBPeripheral *)device
          termChart:(CBCharacteristic*)termChar
           errChart:(CBCharacteristic*)errChar;
 

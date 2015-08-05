@@ -9,10 +9,15 @@
 #import "W2STSDKFeatureMemsSensorFusion.h"
 
 /**
- *  this feature export the quaternuion data that are computed on the node
- *  using the accelerometer, gyroscope and magnetometer data.
- *  in this case the quaternion are sended with a low precision and 3 quaternion
- * each package. in this way we can reach an hight frame rate.
+ *  The feature export the quaternuion data that are computed on the node
+ *  using the accelerometer, gyroscope and magnetometer data
+ * @par
+ * instead of {@link W2STSDKFeatureMemsSensorFusion} here the quaternion are send
+ * using short instead of float, and more than one at time, for reach hight transmission rate.
+ * @par
+ * in this case we assume that the quaternions are always normalized since the node
+ * will transmit only the vectorial component
+ * @author STMicroelectronics - Central Labs.
  */
 @interface W2STSDKFeatureMemsSensorFusionCompact : W2STSDKFeatureMemsSensorFusion
 
