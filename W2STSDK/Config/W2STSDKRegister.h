@@ -97,6 +97,7 @@ typedef NS_ENUM(NSInteger,  W2STSDKRegisterTarget_e) {
 +(instancetype)registerWithAddress:(NSInteger)address size:(NSInteger)size
                             target:(W2STSDKRegisterTarget_e)target;
 
+
 /**
  * Basic constructor of the Register class
  * @param address filed unit
@@ -132,6 +133,7 @@ typedef NS_ENUM(NSInteger,  W2STSDKRegisterTarget_e) {
           target:(W2STSDKRegisterTarget_e)target
            write:(BOOL)write
              ack:(BOOL)ack;
+
 /**
  * Get the data for read the register
  * @param target Mode Persistent/Session

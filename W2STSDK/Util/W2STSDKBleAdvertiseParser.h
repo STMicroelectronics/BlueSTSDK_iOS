@@ -63,7 +63,7 @@
 /**
  * parse the advertise data returned by the system
  * @param advertisementData ble advertise data
- * @throw an exception if the vendor specific field isn't compatible with the 
+ * @throw an exception if the vendor specific field isn't compatible with the
  * W2ST protocol
  */
 -(instancetype)initWithAdvertise:(NSDictionary*)advertisementData;
