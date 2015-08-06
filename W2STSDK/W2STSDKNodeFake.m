@@ -21,6 +21,7 @@
 #import "W2STSDKFeaturePressure.h"
 #import "W2STSDKFeatureProximity.h"
 #import "W2STSDKFeatureTemperature.h"
+#import "W2STSDKFeatureActivity.h"
 #import "W2STSDKFeatureMemsSensorFusion.h"
 
 /**
@@ -70,7 +71,8 @@
                           [[W2STSDKFeatureProximity alloc] initWhitNode:self],
                           [[W2STSDKFeatureTemperature alloc] initWhitNode:self],
                           [[W2STSDKFeatureMemsSensorFusion alloc] initWhitNode:self],
-                          [[W2STSDKFeatureMemsSensorFusionCompact alloc] initWhitNode:self]
+                          [[W2STSDKFeatureMemsSensorFusionCompact alloc] initWhitNode:self],
+                          [[W2STSDKFeatureActivity alloc] initWhitNode:self]
                           ];
     notifyFeatures = [NSMutableDictionary dictionary];
     return self;
