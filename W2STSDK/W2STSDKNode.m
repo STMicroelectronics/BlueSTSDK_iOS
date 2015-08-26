@@ -169,7 +169,9 @@ static dispatch_queue_t sNotificationQueue;
 
     W2STSDKBleAdvertiseParser *parser = [W2STSDKBleAdvertiseParser
                                          advertiseParserWithAdvertise:advertisementData];
-    [self buildAvailableFeatures: parser.featureMap maskFeatureMap:parser.featureMaskMap];
+    NSDictionary *maskFeatureMap = [[W2STSDKManager sharedInstance]getFeaturesForDevice: parser.deviceId];
+    
+    [self buildAvailableFeatures: parser.featureMap maskFeatureMap:maskFeatureMap];
     
     _type = parser.nodeType;
     _name = parser.name;

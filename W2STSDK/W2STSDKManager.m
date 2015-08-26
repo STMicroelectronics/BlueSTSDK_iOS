@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
+#include "Util/W2STSDKBleNodeDefines.h"
 #import "W2STSDKManager_prv.h"
 #import "W2STSDKNode_prv.h"
 #import "W2STSDKNodeFake.h"
@@ -38,6 +39,11 @@
     NSMutableSet *mDiscoveredNode;
     
     /**
+     * contains the map (featureMask_t,Feature class) for each know device id
+     */
+    NSMutableDictionary *mBoardFeatureMap;
+    
+    /**
      *  system ble manager
      */
     CBCentralManager * mCBCentralManager;
@@ -65,6 +71,15 @@
     mManagerListener = [NSMutableSet set];
     mCBCentralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     mNotificationQueue = dispatch_queue_create("W2STSDKManager", DISPATCH_QUEUE_CONCURRENT);
+    
+
+    NSDictionary *defaultValue =[W2STSDKBoardFeatureMap boardFeatureMap];
+    mBoardFeatureMap = [NSMutableDictionary dictionaryWithCapacity:defaultValue.count];
+    //for each key in defaultValue, add a new entry in the mBoardFeatureMap
+    [defaultValue enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
+        [mBoardFeatureMap setObject:[NSMutableDictionary dictionaryWithDictionary:object]
+                             forKey:key];
+    }];
     
     return self;
 }
@@ -169,6 +184,53 @@
     }//for
     return nil;
 }//nodeWithTag
+
+/**
+ *  for each key of the dictionary it check that it has only one bit to 1
+ *
+ *  @param features map of <uint32_t,Feature class>
+ *
+ *  @return true if all the keys have only one bit set to 1
+ */
+-(bool)checkFeatureMask:(NSDictionary*)features{
+    
+    for( NSNumber *n in features ){
+        uint32_t temp = n.unsignedIntValue;
+        
+        //http://stackoverflow.com/questions/109023/how-to-count-the-number-of-set-bits-in-a-32-bit-integer
+        temp = temp - ((temp >> 1) & 0x55555555);
+        temp = (temp & 0x33333333) + ((temp >> 2) & 0x33333333);
+        temp = (((temp + (temp >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
+        
+        if(temp!=1)
+            return false;
+    }
+    return true;
+    
+}
+
+-(void)addFeatureForBoard:(uint8_t)boardId features:(NSDictionary*)features{
+
+    if(![self checkFeatureMask:features])
+        @throw [NSException
+                exceptionWithName:@"Invalid feature key data"
+                reason:@"the key must have only one bit set to 1"
+                userInfo:nil];
+    NSMutableDictionary *addToMe = [mBoardFeatureMap objectForKey:
+                                  [NSNumber numberWithUnsignedChar:boardId]];
+    if(addToMe==nil){
+        [mBoardFeatureMap setObject:[NSMutableDictionary dictionaryWithDictionary:features]
+                             forKey:[NSNumber numberWithUnsignedChar:boardId]];
+    }else{
+        [addToMe addEntriesFromDictionary:features];
+    }
+    
+}
+
+-(NSDictionary*)getFeaturesForDevice:(uint8_t)deviceId{
+    return [mBoardFeatureMap objectForKey:
+            [NSNumber numberWithUnsignedChar:deviceId]];
+}
 
 #pragma mark - W2STSDKManager(prv)
 

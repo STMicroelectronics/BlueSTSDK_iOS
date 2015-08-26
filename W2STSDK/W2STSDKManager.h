@@ -103,6 +103,16 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(W2STSDKNode *)nodeWithTag:(NSString *)tag;
 
 /**
+ *  add to a device a list of possible feature exported by the node
+ *
+ *  @param boardId  new board id or a board id that we want extend
+ *  @param features map of new features add to the board, it is a dictionary of 
+ * <{@link featureMask_t},W2STSDKFeature>
+ * @throw and exception if the featureMask as more than one bit set to 1
+ */
+-(void)addFeatureForBoard:(uint8_t)boardId features:(NSDictionary*)features;
+
+/**
  *  get the singleton instance of the manager
  *
  *  @return instance of the W2STSDKManager

@@ -34,6 +34,13 @@
  */
 -(void)disconnect:(CBPeripheral*)peripheral;
 
+/**
+ * get the list of feature that is possible find in a specific device.
+ *
+ *  @return map of <{@link featureMask_t},W2STSDKFeature>
+ */
+-(NSDictionary*)getFeaturesForDevice:(uint8_t)deviceId;
+
 @end
 
 #endif

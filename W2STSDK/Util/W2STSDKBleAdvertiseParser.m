@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CBAdvertisementData.h>
+#import "W2STSDKManager_prv.h"
 #import "W2STSDKBleAdvertiseParser.h"
 #import "NSData+NumberConversion.h"
 
@@ -113,11 +114,6 @@
     }//if len check
     
     return self;
-}
-
--(NSDictionary*) featureMaskMap{
-    id temp = [NSNumber numberWithUnsignedChar: _deviceId];
-    return [[W2STSDKBoardFeatureMap boardFeatureMap] objectForKey:temp];
 }
 
 @end

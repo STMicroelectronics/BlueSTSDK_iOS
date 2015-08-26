@@ -68,14 +68,6 @@
  */
 -(instancetype)initWithAdvertise:(NSDictionary*)advertisementData;
 
-/**
- *  map of <{@link featureMask_t},W2STSDKFeature>, this can be used for understand what
- * feature a ble characteristic export
- *
- *  @return map of <featureMask_t,W2STSDKFeature>
- */
--(NSDictionary*) featureMaskMap;
-
 
 @end
 

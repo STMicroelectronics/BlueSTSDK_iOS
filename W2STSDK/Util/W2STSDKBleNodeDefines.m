@@ -162,7 +162,7 @@ static NSDictionary *nucleoFeatureMap = nil;
 static NSDictionary *wesuFeatureMap = nil;
 
 /**
- * contains the map (featureMask_t,Feature class) for each know device id
+ * contains the default map (featureMask_t,Feature class) for each know device id
  */
 static NSDictionary *boardFeatureMap = nil;
 
@@ -179,7 +179,7 @@ static NSDictionary *boardFeatureMap = nil;
                              @0x00080000: [W2STSDKFeatureHumidity class], //humidity
                              @0x00040000: [W2STSDKFeatureTemperature class], //temperature
                              @0x00100000: [W2STSDKFeaturePressure class], //pressure
-                             @0x00000010: [W2STSDKFeatureActivity class], //Actvity 
+                             @0x00000010: [W2STSDKFeatureActivity class], //Actvity
                              @0x00000080: [W2STSDKFeatureMemsSensorFusion class], //Mems sensor fusion
                              @0x00000100: [W2STSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
                              @0x00000200: [W2STSDKFeatureFreeFall class], //Free fall detection
