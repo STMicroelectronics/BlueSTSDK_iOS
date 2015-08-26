@@ -15,14 +15,41 @@
  */
 @interface W2STSDKFeatureActivity : W2STSDKFeature
 
-
+/**
+ *  different type of activity recognised by the device
+ */
 typedef NS_ENUM(NSInteger, W2STSDKFeatureActivityType){
-    W2STSDKFeatureActivityTypeStanding =0x00,
-    W2STSDKFeatureActivityTypeWalking =0x01,
-    W2STSDKFeatureActivityTypeFastWalking =0x02,
-    W2STSDKFeatureActivityTypeRunning =0x03,
-    W2STSDKFeatureActivityTypeCycling =0x04,
-    W2STSDKFeatureActivityTypeDriving =0x05,
+    /**
+     *  we don't have enough data for select an activity
+     */
+    W2STSDKFeatureActivityTypeNoActivity =0x00,
+    /**
+     *  the person is standing
+     */
+    W2STSDKFeatureActivityTypeStanding =0x01,
+    /**
+     *  the person is walking
+     */
+    W2STSDKFeatureActivityTypeWalking =0x02,
+    /**
+     *  the person is fast walking
+     */
+    W2STSDKFeatureActivityTypeFastWalking =0x03,
+    /**
+     *  the person is jogging
+     */
+    W2STSDKFeatureActivityTypeJogging =0x04,
+    /**
+     *  the person is biking
+     */
+    W2STSDKFeatureActivityTypeBiking =0x05,
+    /**
+     *  the person is driving
+     */
+    W2STSDKFeatureActivityTypeDriving =0x06,
+    /**
+     *  unknown activity
+     */
     W2STSDKFeatureActivityTypeError =0xFF
 };
 
@@ -33,6 +60,15 @@ typedef NS_ENUM(NSInteger, W2STSDKFeatureActivityType){
  *
  *  @return activity value
  */
-+(W2STSDKFeatureActivityType)getActivity:(W2STSDKFeatureSample*)sample;
++(W2STSDKFeatureActivityType)getActivityType:(W2STSDKFeatureSample*)sample;
+
+/**
+ *  return the data when we receive the notification
+ *
+ *  @param sample data read from the node
+ *
+ *  @return data when we receive the data
+ */
++(NSDate*)getActivityDate:(W2STSDKFeatureSample*)sample;
 
 @end

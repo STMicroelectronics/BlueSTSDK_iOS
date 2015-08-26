@@ -7,56 +7,42 @@
 //
 
 #import "W2STSDKFeature_prv.h"
-#import "W2STSDKFeatureActivity.h"
+#import "W2STSDKFeatureFreeFall.h"
 #import "W2STSDKFeatureField.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Activity"
+#define FEATURE_NAME @"FreeFall"
 #define FEATURE_UNIT @""
 #define FEATURE_MIN 0
-#define FEATURE_MAX 6
+#define FEATURE_MAX 1
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeUInt8
 
 /**
- * @memberof W2STSDKFeatureActivity
+ * @memberof W2STSDKFeatureTemperature
  *  array with the description of field exported by the feature
  */
 static NSArray *sFieldDesc;
 
-@implementation W2STSDKFeatureActivity
+@implementation W2STSDKFeatureFreeFall
 
 +(void)initialize{
-    if(self == [W2STSDKFeatureActivity class]){
-        sFieldDesc = [[NSArray alloc] initWithObjects:
+    if(self == [W2STSDKFeatureFreeFall class]){
+        sFieldDesc = [NSArray arrayWithObject:
                       [W2STSDKFeatureField  createWithName: FEATURE_NAME
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
                                                        min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      [W2STSDKFeatureField  createWithName: @"Date"
-                                                      unit: @"s" //second
-                                                      type:W2STSDKFeatureFieldTypeDouble
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      nil];
+                                                       max:@FEATURE_MAX ]];
     }
     
 }
 
-+(W2STSDKFeatureActivityType)getActivityType:(W2STSDKFeatureSample*)sample{
++(bool)getFreeFallStatus:(W2STSDKFeatureSample*)sample{
     if(sample.data.count>0){
-        return [(NSNumber*)[sample.data objectAtIndex:0] unsignedCharValue];
+        return [(NSNumber*)[sample.data objectAtIndex:0] unsignedCharValue]!=0;
     }
-    return W2STSDKFeatureActivityTypeError;
-}
-
-+(NSDate*)getActivityDate:(W2STSDKFeatureSample*)sample{
-    if(sample.data.count>1){
-        NSTimeInterval time = [(NSNumber*)[sample.data objectAtIndex:0] doubleValue];
-        return [NSDate dateWithTimeIntervalSinceReferenceDate:time];
-    }
-    return nil;
+    return false;
 }
 
 -(instancetype) initWhitNode:(W2STSDKNode *)node{
@@ -70,14 +56,14 @@ static NSArray *sFieldDesc;
 
 
 /**
- *  read int8 for build the activity value, create the new sample and
+ *  read int8 for build the temperature value, create the new sample and
  * and notify it to the delegate
  *
  *  @param timestamp data time stamp
  *  @param rawData   array of byte send by the node
  *  @param offset    offset where we have to start reading the data
  *
- *  @throw exception if there are no byte available in the rawdata array
+ *  @throw exception if there are no 2 bytes available in the rawdata array
  *  @return number of read bytes
  */
 -(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
@@ -89,13 +75,10 @@ static NSArray *sFieldDesc;
                 userInfo:nil];
     }//if
     
-    uint8_t activityId= [rawData extractUInt8FromOffset:offset];
+    uint8_t statusId= [rawData extractUInt8FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObjects:
-                        [NSNumber numberWithUnsignedChar:activityId],
-                        [NSNumber numberWithDouble:[NSDate timeIntervalSinceReferenceDate]],
-                     nil];
-    
+    NSArray *data = [NSArray arrayWithObject:
+                        [NSNumber numberWithUnsignedChar:statusId]];
     W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     
     self.lastSample = sample;
@@ -103,19 +86,19 @@ static NSArray *sFieldDesc;
     [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 1)]
                     sample:sample];
     
-   return 1;
+   return 2;
 }
 
 @end
 
 #import "../W2STSDKFeature+fake.h"
 
-@implementation W2STSDKFeatureActivity (fake)
+@implementation W2STSDKFeatureFreeFall (fake)
 
 -(NSData*) generateFakeData{
     NSMutableData *data = [NSMutableData dataWithCapacity:1];
     
-    uint8_t temp = FEATURE_MIN + rand()%((FEATURE_MAX-FEATURE_MIN+1));
+    uint8_t temp = FEATURE_MIN + rand()%((FEATURE_MAX-FEATURE_MIN));
     [data appendBytes:&temp length:1];
     
     return data;

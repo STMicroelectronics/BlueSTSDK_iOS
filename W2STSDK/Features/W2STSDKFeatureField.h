@@ -25,6 +25,10 @@ typedef NS_ENUM(NSInteger, W2STSDKFeatureFieldType){
      */
     W2STSDKFeatureFieldTypeFloat,
     /**
+     *  64bit float number ieee 754 format
+     */
+    W2STSDKFeatureFieldTypeDouble,
+    /**
      *  64bit signed integer
      */
     W2STSDKFeatureFieldTypeInt64,

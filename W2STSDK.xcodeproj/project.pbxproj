@@ -68,8 +68,12 @@
 		665242871B0B202500931F93 /* W2STSDKManager_prv.h in Headers */ = {isa = PBXBuildFile; fileRef = 665242861B0B1FEE00931F93 /* W2STSDKManager_prv.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		665242891B0B20AC00931F93 /* W2STSDKDebug_prv.h in Headers */ = {isa = PBXBuildFile; fileRef = 665242881B0B207100931F93 /* W2STSDKDebug_prv.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6652428B1B0B20FB00931F93 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6652428A1B0B20FB00931F93 /* CoreFoundation.framework */; };
+		667BAAB91B8CB99500CADD2E /* W2STSDKFeatureFreeFall.h in Headers */ = {isa = PBXBuildFile; fileRef = 667BAAB71B8CB99500CADD2E /* W2STSDKFeatureFreeFall.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		667BAABA1B8CB99500CADD2E /* W2STSDKFeatureFreeFall.m in Sources */ = {isa = PBXBuildFile; fileRef = 667BAAB81B8CB99500CADD2E /* W2STSDKFeatureFreeFall.m */; };
 		66C4A3C41B13689C00990DC0 /* W2STSDKFeatureGenPurpose.h in Headers */ = {isa = PBXBuildFile; fileRef = 66C4A3C21B13689C00990DC0 /* W2STSDKFeatureGenPurpose.h */; };
 		66C4A3C51B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C4A3C31B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m */; };
+		66E22C311B73989500989E09 /* W2STSDKFeatureActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 66E22C2F1B73989500989E09 /* W2STSDKFeatureActivity.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		66E22C321B73989500989E09 /* W2STSDKFeatureActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E22C301B73989500989E09 /* W2STSDKFeatureActivity.m */; };
 		EA01F0151B2F1BE800B35152 /* W2STSDKCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F00D1B2F1BE800B35152 /* W2STSDKCommand.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA01F0161B2F1BE800B35152 /* W2STSDKCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F00E1B2F1BE800B35152 /* W2STSDKCommand.m */; };
 		EA01F0191B2F1BE800B35152 /* W2STSDKRegister.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F0111B2F1BE800B35152 /* W2STSDKRegister.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -156,9 +160,13 @@
 		665242861B0B1FEE00931F93 /* W2STSDKManager_prv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = W2STSDKManager_prv.h; sourceTree = "<group>"; };
 		665242881B0B207100931F93 /* W2STSDKDebug_prv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = W2STSDKDebug_prv.h; sourceTree = "<group>"; };
 		6652428A1B0B20FB00931F93 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		667BAAB71B8CB99500CADD2E /* W2STSDKFeatureFreeFall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = W2STSDKFeatureFreeFall.h; sourceTree = "<group>"; };
+		667BAAB81B8CB99500CADD2E /* W2STSDKFeatureFreeFall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = W2STSDKFeatureFreeFall.m; sourceTree = "<group>"; };
 		66C4A3C21B13689C00990DC0 /* W2STSDKFeatureGenPurpose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = W2STSDKFeatureGenPurpose.h; sourceTree = "<group>"; };
 		66C4A3C31B13689C00990DC0 /* W2STSDKFeatureGenPurpose.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = W2STSDKFeatureGenPurpose.m; sourceTree = "<group>"; };
 		66C9E6571B0C67380091CFD0 /* W2STSDKFeature+fake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "W2STSDKFeature+fake.h"; sourceTree = "<group>"; };
+		66E22C2F1B73989500989E09 /* W2STSDKFeatureActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = W2STSDKFeatureActivity.h; sourceTree = "<group>"; };
+		66E22C301B73989500989E09 /* W2STSDKFeatureActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = W2STSDKFeatureActivity.m; sourceTree = "<group>"; };
 		EA01F00D1B2F1BE800B35152 /* W2STSDKCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = W2STSDKCommand.h; path = Config/W2STSDKCommand.h; sourceTree = "<group>"; };
 		EA01F00E1B2F1BE800B35152 /* W2STSDKCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = W2STSDKCommand.m; path = Config/W2STSDKCommand.m; sourceTree = "<group>"; };
 		EA01F0111B2F1BE800B35152 /* W2STSDKRegister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = W2STSDKRegister.h; path = Config/W2STSDKRegister.h; sourceTree = "<group>"; };
@@ -270,6 +278,10 @@
 		665242291B0B1C1400931F93 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				667BAAB71B8CB99500CADD2E /* W2STSDKFeatureFreeFall.h */,
+				667BAAB81B8CB99500CADD2E /* W2STSDKFeatureFreeFall.m */,
+				66E22C2F1B73989500989E09 /* W2STSDKFeatureActivity.h */,
+				66E22C301B73989500989E09 /* W2STSDKFeatureActivity.m */,
 				6652422A1B0B1C1400931F93 /* W2STSDKFeatureAcceleration.h */,
 				6652422B1B0B1C1400931F93 /* W2STSDKFeatureAcceleration.m */,
 				6652422C1B0B1C1400931F93 /* W2STSDKFeatureAutoConfigurable.h */,
@@ -354,6 +366,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				667BAAB91B8CB99500CADD2E /* W2STSDKFeatureFreeFall.h in Headers */,
+				66E22C311B73989500989E09 /* W2STSDKFeatureActivity.h in Headers */,
 				665242231B0B1C0800931F93 /* W2STSDKFeature.h in Headers */,
 				665242271B0B1C0800931F93 /* W2STSDKNode.h in Headers */,
 				665242211B0B1C0800931F93 /* W2STSDKDebug.h in Headers */,
@@ -493,7 +507,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				665242261B0B1C0800931F93 /* W2STSDKManager.m in Sources */,
+				667BAABA1B8CB99500CADD2E /* W2STSDKFeatureFreeFall.m in Sources */,
 				662D8BD91B0B6C88006B7538 /* W2STSDKNodeFake.m in Sources */,
+				66E22C321B73989500989E09 /* W2STSDKFeatureActivity.m in Sources */,
 				665242241B0B1C0800931F93 /* W2STSDKFeature.m in Sources */,
 				665242571B0B1C1400931F93 /* W2STSDKFeatureAutoConfigurable.m in Sources */,
 				EA01F0161B2F1BE800B35152 /* W2STSDKCommand.m in Sources */,
