@@ -9,18 +9,15 @@
 #import "W2STSDKFeature.h"
 
 /**
- * Export the data from a temperature sensor
+ * Notify a node free fall event detection
  * @author STMicroelectronics - Central Labs.
-
  */
 @interface W2STSDKFeatureFreeFall : W2STSDKFeature
 
 /**
- *  extract the activity value
- *
  *  @param data sample read from the node
  *
- *  @return activity value
+ *  @return true if a free fall was detected by the board
  */
 +(bool)getFreeFallStatus:(W2STSDKFeatureSample*)sample;
 

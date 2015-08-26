@@ -20,6 +20,7 @@
 #import "../Features/W2STSDKFeatureProximity.h"
 #import "../Features/W2STSDKFeatureBattery.h"
 #import "../Features/W2STSDKFeatureActivity.h"
+#import "../Features/W2STSDKFeatureFreeFall.h"
 
 #import "W2STSDKBleNodeDefines.h"
 #import "NSData+NumberConversion.h"
@@ -181,6 +182,7 @@ static NSDictionary *boardFeatureMap = nil;
                              @0x00000010: [W2STSDKFeatureActivity class], //Actvity 
                              @0x00000080: [W2STSDKFeatureMemsSensorFusion class], //Mems sensor fusion
                              @0x00000100: [W2STSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
+                             @0x00000200: [W2STSDKFeatureFreeFall class], //Free fall detection
                              @0x01000000: [W2STSDKFeatureLuminosity class], //luminosity
                              @0x02000000: [W2STSDKFeatureProximity class], //proximity
                              @0x00020000: [W2STSDKFeatureBattery class] //battery
