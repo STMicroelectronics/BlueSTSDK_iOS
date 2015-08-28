@@ -21,6 +21,7 @@
 #import "../Features/W2STSDKFeatureBattery.h"
 #import "../Features/W2STSDKFeatureActivity.h"
 #import "../Features/W2STSDKFeatureFreeFall.h"
+#import "../Features/W2STSDKFeatureCarryPosition.h"
 
 #import "W2STSDKBleNodeDefines.h"
 #import "NSData+NumberConversion.h"
@@ -180,6 +181,7 @@ static NSDictionary *boardFeatureMap = nil;
                              @0x00040000: [W2STSDKFeatureTemperature class], //temperature
                              @0x00100000: [W2STSDKFeaturePressure class], //pressure
                              @0x00000010: [W2STSDKFeatureActivity class], //Actvity
+                             @0x00000008: [W2STSDKFeatureCarryPosition class], //carry position recognition
                              @0x00000080: [W2STSDKFeatureMemsSensorFusion class], //Mems sensor fusion
                              @0x00000100: [W2STSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
                              @0x00000200: [W2STSDKFeatureFreeFall class], //Free fall detection

@@ -18,6 +18,7 @@
 #import "W2STSDKFeatureActivity.h"
 #import "W2STSDKFeatureAutoConfigurable.h"
 #import "W2STSDKFeatureBattery.h"
+#import "W2STSDKFeatureCarryPosition.h"
 #import "W2STSDKFeatureField.h"
 #import "W2STSDKFeatureFreeFall.h"
 #import "W2STSDKFeatureGyroscope.h"

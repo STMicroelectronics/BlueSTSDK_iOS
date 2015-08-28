@@ -9,7 +9,7 @@
 #import "W2STSDKFeature.h"
 
 /**
- * Export the data from a temperature sensor
+ * Export the data from the activiy recognition algorithm
  * @author STMicroelectronics - Central Labs.
 
  */

@@ -7,61 +7,48 @@
 //
 
 #import "W2STSDKFeature_prv.h"
-#import "W2STSDKFeatureActivity.h"
+#import "W2STSDKFeatureCarryPosition.h"
 #import "W2STSDKFeatureField.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Activity"
+#define FEATURE_NAME @"Carry Position"
 #define FEATURE_UNIT @""
 #define FEATURE_MIN 0
 #define FEATURE_MAX 6
 #define FEATURE_TYPE W2STSDKFeatureFieldTypeUInt8
 
 /**
- * @memberof W2STSDKFeatureActivity
+ * @memberof W2STSDKFeatureCarryPosition
  *  array with the description of field exported by the feature
  */
 static NSArray *sFieldDesc;
 
-@implementation W2STSDKFeatureActivity
+@implementation W2STSDKFeatureCarryPosition
 
 +(void)initialize{
-    if(self == [W2STSDKFeatureActivity class]){
-        sFieldDesc = [[NSArray alloc] initWithObjects:
+    if(self == [W2STSDKFeatureCarryPosition class]){
+        sFieldDesc = [NSArray arrayWithObject:
                       [W2STSDKFeatureField  createWithName: FEATURE_NAME
                                                       unit:FEATURE_UNIT
                                                       type:FEATURE_TYPE
                                                        min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      [W2STSDKFeatureField  createWithName: @"Date"
-                                                      unit: @"s" //second
-                                                      type:W2STSDKFeatureFieldTypeDouble
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      nil];
+                                                       max:@FEATURE_MAX ]];
     }
     
 }
 
-+(W2STSDKFeatureActivityType)getActivityType:(W2STSDKFeatureSample*)sample{
++(W2STSDKFeatureCarryPositionType)getPositionType:(W2STSDKFeatureSample*)sample{
     if(sample.data.count>0){
         uint8_t value = [(NSNumber*)[sample.data objectAtIndex:0] unsignedCharValue];
         if(value >= FEATURE_MIN && value<=FEATURE_MAX)
             return value;
         //else -> invalid enum value
-        return W2STSDKFeatureActivityTypeError;
-    }
-    return W2STSDKFeatureActivityTypeError;
-}
+            return W2STSDKFeatureCarryPositionError;
+    }//if
+    return W2STSDKFeatureCarryPositionError;
+}//getPositionType
 
-+(NSDate*)getActivityDate:(W2STSDKFeatureSample*)sample{
-    if(sample.data.count>1){
-        NSTimeInterval time = [(NSNumber*)[sample.data objectAtIndex:0] doubleValue];
-        return [NSDate dateWithTimeIntervalSinceReferenceDate:time];
-    }
-    return nil;
-}
 
 -(instancetype) initWhitNode:(W2STSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
@@ -74,7 +61,7 @@ static NSArray *sFieldDesc;
 
 
 /**
- *  read int8 for build the activity value, create the new sample and
+ *  read int8 for build the position value, create the new sample and
  * and notify it to the delegate
  *
  *  @param timestamp data time stamp
@@ -93,12 +80,10 @@ static NSArray *sFieldDesc;
                 userInfo:nil];
     }//if
     
-    uint8_t activityId= [rawData extractUInt8FromOffset:offset];
+    uint8_t positionId= [rawData extractUInt8FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObjects:
-                        [NSNumber numberWithUnsignedChar:activityId],
-                        [NSNumber numberWithDouble:[NSDate timeIntervalSinceReferenceDate]],
-                     nil];
+    NSArray *data = [NSArray arrayWithObject:
+                        [NSNumber numberWithUnsignedChar:positionId]];
     
     W2STSDKFeatureSample *sample = [W2STSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     
@@ -114,7 +99,7 @@ static NSArray *sFieldDesc;
 
 #import "../W2STSDKFeature+fake.h"
 
-@implementation W2STSDKFeatureActivity (fake)
+@implementation W2STSDKFeatureCarryPosition (fake)
 
 -(NSData*) generateFakeData{
     NSMutableData *data = [NSMutableData dataWithCapacity:1];

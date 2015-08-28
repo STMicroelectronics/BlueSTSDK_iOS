@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6602184A1B903A37006246E9 /* W2STSDKFeatureCarryPosition.h in Headers */ = {isa = PBXBuildFile; fileRef = 660218481B903A37006246E9 /* W2STSDKFeatureCarryPosition.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6602184B1B903A37006246E9 /* W2STSDKFeatureCarryPostion.m in Sources */ = {isa = PBXBuildFile; fileRef = 660218491B903A37006246E9 /* W2STSDKFeatureCarryPostion.m */; };
 		66105DA31B0CC7190050E399 /* W2STSDKFeature+fake.h in Headers */ = {isa = PBXBuildFile; fileRef = 66C9E6571B0C67380091CFD0 /* W2STSDKFeature+fake.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		662D8BD81B0B6C88006B7538 /* W2STSDKNodeFake.h in Headers */ = {isa = PBXBuildFile; fileRef = 662D8BD61B0B6C88006B7538 /* W2STSDKNodeFake.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		662D8BD91B0B6C88006B7538 /* W2STSDKNodeFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 662D8BD71B0B6C88006B7538 /* W2STSDKNodeFake.m */; };
@@ -97,6 +99,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		660218481B903A37006246E9 /* W2STSDKFeatureCarryPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = W2STSDKFeatureCarryPosition.h; sourceTree = "<group>"; };
+		660218491B903A37006246E9 /* W2STSDKFeatureCarryPostion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = W2STSDKFeatureCarryPostion.m; sourceTree = "<group>"; };
 		662D8BD61B0B6C88006B7538 /* W2STSDKNodeFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = W2STSDKNodeFake.h; sourceTree = "<group>"; };
 		662D8BD71B0B6C88006B7538 /* W2STSDKNodeFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = W2STSDKNodeFake.m; sourceTree = "<group>"; };
 		665241F01B0B1BB100931F93 /* W2STSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = W2STSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -278,6 +282,8 @@
 		665242291B0B1C1400931F93 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				660218481B903A37006246E9 /* W2STSDKFeatureCarryPosition.h */,
+				660218491B903A37006246E9 /* W2STSDKFeatureCarryPostion.m */,
 				667BAAB71B8CB99500CADD2E /* W2STSDKFeatureFreeFall.h */,
 				667BAAB81B8CB99500CADD2E /* W2STSDKFeatureFreeFall.m */,
 				66E22C2F1B73989500989E09 /* W2STSDKFeatureActivity.h */,
@@ -366,6 +372,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6602184A1B903A37006246E9 /* W2STSDKFeatureCarryPosition.h in Headers */,
 				667BAAB91B8CB99500CADD2E /* W2STSDKFeatureFreeFall.h in Headers */,
 				66E22C311B73989500989E09 /* W2STSDKFeatureActivity.h in Headers */,
 				665242231B0B1C0800931F93 /* W2STSDKFeature.h in Headers */,
@@ -506,6 +513,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6602184B1B903A37006246E9 /* W2STSDKFeatureCarryPostion.m in Sources */,
 				665242261B0B1C0800931F93 /* W2STSDKManager.m in Sources */,
 				667BAABA1B8CB99500CADD2E /* W2STSDKFeatureFreeFall.m in Sources */,
 				662D8BD91B0B6C88006B7538 /* W2STSDKNodeFake.m in Sources */,
