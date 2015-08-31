@@ -18,6 +18,8 @@
 #import "Util/W2STSDKBleNodeDefines.h"
 #import "util/NSData+NumberConversion.h"
 
+#define RETRAY_ENABLE_NOTIFICATION_DELAY 1.0f
+
 @interface W2STSDKNode() <CBPeripheralDelegate>
 @end
 
@@ -92,6 +94,15 @@ static dispatch_queue_t sNotificationQueue;
      */
     uint16_t mLastTs;
     
+    /**
+     * we can send a request for notification before the connection is completed
+     * (es. we wait that the user insert a pin) -> we use this set for keep the
+     * notification request and we remote it when we receive some data, otherwise we
+     * re ask for enable the notification.
+     * you have to synchronize the access of this structure
+     */
+    NSMutableSet *mAskForNotification;
+    
 }
 
 /**
@@ -152,6 +163,7 @@ static dispatch_queue_t sNotificationQueue;
     mBleConnectionDelegates = [NSMutableSet set];
     mCharFeatureMap = [NSMutableArray array];
     mNotifyFeature = [NSMutableSet set];
+    mAskForNotification = [NSMutableSet set];
     mFeatureCommand=nil;
     _debugConsole=nil;
     _configControl=nil;
@@ -272,11 +284,13 @@ static dispatch_queue_t sNotificationQueue;
             //all ok
             [self updateNodeStatus:W2STSDKNodeStateIdle];
         }else{
-            NSLog(@"Node: %@ Error: %@",_name,[error debugDescription]);
+            NSLog(@"Disconnect: Node: %@ Error: %@ (%d)",_name,
+                  [error localizedDescription],(int)error.code);
             [self updateNodeStatus:W2STSDKNodeStateDead];
         }//if else error==nil
     }else{
-        NSLog(@"Node: %@ Error: %@",_name,[error debugDescription]);
+        NSLog(@"Disconnect Node: %@ Error: %@ (%d)",_name,
+              [error localizedDescription],(int)error.code);
         [self updateNodeStatus:W2STSDKNodeStateUnreachable];
     }//if else
 }//completeDisconnection
@@ -298,7 +312,8 @@ static dispatch_queue_t sNotificationQueue;
 }//disconnect
 
 -(void)connectionError:(NSError*)error{
-    NSLog(@"Error Node:%@ %@ (%ld)",self.name,error.description,(long)error.code);
+    NSLog(@"Connection Node:%@ Error:%@ (%d)",_name,
+          error.localizedDescription,(int)error.code);
    [self updateNodeStatus:W2STSDKNodeStateDead];
 }//connectionError
 
@@ -335,9 +350,16 @@ static dispatch_queue_t sNotificationQueue;
         return false;
     
     CBCharacteristic *c= [self extractCharacteristicsFromFeature:feature];
+    
     if(c==nil)
         return false;
+    
+    @synchronized(mAskForNotification){
+         [mAskForNotification addObject:c.UUID];
+    }//synchronized
+    
     [mPeripheral setNotifyValue:YES forCharacteristic:c];
+    
     [mNotifyFeature addObject:feature];
     return true;
 }//enableNotification
@@ -348,8 +370,18 @@ static dispatch_queue_t sNotificationQueue;
     CBCharacteristic *c=[self extractCharacteristicsFromFeature:feature];
     if(c==nil)
         return false;
+
+    //we remove anyway the uuid, in case we disable the notification before
+    //before receive some data
+    //we do it before set it to no, for avoid that the callback see the object
+    //still inside the set
+    @synchronized(mAskForNotification){
+        [mAskForNotification removeObject:c.UUID];
+    }//synchronized
     [mPeripheral setNotifyValue:NO forCharacteristic:c];
     [mNotifyFeature removeObject:feature];
+
+
     return true;
 }//disableNotification
 
@@ -565,8 +597,12 @@ didDiscoverCharacteristicsForService:(CBService *)service
     
     [mCharDiscoverServiceReq removeObject:service];
     if(mCharDiscoverServiceReq.count == 0){
-        if(mFeatureCommand!=nil)
+        if(mFeatureCommand!=nil){
+            @synchronized(mAskForNotification){
+                [mAskForNotification addObject:mFeatureCommand.UUID];
+            }
            [mPeripheral setNotifyValue:YES forCharacteristic:mFeatureCommand];
+        }
         [self updateNodeStatus:W2STSDKNodeStateConnected];
     }//if
     
@@ -650,13 +686,19 @@ didDiscoverCharacteristicsForService:(CBService *)service
 - (void)peripheral:(CBPeripheral *)peripheral
 didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error {
-    
     if(error){
-        NSLog(@"Error updating the char: %@ Error: %@",
+        NSLog(@"Error reading the char: %@ Error: %@",
               characteristic.UUID.UUIDString,error.localizedDescription);
         [self updateNodeStatus:W2STSDKNodeStateLost];
         return;
     }//if
+    
+    //we are reading the data so we correctly enable the notification
+    @synchronized(mAskForNotification){
+        if( [mAskForNotification containsObject:characteristic.UUID]){
+            [mAskForNotification removeObject:characteristic.UUID];
+        }//if
+    }//synchronized
     
     [self characteristicUpdate:characteristic];
 }//didUpdateValueForCharacteristic
@@ -691,11 +733,28 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
 - (void)peripheral:(CBPeripheral *)peripheral
 didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error{
+    
     if(error){
         NSLog(@"Error updating the char: %@ Error: %@",
               characteristic.UUID.UUIDString,error.localizedDescription);
         [self updateNodeStatus:W2STSDKNodeStateLost];
-    }//if
+    }else{
+        @synchronized(mAskForNotification){
+            [mAskForNotification containsObject:characteristic.UUID];
+        }//syncronized
+        dispatch_time_t when = dispatch_time(DISPATCH_TIME_NOW,
+                (int64_t)(RETRAY_ENABLE_NOTIFICATION_DELAY) * NSEC_PER_SEC);
+        //we reuse the queue for the notification
+        dispatch_after(when, sNotificationQueue, ^{
+            @synchronized(mAskForNotification){
+                //if the uuid is still there we didn't receive data ->
+                //subscribe again to the characteristics
+                if([mAskForNotification containsObject:characteristic.UUID]){
+                    [mPeripheral setNotifyValue:YES forCharacteristic:characteristic]; //request again
+                }//if
+            }//syncronized
+        });
+    }//if-else
 }//didUpdateNotificationStateForCharacteristic
 
 +(NSString*) stateToString:(W2STSDKNodeState)state{

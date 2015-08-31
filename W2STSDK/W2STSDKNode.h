@@ -24,6 +24,15 @@
 /**
  * Class that represent a remote device that will export some data (as {@link W2STSDKFeature})
  * that the user can query or ask to be notify when they change.
+ *
+ *
+ * @note
+ * In case that the node require the a secure connection with the pin it can happen
+ * that the notification subscription are sent before that the connection complete.
+ * Is not possible have callback/notification when the connection complete.
+ * for this reason we try to subscribe the feature every second until we didn't
+ * receive some data from it.
+ *
  * @author STMicroelectronics - Central Labs.
  */
 NS_CLASS_AVAILABLE(10_7, 5_0)
