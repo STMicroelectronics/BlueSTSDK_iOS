@@ -226,6 +226,16 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 -(NSArray*) getFeatures;
 
 /**
+ *  return a particular feature or null if it is not available
+ *
+ *  @param type type of feature that we want have
+ *
+ *  @return null if the feature doesn't exit, otherwise the class that impement 
+ * the request feature
+ */
+-(BlueSTSDKFeature*)getFeatureOfType:(Class)type;
+
+/**
  *  request to update the rssi value
  *  the answer is notify through the {@link BlueSTSDKNodeBleConnectionParamDelegate::node:didChangeRssi:}
  * callback

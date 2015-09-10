@@ -255,6 +255,23 @@ static dispatch_queue_t sNotificationQueue;
     return mAvailableFeature;
 }//getFeatures
 
+-(BlueSTSDKFeature*) getFeatureOfType:(Class)type{
+    
+    NSUInteger featureIdx = [mAvailableFeature indexOfObjectPassingTest:
+                                ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isKindOfClass: type]) {
+            *stop = YES;
+            return YES;
+        }
+        return NO;
+    }];
+    if(featureIdx == NSNotFound){
+        return nil;
+    }//else
+    return [mAvailableFeature objectAtIndex:featureIdx];
+}
+
+
 -(void)connect{
     mUserAskDisconnect=false;
     [self updateNodeStatus:BlueSTSDKNodeStateConnecting];
@@ -396,8 +413,8 @@ static dispatch_queue_t sNotificationQueue;
  */
 +(NSData*)prepareMessageWithMask:(featureMask_t)mask type:(uint8_t)type data:(NSData*)data{
     NSMutableData *msg = [NSMutableData dataWithCapacity:(sizeof(featureMask_t)+1+data.length)];
-    [msg appendBytes:&type length:1];
     [msg appendBytes:&mask length:4];
+    [msg appendBytes:&type length:1];
     [msg appendData:data];
     return msg;
 }//prepareMessageWithMask
