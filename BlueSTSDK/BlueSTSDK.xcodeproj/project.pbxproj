@@ -76,6 +76,9 @@
 		66C4A3C51B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C4A3C31B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.m */; };
 		66E22C311B73989500989E09 /* BlueSTSDKFeatureActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 66E22C2F1B73989500989E09 /* BlueSTSDKFeatureActivity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66E22C321B73989500989E09 /* BlueSTSDKFeatureActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E22C301B73989500989E09 /* BlueSTSDKFeatureActivity.m */; };
+		66E6EA461BAAC0BD000A5968 /* BlueSTSDKConfigControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB52A1A1B4ECCBC00231B83 /* BlueSTSDKConfigControl.m */; };
+		66E6EA471BAAC0D8000A5968 /* BlueSTSDKConfigControl.h in Headers */ = {isa = PBXBuildFile; fileRef = EAB52A191B4ECCBC00231B83 /* BlueSTSDKConfigControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		66E6EA481BAAC0E0000A5968 /* BlueSTSDKConfigControl_prv.h in Headers */ = {isa = PBXBuildFile; fileRef = EAB52A181B4ECCBC00231B83 /* BlueSTSDKConfigControl_prv.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		EA01F0151B2F1BE800B35152 /* BlueSTSDKCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F00D1B2F1BE800B35152 /* BlueSTSDKCommand.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA01F0161B2F1BE800B35152 /* BlueSTSDKCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F00E1B2F1BE800B35152 /* BlueSTSDKCommand.m */; };
 		EA01F0191B2F1BE800B35152 /* BlueSTSDKRegister.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F0111B2F1BE800B35152 /* BlueSTSDKRegister.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -83,9 +86,6 @@
 		EA01F01B1B2F1BE800B35152 /* BlueSTSDKRegisterDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F0131B2F1BE800B35152 /* BlueSTSDKRegisterDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA01F01C1B2F1BE800B35152 /* BlueSTSDKRegisterDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F0141B2F1BE800B35152 /* BlueSTSDKRegisterDefines.m */; };
 		EA01F01E1B305A8800B35152 /* BlueSTSDKCommand_prv.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F01D1B305A8800B35152 /* BlueSTSDKCommand_prv.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		EAB52A1B1B4ECCBC00231B83 /* BlueSTSDKConfigControl_prv.h in Headers */ = {isa = PBXBuildFile; fileRef = EAB52A181B4ECCBC00231B83 /* BlueSTSDKConfigControl_prv.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		EAB52A1C1B4ECCBC00231B83 /* BlueSTSDKConfigControl.h in Headers */ = {isa = PBXBuildFile; fileRef = EAB52A191B4ECCBC00231B83 /* BlueSTSDKConfigControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EAB52A1D1B4ECCBC00231B83 /* BlueSTSDKConfigControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB52A1A1B4ECCBC00231B83 /* BlueSTSDKConfigControl.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -233,6 +233,9 @@
 				665242291B0B1C1400931F93 /* Features */,
 				665242441B0B1C1400931F93 /* Log */,
 				6652424B1B0B1C1400931F93 /* Util */,
+				EAB52A181B4ECCBC00231B83 /* BlueSTSDKConfigControl_prv.h */,
+				EAB52A191B4ECCBC00231B83 /* BlueSTSDKConfigControl.h */,
+				EAB52A1A1B4ECCBC00231B83 /* BlueSTSDKConfigControl.m */,
 				665242171B0B1C0800931F93 /* BlueSTSDKDebug.h */,
 				665242881B0B207100931F93 /* BlueSTSDKDebug_prv.h */,
 				665242181B0B1C0800931F93 /* BlueSTSDKDebug.m */,
@@ -351,9 +354,6 @@
 		EA01F00C1B2F1B6500B35152 /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				EAB52A181B4ECCBC00231B83 /* BlueSTSDKConfigControl_prv.h */,
-				EAB52A191B4ECCBC00231B83 /* BlueSTSDKConfigControl.h */,
-				EAB52A1A1B4ECCBC00231B83 /* BlueSTSDKConfigControl.m */,
 				EA01F01D1B305A8800B35152 /* BlueSTSDKCommand_prv.h */,
 				EA01F00D1B2F1BE800B35152 /* BlueSTSDKCommand.h */,
 				EA01F00E1B2F1BE800B35152 /* BlueSTSDKCommand.m */,
@@ -394,9 +394,9 @@
 				6652425E1B0B1C1400931F93 /* BlueSTSDKFeatureHumidity.h in Headers */,
 				6652426A1B0B1C1400931F93 /* BlueSTSDKFeatureTemperature.h in Headers */,
 				665242621B0B1C1400931F93 /* BlueSTSDKFeatureMemsSensorFusion.h in Headers */,
-				EAB52A1C1B4ECCBC00231B83 /* BlueSTSDKConfigControl.h in Headers */,
 				6652425A1B0B1C1400931F93 /* BlueSTSDKFeatureField.h in Headers */,
 				EA01F01B1B2F1BE800B35152 /* BlueSTSDKRegisterDefines.h in Headers */,
+				66E6EA471BAAC0D8000A5968 /* BlueSTSDKConfigControl.h in Headers */,
 				EA01F0151B2F1BE800B35152 /* BlueSTSDKCommand.h in Headers */,
 				EA01F0191B2F1BE800B35152 /* BlueSTSDKRegister.h in Headers */,
 				665242821B0B1EEC00931F93 /* BlueSTSDKNode_prv.h in Headers */,
@@ -408,7 +408,7 @@
 				665242771B0B1C1400931F93 /* BlueSTSDKBleNodeDefines.h in Headers */,
 				665242741B0B1C1400931F93 /* NSData+NumberConversion.h in Headers */,
 				665242791B0B1C1400931F93 /* BlueSTSDKCharacteristic.h in Headers */,
-				EAB52A1B1B4ECCBC00231B83 /* BlueSTSDKConfigControl_prv.h in Headers */,
+				66E6EA481BAAC0E0000A5968 /* BlueSTSDKConfigControl_prv.h in Headers */,
 				EA01F01E1B305A8800B35152 /* BlueSTSDKCommand_prv.h in Headers */,
 				662D8BD81B0B6C88006B7538 /* BlueSTSDKNodeFake.h in Headers */,
 				665242761B0B1C1400931F93 /* BlueSTSDKBleAdvertiseParser.h in Headers */,
@@ -544,7 +544,7 @@
 				6652427A1B0B1C1400931F93 /* BlueSTSDKCharacteristic.m in Sources */,
 				66C4A3C51B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.m in Sources */,
 				6652426D1B0B1C1400931F93 /* BlueSTSDKFeatureMagnetometer.m in Sources */,
-				EAB52A1D1B4ECCBC00231B83 /* BlueSTSDKConfigControl.m in Sources */,
+				66E6EA461BAAC0BD000A5968 /* BlueSTSDKConfigControl.m in Sources */,
 				6652425B1B0B1C1400931F93 /* BlueSTSDKFeatureField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

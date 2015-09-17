@@ -11,9 +11,6 @@
 		66123F8B1B6F53FF00F1A3B3 /* FeatureListTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66123F8A1B6F53FF00F1A3B3 /* FeatureListTableViewController.m */; };
 		66123F8F1B6F555B00F1A3B3 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 66123F8E1B6F555B00F1A3B3 /* MBProgressHUD.m */; };
 		66123F921B6F55FE00F1A3B3 /* DeviceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66123F911B6F55FE00F1A3B3 /* DeviceTableViewCell.m */; };
-		66123F971B6F5FCA00F1A3B3 /* board_generic.png in Resources */ = {isa = PBXBuildFile; fileRef = 66123F941B6F5FCA00F1A3B3 /* board_generic.png */; };
-		66123F981B6F5FCA00F1A3B3 /* board_nucleo.png in Resources */ = {isa = PBXBuildFile; fileRef = 66123F951B6F5FCA00F1A3B3 /* board_nucleo.png */; };
-		66123F991B6F5FCA00F1A3B3 /* board_wesu.png in Resources */ = {isa = PBXBuildFile; fileRef = 66123F961B6F5FCA00F1A3B3 /* board_wesu.png */; };
 		662B58821B6F87ED000F5072 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B58811B6F87ED000F5072 /* SettingsTableViewController.m */; };
 		664335861B6F6E42001B63DE /* ConsoleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664335851B6F6E42001B63DE /* ConsoleViewController.m */; };
 		66E7BF381B6F4C3B005CB59E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E7BF371B6F4C3B005CB59E /* main.m */; };
@@ -80,9 +77,6 @@
 		66123F8E1B6F555B00F1A3B3 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = externalSrc/MBProgressHUD.m; sourceTree = "<group>"; };
 		66123F901B6F55FE00F1A3B3 /* DeviceTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceTableViewCell.h; sourceTree = "<group>"; };
 		66123F911B6F55FE00F1A3B3 /* DeviceTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceTableViewCell.m; sourceTree = "<group>"; };
-		66123F941B6F5FCA00F1A3B3 /* board_generic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = board_generic.png; sourceTree = "<group>"; };
-		66123F951B6F5FCA00F1A3B3 /* board_nucleo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = board_nucleo.png; sourceTree = "<group>"; };
-		66123F961B6F5FCA00F1A3B3 /* board_wesu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = board_wesu.png; sourceTree = "<group>"; };
 		662B58801B6F87ED000F5072 /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		662B58811B6F87ED000F5072 /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		664335841B6F6E42001B63DE /* ConsoleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsoleViewController.h; sourceTree = "<group>"; };
@@ -120,16 +114,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		66123F931B6F5FCA00F1A3B3 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				66123F941B6F5FCA00F1A3B3 /* board_generic.png */,
-				66123F951B6F5FCA00F1A3B3 /* board_nucleo.png */,
-				66123F961B6F5FCA00F1A3B3 /* board_wesu.png */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
 		66E7BF291B6F4C3B005CB59E = {
 			isa = PBXGroup;
 			children = (
@@ -169,7 +153,6 @@
 				66E7BF3A1B6F4C3B005CB59E /* AppDelegate.m */,
 				66123F8D1B6F555B00F1A3B3 /* MBProgressHUD.h */,
 				66123F8E1B6F555B00F1A3B3 /* MBProgressHUD.m */,
-				66123F931B6F5FCA00F1A3B3 /* Resources */,
 				66E7BF351B6F4C3B005CB59E /* Supporting Files */,
 			);
 			path = BlueSTSDKExample;
@@ -315,10 +298,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66123F971B6F5FCA00F1A3B3 /* board_generic.png in Resources */,
 				66E7BF411B6F4C3B005CB59E /* Main.storyboard in Resources */,
-				66123F991B6F5FCA00F1A3B3 /* board_wesu.png in Resources */,
-				66123F981B6F5FCA00F1A3B3 /* board_nucleo.png in Resources */,
 				66E7BF461B6F4C3B005CB59E /* LaunchScreen.xib in Resources */,
 				66E7BF431B6F4C3B005CB59E /* Images.xcassets in Resources */,
 			);
