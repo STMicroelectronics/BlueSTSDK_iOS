@@ -55,7 +55,8 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(void)discoveryStart;
 
 /**
- *  start a discovery process that will scan for a new device for
+ *  start a discovery process that will scan for a new device. the discovery will
+ * stop after {@code timeoutMs} milliseconds
  *
  *  @param timeoutMs milliseconds to wait before stop the scanning
  */
@@ -93,7 +94,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 /**
  *  tell if the manager is in a discovery state
  *
- *  @return true if the manager is in a discovery state
+ *  @return true if the manager is seaching for new nodes
  */
 -(BOOL) isDiscovering;
 
@@ -127,7 +128,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @param boardId  new board id or a board id that we want extend
  *  @param features map of new features add to the board, it is a dictionary of 
  * <{@link featureMask_t},BlueSTSDKFeature>
- * @throw and exception if the featureMask as more than one bit set to 1
+ * @throw an exception if the featureMask as more than one bit set to 1
  */
 -(void)addFeatureForBoard:(uint8_t)boardId features:(NSDictionary*)features;
 

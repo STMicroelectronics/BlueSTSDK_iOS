@@ -106,7 +106,7 @@
  
  *  @par protected function
  *  @param rawData raw data used for extract the new data
- *  @param data array of NSNumber extracted by raw data
+ *  @param sample object with the extracted data
  */
 -(void) logFeatureUpdate:(NSData*)rawData sample:(BlueSTSDKFeatureSample*)sample;
 
@@ -150,7 +150,7 @@
  *  @protected
  *  this method have to extract the feature data from the byte data
  *
- *  @par abstract method
+ *  @note it is an abstract method, you have to overwrite it!
  *
  *  @param timestamp  package id
  *  @param data      raw data received by the node

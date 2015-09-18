@@ -81,7 +81,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureBatteryStatus){
 +(NSString*)getBatteryStatusStr:(BlueSTSDKFeatureSample*)data;
 
 /**
- *  current charge of percentage
+ *  current percentage of charg
  *
  *  @param data sample read from the node
  *

@@ -28,11 +28,11 @@
 #import "BlueSTSDKFeatureAutoConfigurable.h"
 
 /**
- *  The feature export the quaternuion data that are computed on the node
+ *  The feature export the quaternion data that are computed on the node
  *  using the accelerometer, gyroscope and magnetometer data
  * @par
- * the data are the quaternion component: the vector comonents (qi,qj,qk)
- * and the scalar component qs, the quaternion is normalized
+ * the vector comonents are called (qi,qj,qk) and the the scalar component is 
+ * colled qs. The quaternion is normalized
  * @note this feature is autoconfigurable for calibrate the magnetometer data
  * @author STMicroelectronics - Central Labs.
  */

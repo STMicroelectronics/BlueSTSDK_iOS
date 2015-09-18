@@ -56,10 +56,11 @@
 /**
  *@protected
  *  initialize the node without a peripheral
- * \note it will not be able to do anything this function is needed if you want
- * extend the node and keep using the delegate system build by this class
+ * \note the node intialized with this method will not working properly, this method
+ * must when you extend this class and you want continue to use the notification
+ * system provided by this class
  *
- *  @return semi functional node pointer
+ *  @return partialy functional node pointer
  */
 -(instancetype) init;
 

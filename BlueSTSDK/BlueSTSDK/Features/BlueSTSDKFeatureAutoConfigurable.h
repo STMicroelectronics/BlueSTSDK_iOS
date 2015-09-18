@@ -53,7 +53,8 @@
 /**
  *  request the status of the configuration process, the status is an int between
  * 0 and 100.
- * The status is notify using the didAutoConfigurationChange delegate callback
+ * The status is notify using the 
+ {@link BlueSTSDKFeatureAutoConfigurableDelegate::didAutoConfigurationChange:status:} delegate callback
  *
  *  @return true if the message is correctly send
  */
@@ -68,7 +69,7 @@
 
 /**
  *  register a delegate for this feature
- *  @note the callback are done by an concurrent queue
+ *  @note the callback are done in an concurrent queue
  *
  *  @param delegate object where notify the configuration change
  */

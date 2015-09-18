@@ -123,7 +123,8 @@ typedef uint32_t featureMask_t;
 +(CBUUID*) serviceUuid;
 
 /**
- *  uuid of the config control characteristic, the user can modify the register values
+ *  uuid of the config control characteristic, with this characteristic the user
+ *  can modify the register values
  *
  *  @return uuid of the command characteristic
  */
@@ -187,7 +188,7 @@ typedef uint32_t featureMask_t;
 @end
 
 /**
- *  For each board type contains a map for of pair ( featureMask_t,
+ *  For each board type contains a map for of pair ( {@link featureMask_t},
  *  {@link BlueSTSDKFeature } class )
  */
 @interface BlueSTSDKBoardFeatureMap : NSObject

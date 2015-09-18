@@ -34,12 +34,13 @@
  * file with the same name of the feature.
  * it can be used for logging multiple feature, each feature has its file.The files
  * are keeped open for avoid multiple fopen/fclose.
- * @note Call closeFiles when you stop the logging for avoid to keep open the resources
+ * @note Call closeFiles when you stop the logging for avoid to keep open the files
  *
- * in the log file has the colum:
+ * a log row has the format:
  *  - NodeName: name of the node that send the data
  *  - RawData: exadecimal version of the raw data used for extract the feature data
- *  a colum for each feature item
+ *  - a colum for each feature item
+ *
  * @author STMicroelectronics - Central Labs.
  */
 @interface BlueSTSDKFeatureLogCSV : NSObject<BlueSTSDKFeatureLogDelegate>

@@ -67,7 +67,7 @@ BlueSTSDKNodeStateDelegate>
  */
 - (void)viewDidLoad {
     [super viewDidLoad];
-    mManager = [BlueSTSDKManager sharedInstance];
+    mManager = [BlueSTSDKManager sharedInstance];   
 }
 
 -(void)viewWillAppear:(BOOL)animated{

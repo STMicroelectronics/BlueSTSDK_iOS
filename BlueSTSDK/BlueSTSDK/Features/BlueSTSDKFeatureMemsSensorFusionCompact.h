@@ -28,11 +28,11 @@
 #import "BlueSTSDKFeatureMemsSensorFusion.h"
 
 /**
- *  The feature export the quaternuion data that are computed on the node
+ *  The feature export the quaternion data that are computed on the node
  *  using the accelerometer, gyroscope and magnetometer data
  * @par
- * instead of {@link BlueSTSDKFeatureMemsSensorFusion} here the quaternion are send
- * using short instead of float, and more than one at time, for reach hight transmission rate.
+ * for reach hight transmission rate the quaternion are encoded using short
+ * instead of float, and more than one at time.
  * @par
  * in this case we assume that the quaternions are always normalized since the node
  * will transmit only the vectorial component

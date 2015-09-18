@@ -46,9 +46,9 @@
  *
  * @note
  * In case that the node require the a secure connection with the pin it can happen
- * that the notification subscription are sent before that the connection complete.
- * Is not possible have callback/notification when the connection complete.
- * for this reason we try to subscribe the feature every second until we didn't
+ * that the notification subscription are sent before the connection completed.
+ * It is not possible have callback/notification when the connection completed.
+ * For this reason we try to subscribe the feature every second until we didn't
  * receive some data from it.
  *
  * @author STMicroelectronics - Central Labs.
@@ -121,7 +121,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
      */
     BlueSTSDKNodeTypeGeneric      = 0x00,
     /**
-     *  Wesu board
+     *  STEVAL WESU1 board
      */
     BlueSTSDKNodeTypeSTEVAL_WESU1         = 0x01,
     /**
@@ -202,7 +202,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 -(void) addBleConnectionParamiterDelegate:(id<BlueSTSDKNodeBleConnectionParamDelegate>)delegate;
 
 /**
- *  remove a delefate of type {@link BlueSTSDKNodeBleConnectionParamDelegate}
+ *  remove a delegate of type {@link BlueSTSDKNodeBleConnectionParamDelegate}
  *
  *  @param delegate delegate to remove
  */
@@ -232,7 +232,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 -(BOOL) equals:(BlueSTSDKNode *)node;
 
 /**
- *  get the available node feature, there is a feature for each bit set in the advertise,
+ *  get the available features, there is a feature for each bit set in the advertise,
  *  if the linked characteristics is not find in the node the feature is not enabled
  *
  *  @return array of {@link BlueSTSDKFeature} that the node can export
@@ -258,8 +258,9 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 
 /**
  *  open a connection with this node
- * \par when the connection is completed the the class notify it with a callback
- * on {link BlueSTSDKNodeStateDelegate::node:didChangeState:prevState:
+ * \par
+ * when the connection is completed the the class notify it with a callback
+ * on {@link BlueSTSDKNodeStateDelegate::node:didChangeState:prevState:}
  */
 -(void) connect;
 
@@ -285,7 +286,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 -(BOOL) readFeature:(BlueSTSDKFeature*)feature;
 
 /**
- *  tell if you enable the notification for this particular feature
+ *  tell if the notifications for a feature are enabled
  *
  *  @param feature feature
  *
@@ -321,7 +322,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 
 @required
 /**
- *  notify to the user that the node change the status
+ *  notify to the user that the node change its status
  *
  *  @param node      node that call the delegate, node that change the status
  *  @param newState  new node status
@@ -331,7 +332,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 @end
 
 /**
- *  protocol used by the node for notify a change in the ble connection parameters
+ *  protocol used by the node for notify a change in the BLE connection parameters
  */
 @protocol BlueSTSDKNodeBleConnectionParamDelegate <NSObject>
 
@@ -346,7 +347,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 
 @optional
 /**
- *  notify to the user that the tx power change
+ *  notify to the user that the tx power changed
  *
  *  @param node     node that change the tx power
  *  @param newPower new tx power for the node
