@@ -118,9 +118,9 @@ static NSArray *sFieldDesc;
  *  @param offset    offset where we have to start reading the data
  *
  *  @throw exception if there are no almost 12 bytes available in the rawdata array
- *  @return number of read bytes
+ *  @return quaternion angle + number of read bytes (12 or 16)
  */
--(BlueSTSDKExtractResult*) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     if(rawData.length-offset < 12){
         @throw [NSException

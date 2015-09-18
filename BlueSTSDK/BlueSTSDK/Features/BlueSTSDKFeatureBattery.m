@@ -162,9 +162,9 @@ static NSArray *sFieldDesc;
 *  @param offset    offset where we have to start reading the data
 *
 *  @throw exception if there are no 7 bytes available in the rawdata array
-*  @return number of read bytes
-*/
--(BlueSTSDKExtractResult*) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+ *  @return battery information + number of read bytes (7)
+ */
+-(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     
     if(rawData.length-offset < 7){

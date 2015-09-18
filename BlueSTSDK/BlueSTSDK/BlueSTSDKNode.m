@@ -711,7 +711,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
     
     uint32_t offset=2; // =2 since we already read 2 byte for the timestamp
     for(BlueSTSDKFeature *f in features){
-        offset += [f update_prv:timestamp data:newData dataOffset:offset];
+        offset += [f update:timestamp data:newData dataOffset:offset];
     }//for
     
 }//characteristicUpdate

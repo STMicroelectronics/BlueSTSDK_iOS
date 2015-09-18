@@ -121,9 +121,9 @@ NSArray *sFieldDesc;
  *  @param offset    offset where we have to start reading the data
  *  
  *  @throw exception if there are no 6 bytes available in the rawdata array
- *  @return number of read bytes
+ *  @return acceleration data + number of read bytes (6)
  */
--(BlueSTSDKExtractResult*) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     if(rawData.length-offset < 6){
         @throw [NSException

@@ -158,7 +158,7 @@
  *
  *  @return object that contains the sample extracted and the number of bytes read
  */
--(BlueSTSDKExtractResult*) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
+-(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 /**
  *  @protected
@@ -176,7 +176,7 @@
  *
  *  @return number of read byte
  */
--(uint32_t) update_prv:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
+-(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 @end
 

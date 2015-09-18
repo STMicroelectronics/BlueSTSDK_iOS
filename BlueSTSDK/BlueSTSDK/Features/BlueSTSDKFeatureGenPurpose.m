@@ -90,9 +90,9 @@ static NSArray *sFieldDesc;
  *  @param rawData   array of byte send by the node
  *  @param offset    offset where we have to start reading the data
  *
- *  @return number of read bytes
+ *  @return rawdata + number of read bytes 
  */
--(BlueSTSDKExtractResult*) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
 
     NSMutableArray *tempData = [NSMutableArray arrayWithCapacity:rawData.length-offset];
     

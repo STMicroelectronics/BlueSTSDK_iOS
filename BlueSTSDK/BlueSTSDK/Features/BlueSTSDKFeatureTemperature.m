@@ -86,9 +86,9 @@ static NSArray *sFieldDesc;
  *  @param offset    offset where we have to start reading the data
  *
  *  @throw exception if there are no 2 bytes available in the rawdata array
- *  @return number of read bytes
+ *  @return temperature information + number of read bytes (2)
  */
--(BlueSTSDKExtractResult*) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     if(rawData.length-offset < 2){
         @throw [NSException

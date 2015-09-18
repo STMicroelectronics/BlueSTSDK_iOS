@@ -149,7 +149,7 @@ static NSNumberFormatter *sFormatter;
 
 
 //this function must be implemented in a subclass, this implementation only throw an exception
--(BlueSTSDKExtractResult*) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must overwrite %@ in a subclass]",
                                            NSStringFromSelector(_cmd)]
@@ -158,8 +158,8 @@ static NSNumberFormatter *sFormatter;
 }//update
 
 
--(uint32_t) update_prv:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
-    BlueSTSDKExtractResult *temp = [self update:timestamp data:data dataOffset:offset];
+-(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
+    BlueSTSDKExtractResult *temp = [self extractData:timestamp data:data dataOffset:offset];
     self.lastSample = temp.sample;
     [self notifyUpdateWithSample:temp.sample];
     [self logFeatureUpdate:[data subdataWithRange:NSMakeRange(offset, temp.nReadBytes)]
