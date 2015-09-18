@@ -114,11 +114,11 @@
  */
 -(void)generateFakeFeatureNotification:(NSTimer *)timer{
     BlueSTSDKFeature *feature = (BlueSTSDKFeature*)timer.userInfo;
-    [feature update:(timestamp++) data:[feature generateFakeData] dataOffset:0];
+    [feature update_prv:(timestamp++) data:[feature generateFakeData] dataOffset:0];
 }
 
 -(BOOL)readFeature:(BlueSTSDKFeature *)feature{
-    [feature update:(timestamp++) data:[feature generateFakeData] dataOffset:0];
+    [feature update_prv:(timestamp++) data:[feature generateFakeData] dataOffset:0];
     return true;
 }
 

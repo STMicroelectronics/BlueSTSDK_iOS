@@ -49,6 +49,21 @@
 
 @end
 
+@implementation BlueSTSDKExtractResult
+
++(instancetype) resutlWithSample:(BlueSTSDKFeatureSample *)sample nReadData:(uint32_t)nReadData{
+    return [[BlueSTSDKExtractResult alloc] initWhitSample: sample nReadData:nReadData];
+}
+
+-(instancetype) initWhitSample:(BlueSTSDKFeatureSample *)sample nReadData:(uint32_t)nReadData{
+    self = [super init];
+    _nReadBytes=nReadData;
+    _sample=sample;
+    return self;
+}
+
+@end
+
 
 /**
  *  concurrent queue used for notify the update in different threads
@@ -132,13 +147,25 @@ static NSNumberFormatter *sFormatter;
     return nil;
 }//getFieldsDesc
 
+
 //this function must be implemented in a subclass, this implementation only throw an exception
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must overwrite %@ in a subclass]",
                                            NSStringFromSelector(_cmd)]
                                  userInfo:nil];
-    return 0;
+    return nil;
+}//update
+
+
+-(uint32_t) update_prv:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
+    BlueSTSDKExtractResult *temp = [self update:timestamp data:data dataOffset:offset];
+    self.lastSample = temp.sample;
+    [self notifyUpdateWithSample:temp.sample];
+    [self logFeatureUpdate:[data subdataWithRange:NSMakeRange(offset, temp.nReadBytes)]
+                    sample:temp.sample];
+
+    return temp.nReadBytes;
 }//update
 
 -(void) notifyUpdateWithSample:(BlueSTSDKFeatureSample *)sample{

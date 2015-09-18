@@ -92,7 +92,7 @@ static NSArray *sFieldDesc;
  *
  *  @return number of read bytes
  */
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
 
     NSMutableArray *tempData = [NSMutableArray arrayWithCapacity:rawData.length-offset];
     
@@ -104,13 +104,7 @@ static NSArray *sFieldDesc;
     BlueSTSDKFeatureSample *sample =
         [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:tempData];
     
-    self.lastSample = sample;
-    
-    [self notifyUpdateWithSample:sample];
-    [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, rawData.length-offset)]
-                 sample:sample];
-
-    return (uint32_t)(rawData.length-offset);
+    return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:(uint32_t)(rawData.length-offset)];
 }
 
 

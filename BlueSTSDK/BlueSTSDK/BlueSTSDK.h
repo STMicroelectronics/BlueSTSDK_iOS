@@ -29,9 +29,11 @@
 #import "BlueSTSDKManager.h"
 
 #import "BlueSTSDKNode.h"
+#import "BlueSTSDKNode_pro.h"
 #import "BlueSTSDKDebug.h"
 
 #import "BlueSTSDKFeature.h"
+#import "BlueSTSDKFeature_pro.h"
 
 #import "BlueSTSDKFeatureAcceleration.h"
 #import "BlueSTSDKFeatureActivity.h"

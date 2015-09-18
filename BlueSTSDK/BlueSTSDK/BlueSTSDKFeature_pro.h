@@ -30,6 +30,45 @@
 
 #include "BlueSTSDKFeature.h"
 
+
+/**
+ * class that contains the number of read bytes and the data extracted from the 
+ * raw data stream
+ * @author STMicroelectronics - Central Labs.
+ */
+@interface BlueSTSDKExtractResult : NSObject
+
+    /** number of read bytes */
+    @property(readonly) uint32_t nReadBytes;
+    /** sample data build from the raw data */
+    @property(readonly,retain) BlueSTSDKFeatureSample *sample;
+
+/**
+ *  build a object of type BlueSTSDKExtractResult with the sample and nReadData
+ *  data
+ *
+ *  @param sample    data extracted
+ *  @param nReadData number of bytes used
+ *
+ *  @return new object of type BlueSTSDKExtractResult
+ */
++(instancetype) resutlWithSample:(BlueSTSDKFeatureSample*)sample
+                       nReadData:(uint32_t)nReadData;
+
+/**
+ *  initialize a object of type BlueSTSDKExtractResult with the sample and nReadData
+ *  data
+ *
+ *  @param sample    data extracted
+ *  @param nReadData number of bytes used
+ *
+ *  @return new object of type BlueSTSDKExtractResult
+ */
+-(instancetype) initWhitSample: (BlueSTSDKFeatureSample*)sample
+                     nReadData:(uint32_t)nReadData;
+
+@end
+
 /**
  * This interface contains the protected and packages method that can be used
  * inside the sdk
@@ -109,8 +148,27 @@
 
 /**
  *  @protected
- *  This method is called by the CBPeriferal to notify an update
+ *  this method have to extract the feature data from the byte data
+ *
+ *  @par abstract method
+ *
+ *  @param timestamp  package id
+ *  @param data      raw data received by the node
+ *  @param offset    offset where start to read the raw data
+ *
+ *  @return object that contains the sample extracted and the number of bytes read
+ */
+-(BlueSTSDKExtractResult*) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
+
+/**
+ *  @protected
+ *  This method is called by the CBPeriferal to notify an update. this method call
+ * the abstract method update and notify to the user the data extracted.
+ *
  *  @par package function
+ *
+ *  @note if you overwrite this function you have to call the method logFeatureUpdate
+ * and notifyUpdateWithSample for notify the update to the user
  *
  *  @param timestamp  package id
  *  @param data      raw data received by the node
@@ -118,7 +176,7 @@
  *
  *  @return number of read byte
  */
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
+-(uint32_t) update_prv:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 @end
 

@@ -87,7 +87,7 @@ static NSArray *sFieldDesc;
  *  @throw exception if there are no 4 bytes available in the rawdata array
  *  @return number of read bytes
  */
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) update:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     if(rawData.length-offset < 4){
         @throw [NSException
@@ -100,13 +100,7 @@ static NSArray *sFieldDesc;
     
     NSArray *data = [NSArray arrayWithObject:[NSNumber numberWithFloat:press/100.0f]];
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
-    self.lastSample = sample;
-    
-    [self notifyUpdateWithSample:sample];
-    [self logFeatureUpdate:[rawData subdataWithRange:NSMakeRange(offset, 4)]
-                    sample:sample];
-    
-    return 4;
+    return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:4];
 }
 
 @end
