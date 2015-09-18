@@ -251,6 +251,10 @@
             [NSNumber numberWithUnsignedChar:deviceId]];
 }
 
+-(bool)isValidDeviceId:(uint8_t)deviceId{
+    return [self getFeaturesForDevice:deviceId]!=nil;
+}
+
 #pragma mark - BlueSTSDKManager(prv)
 
 -(void)connect:(CBPeripheral*)peripheral{

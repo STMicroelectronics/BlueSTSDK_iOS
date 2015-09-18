@@ -64,19 +64,19 @@
  */
 -(BlueSTSDKNodeType) getNodeType:(uint8_t) type {
     BlueSTSDKNodeType nodetype = BlueSTSDKNodeTypeGeneric;
-    if (type==DEVICE_ID_GENERIC)
-        nodetype = BlueSTSDKNodeTypeGeneric;
-    else if (type == DEVICE_ID_WESU)
+    if(![BlueSTSDKManager.sharedInstance isValidDeviceId:type])
+        @throw [NSException
+                exceptionWithName:@"Invalid Manufactured data"
+                reason:@"Invalid Node Type"
+                userInfo:nil];
+   
+    if (type == DEVICE_ID_WESU)
         nodetype =  BlueSTSDKNodeTypeWeSU;
     else if (type == DEVICE_ID_L1DISCO)
         nodetype =  BlueSTSDKNodeTypeL1_Discovery;
     else if ((type & DEVICE_ID_NUCLEO_BIT) == DEVICE_ID_NUCLEO_BIT)
         nodetype =  BlueSTSDKNodeTypeNucleo;
-    else
-        @throw [NSException
-                exceptionWithName:@"Invalid Manufactured data"
-                reason:@"Invalid Node Type"
-                userInfo:nil];
+    
     return nodetype;
 }
 

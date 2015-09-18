@@ -132,11 +132,22 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(void)addFeatureForBoard:(uint8_t)boardId features:(NSDictionary*)features;
 
 /**
+ *  check that the deviceId is recognized by the manager
+ *
+ *  @param deviceId board id to check
+ *
+ *  @return true if the deviceId is manage by this manager
+ */
+-(bool)isValidDeviceId:(uint8_t)deviceId;
+
+/**
  *  get the singleton instance of the manager
  *
  *  @return instance of the BlueSTSDKManager
  */
 + (instancetype)sharedInstance;
+
+
 
 @end
 
