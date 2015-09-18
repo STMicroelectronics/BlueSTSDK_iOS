@@ -37,8 +37,7 @@
 #define PROTOCOL_VERSION_NOT_AVAILABLE 0xFF
 
 #define DEVICE_ID_GENERIC 0x00
-#define DEVICE_ID_WESU 0x01
-#define DEVICE_ID_L1DISCO 0x02
+#define DEVICE_ID_STEVAL_WESU1 0x01
 #define DEVICE_ID_NUCLEO_BIT 0x80
 
 #define ADVERTISE_SIZE_COMPACT 6
@@ -70,10 +69,8 @@
                 reason:@"Invalid Node Type"
                 userInfo:nil];
    
-    if (type == DEVICE_ID_WESU)
-        nodetype =  BlueSTSDKNodeTypeWeSU;
-    else if (type == DEVICE_ID_L1DISCO)
-        nodetype =  BlueSTSDKNodeTypeL1_Discovery;
+    if (type == DEVICE_ID_STEVAL_WESU1)
+        nodetype =  BlueSTSDKNodeTypeSTEVAL_WESU1;
     else if ((type & DEVICE_ID_NUCLEO_BIT) == DEVICE_ID_NUCLEO_BIT)
         nodetype =  BlueSTSDKNodeTypeNucleo;
     

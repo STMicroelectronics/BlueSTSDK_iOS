@@ -36,7 +36,6 @@
 @class BlueSTSDKFeature;
 
 
-
 @protocol BlueSTSDKNodeBleConnectionParamDelegate;
 @protocol BlueSTSDKNodeStateDelegate;
 
@@ -124,11 +123,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
     /**
      *  Wesu board
      */
-    BlueSTSDKNodeTypeWeSU         = 0x01,
-    /**
-     *  L1 board
-     */
-    BlueSTSDKNodeTypeL1_Discovery = 0x02,
+    BlueSTSDKNodeTypeSTEVAL_WESU1         = 0x01,
     /**
      *  nucleo + ble expansion board
      */
