@@ -36,9 +36,10 @@
  *  by the sdk
  * @author STMicroelectronics - Central Labs.
  */
-@interface BlueSTSDKManager(Prv)
+@interface BlueSTSDKManager()
 
 /**
+ * @private
  *  start a connection with a ble peripheral
  *
  *  @param peripheral device to connect
@@ -47,6 +48,7 @@
 
 
 /**
+ * @private
  *  close the connection with a ble peripheral
  *
  *  @param peripheral device to disconnect
@@ -54,6 +56,7 @@
 -(void)disconnect:(CBPeripheral*)peripheral;
 
 /**
+ * @private
  * get the list of feature that is possible find in a specific device.
  *
  *  @return map of <{@link featureMask_t},BlueSTSDKFeature>

@@ -75,7 +75,7 @@
  * parse the advertise data returned by the system
  * @param advertisementData ble advertise data
  * @throw an exception if the vendor specific field isn't compatible with 
- * the W2ST protocol
+ * the BlueST protocol
  */
 +(instancetype)advertiseParserWithAdvertise:(NSDictionary *)advertisementData;
 
@@ -83,7 +83,7 @@
  * parse the advertise data returned by the system
  * @param advertisementData ble advertise data
  * @throw an exception if the vendor specific field isn't compatible with the
- * W2ST protocol
+ * BlueST protocol
  */
 -(instancetype)initWithAdvertise:(NSDictionary*)advertisementData;
 

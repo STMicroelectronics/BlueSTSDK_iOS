@@ -72,7 +72,7 @@
     }//if else
 }
 
--(id) initWithChar:(CBCharacteristic*)charact features:(NSArray*)features{
+-(instancetype) initWithChar:(CBCharacteristic*)charact features:(NSArray*)features{
     _characteristic=charact;
     _features = features;
     return self;

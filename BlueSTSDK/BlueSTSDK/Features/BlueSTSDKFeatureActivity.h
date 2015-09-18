@@ -75,7 +75,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureActivityType){
 /**
  *  extract the activity value
  *
- *  @param data sample read from the node
+ *  @param sample sample read from the node
  *
  *  @return activity value
  */

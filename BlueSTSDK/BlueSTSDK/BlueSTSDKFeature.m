@@ -30,7 +30,7 @@
 #import "BlueSTSDKFeatureField.h"
 
 @interface BlueSTSDKFeature()
-@property (readwrite,atomic) BlueSTSDKFeatureSample *lastSample;
+//@property (readwrite,atomic) BlueSTSDKFeatureSample *lastSample;
 @end
 
 

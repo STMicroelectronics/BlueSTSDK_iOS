@@ -39,9 +39,12 @@
 
 /**
  *  <b>abstract method</b>, you have to overwrite this method if you want 
- *  enable the possibility to use a fake feature into the ios emulator
+ *  enable the possibility to use a fake feature into the ios emulator.
+ *  \par
+ *  this method have to generate some random/fake data that will be used
+ *  passed to the BlueSTSDKFeature::update()
+ *
  *  @note it is an abstract method, you have to overwrite it!
- 
  *  @return data that will be passed to the updateFeature for trigger a fake feature update
  */
 -(NSData*) generateFakeData;

@@ -79,6 +79,8 @@
 		66E6EA461BAAC0BD000A5968 /* BlueSTSDKConfigControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB52A1A1B4ECCBC00231B83 /* BlueSTSDKConfigControl.m */; };
 		66E6EA471BAAC0D8000A5968 /* BlueSTSDKConfigControl.h in Headers */ = {isa = PBXBuildFile; fileRef = EAB52A191B4ECCBC00231B83 /* BlueSTSDKConfigControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66E6EA481BAAC0E0000A5968 /* BlueSTSDKConfigControl_prv.h in Headers */ = {isa = PBXBuildFile; fileRef = EAB52A181B4ECCBC00231B83 /* BlueSTSDKConfigControl_prv.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		66E6EA4E1BAB0B21000A5968 /* BlueSTSDKNode_pro.h in Headers */ = {isa = PBXBuildFile; fileRef = 66E6EA4D1BAB0A73000A5968 /* BlueSTSDKNode_pro.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		66E6EA4F1BAB0B29000A5968 /* BlueSTSDKFeature_pro.h in Headers */ = {isa = PBXBuildFile; fileRef = 66E6EA4C1BAB097B000A5968 /* BlueSTSDKFeature_pro.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA01F0151B2F1BE800B35152 /* BlueSTSDKCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F00D1B2F1BE800B35152 /* BlueSTSDKCommand.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA01F0161B2F1BE800B35152 /* BlueSTSDKCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F00E1B2F1BE800B35152 /* BlueSTSDKCommand.m */; };
 		EA01F0191B2F1BE800B35152 /* BlueSTSDKRegister.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F0111B2F1BE800B35152 /* BlueSTSDKRegister.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -171,6 +173,8 @@
 		66C9E6571B0C67380091CFD0 /* BlueSTSDKFeature+fake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BlueSTSDKFeature+fake.h"; sourceTree = "<group>"; };
 		66E22C2F1B73989500989E09 /* BlueSTSDKFeatureActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureActivity.h; sourceTree = "<group>"; };
 		66E22C301B73989500989E09 /* BlueSTSDKFeatureActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureActivity.m; sourceTree = "<group>"; };
+		66E6EA4C1BAB097B000A5968 /* BlueSTSDKFeature_pro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeature_pro.h; sourceTree = "<group>"; };
+		66E6EA4D1BAB0A73000A5968 /* BlueSTSDKNode_pro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKNode_pro.h; sourceTree = "<group>"; };
 		EA01F00D1B2F1BE800B35152 /* BlueSTSDKCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKCommand.h; path = Config/BlueSTSDKCommand.h; sourceTree = "<group>"; };
 		EA01F00E1B2F1BE800B35152 /* BlueSTSDKCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlueSTSDKCommand.m; path = Config/BlueSTSDKCommand.m; sourceTree = "<group>"; };
 		EA01F0111B2F1BE800B35152 /* BlueSTSDKRegister.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKRegister.h; path = Config/BlueSTSDKRegister.h; sourceTree = "<group>"; };
@@ -240,13 +244,15 @@
 				665242881B0B207100931F93 /* BlueSTSDKDebug_prv.h */,
 				665242181B0B1C0800931F93 /* BlueSTSDKDebug.m */,
 				665242191B0B1C0800931F93 /* BlueSTSDKFeature.h */,
-				66C9E6571B0C67380091CFD0 /* BlueSTSDKFeature+fake.h */,
+				66E6EA4C1BAB097B000A5968 /* BlueSTSDKFeature_pro.h */,
 				665242831B0B1F2000931F93 /* BlueSTSDKFeature_prv.h */,
+				66C9E6571B0C67380091CFD0 /* BlueSTSDKFeature+fake.h */,
 				6652421A1B0B1C0800931F93 /* BlueSTSDKFeature.m */,
 				6652421B1B0B1C0800931F93 /* BlueSTSDKManager.h */,
 				665242861B0B1FEE00931F93 /* BlueSTSDKManager_prv.h */,
 				6652421C1B0B1C0800931F93 /* BlueSTSDKManager.m */,
 				6652421D1B0B1C0800931F93 /* BlueSTSDKNode.h */,
+				66E6EA4D1BAB0A73000A5968 /* BlueSTSDKNode_pro.h */,
 				665242811B0B1E7800931F93 /* BlueSTSDKNode_prv.h */,
 				6652421E1B0B1C0800931F93 /* BlueSTSDKNode.m */,
 				662D8BD61B0B6C88006B7538 /* BlueSTSDKNodeFake.h */,
@@ -391,6 +397,8 @@
 				6652425C1B0B1C1400931F93 /* BlueSTSDKFeatureGyroscope.h in Headers */,
 				665242561B0B1C1400931F93 /* BlueSTSDKFeatureAutoConfigurable.h in Headers */,
 				665242641B0B1C1400931F93 /* BlueSTSDKFeatureMemsSensorFusionCompact.h in Headers */,
+				66E6EA4E1BAB0B21000A5968 /* BlueSTSDKNode_pro.h in Headers */,
+				66E6EA4F1BAB0B29000A5968 /* BlueSTSDKFeature_pro.h in Headers */,
 				6652425E1B0B1C1400931F93 /* BlueSTSDKFeatureHumidity.h in Headers */,
 				6652426A1B0B1C1400931F93 /* BlueSTSDKFeatureTemperature.h in Headers */,
 				665242621B0B1C1400931F93 /* BlueSTSDKFeatureMemsSensorFusion.h in Headers */,

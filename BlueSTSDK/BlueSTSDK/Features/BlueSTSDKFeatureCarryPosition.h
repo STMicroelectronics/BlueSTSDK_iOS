@@ -30,7 +30,6 @@
 /**
  * Export the data from the carry position recognition algorithm
  * @author STMicroelectronics - Central Labs.
-
  */
 @interface BlueSTSDKFeatureCarryPosition : BlueSTSDKFeature
 
@@ -75,7 +74,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureCarryPositionType){
 /**
  *  extract the position value
  *
- *  @param data sample read from the node
+ *  @param sample sample read from the node
  *
  *  @return activity value
  */

@@ -37,9 +37,8 @@
 @interface BlueSTSDKDebug(Prv)
 
 /**
- * @package
+ * @private
  * called when CBPeripheral finish to write the data to an debug characteristic
- * @par package method
  *
  *  @param termChar characteristics where we write the data
  *  @param error    if !=nil error happen during the write
@@ -48,11 +47,10 @@
                                    error:(NSError*)error;
 
 /**
- * @package
+ * @private
  * called by the CBPeripheral receive an update from the debug service
- * @par package method
  *
- *  @param termChar updated characteristics
+ * @param termChar updated characteristics
  */
 -(void)receiveCharacteristicsUpdate:(CBCharacteristic*)termChar;
 

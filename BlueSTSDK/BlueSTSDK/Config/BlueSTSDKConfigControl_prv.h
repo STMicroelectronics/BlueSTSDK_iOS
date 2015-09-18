@@ -35,6 +35,7 @@
 @interface BlueSTSDKConfigControl(prv)
 
 /**
+ * @private
  * call the method onRegisterReadResult or  onRegisterWriteResult for
  * each delegate that subscribe to this feature.
  * @par
@@ -43,7 +44,9 @@
  * @param characteristic byte read from the register
  */
 -(void)characteristicsUpdate:(CBCharacteristic *)characteristic;
+
 /**
+ * @private
  * call the method onRequestResult for
  * each listener that subscribe to this feature.
  * @par

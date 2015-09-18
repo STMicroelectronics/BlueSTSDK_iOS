@@ -187,8 +187,8 @@ typedef uint32_t featureMask_t;
 @end
 
 /**
- *  for each board type contains a map for of pair featureMask_t the linked
- *  {@link BlueSTSDKFeature } class
+ *  For each board type contains a map for of pair ( featureMask_t,
+ *  {@link BlueSTSDKFeature } class )
  */
 @interface BlueSTSDKBoardFeatureMap : NSObject
 

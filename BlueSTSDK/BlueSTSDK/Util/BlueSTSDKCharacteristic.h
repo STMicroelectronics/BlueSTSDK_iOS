@@ -55,7 +55,7 @@
  *
  *  @return object of type BlueSTSDKCharacteristic
  */
--(id) initWithChar:(CBCharacteristic*)charac features:(NSArray*)features;
+-(instancetype) initWithChar:(CBCharacteristic*)charac features:(NSArray*)features;
 
 /**
  *  find the features manage by a ble characteristic

@@ -34,7 +34,7 @@
 @interface BlueSTSDKFeatureFreeFall : BlueSTSDKFeature
 
 /**
- *  @param data sample read from the node
+ *  @param sample sample read from the node
  *
  *  @return true if a free fall was detected by the board
  */

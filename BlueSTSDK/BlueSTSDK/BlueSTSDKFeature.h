@@ -78,9 +78,9 @@
  * \par
  * You can read the feature value or register a delegate for have
  * notification when the node will update the values
+ * @note That all the notification will be submited in a concurrent queue,
+ * so the callback will be run in a background thread
  * \par
- * Node that all the notification will be summited in a concurrent queue,
- * so the callback will be run in a concurrent thread
  * @note This class is abstract, you have to extend it and implement the missing function
  * @author STMicroelectronics - Central Labs.
  */
@@ -124,7 +124,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 
 /**
  *  register a new {@link BlueSTSDKFeatureDelegate}, this protocol is used for 
- * notify the user that the feature was updated
+ * notify to the user that the feature have new data
  *
  *  @param delegate class where do the callback for notify an update
  */
@@ -140,7 +140,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 /**
  *  register a new {@link BlueSTSDKFeatureLogDelegate} this protocol will be called when
  * the feature is updated and will contain the raw data used for extract the
- * data and the parsed data, is used for logging all the data that comes from the
+ * data and the parsed data,it is used for logging all the data that comes from the
  * node
  *
  *  @param delegate class where to the callback
@@ -168,7 +168,6 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  * <b>abstract method</b>, return an array of {@link BlueSTSDKFeatureField} that
  * describe the data inside the array {@link BlueSTSDKFeatureSample::data}
  *  @note it is an abstract method, you have to overwrite it!
- 
  *  @return array of BlueSTSDKFeatureField that describe the data exported by the feature
  */
 -(NSArray*) getFieldsDesc;
