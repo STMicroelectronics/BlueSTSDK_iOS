@@ -211,8 +211,7 @@ BlueSTSDKNodeStateDelegate>
         case BlueSTSDKNodeTypeNucleo:
             cell.boardImage.image = [UIImage imageNamed:@"board_nucleo"];
             break;
-        case BlueSTSDKNodeTypeL1_Discovery:
-        case BlueSTSDKNodeTypeWeSU:
+        case BlueSTSDKNodeTypeSTEVAL_WESU1:
             cell.boardImage.image = [UIImage imageNamed:@"board_steval_wesu1"];
             break;
         case BlueSTSDKNodeTypeGeneric:

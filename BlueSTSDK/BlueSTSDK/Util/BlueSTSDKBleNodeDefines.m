@@ -179,7 +179,7 @@ static NSDictionary *nucleoFeatureMap = nil;
 /**
  *  map that link a featureMask_t with a feature class, used for the wesu device
  */
-static NSDictionary *wesuFeatureMap = nil;
+static NSDictionary *stevalWesu1FeatureMap = nil;
 
 /**
  * contains the default map (featureMask_t,Feature class) for each know device id
@@ -208,7 +208,7 @@ static NSDictionary *boardFeatureMap = nil;
                              @0x02000000: [BlueSTSDKFeatureProximity class], //proximity
                              @0x00020000: [BlueSTSDKFeatureBattery class] //battery
                              };
-        wesuFeatureMap = @{
+        stevalWesu1FeatureMap = @{
                            @0x00020000: [BlueSTSDKFeatureBattery class], //battery
                            @0x00040000: [BlueSTSDKFeatureTemperature class], //temperature
                            @0x00080000: [BlueSTSDKFeatureHumidity class], //humidity
@@ -221,7 +221,7 @@ static NSDictionary *boardFeatureMap = nil;
         
         boardFeatureMap = @{
                             @0x00: genericFeatureMap,
-                            @0x01: wesuFeatureMap,
+                            @0x01: stevalWesu1FeatureMap,
                             @0x80: nucleoFeatureMap
                             };
     }//if
