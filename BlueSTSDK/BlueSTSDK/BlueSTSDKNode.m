@@ -368,9 +368,43 @@ static dispatch_queue_t sNotificationQueue;
         return [BlueSTSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
 }
 
+
+/**
+ * tell if you can read a characteristic
+ * @param c characteristic to read
+ * @return true if it can be read
+ */
++(BOOL) charCanBeRead:(CBCharacteristic *)c{
+    return (c.properties & CBCharacteristicPropertyRead)!=0;
+}
+
+/**
+ * tell if you can enable the notification for a characteristic
+ * @param c characteristic to test
+ * @return true if it can be notify
+ */
++(BOOL) charCanBeNotify:(CBCharacteristic *)c{
+    return (c.properties & (CBCharacteristicPropertyNotify |
+                            CBCharacteristicPropertyNotifyEncryptionRequired))!=0;
+}
+
+/**
+ * tell if you can write a characteristic
+ * @param c characteristic to test
+ * @return true if it can be write
+ */
++(BOOL) charCanBeWrite:(CBCharacteristic *)c{
+    return (c.properties & (CBCharacteristicPropertyWrite |
+                            CBCharacteristicPropertyWriteWithoutResponse))!=0;
+}
+
+
+
 -(BOOL)readFeature:(BlueSTSDKFeature *)feature{
     CBCharacteristic *c =[self extractCharacteristicsFromFeature: feature];
     if(c==nil)
+        return false;
+    if(![BlueSTSDKNode charCanBeRead:c])
         return false;
     [mPeripheral readValueForCharacteristic:c];
     return true;
@@ -388,6 +422,8 @@ static dispatch_queue_t sNotificationQueue;
     CBCharacteristic *c= [self extractCharacteristicsFromFeature:feature];
     
     if(c==nil)
+        return false;
+    if(![BlueSTSDKNode charCanBeNotify:c])
         return false;
     
     @synchronized(mAskForNotification){
@@ -466,7 +502,9 @@ static dispatch_queue_t sNotificationQueue;
 
     if(featureChar==nil)
         return false;
-    
+    if(![BlueSTSDKNode charCanBeWrite:featureChar]){
+        return false;
+    }
     [mPeripheral writeValue:data forCharacteristic:featureChar type:CBCharacteristicWriteWithoutResponse];
     return true;
 }//writeDataToFeature
