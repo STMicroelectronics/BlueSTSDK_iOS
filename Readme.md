@@ -169,7 +169,7 @@ Note that each callback is performed asynchronously by a background thread.
     ```
     
 ##Docs
-You can found the full api documentation at this link: [Documentation](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc)
+You can found the full api documentation at this link: [Documentation](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html)
 
 ##License
 COPYRIGHT(c) 2015 STMicroelectronics
