@@ -697,6 +697,9 @@ didDiscoverCharacteristicsForService:(CBService *)service
  */
 -(void)notifyCommandResponse:(NSData*)data{
 
+    if(data.length<7)
+        return;
+    
     uint32_t timestamp =[data extractLeUInt16FromOffset: 0];
     uint32_t featureMask = [data extractBeUInt32FromOffset:2];
     uint8_t commandType = [data extractUInt8FromOffset:6];
