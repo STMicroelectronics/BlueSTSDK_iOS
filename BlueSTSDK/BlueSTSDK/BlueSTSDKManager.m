@@ -138,7 +138,11 @@
 }
 
 -(void)resetDiscovery {
-    [mDiscoveredNode removeAllObjects];
+    for( BlueSTSDKNode *node in mDiscoveredNode){
+        if( ![node isConnected]){
+            [mDiscoveredNode removeObject:node];
+        }//if
+    }//for
 }
 
 -(NSArray*) nodes{
