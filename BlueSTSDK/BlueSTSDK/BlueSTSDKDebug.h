@@ -70,11 +70,13 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
           errChart:(CBCharacteristic*)errChar;
 
 /**
- *  send a message to the debug console
+ *  send a message to the debug console, the message longher than the maximun size will
+ * be splitted in several ble packages
  *
  *  @param msg message to write in the node debug console
+ *  @return number of byte send
  */
--(void) writeMessage:(NSString*)msg;
+-(NSUInteger) writeMessage:(NSString*)msg;
 
 @end
 

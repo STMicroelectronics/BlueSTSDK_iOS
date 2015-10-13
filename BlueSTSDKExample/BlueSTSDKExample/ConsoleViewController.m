@@ -58,6 +58,10 @@ static NSDateFormatter *sDateFormatter;
      *  displayed string with all the message send/received to/from the board
      */
     NSMutableAttributedString *mDisplayString;
+    /** message that we have to send */
+    NSString *mMessageToSend;
+    /** number of byte that we have sent */
+    NSUInteger mLastByteSend;
 }
 
 /**
@@ -123,11 +127,34 @@ static NSDateFormatter *sDateFormatter;
  *  @return true
  */
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    [_debugInterface writeMessage: textField.text];
+    [self setMessageToSend:textField.text];
+    [self sendMessage];
     textField.text=@"";
     [self.view endEditing:YES];
     return true;
 }//textFieldShouldReturn
+
+/** the message 
+ * @param msg message that we have to send
+ */
+-(void)setMessageToSend:(NSString *)msg{
+    mMessageToSend=msg;
+    mLastByteSend=0;
+}
+
+/**
+ * send a a message, or part of it
+ */
+-(void)sendMessage{
+    
+    if(mLastByteSend >= mMessageToSend.length)
+        return;
+    
+    mLastByteSend += [_debugInterface writeMessage:
+                      [mMessageToSend substringFromIndex:mLastByteSend]];
+    
+}
+
 
 /**
  *  display a message received from the device
@@ -179,6 +206,8 @@ static NSDateFormatter *sDateFormatter;
     [mDisplayString appendAttributedString:temp];
     dispatch_async(dispatch_get_main_queue(),^{
         _console.attributedText = mDisplayString;
+        //after update the gui we can send a new message
+        [self sendMessage];
     });
 }//didStdInSend
 
