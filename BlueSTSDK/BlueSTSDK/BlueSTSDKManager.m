@@ -138,8 +138,17 @@
 }
 
 -(void)resetDiscovery {
-    [mDiscoveredNode removeAllObjects];
-}
+    NSMutableArray *removeMe = [NSMutableArray arrayWithCapacity:mDiscoveredNode.count];
+    for( BlueSTSDKNode *node in mDiscoveredNode){
+        if( ![node isConnected]){
+            [removeMe addObject:node];
+        }//if
+    }//for
+    
+    for (BlueSTSDKNode *remove in removeMe){
+        [mDiscoveredNode removeObject:remove];
+    }//for
+}//resetDiscovery
 
 -(NSArray*) nodes{
     return [mDiscoveredNode allObjects];

@@ -29,6 +29,8 @@
 
 #import "Util/BlueSTSDKBleNodeDefines.h"
 
+#define MAX_MESSAGE_LENGHT 20
+
 @implementation BlueSTSDKDebug{
     /**
      *  device that will send the information
@@ -63,10 +65,15 @@
     return self;
 }
 
--(void) writeMessage:(NSString*)msg{
-    [mWriteMessageQueue addObject:msg];
-    NSData *tempData = [msg dataUsingEncoding:NSASCIIStringEncoding];
-    [mDevice writeValue:tempData forCharacteristic:mTermChar type:CBCharacteristicWriteWithResponse];
+-(NSUInteger) writeMessage:(NSString*)msg{
+    NSData *tempData = [msg dataUsingEncoding:NSUTF8StringEncoding];
+    uint8_t data[MAX_MESSAGE_LENGHT];
+    NSUInteger lenght =MIN(MAX_MESSAGE_LENGHT,tempData.length);
+    [tempData getBytes:data range:NSMakeRange(0, lenght)];
+    NSData *dataToSend = [NSData dataWithBytes:data length:lenght];
+    [mDevice writeValue:dataToSend forCharacteristic:mTermChar type:CBCharacteristicWriteWithResponse];
+    [mWriteMessageQueue addObject:[NSString stringWithUTF8String:dataToSend.bytes]];
+    return lenght;
 }
 
 @synthesize delegate = _delegate;
