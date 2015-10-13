@@ -601,13 +601,18 @@ didDiscoverServices:(NSError *)error{
 -(void)buildKnowFeatureFromChar:(CBCharacteristic*)c{
     featureMask_t featureMask = [BlueSTSDKFeatureCharacteristics extractFeatureMask:c.UUID];
     NSMutableArray *charFeature = [[NSMutableArray alloc] initWithCapacity:1];
-    for(NSNumber *mask in mMaskToFeature.allKeys ){
-        featureMask_t temp = (featureMask_t) mask.unsignedIntegerValue;
-        if((temp & featureMask)!=0){
-            BlueSTSDKFeature *f = [mMaskToFeature objectForKey:mask];
-            [f setEnabled:true];
-            [charFeature addObject:f];
+    
+    uint32_t mask = 1<<31;
+    for(uint32_t i=0; i<32; i++){
+        if((featureMask & mask)!=0){
+            NSNumber *key = [NSNumber numberWithUnsignedInt:mask];
+            BlueSTSDKFeature *f = [mMaskToFeature objectForKey: key];
+            if(f!=nil){
+                [f setEnabled:true];
+                [charFeature addObject:f];
+            }//if
         }//if
+        mask = mask >>1;
     }//for
     
     if(charFeature.count != 0){ //if we found some feature save it
