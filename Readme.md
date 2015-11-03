@@ -70,7 +70,7 @@ If available the debug service must have the UUID <code>0000000-0000E-11e1-9ab4-
 - <code>00000002-000E-11e1-ac36-0002a5d5c51b</code> (Notify) is used by the board to notify an error message.
 
 ####Configuration
-If available the configuration service must have the UUID <code>00000000-000F-11e1-ac36-0002a5d5c51b</code> and will contain 2 characteristics:
+If available the configuration service must have the UUID <code>00000000-000F-11e1-9ab4-0002a5d5c51b</code> and will contain 2 characteristics:
 
 - <code>00000002-000F-11e1-ac36-0002a5d5c51b</code> (Notify/Write): it can be used to send command/data to a specific feature.
 
@@ -90,7 +90,7 @@ If available the configuration service must have the UUID <code>00000000-000F-11
     
   From the SDK point of view the messages are sent using the method [<code>BlueSTSDKFeature::sendCommand:data:</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature.html#a669cd03b94a0d0c9649ecef6af22645b) and the answer is notified with a callback passed through the method [<code>BlueSTSDKFeature::parseCommandResponseWithTimestamp:commandType::data:</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/com/html/interface_blue_s_t_s_d_k_feature.html#a16e1c4d33cc52bc5b19f55c126e).
 
-- <code>00000002-000F-11e1-ac36-0002a5d5c51b</code> (Read/Write/Notify): if available it is used to access the board configuration register that can be modified using the [<code>BlueSTSDKConfigControl</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_config_control.html) class.
+- <code>00000001-000F-11e1-ac36-0002a5d5c51b</code> (Read/Write/Notify): if available it is used to access the board configuration register that can be modified using the [<code>BlueSTSDKConfigControl</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_config_control.html) class.
 
 ###Example
 The ST Bluemicrosystem1 firmware implements this protocol, you can find the project source here: [Bluemicrosystem1](http://www.st.com/bluemicrosystem1)
