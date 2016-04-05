@@ -46,7 +46,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 /**
  *  node that export this console
  */
-@property (readonly,strong) BlueSTSDKNode* node;
+@property (readonly,strong) BlueSTSDKNode* parentNode;
 
 /**
  *  delegate used for notify new message in the console, when you set a delegate
@@ -59,13 +59,13 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  create a debug console
  *
  *  @param node     node that export the debug console
- *  @param device   device associated to the node
+ *  @param periph   peripheral associated to the node
  *  @param termChar characteristic where write and read the console message
  *  @param errChar  characteristic where receive the error messages
  *
  *  @return pointer to a BlueSTSDKDebug class
  */
--(instancetype) initWithNode:(BlueSTSDKNode *)node device:(CBPeripheral *)device
+-(instancetype) initWithNode:(BlueSTSDKNode *)node periph:(CBPeripheral *)periph
          termChart:(CBCharacteristic*)termChar
           errChart:(CBCharacteristic*)errChar;
 

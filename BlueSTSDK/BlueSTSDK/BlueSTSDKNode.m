@@ -36,8 +36,10 @@
 #import "Util/BlueSTSDKBleAdvertiseParser.h"
 #import "Util/BlueSTSDKBleNodeDefines.h"
 #import "util/NSData+NumberConversion.h"
+#import "util/UnwrapTimeStamp.h"
 
 #define RETRAY_ENABLE_NOTIFICATION_DELAY 1.0f
+#define TAG_NAME_CHAR_NUM 6
 
 @interface BlueSTSDKNode() <CBPeripheralDelegate>
 @end
@@ -56,7 +58,7 @@ static dispatch_queue_t sNotificationQueue;
     CBCharacteristic *mFeatureCommand;
     
     /**
-     *  remote ble device
+     *  remote ble peripheral
      */
     CBPeripheral *mPeripheral;
     
@@ -101,17 +103,7 @@ static dispatch_queue_t sNotificationQueue;
     //when this array becomes empty the node is connected
     NSMutableArray *mCharDiscoverServiceReq;
     
-    /**
-     * Number of time that the ts has reset.
-     * The ts is reseted when we see a ts with a lower value after that the ts
-     * reach the value (2^16)-100
-     */
-    uint32_t mNReset;
-    
-    /**
-     *last raw ts received from the board, it is a number between 0 and (2^16)-1
-     */
-    uint16_t mLastTs;
+    UnwrapTimeStamp *mUnwrapUtil;
     
     /**
      * we can send a request for notification before the connection is completed
@@ -122,6 +114,10 @@ static dispatch_queue_t sNotificationQueue;
      */
     NSMutableSet *mAskForNotification;
     
+    /**
+     *caching the friendly name to avoid several calculation
+     */
+    NSString *mFriendlyNameCache;
 }
 
 /**
@@ -175,9 +171,9 @@ static dispatch_queue_t sNotificationQueue;
     self = [super init];
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sNotificationQueue = dispatch_queue_create("W2STNode", DISPATCH_QUEUE_CONCURRENT);
+        sNotificationQueue = dispatch_queue_create("BlueSTNode", DISPATCH_QUEUE_CONCURRENT);
     });
-    
+
     mNodeStatusDelegates = [NSMutableSet set];
     mBleConnectionDelegates = [NSMutableSet set];
     mCharFeatureMap = [NSMutableArray array];
@@ -200,11 +196,12 @@ static dispatch_queue_t sNotificationQueue;
 
     BlueSTSDKBleAdvertiseParser *parser = [BlueSTSDKBleAdvertiseParser
                                          advertiseParserWithAdvertise:advertisementData];
-    NSDictionary *maskFeatureMap = [[BlueSTSDKManager sharedInstance]getFeaturesForDevice: parser.deviceId];
+    NSDictionary *maskFeatureMap = [[BlueSTSDKManager sharedInstance]getFeaturesForNode: parser.nodeId];
     
     [self buildAvailableFeatures: parser.featureMap maskFeatureMap:maskFeatureMap];
     
     _type = parser.nodeType;
+    _typeId = parser.nodeId;
     _name = parser.name;
     _address = parser.address;
     _protocolVersion = parser.protocolVersion;
@@ -216,7 +213,40 @@ static dispatch_queue_t sNotificationQueue;
     return self;
 }
 
+-(NSString *) friendlyName {
+    return [self friendlyName:NO];
+}
 
+/**
+ * get the tag or the address and strip ':' or '-'
+ * after compound it with the name of the node
+ */
+-(NSString *) friendlyName:(BOOL)forceUpdate {
+    if (!mFriendlyNameCache || forceUpdate) {
+        //if address removing the :
+        NSString *tag = self.addressEx;
+        NSString *name = self.name;
+        NSString *tail = @"";
+        
+        tag = [tag stringByReplacingOccurrencesOfString:@":" withString:@""];
+        tag = [tag stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        
+        NSInteger len = [tag length];
+        
+        tail = len <= TAG_NAME_CHAR_NUM ? tag : [tag substringFromIndex:len - TAG_NAME_CHAR_NUM];
+        mFriendlyNameCache = [NSString stringWithFormat:@"%@ @%@", name, tail];
+    }
+    assert(mFriendlyNameCache);
+    return mFriendlyNameCache;
+}
+
+/**
+ * if the address (BLE) is valid (provided by board on the discovery time)
+ * return it otherwise use the as tag the identify provided by iOS
+ */
+-(NSString *)addressEx {
+    return self.address && ![self.address isEqualToString:@""] ? self.address : self.tag;
+}
 -(void) addBleConnectionParamiterDelegate:(id<BlueSTSDKNodeBleConnectionParamDelegate>)delegate{
     [mBleConnectionDelegates addObject:delegate];
 }//addBleConnectionParamiterDelegate
@@ -274,25 +304,31 @@ static dispatch_queue_t sNotificationQueue;
     return mAvailableFeature;
 }//getFeatures
 
--(BlueSTSDKFeature*) getFeatureOfType:(Class)type{
+-(NSArray*) getFeaturesOfType:(Class)type{
+    NSMutableArray *foundFeature = [NSMutableArray array];
     
-    NSUInteger featureIdx = [mAvailableFeature indexOfObjectPassingTest:
-                                ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-        if ([obj isKindOfClass: type]) {
-            *stop = YES;
-            return YES;
-        }
-        return NO;
-    }];
-    if(featureIdx == NSNotFound){
-        return nil;
-    }//else
-    return [mAvailableFeature objectAtIndex:featureIdx];
-}
+    for(BlueSTSDKFeature *f in mAvailableFeature){
+        if([f isKindOfClass:type]){
+            [foundFeature addObject:f];
+        }//if
+    }//for
+    
+    return foundFeature;
+}//getFeaturesOfType
 
+-(BlueSTSDKFeature*) getFeatureOfType:(Class)type{
+
+    NSArray *features = [self getFeaturesOfType:type];
+    if(features.count == 0)
+        return nil;
+    //else
+    return [features objectAtIndex:0];
+}
 
 -(void)connect{
     mUserAskDisconnect=false;
+    //reset the unwrap object
+    mUnwrapUtil = [[UnwrapTimeStamp alloc]init];
     [self updateNodeStatus:BlueSTSDKNodeStateConnecting];
     [[BlueSTSDKManager sharedInstance]connect:mPeripheral];
 }//connect
@@ -302,8 +338,6 @@ static dispatch_queue_t sNotificationQueue;
         [self updateNodeStatus:BlueSTSDKNodeStateUnreachable];
         return;
     }//if
-    mLastTs=0;
-    mNReset=0;
     //else
     [mPeripheral discoverServices:nil];
 }//completeConnection
@@ -468,7 +502,14 @@ static dispatch_queue_t sNotificationQueue;
  */
 +(NSData*)prepareMessageWithMask:(featureMask_t)mask type:(uint8_t)type data:(NSData*)data{
     NSMutableData *msg = [NSMutableData dataWithCapacity:(sizeof(featureMask_t)+1+data.length)];
-    [msg appendBytes:&mask length:4];
+
+    //store the feature mask as big endian
+    uint8_t *maskByte = (uint8_t*)&mask;
+    [msg appendBytes:maskByte+3 length:1];
+    [msg appendBytes:maskByte+2 length:1];
+    [msg appendBytes:maskByte+1 length:1];
+    [msg appendBytes:maskByte+0 length:1];
+
     [msg appendBytes:&type length:1];
     [msg appendData:data];
     return msg;
@@ -477,23 +518,35 @@ static dispatch_queue_t sNotificationQueue;
 
 -(BOOL)sendCommandMessageToFeature:(BlueSTSDKFeature*)feature type:(uint8_t)commandType
                      data:(NSData*) commandData{
-    if(mFeatureCommand==nil)
+   
+    //find the characteristic link with the feature
+    CBCharacteristic *featureChar = [BlueSTSDKCharacteristic
+                                     getCharFromFeature:feature in:mCharFeatureMap];
+    if(featureChar==nil)
         return false;
+
+    CBCharacteristic *writeTo = mFeatureCommand == nil ? featureChar : mFeatureCommand;
+    if(writeTo==nil || ![BlueSTSDKNode charCanBeWrite:writeTo]){
+        return false;
+    }//if
+    
     //the general purpose feature can not receive command
     if([feature isKindOfClass:BlueSTSDKFeatureGenPurpose.class])
         return false;
     
-    //find the characteristic link with the feature
-    CBCharacteristic *featureChar = [BlueSTSDKCharacteristic getCharFromFeature:feature in:mCharFeatureMap];
-    if(featureChar==nil)
-        return false;
-    
     //extract the feature bit mask
     featureMask_t featureMask = [BlueSTSDKFeatureCharacteristics extractFeatureMask:featureChar.UUID];
+    
     //compose the message
     NSData *msg = [BlueSTSDKNode prepareMessageWithMask:featureMask type:commandType data:commandData];
-    //send it
-    [mPeripheral writeValue:msg forCharacteristic:mFeatureCommand type:CBCharacteristicWriteWithoutResponse];
+    if(writeTo==mFeatureCommand)
+        [mPeripheral writeValue:msg forCharacteristic:writeTo type:CBCharacteristicWriteWithoutResponse];
+    else{ //write directly on the feature, we don't send the feature mask
+        [mPeripheral writeValue:[msg subdataWithRange:NSMakeRange(sizeof(featureMask_t),
+                                                                  msg.length-sizeof(featureMask_t))]
+              forCharacteristic:writeTo
+                           type:CBCharacteristicWriteWithoutResponse];
+    }
     return true;
 }//sendCommandMessageToFeature
 
@@ -513,10 +566,11 @@ static dispatch_queue_t sNotificationQueue;
 /**
  * if we receive an rssi update, we notify it to the delegate
  */
-- (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral
-                          error:(NSError *)error{
+- (void)peripheral:(CBPeripheral *)peripheral
+                  didReadRSSI:(nonnull NSNumber *)RSSI
+             error:(nullable NSError *)error{
     if(error==nil){
-        [self updateRssi:peripheral.RSSI];
+        [self updateRssi:RSSI];
     }else
         NSLog(@"Error Updating Rssi: %@ (%ld)",error.description,(long)error.code);
 }//peripheralDidUpdateRSSI
@@ -565,7 +619,7 @@ didDiscoverServices:(NSError *)error{
     if(term == nil || err == nil)
         return nil;
     else
-        return [[BlueSTSDKDebug alloc] initWithNode:self device:mPeripheral
+        return [[BlueSTSDKDebug alloc] initWithNode:self periph:mPeripheral
                                         termChart:term errChart:err];
 }//buildDebugService
 
@@ -587,7 +641,7 @@ didDiscoverServices:(NSError *)error{
         }
     }//for
     if(configcontrolchar!=nil){
-      return [BlueSTSDKConfigControl configControlWithNode:self device:mPeripheral
+      return [BlueSTSDKConfigControl configControlWithNode:self periph:mPeripheral
                                       configControlChart:configcontrolchar];
     }else
         return nil;
@@ -750,10 +804,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
     
     //extract the timestamp and add the offset for extend the ts from 16bit to 32
     uint16_t timeStamp16 = [newData extractLeUInt16FromOffset: 0];
-    if(mLastTs>((1<<16)-100) && mLastTs > timeStamp16)
-        mNReset++;
-    uint32_t timestamp = mNReset * (1<<16) + timeStamp16;
-    mLastTs=timeStamp16;
+    uint64_t timestamp = [mUnwrapUtil unwrap:timeStamp16];
     
     uint32_t offset=2; // =2 since we already read 2 byte for the timestamp
     for(BlueSTSDKFeature *f in features){
@@ -838,6 +889,8 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
         });
     }//if-else
 }//didUpdateNotificationStateForCharacteristic
+
+
 
 +(NSString*) stateToString:(BlueSTSDKNodeState)state{
     switch (state) {

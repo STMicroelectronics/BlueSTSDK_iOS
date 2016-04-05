@@ -49,13 +49,13 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 @interface BlueSTSDKManager : NSObject
 
 /**
- *  start a discovery process, it will stop after 
- * {@link BlueSTSDKMANAGER_DEFAULT_SCANING_TIMEOUT_S} seconds
+ *  Start a discovery process, the discovery will stop when the use call
+ * {@link BlueSTSDKManagerDelegate#discoveryStop}
  */
 -(void)discoveryStart;
 
 /**
- *  start a discovery process that will scan for a new device. the discovery will
+ *  Start a discovery process that will scan for a new node. The discovery will
  * stop after {@code timeoutMs} milliseconds
  *
  *  @param timeoutMs milliseconds to wait before stop the scanning
@@ -63,12 +63,12 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(void)discoveryStart:(int)timeoutMs;
 
 /**
- *  stop the discovery process
+ *  Stop the discovery process
  */
 -(void)discoveryStop;
 
 /**
- *  add a delegate where the class will notify a change of status or a new node 
+ *  Add a delegate where the class will notify a change of status or a new node
  *  discovered.
  *
  *  you can register multiple delegate, the call back will be done in a concurrent queue
@@ -78,33 +78,38 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(void)addDelegate:(id<BlueSTSDKManagerDelegate>)delegate;
 
 /**
- *  remove a delegate
+ *  Remove a delegate
  *
  *  @param delegate delegate to remove
  */
 -(void)removeDelegate:(id<BlueSTSDKManagerDelegate>)delegate;
 
 /**
- *  get all the discovered nodes
+ *  Get all the discovered nodes
  *
  *  @return array of {@link BlueSTSDKNode} with all the discovered nodes
  */
 -(NSArray *) nodes;
 
 /**
- *  tell if the manager is in a discovery state
+ *  Tell if the manager is in a discovery state
  *
  *  @return true if the manager is seaching for new nodes
  */
 -(BOOL) isDiscovering;
 
 /**
- *  remove all the discovered nodes
+ *  Remove all the discovered nodes no connected
  */
 -(void) resetDiscovery;
 
 /**
- *  search in the discovered node the one that has a particular name,
+ *  Remove all the discovered nodes
+ */
+-(void) resetDiscovery:(BOOL)force;
+
+/**
+ *  Search in the discovered node the one that has a particular name,
  *  @note the node name is not unique so we will return the first node that match the name
  *
  *  @param name node name to search
@@ -114,7 +119,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(BlueSTSDKNode *)nodeWithName:(NSString *)name;
 
 /**
- *  search in the discovered node the one that has a particular tag
+ *  Search in the discovered node the one that has a particular tag
  *
  *  @param tag tag to search
  *
@@ -123,26 +128,31 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(BlueSTSDKNode *)nodeWithTag:(NSString *)tag;
 
 /**
- *  add to a device a list of possible feature exported by the node
- *
- *  @param boardId  new board id or a board id that we want extend
+ *  Insert a fake node inside the list of discovered node
+ */
+-(void) addVirtualNode;
+
+/**
+ *  Add to a node a list of possible feature exported by the node
+ *	
+ *  @param nodeId  new board id or a board id that we want extend
  *  @param features map of new features add to the board, it is a dictionary of 
  * <{@link featureMask_t},BlueSTSDKFeature>
  * @throw an exception if the featureMask as more than one bit set to 1
  */
--(void)addFeatureForBoard:(uint8_t)boardId features:(NSDictionary*)features;
+-(void)addFeatureForNode:(uint8_t)nodeId features:(NSDictionary*)features;
 
 /**
- *  check that the deviceId is recognized by the manager
+ *  Check that the nodeId is recognized by the manager
  *
- *  @param deviceId board id to check
+ *  @param nodeId board id to check
  *
- *  @return true if the deviceId is manage by this manager
+ *  @return true if the nodeId is manage by this manager
  */
--(bool)isValidDeviceId:(uint8_t)deviceId;
+-(bool)isValidNodeId:(uint8_t)nodeId;
 
 /**
- *  get the singleton instance of the manager
+ *  Get the singleton instance of the manager
  *
  *  @return instance of the BlueSTSDKManager
  */
@@ -159,7 +169,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 @protocol BlueSTSDKManagerDelegate <NSObject>
 @required
 /**
- *  function called when a new node is discovered
+ *  Function called when a new node is discovered
  *
  *  @param manager manager that discovered the node (the manger is a singleton,
  *    so this parameter is only for have a consistent method sign with the others delegate)
@@ -168,7 +178,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 - (void)manager:(BlueSTSDKManager *)manager didDiscoverNode:(BlueSTSDKNode *)node;
 
 /**
- *  function called when the status of the manager change
+ *  Function called when the status of the manager change
  *
  *  @param manager manager that discovered the node (the manger is a singleton,
  *    so this parameter is only for have a consistent method sign with the others delegate)

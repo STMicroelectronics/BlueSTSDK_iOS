@@ -37,10 +37,20 @@
 @interface BlueSTSDKNodeFake : BlueSTSDKNode
 
 /**
- *  create a fake BlueSTSDKNode that doesn't use the bluethoot
+ *  create a fake BlueSTSDKNode that doesn't use the bluetooth
  *
  *  @return pointer to a BlueSTSDKNode
  */
 -(instancetype)init;
 
+/**
+ *  create a fake BlueSTSDKNode that doesn't use the bluetooth
+ *
+ *  @param name    node name
+ *  @param tag     tag used for this node
+ *  @param address mac address of this node
+ *
+ *  @return a fake node
+ */
+-(instancetype)initWithName:(NSString *)name tag:(NSString *)tag address:(NSString *)address;
 @end

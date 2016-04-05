@@ -36,4 +36,26 @@
  */
 @interface BlueSTSDKFeatureLogNSLog : NSObject<BlueSTSDKFeatureLogDelegate>
 
+/**
+ *  startup timestamp of the logging
+ */
+@property (readonly,strong) NSDate* startupTimestamp;
+
+/**
+ *  create a logger with a timestamp
+ *
+ *  @param timestamp the startup timestamp of the logging
+ *
+ *  @return pointer to the logger
+ */
++(instancetype)loggerWithTimestamp:(NSDate *)timestamp;
+
+/**
+ *  create the logger with a timestamp
+ *
+ *  @param timestamp the startup timestamp of the logging
+ *
+ *  @return pointer to the logger
+ */
+-(instancetype)initWithTimestamp:(NSDate *)timestamp;
 @end

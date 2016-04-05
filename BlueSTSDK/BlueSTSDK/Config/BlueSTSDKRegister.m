@@ -154,7 +154,7 @@
  * Get the buffer for read the register
  * @param target Mode Persistent/Session
  *
- * @return the packet (buffer) to send to the device to read the register
+ * @return the packet (buffer) to send to the node to read the register
  */
 -(NSData *)toReadPacketWithTarget:(BlueSTSDKRegisterTarget_e)target {
     NSData * data = [NSData data];
@@ -170,9 +170,9 @@
 /**
  * Get the buffer for write the register
  * @param target Mode Persistent/Session
- * @param payloadData data to write in the device register
+ * @param payloadData data to write in the node register
  *
- * @return the packet (buffer) to send to the device to write the register with the value
+ * @return the packet (buffer) to send to the node to write the register with the value
  * defined in the payload
  */
 -(NSData *)toWritePacketWithTarget:(BlueSTSDKRegisterTarget_e)target
@@ -198,7 +198,7 @@
 
 /**
  * Get the payload of the read register
- * @param data received from the device
+ * @param data received from the node
  *
  * @return the data of the read registers
  */
@@ -213,7 +213,7 @@
 
 /**
  * Get the Header of the received register
- * @param data received from the device
+ * @param data received from the node
  *
  * @return the Header of the read registers
  */
@@ -238,7 +238,7 @@
 
 /**
  * Get the Target of the received register
- * @param data received from the device
+ * @param data received from the node
  *
  * @return the Mode of the read registers
  */
@@ -252,7 +252,7 @@
 
 /**
  * Check if the buffer is for a write operation
- * @param data received from the device
+ * @param data received from the node
  *
  * @return true if write bit is set
  */
@@ -264,7 +264,7 @@
 
 /**
  * Check if the buffer is for a write operation
- * @param data received from the device
+ * @param data received from the node
  *
  * @return true if Read bit is set
  */
@@ -275,7 +275,7 @@
 
 /**
  * Get the address of the received register
- * @param data received from the device
+ * @param data received from the node
  *
  * @return the address of the register read or write operation
  */
@@ -287,7 +287,7 @@
 
 /**
  * Get the error of the received register
- * @param data received from the device
+ * @param data received from the node
  *
  * @return the error code of the register read or write operation
  */
@@ -299,7 +299,7 @@
 
 /**
  * Get the size of the received register
- * @param data received from the device
+ * @param data received from the node
  *
  * @return the size of the register read or write operation
  */

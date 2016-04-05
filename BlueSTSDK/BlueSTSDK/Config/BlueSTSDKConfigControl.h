@@ -56,18 +56,18 @@
 /**
  * Instance for Config Control class
  * @param node node that will be configurate
- * @param device CBPeripheral connection with the node
+ * @param periph CBPeripheral connection with the node
  * @param configControlChar CBCharacteristic used for access to the register
  */
-+(instancetype)configControlWithNode:(BlueSTSDKNode *)node device:(CBPeripheral *)device
++(instancetype)configControlWithNode:(BlueSTSDKNode *)node periph:(CBPeripheral *)periph
                   configControlChart:(CBCharacteristic*)configControlChar;
 
 /**
  * Initialize for Config Control class
  * @param node node that will be configurate
- * @param device CBPeripheral connection with the node
+ * @param periph CBPeripheral connection with the node
  * @param configControlChar CBCharacteristic used for access to the register */
--(instancetype)initWithNode:(BlueSTSDKNode *)node device:(CBPeripheral *)device
+-(instancetype)initWithNode:(BlueSTSDKNode *)node periph:(CBPeripheral *)periph
          configControlChart:(CBCharacteristic*)configControlChar;
 
 /**

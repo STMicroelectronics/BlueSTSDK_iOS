@@ -27,6 +27,8 @@
 
 #import "SettingsTableViewController.h"
 
+#import <BlueSTSDK/BlueSTSDKRegisterDefines.h>
+
 @interface SettingsTableViewController ()<BlueSTSDKConfigControlDelegate>
 
 @end

@@ -30,13 +30,13 @@
 
 #import <Foundation/Foundation.h>
 #import "BlueSTSDKRegister.h"
-#import "BlueSTSDKRegisterDefines.h"
+//#import "BlueSTSDKRegisterDefines.h"
 
 /**
- * class that represent an abstraction of the device command to set/get the proper register
+ * class that represent an abstraction of the node command to set/get the proper register
  * <p>
  * The class maintain the information  of the register, the target and the payload to
- * write or just read to/from the device
+ * write or just read to/from the node
  * </p>
  *
  * @author STMicroelectronics - Central Labs.
@@ -76,15 +76,6 @@
 +(instancetype)commandWithRegister:(BlueSTSDKRegister *)reg
                             target:(BlueSTSDKRegisterTarget_e)target
                               data:(NSData *)data;
-/**
- * Instance for Command class
- * @param name RegisterName to manage with this command
- * @param target Memory target for the register
- * @param data value as byte array to set
- */
-+(instancetype)commandWithRegisterName:(BlueSTSDKRegisterName_e)name
-                                target:(BlueSTSDKRegisterTarget_e)target
-                                  data:(NSData *)data;
 
 /**
  * Instance for Command class
@@ -93,14 +84,6 @@
  */
 +(instancetype)commandWithRegister:(BlueSTSDKRegister *)reg
                             target:(BlueSTSDKRegisterTarget_e)target;
-
-/**
- * Instance for Command class
- * @param name Register to manage with this command
- * @param target Memory target for the register
- */
-+(instancetype)commandWithRegisterName:(BlueSTSDKRegisterName_e)name
-                                target:(BlueSTSDKRegisterTarget_e)target;
 
 /**
  * Instance for Command class
@@ -116,18 +99,6 @@
 
 /**
  * Instance for Command class
- * @param name RegisterName to manage with this command
- * @param target Memory target for the register
- * @param value value to set
- * @param byteSize the type of the val parameter
- */
-+(instancetype)commandWithRegisterName:(BlueSTSDKRegisterName_e)name
-                                target:(BlueSTSDKRegisterTarget_e)target
-                                 value:(NSInteger)value
-                              byteSize:(NSInteger)byteSize;
-
-/**
- * Instance for Command class
  * @param reg Register to manage with this command
  * @param target Memory target for the register
  * @param value float value to set
@@ -136,15 +107,6 @@
                             target:(BlueSTSDKRegisterTarget_e)target
                         valueFloat:(float)value;
 
-/**
- * Instance for Command class
- * @param name Register name to manage with this command
- * @param target Memory target for the register
- * @param value float value to set
- */
-+(instancetype)commandWithRegisterName:(BlueSTSDKRegisterName_e)name
-                                target:(BlueSTSDKRegisterTarget_e)target
-                            valueFloat:(float)value;
 
 /**
  * Instance for Command class
@@ -156,15 +118,6 @@
                             target:(BlueSTSDKRegisterTarget_e)target
                        valueString:(NSString *)str;
 
-/**
- * Instance for Command class
- * @param name Register to manage with this command
- * @param target Memory target for the register
- * @param str String value to set
- */
-+(instancetype)commandWithRegisterName:(BlueSTSDKRegisterName_e)name
-                                target:(BlueSTSDKRegisterTarget_e)target
-                           valueString:(NSString *)str;
 
 /**
  * Instance for Command class

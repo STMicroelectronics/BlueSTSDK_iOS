@@ -143,7 +143,7 @@ static dispatch_queue_t sNotificationQueue;
  *  @param commandType command type
  *  @param data        command data
  */
--(void) parseCommandResponseWithTimestamp:(uint32_t)timestamp
+-(void) parseCommandResponseWithTimestamp:(uint64_t)timestamp
                                  commandType:(uint8_t)commandType
                                         data:(NSData*)data{
     uint8_t status = [data extractUInt8FromOffset:0];

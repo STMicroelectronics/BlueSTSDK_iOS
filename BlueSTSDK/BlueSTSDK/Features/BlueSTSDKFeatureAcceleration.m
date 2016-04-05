@@ -33,7 +33,7 @@
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Acceleration"
+#define FEATURE_NAME @"Accelerometer"
 #define FEATURE_UNIT @"mg"
 #define FEATURE_MIN -2000
 #define FEATURE_MAX 2000
@@ -123,7 +123,7 @@ NSArray *sFieldDesc;
  *  @throw exception if there are no 6 bytes available in the rawdata array
  *  @return acceleration data + number of read bytes (6)
  */
--(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     if(rawData.length-offset < 6){
         @throw [NSException

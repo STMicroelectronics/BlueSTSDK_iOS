@@ -86,7 +86,7 @@ static NSArray *sFieldDesc;
  *  @throw exception if there are no 2 bytes available in the rawdata array
  *  @return humidity + number of read bytes (2)
  */
--(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     if(rawData.length-offset < 2){
         @throw [NSException
@@ -99,7 +99,8 @@ static NSArray *sFieldDesc;
     
     NSArray *data = [NSArray arrayWithObject:[NSNumber numberWithFloat:hum/10.0f]];
     
-    BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
+    BlueSTSDKFeatureSample *sample =
+        [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:2];
 
 }

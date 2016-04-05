@@ -46,11 +46,46 @@
 @interface BlueSTSDKFeatureLogCSV : NSObject<BlueSTSDKFeatureLogDelegate>
 
 /**
- *  create the logger
+ *  startup timestamp of the logging
+ */
+@property (readonly,strong) NSDate* startupTimestamp;
+
+/**
+ *  create a logger
  *
  *  @return pointer to the logger
  */
--(instancetype)init;
++(instancetype)logger;
+
+
+/**
+ *  create a logger
+ *
+ *  @param timestamp timestamp used in the file name
+ *  @param nodes     list of node to log
+ *
+ *  @return pointer to a logger
+ */
++(instancetype)loggerWithTimestamp:(NSDate *)timestamp nodes:(NSArray *)nodes;
+
+/**
+ *  create a logger that use the current timestamp inside the file name
+ *
+ *  @param nodes list of node to log
+ *
+ *  @return pointer to a logger	
+ */
++(instancetype)loggerWithNodes:(NSArray *)nodes;
+
+/**
+ *  create a logger
+ *
+ *  @param timestamp timestamp used in the file name
+ *  @param nodes     list of node to log
+ *
+ *  @return pointer to a logger
+ */
+-(instancetype)initWithTimestamp:(NSDate *)timestamp nodes:(NSArray *)nodes;
 
 /**
  *  close all the open files
@@ -58,15 +93,40 @@
 -(void) closeFiles;
 
 /**
- *  get all the csv file in the directory
+ *  get all the csv file of the current session logging in the directory
  *
  *  @return array of NSURL with the created log files
  */
-+(NSArray*) getLogFiles;
+-(NSArray*) getLogFiles;
 
 /**
- *  remove all the file with estension *.csv in the same folter where we save the log files
+ *  remove all the file of the current session with estension *.csv in the same folter where we save the log files
  */
-+(void) removeLogFiles;
+-(void) removeLogFiles;
+
+/**
+ *  true if there are log files
+ *
+ *  @return true if there are log files, false if there are no log files
+ */
++(BOOL) areThereLogFiles;
+
+/**
+ *  count the log files available in the folder
+ *
+ *  @return the number of log files
+ */
++(NSInteger) countAllLogFiles;
+
+/**
+ *  get all log files available in the folder
+ *
+ *  @return array of log files
+ */
++(NSArray*) getAllLogFiles;
+/**
+ *  clear log folder from all csv files
+ */
++(void) clearLogFolder;
 
 @end

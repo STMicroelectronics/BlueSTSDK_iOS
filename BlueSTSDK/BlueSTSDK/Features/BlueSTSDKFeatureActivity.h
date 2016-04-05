@@ -30,12 +30,11 @@
 /**
  * Export the data from the activiy recognition algorithm
  * @author STMicroelectronics - Central Labs.
-
  */
 @interface BlueSTSDKFeatureActivity : BlueSTSDKFeature
 
 /**
- *  different type of activity recognised by the device
+ *  different type of activity recognized by the node
  */
 typedef NS_ENUM(NSInteger, BlueSTSDKFeatureActivityType){
     /**

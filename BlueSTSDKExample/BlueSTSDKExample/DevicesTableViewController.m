@@ -67,7 +67,7 @@ BlueSTSDKNodeStateDelegate>
  */
 - (void)viewDidLoad {
     [super viewDidLoad];
-    mManager = [BlueSTSDKManager sharedInstance];   
+    mManager = [BlueSTSDKManager sharedInstance];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -92,7 +92,9 @@ BlueSTSDKNodeStateDelegate>
     [super viewDidAppear:animated];
     assert(mManager != nil);
     [mManager addDelegate:self];
-    
+#if TARGET_IPHONE_SIMULATOR
+    [mManager addVirtualNode];
+#endif
     
     //if some node are already discovered show it, and we disconnect
     [mManager discoveryStart:DISCOVERY_TIMEOUT];
@@ -167,7 +169,6 @@ BlueSTSDKNodeStateDelegate>
         [self.tableView reloadData];
         
     });
-    
 }
 
 

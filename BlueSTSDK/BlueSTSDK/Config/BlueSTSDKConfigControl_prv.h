@@ -52,7 +52,7 @@
  * @par
  * if you extend the method update you have to call this method after that you update the data
  * 
- * @param characteristic that contains the data command sent to the device
+ * @param characteristic that contains the data command sent to the node
  * @param success true if the wrote command is send correctly
  */
 -(void)characteristicsWriteUpdate:(CBCharacteristic *)characteristic success:(bool)success;

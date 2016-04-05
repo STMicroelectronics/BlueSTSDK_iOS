@@ -47,24 +47,12 @@
     return [[BlueSTSDKCommand alloc] initWithRegister:reg target:target data:data];
 }
 
-+(instancetype)commandWithRegisterName:(BlueSTSDKRegisterName_e)name
-                                target:(BlueSTSDKRegisterTarget_e)target
-                                  data:(NSData *)data {
-    return [BlueSTSDKCommand commandWithRegister:
-            [BlueSTSDKRegisterDefines lookUpWithRegisterName:name]
-                                        target:target
-                                          data:data];
-}
 
 +(instancetype)commandWithRegister:(BlueSTSDKRegister *)reg
                             target:(BlueSTSDKRegisterTarget_e)target {
     return [BlueSTSDKCommand commandWithRegister:reg target:target data:nil];
 }
-+(instancetype)commandWithRegisterName:(BlueSTSDKRegisterName_e)name
-                                target:(BlueSTSDKRegisterTarget_e)target {
-    return [BlueSTSDKCommand commandWithRegister:
-            [BlueSTSDKRegisterDefines lookUpWithRegisterName:name] target:target];
-}
+
 +(instancetype)commandWithRegister:(BlueSTSDKRegister *)reg
                             target:(BlueSTSDKRegisterTarget_e)target
                              value:(NSInteger)value
@@ -74,16 +62,6 @@
     return [BlueSTSDKCommand commandWithRegister:reg target:target data:locdata];
 }
 
-+(instancetype)commandWithRegisterName:(BlueSTSDKRegisterName_e)name
-                                target:(BlueSTSDKRegisterTarget_e)target
-                                 value:(NSInteger)value
-                              byteSize:(NSInteger)byteSize {
-    return [BlueSTSDKCommand commandWithRegister:
-            [BlueSTSDKRegisterDefines lookUpWithRegisterName:name]
-                                        target:target
-                                         value:value
-                                      byteSize:byteSize];
-}
 
 +(instancetype)commandWithRegister:(BlueSTSDKRegister *)reg
                             target:(BlueSTSDKRegisterTarget_e)target
@@ -93,14 +71,6 @@
     return [BlueSTSDKCommand commandWithRegister:reg target:target data:locdata];
 }
 
-+(instancetype)commandWithRegisterName:(BlueSTSDKRegisterName_e)name
-                                target:(BlueSTSDKRegisterTarget_e)target
-                            valueFloat:(float)value {
-    return [BlueSTSDKCommand commandWithRegister:
-            [BlueSTSDKRegisterDefines lookUpWithRegisterName:name]
-                                        target:target
-                                    valueFloat:value];
-}
 
 +(instancetype)commandWithRegister:(BlueSTSDKRegister *)reg
                             target:(BlueSTSDKRegisterTarget_e)target
@@ -109,14 +79,6 @@
     return [BlueSTSDKCommand commandWithRegister:reg target:target data:locdata];
 }
 
-+(instancetype)commandWithRegisterName:(BlueSTSDKRegisterName_e)name
-                                target:(BlueSTSDKRegisterTarget_e)target
-                           valueString:(NSString *)str {
-    return [BlueSTSDKCommand commandWithRegister:
-            [BlueSTSDKRegisterDefines lookUpWithRegisterName:name]
-                                        target:target
-                                   valueString:str];
-}
 
 +(instancetype)commandWithData:(NSData *)dataReceived{
     BlueSTSDKRegister *reg = [BlueSTSDKRegister registerWithData:dataReceived];

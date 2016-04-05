@@ -34,8 +34,8 @@
 
 #define FEATURE_NAME @"Pressure"
 #define FEATURE_UNIT @"mBar"
-#define FEATURE_MIN 0
-#define FEATURE_MAX 100
+#define FEATURE_MIN 900
+#define FEATURE_MAX 1100
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeFloat
 
 /**
@@ -87,7 +87,7 @@ static NSArray *sFieldDesc;
  *  @throw exception if there are no 4 bytes available in the rawdata array
  *  @return pressure information + number of read bytes (4)
  */
--(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     if(rawData.length-offset < 4){
         @throw [NSException

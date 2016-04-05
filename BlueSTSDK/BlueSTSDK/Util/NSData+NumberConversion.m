@@ -67,6 +67,10 @@
     return temp;
 }
 
+-(uint32_t) extractLeUInt32FromOffset:(NSUInteger)offset{
+    return (uint32_t)[self extractLeInt32FromOffset:offset];
+}
+
 -(float) extractLeFloatFromOffset:(NSUInteger)offset{
     NSRange range = NSMakeRange(offset, 4);
     float temp;

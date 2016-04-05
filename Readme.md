@@ -1,11 +1,11 @@
 #BlueST SDK
 
-BlueST is an multi-platform library (Android and iOS supported) that permits to easily access to the data exported by a Bluetooth Low Energy (BLE) device that implements the BlueST protocol.
+BlueST is a multi-platform library (Android and iOS supported) that permits easy access to the data exported by a Bluetooth Low Energy (BLE) device that implements the BlueST protocol.
 
 ##BlueST Protocol
 
 ###Advertise
-The library will show only the device that has a vendor specific field formatted in this way:
+The library will show only the device that has a vendor-specific field formatted in the following way:
 
 |Length|  1       |1           | 1                |1          | 4              | 6        |
 |------|----------|------------|------------------|-----------|----------------|----------|
@@ -17,39 +17,37 @@ The library will show only the device that has a vendor specific field formatted
  
  - The Device Id is a number that identifies the type of device. It is used to select different types of feature mask and can manage more than 32 features.
 Currently used values are:
-    - 0x00 for a generic device.
+    - 0x00 for a generic device
     - 0x01 is reserved for the STEVAL-WESU1 board
-    - 0x80 for a generic Nucleo board.
+    - 0x80 for a generic Nucleo board
+    - 0x81 for a Nucleo board exporting remote feature
 
-  You should use a value between 0x02 and 0x7F for your custom board, values between 0x80 and 0xFF are reserved for ST Nucleo boards.
+  You should use a value between 0x02 and 0x7F for your custom board, as values between 0x80 and 0xFF are reserved for ST Nucleo boards.
  
- - The feature mask is a bit field that permits to understand what characteristics/features are exported by the board.
-Currently bits are mapped in the following way:
-   
+ - The feature mask is a bit field that provides information regarding what characteristics/features are exported by the board.
+Currently, bits are mapped in the following way:
+  
    |Bit|31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|
    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-   |Feature|RFU|RFU|RFU|RFU|RFU|RFU|Proximity|Lux|Acc|Gyro|Mag|Pressure|Humidity|Temperature|Battery|RFU|
-   
+   |Feature|RFU|RFU|Switch|Direction of arrival|RFU|MicLevel|Proximity|Lux|Acc|Gyro|Mag|Pressure|Humidity|Temperature|Battery|Second Temperature|
    
    |Bit|15|14|13|12|11|10|9|8|7|6|5|4|3|2|1|0|
    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-   |Feature|RFU|RFU|RFU|RFU|RFU|RFU|RFU|Sensor Fusion Compact|Sensor Fusion|RFU|RFU|Activity|Carry Position|RFU|RFU|RFU|
-   
-
-You can use one of the RFU bits or define a new device and decide how map the feature. 
-To see how the data are exported by already defined features, take a look at the method [<code>BlueSTSDKFeature::extractData:data:dataOffset</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature.html#aca7a0947e86bcffba03ffa29bdcdd473) inside the feature class definition.
+   |Feature|RFU|RFU|RFU|RFU|RFU|AccEvent|FreeFall|Sensor Fusion Compact|Sensor Fusion|RFU|RFU|Activity|Carry Position|ProximityGesture|MemsGesture|Pedometer|
+You can use one of the RFU bits or define a new device and decide how to map the feature. 
+To see how the data is exported by pre-defined features, consult the export method [<code> Feature.ExtractResult Feature.extractData(long,byte[],int)</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_Android/javadoc/com/st/BlueSTSDK/Feature.html#extractData-long-byte:A-int-).  within the feature class definition.
 
 
-- The device MAC address is optional and only useful to get the device MAC address on an iOS device.
+- The device MAC address is optional and useful only for obtaining the device MAC address on an iOS device.
 
 
 ### Characteristics/Features
- The characteristics managed by the SDK must have an UUID like: <code>*XXXXXXXX*-0001-11e1-ac36-0002a5d5c51b</code>.
- The SDK will scan all the services looking for characteristics that match that pattern. 
+ The characteristics managed by the SDK must have a UUID such as: <code>*XXXXXXXX*-0001-11e1-ac36-0002a5d5c51b</code>.
+ The SDK will scan all the services, searching for characteristics that match that pattern. 
  
  The first part of the UUID will have the bit set to 1 for each feature exported by the characteristics.
  
- In case of multiple features mapped in a single characteristic the data must be in the same order as the bit mask.
+ In case of multiple features mapped in a single characteristic, the data must be in the same order as the bit mask.
  
  The characteristic data format must be:
  
@@ -57,24 +55,36 @@ To see how the data are exported by already defined features, take a look at the
 |:------:|:---------:|:------------------:|:-------------------:|:-----:|
 |  Name  | Timestamp | First Feature Data | Second Feature Data | ..... |
   
- The first 2 bytes are used to communicate a time stamp. This is especially useful to recognize any data loss.
+ The first 2 bytes are used to communicate a time stamp. This is especially useful for recognizing any data loss.
  
  Since the BLE packet max length is 20 bytes, the max size for a feature data field is 18 bytes.
  
+#### Remote Feature
+This type of Feature are created for handle the case when the node collect information from 
+other boards the user want to know also how produced the data.
+
+For this type of feature a node ID is attach at the beginning of a standard feature update message.
+
+For this type of feature the characteristic data format must be:
+ 
+| Length |     2     |        2         |      >1       |       |
+|:------:|:---------:|:----------------:|:-------------:|:-----:|
+|  Name  |  NodeID   | Remote timestamp | Feature Data  | ..... |
+
 
 ###Special Services
 ####[Debug](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_debug.html)
-If available the debug service must have the UUID <code>0000000-0000E-11e1-9ab4-0002a5d5c51b</code> and will contains 2 characteristics:
+If available, the debug service must have the UUID <code>0000000-0000E-11e1-9ab4-0002a5d5c51b</code> and will contains 2 characteristics:
 
-- <code>00000001-000E-11e1-ac36-0002a5d5c51b</code> (Notify/Write) is used to send string commands to the board and to notify the result.
-- <code>00000002-000E-11e1-ac36-0002a5d5c51b</code> (Notify) is used by the board to notify an error message.
+- <code>00000001-000E-11e1-ac36-0002a5d5c51b</code> (Notify/Write) is used to send string commands to the board and to notify the user of the result.
+- <code>00000002-000E-11e1-ac36-0002a5d5c51b</code> (Notify) is used by the board to notify the user of an error message.
 
 ####Configuration
-If available the configuration service must have the UUID <code>00000000-000F-11e1-ac36-0002a5d5c51b</code> and will contain 2 characteristics:
+If available, the configuration service must have the UUID <code>00000000-000F-11e1-9ab4-0002a5d5c51b</code> and will contain 2 characteristics:
 
 - <code>00000002-000F-11e1-ac36-0002a5d5c51b</code> (Notify/Write): it can be used to send command/data to a specific feature.
 
-    The request message must have the format:
+    The request message must have the following format:
     
     | Length |             4            |    1    | 0-15         |
     |:------:|:------------------------:|:-------:|--------------|
@@ -82,18 +92,23 @@ If available the configuration service must have the UUID <code>00000000-000F-11
   
     Where the first 4 bytes will select the recipient of the command/data package.
   
-    The optional command answer must have the format:
+    The optional command answer must have the following format:
     
     | Length |     2     |          4          |      1     |     0-13    |
     |:------:|:---------:|:-------------------:|:----------:|:-----------:|
     |  Name  | Timestamp | Sender Feature Mask | Command Id | Answer Data |
     
   From the SDK point of view the messages are sent using the method [<code>BlueSTSDKFeature::sendCommand:data:</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature.html#a669cd03b94a0d0c9649ecef6af22645b) and the answer is notified with a callback passed through the method [<code>BlueSTSDKFeature::parseCommandResponseWithTimestamp:commandType::data:</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/com/html/interface_blue_s_t_s_d_k_feature.html#a16e1c4d33cc52bc5b19f55c126e).
+ 
+  If this characteristic does not exist, but the characteristics that export the feature is in 
+  write mode, the *command id* and the *command data* are sending directly to the feature 
+  characteristics. In this case is not possible answer to the command.
 
 - <code>00000002-000F-11e1-ac36-0002a5d5c51b</code> (Read/Write/Notify): if available it is used to access the board configuration register that can be modified using the [<code>BlueSTSDKConfigControl</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_config_control.html) class.
 
 ###Example
-The ST Bluemicrosystem1 firmware implements this protocol, you can find the project source here: [Bluemicrosystem1](http://www.st.com/bluemicrosystem1)
+The ST Bluemicrosystem1 and ST Bluemicrosystem3 firmware implements this protocol, you can find 
+the project source here: [Bluemicrosystem](http://www.st.com/bluemicrosystem)
 
 ##How to install the library
 ###As an external library
@@ -109,7 +124,7 @@ The ST Bluemicrosystem1 firmware implements this protocol, you can find the proj
 
 ###[Manager](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_manager.html)
 This is a singleton class that starts/stops the discovery process and stores the retrieved nodes.
-Before starting the scanning process it is also possible to define a new deviceId and to register/add new features to already defined devices
+Before starting the scanning process, it is also possible to define a new deviceId and to register/add new features to already-defined devices
 
 The Manager will notify a node discovery through the [<code>BlueSTSDKManagerDelegate</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/com/html/protocol_blue_s_t_s_d_k_manager_delegate-p.html) delegate.
 Note that each callback is performed asynchronously by a background thread.
@@ -117,7 +132,7 @@ Note that each callback is performed asynchronously by a background thread.
 ###[Node](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_node.html)
 This class represents a remote device.
 
-From this class you can recover what features are exported by a node and read write data from/to the device.
+From this class you can recover what features are exported by a node and read/write data from/to the device.
 The node will export all the features that are set to 1 in the advertise message. Once the device is connected, scanning and enabling of available characteristics are performed. At this point it is possible to request/send data related to the discovered features.
 
 A node notifies its RSSI (signal strength) through the [<code>BlueSTSDKNodeBleConnectionParamDelegate</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/protocol_blue_s_t_s_d_k_node_ble_connection_param_delegate-p.html) delegate.
@@ -135,11 +150,11 @@ Note that each callback is performed asynchronously by a background thread.
 
 
 ###[Feature](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature.html)
-This class represent a data exported by the node.
+This class represent data exported by the node.
 
 Each Feature has an array of  [<code>BlueSTSDKFeatureField</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature_field.html) that describes the data exported.
 
-Data are received from a BLE characteristic and contained in a class  [<code>BlueSTSDKFeatureSample</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature_sample.html). Data are notified to the user using a listener pattern.
+Data are received from a BLE characteristic and contained in a class  [<code>BlueSTSDKFeatureSample</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature_sample.html). The user is notified of data using a listener pattern.
 
 The data exported by the Sample can be extracted using the static utility methods of the class.
 
@@ -169,7 +184,7 @@ Note that each callback is performed asynchronously by a background thread.
     ```
     
 ##Docs
-You can found the full api documentation at this link: [Documentation](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html)
+You can find the documentation at this link: [Documentation](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html)
 
 ##License
 COPYRIGHT(c) 2015 STMicroelectronics

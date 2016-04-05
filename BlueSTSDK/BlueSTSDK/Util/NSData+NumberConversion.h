@@ -71,6 +71,7 @@
  *      self[offset+2], self[offset+3]
  */
 -(int32_t) extractLeInt32FromOffset:(NSUInteger)offset;
+-(uint32_t) extractLeUInt32FromOffset:(NSUInteger)offset;
 
 /**
  *  extract an uint32 from a big endian byte array

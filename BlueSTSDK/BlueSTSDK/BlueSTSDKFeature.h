@@ -29,6 +29,7 @@
 #define BlueSTSDK_BlueSTSDKFeature_h
 
 #import <Foundation/Foundation.h>
+#import "BlueSTSDKFeatureField.h"
 
 @protocol BlueSTSDKFeatureDelegate;
 @protocol BlueSTSDKFeatureLogDelegate;
@@ -37,14 +38,14 @@
 
 /**
  *  Class that represent a sample data from a feature, it contains the data
- * exported by the feature and the device timestamp.
+ * exported by the feature and the node timestamp.
  * @author STMicroelectronics - Central Labs.
  */
 @interface BlueSTSDKFeatureSample : NSObject
 /**
- *  device time stamp at the moment of the data acquisition
+ *  node time stamp at the moment of the data acquisition
  */
-@property(readonly) uint32_t timestamp;
+@property(readonly) uint64_t timestamp;
 
 /**
  *  array of NSNumber with the feature data
@@ -59,7 +60,7 @@
  *
  *  @return object that contains the data
  */
-+(instancetype) sampleWithTimestamp:(uint32_t)timestamp data:(NSArray*)data;
++(instancetype) sampleWithTimestamp:(uint64_t)timestamp data:(NSArray*)data;
 
 /**
  *  initialize a BlueSTSDKFeatureSample
@@ -69,7 +70,7 @@
  *
  *  @return object that contains the data
  */
--(instancetype) initWhitTimestamp: (uint32_t)timestamp data:(NSArray*)data;
+-(instancetype) initWhitTimestamp: (uint64_t)timestamp data:(NSArray*)data;
 
 @end
 
@@ -110,7 +111,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 @property (readonly) NSDate* lastUpdate;
 
 /**
- *  object that contains the last data received from the device
+ *  object that contains the last data received from the node
  */
 @property (readonly,atomic) BlueSTSDKFeatureSample *lastSample;
 

@@ -26,9 +26,18 @@
  ******************************************************************************/
 
 #import "BlueSTSDKFeatureLogNSLog.h"
+#import "BlueSTSDKNode.h"
 
 @implementation BlueSTSDKFeatureLogNSLog
 
++(instancetype)loggerWithTimestamp:(NSDate *)timestamp {
+    return [[BlueSTSDKFeatureLogNSLog alloc] initWithTimestamp:timestamp];
+}
+-(instancetype)initWithTimestamp:(NSDate *)timestamp {
+    self = [super init];
+    _startupTimestamp = timestamp;
+    return self;
+}
 /**
  *  print the new data in the NSLog stream
  */
@@ -44,7 +53,8 @@
             }//for
         }];
     }//if
-    NSLog(@"%@ ts:%d Raw:%@ Data:%@",feature.name,sample.timestamp,temp,[feature description]);
+    BlueSTSDKNode *node = (BlueSTSDKNode *)feature.parentNode;
+    NSLog(@"%@ %@ ts:%llu Raw:%@ Data:%@", node.friendlyName, feature.name, sample.timestamp,temp,[feature description]);
 }//feature
 
 @end

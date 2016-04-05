@@ -36,16 +36,16 @@
 #define PROTOCOL_VERSION_CURRENT_MIN 0x01
 #define PROTOCOL_VERSION_NOT_AVAILABLE 0xFF
 
-#define DEVICE_ID_GENERIC 0x00
-#define DEVICE_ID_STEVAL_WESU1 0x01
-#define DEVICE_ID_NUCLEO_BIT 0x80
+#define NODE_ID_GENERIC 0x00
+#define NODE_ID_STEVAL_WESU1 0x01
+#define NODE_ID_NUCLEO_BIT 0x80
 
 #define ADVERTISE_SIZE_COMPACT 6
 #define ADVERTISE_SIZE_FULL 12
 #define ADVERTISE_MAX_SIZE 20
 
 #define ADVERTISE_FIELD_POS_PROTOCOL 0
-#define ADVERTISE_FIELD_POS_DEVICE_ID 1
+#define ADVERTISE_FIELD_POS_NODE_ID 1
 #define ADVERTISE_FIELD_POS_FEATURE_MAP 2
 #define ADVERTISE_FIELD_POS_ADDRESS 6
 
@@ -63,15 +63,15 @@
  */
 -(BlueSTSDKNodeType) getNodeType:(uint8_t) type {
     BlueSTSDKNodeType nodetype = BlueSTSDKNodeTypeGeneric;
-    if(![BlueSTSDKManager.sharedInstance isValidDeviceId:type])
+    if(![BlueSTSDKManager.sharedInstance isValidNodeId:type])
         @throw [NSException
                 exceptionWithName:@"Invalid Manufactured data"
                 reason:@"Invalid Node Type"
                 userInfo:nil];
    
-    if (type == DEVICE_ID_STEVAL_WESU1)
+    if (type == NODE_ID_STEVAL_WESU1)
         nodetype =  BlueSTSDKNodeTypeSTEVAL_WESU1;
-    else if ((type & DEVICE_ID_NUCLEO_BIT) == DEVICE_ID_NUCLEO_BIT)
+    else if ((type & NODE_ID_NUCLEO_BIT) == NODE_ID_NUCLEO_BIT)
         nodetype =  BlueSTSDKNodeTypeNucleo;
     
     return nodetype;
@@ -99,8 +99,8 @@
     _featureMap = 0x00;
     _protocolVersion = PROTOCOL_VERSION_NOT_AVAILABLE;
     _address = nil;
-    _deviceId = DEVICE_ID_GENERIC;
-    _nodeType = [self getNodeType: _deviceId];
+    _nodeId = NODE_ID_GENERIC;
+    _nodeType = [self getNodeType: _nodeId];
     
     //start to fill the value with the extracted values
     
@@ -113,8 +113,8 @@
                         PROTOCOL_VERSION_CURRENT_MIN, PROTOCOL_VERSION_CURRENT]
                 userInfo:nil];
     
-    _deviceId = [rawData extractUInt8FromOffset:ADVERTISE_FIELD_POS_DEVICE_ID];
-    _nodeType = [self getNodeType: _deviceId];
+    _nodeId = [rawData extractUInt8FromOffset:ADVERTISE_FIELD_POS_NODE_ID];
+    _nodeType = [self getNodeType: _nodeId];
     _featureMap = [rawData extractBeUInt32FromOffset:ADVERTISE_FIELD_POS_FEATURE_MAP];
     
     

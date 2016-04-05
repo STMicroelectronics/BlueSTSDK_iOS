@@ -36,11 +36,11 @@
 
 @implementation BlueSTSDKFeatureSample
 
-+(instancetype) sampleWithTimestamp:(uint32_t)timestamp data:(NSArray*)data{
++(instancetype) sampleWithTimestamp:(uint64_t)timestamp data:(NSArray*)data{
     return [[BlueSTSDKFeatureSample alloc] initWhitTimestamp: timestamp data:data];
 }
 
--(instancetype) initWhitTimestamp: (uint32_t)timestamp data:(NSArray*)data{
+-(instancetype) initWhitTimestamp: (uint64_t)timestamp data:(NSArray*)data{
     self = [super init];
     _timestamp=timestamp;
     _data=data;
@@ -149,7 +149,7 @@ static NSNumberFormatter *sFormatter;
 
 
 //this function must be implemented in a subclass, this implementation only throw an exception
--(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must overwrite %@ in a subclass]",
                                            NSStringFromSelector(_cmd)]
@@ -158,7 +158,7 @@ static NSNumberFormatter *sFormatter;
 }//update
 
 
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
+-(uint32_t) update:(uint64_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
     BlueSTSDKExtractResult *temp = [self extractData:timestamp data:data dataOffset:offset];
     self.lastSample = temp.sample;
     [self notifyUpdateWithSample:temp.sample];
@@ -189,7 +189,7 @@ static NSNumberFormatter *sFormatter;
 }//sendCommand
 
 //optional abstract method -> default implementation is an empty method
--(void) parseCommandResponseWithTimestamp:(uint32_t)timestamp
+-(void) parseCommandResponseWithTimestamp:(uint64_t)timestamp
                               commandType:(uint8_t)commandType
                                      data:(NSData*)data{
     
@@ -203,10 +203,10 @@ static NSNumberFormatter *sFormatter;
 -(NSString*) description{
     NSMutableString *s = [NSMutableString stringWithString:@"Ts:"];
     BlueSTSDKFeatureSample *sample = self.lastSample;
-    [s appendFormat:@"%d ",sample.timestamp ];
+    [s appendFormat:@"%lld ",sample.timestamp ];
     NSArray *fields = [self getFieldsDesc];
     NSArray *datas = sample.data;
-    for (int i = 0; i < fields.count; i++) {
+    for (int i = 0; i < datas.count; i++) {
         BlueSTSDKFeatureField *field =(BlueSTSDKFeatureField*)[fields objectAtIndex:i];
         NSNumber *data = (NSNumber*)[datas objectAtIndex:i];
         [s appendFormat:@"%@: %@ ",field.name,[sFormatter stringFromNumber:data]];

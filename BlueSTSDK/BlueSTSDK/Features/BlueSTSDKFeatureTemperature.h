@@ -30,7 +30,6 @@
 /**
  * Export the data from a temperature sensor
  * @author STMicroelectronics - Central Labs.
-
  */
 @interface BlueSTSDKFeatureTemperature : BlueSTSDKFeature
 

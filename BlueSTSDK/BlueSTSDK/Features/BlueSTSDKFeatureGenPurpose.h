@@ -25,7 +25,8 @@
  *
  ******************************************************************************/
 
-#import <BlueSTSDK/BlueSTSDK.h>
+#import <CoreBluetooth/CBCharacteristic.h>
+#import "BlueSTSDKFeature.h"
 
 /**
  * this is a special feature where the data are not parsed, since the format is 

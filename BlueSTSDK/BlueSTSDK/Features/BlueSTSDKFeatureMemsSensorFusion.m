@@ -31,7 +31,7 @@
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"MemsSensorFusion"
+#define FEATURE_NAME @"MEMS Sensor Fusion"
 #define FEATURE_UNIT @""
 #define FEATURE_MIN -1.0f
 #define FEATURE_MAX 1.0
@@ -120,7 +120,7 @@ static NSArray *sFieldDesc;
  *  @throw exception if there are no almost 12 bytes available in the rawdata array
  *  @return quaternion angle + number of read bytes (12 or 16)
  */
--(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     if(rawData.length-offset < 12){
         @throw [NSException

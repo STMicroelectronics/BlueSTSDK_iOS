@@ -109,7 +109,7 @@ static NSArray *sFieldDesc;
  *  @throw exception if there are no 6 bytes available in the rawdata array
  *  @return magnetometer datas + number of read bytes (6)
  */
--(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     if(rawData.length-offset < 6){
         @throw [NSException

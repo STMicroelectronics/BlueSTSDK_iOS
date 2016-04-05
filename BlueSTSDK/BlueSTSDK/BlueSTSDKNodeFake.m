@@ -42,13 +42,22 @@
 #import "BlueSTSDKFeatureTemperature.h"
 #import "BlueSTSDKFeatureActivity.h"
 #import "BlueSTSDKFeatureCarryPosition.h"
+#import "BlueSTSDKFeatureMicLevel.h"
 #import "BlueSTSDKFeatureMemsSensorFusion.h"
+#import "BlueSTSDKFeatureProximityGesture.h"
+#import "BlueSTSDKFeatureMemsGesture.h"
+#import "BlueSTSDKFeaturePedometer.h"
+#import "BlueSTSDKFeatureAccelerometerEvent.h"
+#import "BlueSTSDKRemoteFeatureHumidity.h"
+#import "BlueSTSDKRemoteFeaturePressure.h"
+#import "BlueSTSDKRemoteFeatureTemperature.h"
 
 /**
  *  @relates BlueSTSDKManager
  *  a notification each 0.2s, 5 notifcation each second
  */
 #define NOTIFICATION_TIME_INTERVAL 0.2f
+
 
 @implementation BlueSTSDKNodeFake{
     /**
@@ -68,16 +77,22 @@
     NSMutableDictionary *notifyFeatures;
 }
 
+static NSInteger nodeFakeCount = 0;
+
 @synthesize name = _name;
 @synthesize tag = _tag;
 @synthesize txPower = _txPower;
+@synthesize address = _address;
 
 
--(instancetype)init{
+-(instancetype)initWithName:(NSString *)name tag:(NSString *)tag address:(NSString *)address {
     self = [super init];
+    
     timestamp=0;
-    _name=@"FakeNode";
-    _tag=@"012345678-1234-5678-0123-123456789ABCD";
+    nodeFakeCount++;
+    _name= name == nil || [name isEqualToString:@""] ? [NSString stringWithFormat:@"FakeNode%ld", (long)nodeFakeCount] : name;
+    _tag= tag == nil || [tag isEqualToString:@""] ? [NSString stringWithFormat:@"00000-00-%04ld", (long)nodeFakeCount] : tag;
+    _address= address == nil || [address isEqualToString:@""] ? [NSString stringWithFormat:@"AB:CD:EF:12:34:%02lX", (long)nodeFakeCount] : address;
     _txPower=@100;
     availableFeatures = @[
                           [[BlueSTSDKFeatureAcceleration alloc] initWhitNode:self],
@@ -93,11 +108,22 @@
                           [[BlueSTSDKFeatureMemsSensorFusion alloc] initWhitNode:self],
                           [[BlueSTSDKFeatureMemsSensorFusionCompact alloc] initWhitNode:self],
                           [[BlueSTSDKFeatureActivity alloc] initWhitNode:self],
-                          [[BlueSTSDKFeatureCarryPosition alloc] initWhitNode:self]];
+                          [[BlueSTSDKFeatureCarryPosition alloc] initWhitNode:self],
+                          [[BlueSTSDKFeatureMicLevel alloc] initWhitNode:self],
+                          [[BlueSTSDKFeatureProximityGesture alloc] initWhitNode:self],
+                          [[BlueSTSDKFeatureMemsGesture alloc] initWhitNode:self],
+                          [[BlueSTSDKFeaturePedometer alloc] initWhitNode:self],
+                          [[BlueSTSDKFeatureAccelerometerEvent alloc] initWhitNode:self],
+                          [[BlueSTSDKRemoteFeaturePressure alloc]initWhitNode:self],
+                          [[BlueSTSDKRemoteFeatureTemperature alloc]initWhitNode:self],
+                          [[BlueSTSDKRemoteFeatureHumidity alloc]initWhitNode:self]];
     notifyFeatures = [NSMutableDictionary dictionary];
     return self;
 }//init
 
+-(instancetype)init{
+    return [self initWithName:@"" tag:@"" address:@""];
+}
 -(void)readRssi{
     [super updateRssi: @(rand() % 100)];
 }//readRssi

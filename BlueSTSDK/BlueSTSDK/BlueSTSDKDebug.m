@@ -29,13 +29,13 @@
 
 #import "Util/BlueSTSDKBleNodeDefines.h"
 
-#define MAX_MESSAGE_LENGHT 20
+#define MAX_MESSAGE_LENGTH 20
 
 @implementation BlueSTSDKDebug{
     /**
-     *  device that will send the information
+     *  peripheral that will send the information
      */
-    CBPeripheral *mDevice;
+    CBPeripheral *mPeriph;
     
     /**
      *  characteristic where we will read the stdout message
@@ -54,26 +54,26 @@
     NSMutableArray *mWriteMessageQueue;
 }
 
--(instancetype) initWithNode:(BlueSTSDKNode *)node device:(CBPeripheral *)device
+-(instancetype) initWithNode:(BlueSTSDKNode *)node periph:(CBPeripheral *)periph
          termChart:(CBCharacteristic*)termChar
           errChart:(CBCharacteristic*)errChar{
-    _node=node;
+    _parentNode=node;
     mTermChar=termChar;
     mErrChar=errChar;
-    mDevice=device;
+    mPeriph=periph;
     mWriteMessageQueue = [NSMutableArray array];
     return self;
 }
 
 -(NSUInteger) writeMessage:(NSString*)msg{
     NSData *tempData = [msg dataUsingEncoding:NSUTF8StringEncoding];
-    uint8_t data[MAX_MESSAGE_LENGHT];
-    NSUInteger lenght =MIN(MAX_MESSAGE_LENGHT,tempData.length);
-    [tempData getBytes:data range:NSMakeRange(0, lenght)];
-    NSData *dataToSend = [NSData dataWithBytes:data length:lenght];
-    [mDevice writeValue:dataToSend forCharacteristic:mTermChar type:CBCharacteristicWriteWithResponse];
+    uint8_t data[MAX_MESSAGE_LENGTH];
+    NSUInteger length=MIN(MAX_MESSAGE_LENGTH,tempData.length);
+    [tempData getBytes:data range:NSMakeRange(0, length)];
+    NSData *dataToSend = [NSData dataWithBytes:data length:length];
+    [mPeriph writeValue:dataToSend forCharacteristic:mTermChar type:CBCharacteristicWriteWithResponse];
     [mWriteMessageQueue addObject:[NSString stringWithUTF8String:dataToSend.bytes]];
-    return lenght;
+    return length;
 }
 
 @synthesize delegate = _delegate;
@@ -95,8 +95,8 @@
     @synchronized(self){
         _delegate=delegate;
         BOOL enable = delegate!=nil; //enable if !=nil, disable if ==nil
-        [mDevice setNotifyValue:enable forCharacteristic:mTermChar];
-        [mDevice setNotifyValue:enable forCharacteristic:mErrChar];
+        [mPeriph setNotifyValue:enable forCharacteristic:mTermChar];
+        [mPeriph setNotifyValue:enable forCharacteristic:mErrChar];
     }//setDelegate
 }
 

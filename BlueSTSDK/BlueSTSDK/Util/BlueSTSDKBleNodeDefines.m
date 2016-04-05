@@ -41,6 +41,17 @@
 #import "../Features/BlueSTSDKFeatureActivity.h"
 #import "../Features/BlueSTSDKFeatureFreeFall.h"
 #import "../Features/BlueSTSDKFeatureCarryPosition.h"
+#import "../Features/BlueSTSDKFeatureMicLevel.h"
+#import "../Features/BlueSTSDKFeatureProximityGesture.h"
+#import "../Features/BlueSTSDKFeatureMemsGesture.h"
+#import "../Features/BlueSTSDKFeaturePedometer.h"
+#import "../Features/BlueSTSDKFeatureAccelerometerEvent.h"
+#import "../Features/BlueSTSDKFeatureDirectionOfArrival.h"
+#import "../Features/BlueSTSDKFeatureSwitch.h"
+#import "../Features/Remote/BlueSTSDKRemoteFeatureSwitch.h"
+#import "../Features/Remote/BlueSTSDKRemoteFeatureTemperature.h"
+#import "../Features/Remote/BlueSTSDKRemoteFeaturePressure.h"
+#import "../Features/Remote/BlueSTSDKRemoteFeatureHumidity.h"
 
 #import "BlueSTSDKBleNodeDefines.h"
 #import "NSData+NumberConversion.h"
@@ -167,22 +178,27 @@
 @implementation BlueSTSDKBoardFeatureMap
 
 /**
- *  map that link a featureMask_t with a feature class, used for the generic device
+ *  map that link a featureMask_t with a feature class, used for the generic node
  */
 static NSDictionary *genericFeatureMap = nil;
 
 /**
- *  map that link a featureMask_t with a feature class, used for the generic nucleo device
+ *  map that link a featureMask_t with a feature class, used for the generic nucleo node
  */
 static NSDictionary *nucleoFeatureMap = nil;
 
 /**
- *  map that link a featureMask_t with a feature class, used for the wesu device
+ *  map that link a featureMask_t with a feature class, used for the generic nucleo node
+ */
+static NSDictionary *bleStarNucleoFeatureMap = nil;
+
+/**
+ *  map that link a featureMask_t with a feature class, used for the wesu node
  */
 static NSDictionary *stevalWesu1FeatureMap = nil;
 
 /**
- * contains the default map (featureMask_t,Feature class) for each know device id
+ * contains the default map (featureMask_t,Feature class) for each know node id
  */
 static NSDictionary *boardFeatureMap = nil;
 
@@ -193,21 +209,39 @@ static NSDictionary *boardFeatureMap = nil;
                               
                               };
         nucleoFeatureMap = @{
-                             @0x00200000: [BlueSTSDKFeatureMagnetometer class], //mag
-                             @0x00400000: [BlueSTSDKFeatureGyroscope class], //gyo
+                             @0x20000000: [BlueSTSDKFeatureSwitch class],
+                             @0x10000000: [BlueSTSDKFeatureDirectionOfArrival class], //Sound source of arrival
+                             @0x04000000: [BlueSTSDKFeatureMicLevel class], //Mic Level
+                             @0x02000000: [BlueSTSDKFeatureProximity class], //proximity
+                             @0x01000000: [BlueSTSDKFeatureLuminosity class], //luminosity
                              @0x00800000: [BlueSTSDKFeatureAcceleration class], //acc
+                             @0x00400000: [BlueSTSDKFeatureGyroscope class], //gyo
+                             @0x00200000: [BlueSTSDKFeatureMagnetometer class], //mag
+                             @0x00100000: [BlueSTSDKFeaturePressure class], //pressure
                              @0x00080000: [BlueSTSDKFeatureHumidity class], //humidity
                              @0x00040000: [BlueSTSDKFeatureTemperature class], //temperature
-                             @0x00100000: [BlueSTSDKFeaturePressure class], //pressure
+                             @0x00020000: [BlueSTSDKFeatureBattery class], //battery
+                             @0x00010000: [BlueSTSDKFeatureTemperature class], //temperature
+                             @0x00000400: [BlueSTSDKFeatureAccelerometerEvent class], //Free fall detection
+                             @0x00000200: [BlueSTSDKFeatureFreeFall class], //Free fall detection
+                             @0x00000100: [BlueSTSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
+                             @0x00000080: [BlueSTSDKFeatureMemsSensorFusion class], //Mems sensor fusion
                              @0x00000010: [BlueSTSDKFeatureActivity class], //Actvity
                              @0x00000008: [BlueSTSDKFeatureCarryPosition class], //carry position recognition
-                             @0x00000080: [BlueSTSDKFeatureMemsSensorFusion class], //Mems sensor fusion
-                             @0x00000100: [BlueSTSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
-                             @0x00000200: [BlueSTSDKFeatureFreeFall class], //Free fall detection
-                             @0x01000000: [BlueSTSDKFeatureLuminosity class], //luminosity
-                             @0x02000000: [BlueSTSDKFeatureProximity class], //proximity
-                             @0x00020000: [BlueSTSDKFeatureBattery class] //battery
+                             @0x00000004: [BlueSTSDKFeatureProximityGesture class], //Proximity Gesture
+                             @0x00000002: [BlueSTSDKFeatureMemsGesture class], //Proximity Gesture
+                             @0x00000001: [BlueSTSDKFeaturePedometer class], //Pedometer
+                           
                              };
+        
+        bleStarNucleoFeatureMap = @{
+                             @0x20000000: [BlueSTSDKRemoteFeatureSwitch class],
+                             @0x00100000: [BlueSTSDKRemoteFeaturePressure class], //pressure
+                             @0x00080000: [BlueSTSDKRemoteFeatureHumidity class], //humidity
+                             @0x00040000: [BlueSTSDKRemoteFeatureTemperature class], //temperature
+                             };
+
+        
         stevalWesu1FeatureMap = @{
                            @0x00020000: [BlueSTSDKFeatureBattery class], //battery
                            @0x00040000: [BlueSTSDKFeatureTemperature class], //temperature
@@ -216,13 +250,18 @@ static NSDictionary *boardFeatureMap = nil;
                            @0x00200000: [BlueSTSDKFeatureMagnetometer class], //mag
                            @0x00400000: [BlueSTSDKFeatureGyroscope class], //gyo
                            @0x00800000: [BlueSTSDKFeatureAcceleration class], //acc
-                           @0x00000080: [BlueSTSDKFeatureMemsSensorFusion class] //mems sensor fusion
+                           @0x00000080: [BlueSTSDKFeatureMemsSensorFusion class], //mems sensor fusion
+                           @0x00000200: [BlueSTSDKFeatureFreeFall class], //Free fall detection
+                           @0x00000010: [BlueSTSDKFeatureActivity class], //Actvity recognition
+                           @0x00000008: [BlueSTSDKFeatureCarryPosition class], //carry position
+                           @0x00000001: [BlueSTSDKFeaturePedometer class], //Pedometer
                            };
         
         boardFeatureMap = @{
                             @0x00: genericFeatureMap,
                             @0x01: stevalWesu1FeatureMap,
-                            @0x80: nucleoFeatureMap
+                            @0x80: nucleoFeatureMap,
+                            @0x81: bleStarNucleoFeatureMap
                             };
     }//if
 }//initialize

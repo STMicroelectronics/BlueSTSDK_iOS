@@ -87,7 +87,7 @@ static NSArray *sFieldDesc;
  *  @throw exception if there are no 2 bytes available in the rawdata array
  *  @return luminosity information + number of read bytes (2)
  */
--(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     if(rawData.length-offset < 2){
         @throw [NSException

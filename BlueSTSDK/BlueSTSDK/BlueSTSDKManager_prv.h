@@ -42,7 +42,7 @@
  * @private
  *  start a connection with a ble peripheral
  *
- *  @param peripheral device to connect
+ *  @param peripheral node to connect
  */
 -(void)connect:(CBPeripheral*)peripheral;
 
@@ -51,17 +51,17 @@
  * @private
  *  close the connection with a ble peripheral
  *
- *  @param peripheral device to disconnect
+ *  @param peripheral node to disconnect
  */
 -(void)disconnect:(CBPeripheral*)peripheral;
 
 /**
  * @private
- * get the list of feature that is possible find in a specific device.
+ * get the list of feature that is possible find in a specific node.
  *
  *  @return map of <{@link featureMask_t},BlueSTSDKFeature>
  */
--(NSDictionary*)getFeaturesForDevice:(uint8_t)deviceId;
+-(NSDictionary*)getFeaturesForNode:(uint8_t)nodeId;
 
 @end
 

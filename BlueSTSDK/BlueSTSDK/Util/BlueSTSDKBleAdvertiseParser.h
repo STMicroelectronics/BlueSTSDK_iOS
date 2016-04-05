@@ -47,9 +47,9 @@
  */
 @property (readonly) unsigned char protocolVersion;
 /**
- *  board id, tell the board type
+ *  node id, tell the node type
  */
-@property (readonly) unsigned char deviceId;
+@property (readonly) unsigned char nodeId;
 
 /**
  *  bit mask that tell what feature are available in the node

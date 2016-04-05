@@ -34,7 +34,7 @@
 @interface BlueSTSDKFeatureCarryPosition : BlueSTSDKFeature
 
 /**
- *  different type of position recognised by the device
+ *  different type of position recognized by the node
  */
 typedef NS_ENUM(NSInteger, BlueSTSDKFeatureCarryPositionType){
     /**
@@ -42,27 +42,27 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureCarryPositionType){
      */
     BlueSTSDKFeatureCarryPositionUnknown =0x00,
     /**
-     *  the device is on the desk
+     *  the node is on the desk
      */
     BlueSTSDKFeatureCarryPositionOnDesk =0x01,
     /**
-     *  the device is in the user hand
+     *  the node is in the user hand
      */
     BlueSTSDKFeatureCarryPositionInHand =0x02,
     /**
-     *  the device is in near the user head
+     *  the node is in near the user head
      */
     BlueSTSDKFeatureCarryPositionNearHead =0x03,
     /**
-     *  the device is in the shirt pocket
+     *  the node is in the shirt pocket
      */
     BlueSTSDKFeatureCarryPositionShirtPocket =0x04,
     /**
-     *  the device is in the trousers pocket
+     *  the node is in the trousers pocket
      */
     BlueSTSDKFeatureCarryPositionTrousersPocket =0x05,
     /**
-     *  the device is attached to an arm that is swinging
+     *  the node is attached to an arm that is swinging
      */
     BlueSTSDKFeatureCarryPositionArmSwing =0x06,
     /**

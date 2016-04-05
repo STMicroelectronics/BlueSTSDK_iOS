@@ -103,7 +103,7 @@ static NSArray *sFieldDesc;
  *  @throw exception if there are no byte available in the rawdata array
  *  @return activity id + number of read bytes (1)
  */
--(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     if(rawData.length-offset < 1){
         @throw [NSException

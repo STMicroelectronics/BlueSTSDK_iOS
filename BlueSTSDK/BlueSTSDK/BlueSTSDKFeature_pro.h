@@ -132,7 +132,7 @@
  *  @param commandType id of the command that generate the answer
  *  @param data        response data
  */
--(void) parseCommandResponseWithTimestamp:(uint32_t)timestamp
+-(void) parseCommandResponseWithTimestamp:(uint64_t)timestamp
                               commandType:(uint8_t)commandType
                                      data:(NSData*)data;
 
@@ -158,7 +158,7 @@
  *
  *  @return object that contains the sample extracted and the number of bytes read
  */
--(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
+-(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 /**
  *  @protected
@@ -176,7 +176,7 @@
  *
  *  @return number of read byte
  */
--(uint32_t) update:(uint32_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
+-(uint32_t) update:(uint64_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
 
 @end
 

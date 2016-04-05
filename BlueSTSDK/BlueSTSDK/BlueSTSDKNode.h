@@ -40,7 +40,7 @@
 @protocol BlueSTSDKNodeStateDelegate;
 
 /**
- * Class that represent a remote device that will export some data (as {@link BlueSTSDKFeature})
+ * Class that represent a remote node that will export some data (as {@link BlueSTSDKFeature})
  * that the user can query or ask to be notify when they change.
  *
  *
@@ -141,6 +141,11 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 @property (assign, nonatomic,readonly) BlueSTSDKNodeType type;
 
 /**
+ *  board type id
+ */
+@property (assign, nonatomic,readonly) uint8_t typeId;
+
+/**
  *  node name, is not guaranteed that this string is unique
  */
 @property (retain, readonly) NSString *name;
@@ -184,6 +189,20 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *  tx power used from the board
  */
 @property (retain, readonly) NSNumber *txPower;
+
+/**
+ *  return a friendly name composed with name and tag or address
+ *
+ *  @return a string represent the friendly name
+ */
+-(NSString *) friendlyName;
+
+/**
+ *  return the address if available otherwise the tag
+ *
+ *  @return a string represent the address
+ */
+-(NSString *)addressEx;
 
 /**
  *  convert the enum value to a string
@@ -239,8 +258,13 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  */
 -(NSArray*) getFeatures;
 
+/** get all the available feature of a specific type 
+ * @param type type of features to serach
+ * @return array of {@link BlueSTSDKFeature} exported by the node*/
+-(NSArray*)getFeaturesOfType:(Class)type;
+
 /**
- *  return a particular feature or null if it is not available
+ *  return the first feature of the specific type or null if it is not available
  *
  *  @param type type of feature that we want have
  *

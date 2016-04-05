@@ -35,9 +35,9 @@ static dispatch_queue_t sNotificationQueue;
 
 @implementation BlueSTSDKConfigControl {
     /**
-     *  device that will send the information
+     *  periph that will send the information
      */
-    CBPeripheral *mDevice;
+    CBPeripheral *mPeriph;
     
     /**
      *  characteristic where we will read the stdout message
@@ -50,11 +50,11 @@ static dispatch_queue_t sNotificationQueue;
     NSMutableSet *mConfigControlDelegates;
 }
 
-+(instancetype)configControlWithNode:(BlueSTSDKNode *)node device:(CBPeripheral *)device
++(instancetype)configControlWithNode:(BlueSTSDKNode *)node periph:(CBPeripheral *)periph
                   configControlChart:(CBCharacteristic*)configControlChar {
-    return [[BlueSTSDKConfigControl alloc] initWithNode:node device:device configControlChart:configControlChar];
+    return [[BlueSTSDKConfigControl alloc] initWithNode:node periph:periph configControlChart:configControlChar];
 }
--(instancetype)initWithNode:(BlueSTSDKNode *)node device:(CBPeripheral *)device
+-(instancetype)initWithNode:(BlueSTSDKNode *)node periph:(CBPeripheral *)periph
          configControlChart:(CBCharacteristic*)configControlChar {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -64,10 +64,10 @@ static dispatch_queue_t sNotificationQueue;
     self = [super init];
     _node=node;
     mConfigControlChar=configControlChar;
-    mDevice=device;
+    mPeriph=periph;
     mConfigControlDelegates = [NSMutableSet set];
     
-    [mDevice setNotifyValue:YES forCharacteristic:configControlChar];
+    [mPeriph setNotifyValue:YES forCharacteristic:configControlChar];
     
     //mWriteMessageQueue = [NSMutableArray array];
     return self;
@@ -83,9 +83,9 @@ static dispatch_queue_t sNotificationQueue;
 }
 
 -(void)actionWithCommand:(BlueSTSDKCommand *)cmd read:(BOOL)read {
-    if (cmd != nil && cmd.registerField != nil && mDevice != nil && mConfigControlChar != nil) {
+    if (cmd != nil && cmd.registerField != nil && mPeriph != nil && mConfigControlChar != nil) {
         NSData *tempData = read ? [cmd toReadPacket] : [cmd toWritePacket];
-        [mDevice writeValue:tempData forCharacteristic:mConfigControlChar type:CBCharacteristicWriteWithResponse];
+        [mPeriph writeValue:tempData forCharacteristic:mConfigControlChar type:CBCharacteristicWriteWithResponse];
     }
 }
 

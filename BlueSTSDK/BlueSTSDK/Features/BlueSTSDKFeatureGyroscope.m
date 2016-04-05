@@ -34,8 +34,8 @@
 
 #define FEATURE_NAME @"Gyroscope"
 #define FEATURE_UNIT @"dps"
-#define FEATURE_MIN (-1<<15)
-#define FEATURE_MAX (1<<15)
+#define FEATURE_MAX ((float)(1<<15)/10.0f)
+#define FEATURE_MIN (-FEATURE_MAX)
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeFloat
 
 /**
@@ -107,7 +107,7 @@ static NSArray *sFieldDesc;
  *  @throw exception if there are no 6 bytes available in the rawdata array
  *  @return gyroscope information + number of read bytes (6)
  */
--(BlueSTSDKExtractResult*) extractData:(uint32_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
+-(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
     if(rawData.length-offset < 6){
         @throw [NSException
@@ -121,9 +121,9 @@ static NSArray *sFieldDesc;
     gyroY= [rawData extractLeInt16FromOffset:offset+2];
     gyroZ= [rawData extractLeInt16FromOffset:offset+4];
     
-    NSArray *newData = [NSArray arrayWithObjects:[NSNumber numberWithFloat:gyroX],
-                        [NSNumber numberWithFloat:gyroY],
-                        [NSNumber numberWithFloat:gyroZ],
+    NSArray *newData = [NSArray arrayWithObjects:[NSNumber numberWithFloat:gyroX/10.0f],
+                        [NSNumber numberWithFloat:gyroY/10.0f],
+                        [NSNumber numberWithFloat:gyroZ/10.0f],
                         nil];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:newData];
@@ -139,13 +139,13 @@ static NSArray *sFieldDesc;
 -(NSData*) generateFakeData{
     NSMutableData *data = [NSMutableData dataWithCapacity:6];
     
-    int16_t temp = FEATURE_MIN + rand()%(FEATURE_MAX-FEATURE_MIN);
+    int16_t temp = (int16_t)(( FEATURE_MIN + ((float)rand() / RAND_MAX)*(FEATURE_MAX-FEATURE_MIN))*10);
     [data appendBytes:&temp length:2];
     
-    temp = FEATURE_MIN + rand()%(FEATURE_MAX-FEATURE_MIN);
+    temp = (int16_t)( FEATURE_MIN + ((float)rand() / RAND_MAX)*(FEATURE_MAX-FEATURE_MIN))*10;
     [data appendBytes:&temp length:2];
     
-    temp = FEATURE_MIN + rand()%(FEATURE_MAX-FEATURE_MIN);
+    temp = (int16_t)( FEATURE_MIN + ((float)rand() / RAND_MAX)*(FEATURE_MAX-FEATURE_MIN))*10;
     [data appendBytes:&temp length:2];
     
     return data;

@@ -27,8 +27,6 @@
 
 #import <Foundation/Foundation.h>
 
-
-
 /**
  * This class describe a feature data field
  * @author STMicroelectronics - Central Labs.

@@ -55,12 +55,12 @@
     /**
      *  set with the discovered nodes, of type BlueSTSDKNode
      */
-    NSMutableSet *mDiscoveredNode;
+    NSMutableArray *mDiscoveredNode;
     
     /**
-     * contains the map (featureMask_t,Feature class) for each know device id
+     * contains the map (featureMask_t,Feature class) for each know node id
      */
-    NSMutableDictionary *mBoardFeatureMap;
+    NSMutableDictionary *mNodeFeatureMap;
     
     /**
      *  system ble manager
@@ -86,17 +86,17 @@
 -(id)init {
     self = [super init];
     
-    mDiscoveredNode = [NSMutableSet set];
+    mDiscoveredNode = [NSMutableArray array];
     mManagerListener = [NSMutableSet set];
     mCBCentralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     mNotificationQueue = dispatch_queue_create("BlueSTSDKManager", DISPATCH_QUEUE_CONCURRENT);
     
 
     NSDictionary *defaultValue =[BlueSTSDKBoardFeatureMap boardFeatureMap];
-    mBoardFeatureMap = [NSMutableDictionary dictionaryWithCapacity:defaultValue.count];
-    //for each key in defaultValue, add a new entry in the mBoardFeatureMap
+    mNodeFeatureMap = [NSMutableDictionary dictionaryWithCapacity:defaultValue.count];
+    //for each key in defaultValue, add a new entry in the mNodeFeatureMap
     [defaultValue enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
-        [mBoardFeatureMap setObject:[NSMutableDictionary dictionaryWithDictionary:object]
+        [mNodeFeatureMap setObject:[NSMutableDictionary dictionaryWithDictionary:object]
                              forKey:key];
     }];
     
@@ -114,22 +114,16 @@
     
     [mCBCentralManager scanForPeripheralsWithServices:nil options:options];
     [self changeDiscoveryStatus:true];
-    NSTimeInterval delay = BlueSTSDKMANAGER_DEFAULT_SCANING_TIMEOUT_S;
-    if(timeoutMs>0 && timeoutMs <= 60000) { //max 60 sec
+    NSTimeInterval delay = -1.0f;
+    if(timeoutMs>0) {
         delay = (NSTimeInterval)((double)timeoutMs / 1000.0f);
+        //if timeoutMs
     }
-    //if timeoutMs
-    [self performSelector:@selector(discoveryStop) withObject:nil afterDelay:delay];
-    
-    //if we are running in a simulator we create a fake node for show random numbers
-#if (TARGET_IPHONE_SIMULATOR)
-    BlueSTSDKNode *fakeNode = [[BlueSTSDKNodeFake alloc] init];
-    BlueSTSDKNode *node = [self nodeWithTag:fakeNode.tag];
-    if(node == nil){
-        
-        [self addAndNotifyNewNode:fakeNode];
-    }//if
-#endif
+    if(delay>0)
+        [self performSelector:@selector(discoveryStop)
+                   withObject:nil
+                   afterDelay:delay];
+    //else don't stop the discovery
 }//discoveryStart
 
 -(void) discoveryStop{
@@ -138,20 +132,31 @@
 }
 
 -(void)resetDiscovery {
+    [self resetDiscovery:YES];
+}
+-(void)resetDiscovery:(BOOL)force {
+    if (force) {
+        for( BlueSTSDKNode *node in mDiscoveredNode){
+            if([node isConnected]){
+                [node disconnect];
+            }//if
+        }//for
+    }
     NSMutableArray *removeMe = [NSMutableArray arrayWithCapacity:mDiscoveredNode.count];
     for( BlueSTSDKNode *node in mDiscoveredNode){
         if( ![node isConnected]){
             [removeMe addObject:node];
         }//if
     }//for
-    
     for (BlueSTSDKNode *remove in removeMe){
         [mDiscoveredNode removeObject:remove];
     }//for
+    
+    
 }//resetDiscovery
 
 -(NSArray*) nodes{
-    return [mDiscoveredNode allObjects];
+    return mDiscoveredNode; //[mDiscoveredNode allObjects];
 }
 
 -(void)addDelegate:(id<BlueSTSDKManagerDelegate>)delegate {
@@ -214,6 +219,19 @@
 }//nodeWithTag
 
 /**
+ *  add a new node and call all the delegate for notify the discovery of a new node
+ *
+ *  @param node new discovered node
+ */
+- (void) addVirtualNode {
+    @try {
+        BlueSTSDKNode *fakeNode = [[BlueSTSDKNodeFake alloc] init];
+        [self addAndNotifyNewNode:fakeNode];
+    }
+    @catch (NSException *exception) {//not a valid advertise -> avoid to add it
+    }
+}
+/**
  *  for each key of the dictionary it check that it has only one bit to 1
  *
  *  @param features map of <uint32_t,Feature class>
@@ -237,31 +255,31 @@
     
 }
 
--(void)addFeatureForBoard:(uint8_t)boardId features:(NSDictionary*)features{
+-(void)addFeatureForNode:(uint8_t)nodeId features:(NSDictionary*)features{
 
     if(![self checkFeatureMask:features])
         @throw [NSException
                 exceptionWithName:@"Invalid feature key data"
                 reason:@"the key must have only one bit set to 1"
                 userInfo:nil];
-    NSMutableDictionary *addToMe = [mBoardFeatureMap objectForKey:
-                                  [NSNumber numberWithUnsignedChar:boardId]];
+    NSMutableDictionary *addToMe = [mNodeFeatureMap objectForKey:
+                                  [NSNumber numberWithUnsignedChar:nodeId]];
     if(addToMe==nil){
-        [mBoardFeatureMap setObject:[NSMutableDictionary dictionaryWithDictionary:features]
-                             forKey:[NSNumber numberWithUnsignedChar:boardId]];
+        [mNodeFeatureMap setObject:[NSMutableDictionary dictionaryWithDictionary:features]
+                             forKey:[NSNumber numberWithUnsignedChar:nodeId]];
     }else{
         [addToMe addEntriesFromDictionary:features];
     }
     
 }
 
--(NSDictionary*)getFeaturesForDevice:(uint8_t)deviceId{
-    return [mBoardFeatureMap objectForKey:
-            [NSNumber numberWithUnsignedChar:deviceId]];
+-(NSDictionary*)getFeaturesForNode:(uint8_t)nodeId{
+    return [mNodeFeatureMap objectForKey:
+            [NSNumber numberWithUnsignedChar:nodeId]];
 }
 
--(bool)isValidDeviceId:(uint8_t)deviceId{
-    return [self getFeaturesForDevice:deviceId]!=nil;
+-(bool)isValidNodeId:(uint8_t)nodeId{
+    return [self getFeaturesForNode:nodeId]!=nil;
 }
 
 #pragma mark - BlueSTSDKManager(prv)

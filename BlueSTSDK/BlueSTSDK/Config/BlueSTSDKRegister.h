@@ -1,4 +1,4 @@
-/*******************************************************************************
+	/*******************************************************************************
  * COPYRIGHT(c) 2015 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -61,8 +61,9 @@ typedef NS_ENUM(NSInteger, BlueSTSDKRegisterAccess_e) {
 typedef NS_ENUM(NSInteger,  BlueSTSDKRegisterTarget_e) {
     BlueSTSDK_REGISTER_TARGET_PERSISTENT = 0x01,
     BlueSTSDK_REGISTER_TARGET_SESSION = 0x02,
-    BlueSTSDK_REGISTER_TARGET_BOTH = BlueSTSDK_REGISTER_TARGET_PERSISTENT | BlueSTSDK_REGISTER_TARGET_SESSION,
+    BlueSTSDK_REGISTER_TARGET_BOTH = 0x03
 };
+
 #define BlueSTSDK_REGISTER_TARGET_Is(value, target) (((value) & (target)) == (target))
 #define BlueSTSDK_REGISTER_TARGET_IsPersistent(value) BlueSTSDK_REGISTER_TARGET_Is(value, BlueSTSDK_REGISTER_TARGET_PERSISTENT)
 #define BlueSTSDK_REGISTER_TARGET_IsSession(value) BlueSTSDK_REGISTER_TARGET_Is(value, BlueSTSDK_REGISTER_TARGET_SESSION)
@@ -158,30 +159,30 @@ typedef NS_ENUM(NSInteger,  BlueSTSDKRegisterTarget_e) {
  * Get the data for read the register
  * @param target Mode Persistent/Session
  *
- * @return the packet (buffer) to send to the device to read the register
+ * @return the packet (buffer) to send to the node to read the register
  */
 -(NSData *)toReadPacketWithTarget:(BlueSTSDKRegisterTarget_e)target;
 
 /**
  * Get the data for write the register
  * @param target Mode Persistent/Session
- * @param payloadData data to write in the device register
+ * @param payloadData data to write in the node register
  *
- * @return the packet (buffer) to send to the device to write the register with the value
+ * @return the packet (buffer) to send to the node to write the register with the value
  * defined in the payload
  */
 -(NSData *)toWritePacketWithTarget:(BlueSTSDKRegisterTarget_e)target payloadData:(NSData *)payloadData;
 /**
  * Get the payload of the read register
- * @param data packet received from the device
+ * @param data packet received from the node
  *
  * @return the value(s) of the read registers
  */
 +(NSData *)getPayloadFromData:(NSData *)data;
 /**
  * Get the header of the read command
- * @param data packet received from the device
- * @param pheader pointer to packet received from the device
+ * @param data packet received from the node
+ * @param pheader pointer to packet received from the node
  *
  * @return the value(s) of the read registers
  */
@@ -189,42 +190,42 @@ typedef NS_ENUM(NSInteger,  BlueSTSDKRegisterTarget_e) {
 
 /**
  * Get the Target of the received register
- * @param data packet received from the device
+ * @param data packet received from the node
  *
  * @return the Target of the read registers
  */
 +(BlueSTSDKRegisterTarget_e)getTargetFromData:(NSData *)data;
 /**
  * Check if the data is for a write operation
- * @param data packet received from the device
+ * @param data packet received from the node
  *
  * @return true if write bit is set
  */
 +(BOOL)isWriteOperationFromData:(NSData *)data;
 /**
  * Check if the data is for a write operation
- * @param data packet received from the device
+ * @param data packet received from the node
  *
  * @return true if Read bit is set
  */
 +(BOOL)isReadOperationFromData:(NSData *)data;
 /**
  * Get the address of the received register
- * @param data packet received from the device
+ * @param data packet received from the node
  *
  * @return the address of the register read or write operation
  */
 +(NSInteger)getAddressFromData:(NSData *)data;
 /**
  * Get the error of the received register
- * @param data packet received from the device
+ * @param data packet received from the node
  *
  * @return the error code of the register read or write operation
  */
 +(NSInteger)getErrorFromData:(NSData *)data;
 /**
  * Get the size of the received register
- * @param data packet received from the device
+ * @param data packet received from the node
  *
  * @return the size of the register read or write operation
  */
