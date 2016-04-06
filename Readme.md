@@ -104,7 +104,7 @@ If available, the configuration service must have the UUID <code>00000000-000F-1
   write mode, the *command id* and the *command data* are sending directly to the feature 
   characteristics. In this case is not possible answer to the command.
 
-- <code>00000002-000F-11e1-ac36-0002a5d5c51b</code> (Read/Write/Notify): if available it is used to access the board configuration register that can be modified using the [<code>BlueSTSDKConfigControl</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_config_control.html) class.
+- <code>00000001-000F-11e1-ac36-0002a5d5c51b</code> (Read/Write/Notify): if available it is used to access the board configuration register that can be modified using the [<code>BlueSTSDKConfigControl</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_config_control.html) class.
 
 ###Example
 The ST Bluemicrosystem1 and ST Bluemicrosystem3 firmware implements this protocol, you can find 
