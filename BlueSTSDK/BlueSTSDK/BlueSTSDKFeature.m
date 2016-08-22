@@ -36,11 +36,11 @@
 
 @implementation BlueSTSDKFeatureSample
 
-+(instancetype) sampleWithTimestamp:(uint64_t)timestamp data:(NSArray*)data{
++(instancetype) sampleWithTimestamp:(uint64_t)timestamp data:(NSArray<NSNumber*> *)data{
     return [[BlueSTSDKFeatureSample alloc] initWhitTimestamp: timestamp data:data];
 }
 
--(instancetype) initWhitTimestamp: (uint64_t)timestamp data:(NSArray*)data{
+-(instancetype) initWhitTimestamp: (uint64_t)timestamp data:(NSArray<NSNumber*> *)data{
     self = [super init];
     _timestamp=timestamp;
     _data=data;
@@ -77,10 +77,6 @@ static NSNumberFormatter *sFormatter;
 
 
 @implementation BlueSTSDKFeature{
-    /**
-     *  set of delegate where notify the feature update
-     */
-    NSMutableSet *mFeatureDelegates;
     
     /**
      *  set of delegate where log the feature update
@@ -112,7 +108,7 @@ static NSNumberFormatter *sFormatter;
         [sFormatter setNegativeFormat:@"-#0.00"];
     });
     
-    mFeatureDelegates = [NSMutableSet set];
+    _featureDelegates = [NSMutableSet set];
     mFeatureLogDelegates = [NSMutableSet set];
     _parentNode=node;
     _enabled=false;
@@ -125,10 +121,10 @@ static NSNumberFormatter *sFormatter;
 }
 
 -(void) addFeatureDelegate:(id<BlueSTSDKFeatureDelegate>)delegate{
-    [mFeatureDelegates addObject:delegate];
+    [_featureDelegates addObject:delegate];
 }
 -(void) removeFeatureDelegate:(id<BlueSTSDKFeatureDelegate>)delegate{
-    [mFeatureDelegates removeObject:delegate];
+    [_featureDelegates removeObject:delegate];
 }
 
 -(void) addFeatureLoggerDelegate:(id<BlueSTSDKFeatureLogDelegate>)delegate{
@@ -162,14 +158,19 @@ static NSNumberFormatter *sFormatter;
     BlueSTSDKExtractResult *temp = [self extractData:timestamp data:data dataOffset:offset];
     self.lastSample = temp.sample;
     [self notifyUpdateWithSample:temp.sample];
+    if(temp.nReadBytes!=data.length)
     [self logFeatureUpdate:[data subdataWithRange:NSMakeRange(offset, temp.nReadBytes)]
                     sample:temp.sample];
+    else
+        [self logFeatureUpdate:data
+                        sample:temp.sample];
+
 
     return temp.nReadBytes;
 }//update
 
 -(void) notifyUpdateWithSample:(BlueSTSDKFeatureSample *)sample{
-    for (id<BlueSTSDKFeatureDelegate> delegate in mFeatureDelegates) {
+    for (id<BlueSTSDKFeatureDelegate> delegate in _featureDelegates) {
         dispatch_async(sNotificationQueue,^{
             [delegate didUpdateFeature:self sample:sample];
         });
@@ -205,12 +206,12 @@ static NSNumberFormatter *sFormatter;
     BlueSTSDKFeatureSample *sample = self.lastSample;
     [s appendFormat:@"%lld ",sample.timestamp ];
     NSArray *fields = [self getFieldsDesc];
-    NSArray *datas = sample.data;
-    for (int i = 0; i < datas.count; i++) {
-        BlueSTSDKFeatureField *field =(BlueSTSDKFeatureField*)[fields objectAtIndex:i];
-        NSNumber *data = (NSNumber*)[datas objectAtIndex:i];
+    NSArray<NSNumber *> *datas = sample.data;
+    for (NSUInteger i = 0; i < datas.count; i++) {
+        BlueSTSDKFeatureField *field =(BlueSTSDKFeatureField*) fields[i];
+        NSNumber *data = datas[i];
         [s appendFormat:@"%@: %@ ",field.name,[sFormatter stringFromNumber:data]];
-        if(field.unit.length!=0){
+        if([field hasUnit]){
             [s appendFormat:@"(%@) ", field.unit ];
         }//if
     }//for

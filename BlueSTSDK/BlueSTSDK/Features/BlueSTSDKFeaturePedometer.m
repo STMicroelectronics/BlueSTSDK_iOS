@@ -36,7 +36,7 @@
 
 #define FEATURE_NAME @"Pedometer"
 #define FEATURE_STEPS_DATA_NAME @"Steps"
-#define FEATURE_STEPS_UNIT @""
+#define FEATURE_STEPS_UNIT nil
 #define FEATURE_STEPS_MIN @0
 #define FEATURE_STEPS_MAX @(UINT_MAX)
 #define FEATURE_STEPS_TYPE BlueSTSDKFeatureFieldTypeUInt32
@@ -57,18 +57,16 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeaturePedometer class]){
-        sFieldDesc = [NSArray arrayWithObjects:
-                      [BlueSTSDKFeatureField  createWithName: FEATURE_STEPS_DATA_NAME
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_STEPS_DATA_NAME
                                                         unit:FEATURE_STEPS_UNIT
                                                         type:FEATURE_STEPS_TYPE
                                                          min:FEATURE_STEPS_MIN
-                                                         max:FEATURE_STEPS_MAX ],
-                      [BlueSTSDKFeatureField  createWithName: FEATURE_FREQ_DATA_NAME
-                                                        unit:FEATURE_FREQ_UNIT
-                                                        type:FEATURE_FREQ_TYPE
-                                                         min:FEATURE_FREQ_MIN
-                                                         max:FEATURE_FREQ_MAX ],
-                      nil];
+                                                         max:FEATURE_STEPS_MAX],
+                [BlueSTSDKFeatureField createWithName:FEATURE_FREQ_DATA_NAME
+                                                 unit:FEATURE_FREQ_UNIT
+                                                 type:FEATURE_FREQ_TYPE
+                                                  min:FEATURE_FREQ_MIN
+                                                  max:FEATURE_FREQ_MAX]];
     }//if
     
 }
@@ -104,9 +102,7 @@ static NSArray *sFieldDesc;
     
     uint32_t steps= [rawData extractLeUInt32FromOffset:offset];
     uint16_t freq= [rawData extractLeUInt16FromOffset:offset+4];
-    NSArray *data = [NSArray arrayWithObjects:
-                     [NSNumber numberWithUnsignedChar:steps],
-                     [NSNumber numberWithUnsignedShort:freq],nil];
+    NSArray *data = @[[NSNumber numberWithUnsignedChar:steps],  @(freq)];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:6];

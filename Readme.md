@@ -29,7 +29,7 @@ Currently, bits are mapped in the following way:
   
    |Bit|31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|
    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-   |Feature|RFU|RFU|Switch|Direction of arrival|RFU|MicLevel|Proximity|Lux|Acc|Gyro|Mag|Pressure|Humidity|Temperature|Battery|Second Temperature|
+   |Feature|RFU|ADPCM Audio sync|Switch|Direction of arrival|ADPCM Audio|MicLevel|Proximity|Lux|Acc|Gyro|Mag|Pressure|Humidity|Temperature|Battery|Second Temperature|
    
    |Bit|15|14|13|12|11|10|9|8|7|6|5|4|3|2|1|0|
    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -182,7 +182,14 @@ Note that each callback is performed asynchronously by a background thread.
     [manager addFeatureForBoard:deviceId features:temp];
 
     ```
-    
+    Otherwise you can register the characteristics before call the connect method:
+
+    ```Objective-C
+    BlueSTSDKNode *node = ...;
+    NSDictionary *map = [BlueSTSDKStdCharToFeatureMap getManageStdCharacteristics];
+    [node addExternalCharacteristics: map];
+    ```
+ 
 ##Docs
 You can find the documentation at this link: [Documentation](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html)
 

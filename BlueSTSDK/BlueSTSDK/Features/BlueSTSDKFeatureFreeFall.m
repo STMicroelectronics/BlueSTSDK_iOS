@@ -32,7 +32,7 @@
 #import "../Util/NSData+NumberConversion.h"
 
 #define FEATURE_NAME @"FreeFall"
-#define FEATURE_UNIT @""
+#define FEATURE_UNIT nil
 #define FEATURE_MIN 0
 #define FEATURE_MAX 1
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeUInt8
@@ -47,12 +47,11 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureFreeFall class]){
-        sFieldDesc = [NSArray arrayWithObject:
-                      [BlueSTSDKFeatureField  createWithName: FEATURE_NAME
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ]];
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
+                                                        unit:FEATURE_UNIT
+                                                        type:FEATURE_TYPE
+                                                         min:@FEATURE_MIN
+                                                         max:@FEATURE_MAX]];
     }
     
 }
@@ -96,8 +95,7 @@ static NSArray *sFieldDesc;
     
     uint8_t statusId= [rawData extractUInt8FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObject:
-                        [NSNumber numberWithUnsignedChar:statusId]];
+    NSArray *data = @[@(statusId)];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample
                                     sampleWithTimestamp:timestamp data:data ];

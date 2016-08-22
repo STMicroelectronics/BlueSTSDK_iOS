@@ -43,6 +43,7 @@
     /** sample data build from the raw data */
     @property(readonly,retain) BlueSTSDKFeatureSample *sample;
 
+
 /**
  *  build a object of type BlueSTSDKExtractResult with the sample and nReadData
  *  data
@@ -78,6 +79,11 @@
 
 //we redefine the property for be read write, when the user see it in read only
 @property (readwrite,atomic) BlueSTSDKFeatureSample *lastSample;
+
+/**
+ *  set of delegate where notify the feature update
+ */
+@property(readonly,atomic,retain) NSMutableSet *featureDelegates;
 
 /**
  * @protected

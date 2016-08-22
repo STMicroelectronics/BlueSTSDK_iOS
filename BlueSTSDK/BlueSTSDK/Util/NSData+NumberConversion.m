@@ -47,6 +47,20 @@
     return (int16_t)[self extractLeUInt16FromOffset:offset];
 }
 
+-(uint16_t) extractBeUInt16FromOffset:(NSUInteger)offset{
+    NSRange range = NSMakeRange(offset, 2);
+    uint16_t leInt;
+    [self getBytes:&leInt range:range];
+    uint16_t beInt=0;
+    beInt |= (0x00FF & leInt) << 8;
+    beInt |= (0xFF00 & leInt) >> 8;
+    return beInt;
+}
+
+-(int16_t) extractBeInt16FromOffset:(NSUInteger)offset{
+    return (int16_t)[self extractLeUInt16FromOffset:offset];
+}
+
 -(uint32_t) extractBeUInt32FromOffset:(NSUInteger)offset{
     NSRange range = NSMakeRange(offset, 4);
     uint32_t leInt;
@@ -58,6 +72,10 @@
     beInt |= (0x00FF0000 & leInt) >> 8;
     beInt |= (0xFF000000 & leInt) >> 24;
     return beInt;
+}
+
+-(int32_t) extractBeInt32FromOffset:(NSUInteger)offset{
+    return (int32_t) [self extractBeUInt32FromOffset:offset];
 }
 
 -(int32_t) extractLeInt32FromOffset:(NSUInteger)offset{
@@ -77,6 +95,19 @@
     [self getBytes:&temp range:range];
     return temp;
 }
+
+- (NSData *)int16ChangeEndianes {
+    NSMutableData *out = [NSMutableData dataWithCapacity:self.length];
+    NSUInteger nByte = out.length;
+    const uint8_t *inBuf = self.bytes;
+    uint8_t *outBuf = out.mutableBytes;
+    for(int i=0;i<nByte;i+=2){
+        outBuf[i+1]=inBuf[i];
+        outBuf[i]=inBuf[i+1];
+    }
+    return out;
+}
+
 
 @end
 

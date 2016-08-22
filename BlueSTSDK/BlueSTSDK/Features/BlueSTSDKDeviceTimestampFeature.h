@@ -1,5 +1,5 @@
 /*******************************************************************************
- * COPYRIGHT(c) 2015 STMicroelectronics
+ * COPYRIGHT(c) 2016 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -25,15 +25,15 @@
  *
  ******************************************************************************/
 
-#import <BlueSTSDK/BlueSTSDKFeaturePressure.h>
+
+#import <Foundation/Foundation.h>
+#import "BlueSTSDKFeature.h"
 
 /**
- *  Feature that contains an pressure read from a remote node
+ * Utiliy class that use as timestamp the system timestamp, in this way the fist 2 bytes
+ * of the notificaiton are used for store data
  *
  * @author STMicroelectronics - Central Labs.
  */
-@interface BlueSTSDKRemoteFeaturePressure : BlueSTSDKFeaturePressure
-
-+(int)getNodeId:(BlueSTSDKFeatureSample*)sample;
-
+@interface BlueSTSDKDeviceTimestampFeature : BlueSTSDKFeature
 @end

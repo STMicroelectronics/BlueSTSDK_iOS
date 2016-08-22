@@ -25,15 +25,17 @@
  *
  ******************************************************************************/
 
-#import <BlueSTSDK/BlueSTSDKFeaturePressure.h>
+#import <Foundation/Foundation.h>
+#import <CoreBluetooth/CBUUID.h>
 
 /**
- *  Feature that contains an pressure read from a remote node
+ * Extend a dictionary of (NSArray<Class> *) and permit to append a new class to the array
+ * if the key is already present or to create a new array if the key is new
  *
  * @author STMicroelectronics - Central Labs.
  */
-@interface BlueSTSDKRemoteFeaturePressure : BlueSTSDKFeaturePressure
+@interface NSMutableDictionary (BlueSTSDKFeature)
 
-+(int)getNodeId:(BlueSTSDKFeatureSample*)sample;
+-(NSArray<Class> *) add:(CBUUID*)key feature:(Class)f;
 
 @end

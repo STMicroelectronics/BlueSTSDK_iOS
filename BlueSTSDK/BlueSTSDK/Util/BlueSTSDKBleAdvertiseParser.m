@@ -38,6 +38,8 @@
 
 #define NODE_ID_GENERIC 0x00
 #define NODE_ID_STEVAL_WESU1 0x01
+#define NODE_ID_SENSOR_TILE 0x02
+#define NODE_ID_BLUE_COIN 0x03
 #define NODE_ID_NUCLEO_BIT 0x80
 
 #define ADVERTISE_SIZE_COMPACT 6
@@ -71,6 +73,10 @@
    
     if (type == NODE_ID_STEVAL_WESU1)
         nodetype =  BlueSTSDKNodeTypeSTEVAL_WESU1;
+    else if(type == NODE_ID_SENSOR_TILE)
+        nodetype = BlueSTSDKNodeTypeSensor_Tile;
+    else if(type == NODE_ID_BLUE_COIN)
+        nodetype = BlueSTSDKNodeTypeBlue_Coin;
     else if ((type & NODE_ID_NUCLEO_BIT) == NODE_ID_NUCLEO_BIT)
         nodetype =  BlueSTSDKNodeTypeNucleo;
     
@@ -83,9 +89,9 @@
 
 
 -(instancetype)initWithAdvertise:(NSDictionary *)advertisementData{
-    _name = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
-    _txPower = [advertisementData objectForKey:CBAdvertisementDataTxPowerLevelKey];
-    NSData *rawData = [advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey];
+    _name = advertisementData[CBAdvertisementDataLocalNameKey];
+    _txPower = advertisementData[CBAdvertisementDataTxPowerLevelKey];
+    NSData *rawData = advertisementData[CBAdvertisementDataManufacturerDataKey];
     const NSInteger len = [rawData length];
     
     if(len != ADVERTISE_SIZE_COMPACT && len != ADVERTISE_SIZE_FULL)

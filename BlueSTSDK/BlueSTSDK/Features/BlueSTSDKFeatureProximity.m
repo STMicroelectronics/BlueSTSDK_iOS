@@ -49,13 +49,11 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureProximity class]){
-        sFieldDesc = [NSArray arrayWithObjects:
-                      [BlueSTSDKFeatureField  createWithName:FEATURE_NAME
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      nil];
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
+                                                        unit:FEATURE_UNIT
+                                                        type:FEATURE_TYPE
+                                                         min:@FEATURE_MIN
+                                                         max:@FEATURE_MAX]];
     }//if
     
 }
@@ -104,7 +102,7 @@ static NSArray *sFieldDesc;
     
     uint16_t distance = [rawData extractLeUInt16FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObject:[NSNumber numberWithFloat:distance]];
+    NSArray *data = @[@(distance)];
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:2];
 

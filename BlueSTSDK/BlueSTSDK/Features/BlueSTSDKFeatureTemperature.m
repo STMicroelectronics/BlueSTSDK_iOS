@@ -48,13 +48,11 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureTemperature class]){
-        sFieldDesc = [[NSArray alloc] initWithObjects:
-                      [BlueSTSDKFeatureField  createWithName: FEATURE_NAME
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      nil];
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
+                                                        unit:FEATURE_UNIT
+                                                        type:FEATURE_TYPE
+                                                         min:@FEATURE_MIN
+                                                         max:@FEATURE_MAX]];
     }
     
 }
@@ -63,7 +61,7 @@ static NSArray *sFieldDesc;
 +(float)getTemperature:(BlueSTSDKFeatureSample *)sample{
     if(sample.data.count==0)
         return NAN;
-    return[[sample.data objectAtIndex:0] floatValue];
+    return[sample.data[0] floatValue];
 }
 
 
@@ -99,7 +97,7 @@ static NSArray *sFieldDesc;
     
     int16_t temp= [rawData extractLeInt16FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObject:[NSNumber numberWithFloat:temp/10.0f]];
+    NSArray *data = @[@(temp / 10.0f)];
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:2];
 }

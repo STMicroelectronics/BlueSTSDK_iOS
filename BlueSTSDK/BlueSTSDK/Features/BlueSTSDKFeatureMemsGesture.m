@@ -32,7 +32,7 @@
 #import "../Util/NSData+NumberConversion.h"
 
 #define FEATURE_NAME @"Mems Gesture"
-#define FEATURE_UNIT @""
+#define FEATURE_UNIT nil
 #define FEATURE_MIN 0
 #define FEATURE_MAX 3
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeUInt8
@@ -47,12 +47,11 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureMemsGesture class]){
-        sFieldDesc = [NSArray arrayWithObject:
-                      [BlueSTSDKFeatureField  createWithName: FEATURE_NAME
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
                                                         unit:FEATURE_UNIT
                                                         type:FEATURE_TYPE
                                                          min:@FEATURE_MIN
-                                                         max:@FEATURE_MAX ]];
+                                                         max:@FEATURE_MAX]];
     }
     
 }
@@ -101,8 +100,7 @@ static NSArray *sFieldDesc;
     
     uint8_t positionId= [rawData extractUInt8FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObject:
-                     [NSNumber numberWithUnsignedChar:positionId]];
+    NSArray *data = @[@(positionId)];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:1];

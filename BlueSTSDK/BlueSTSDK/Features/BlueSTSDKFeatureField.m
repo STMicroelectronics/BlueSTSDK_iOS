@@ -56,4 +56,11 @@
     return self;
 }
 
+- (BOOL)hasUnit {
+    if(_unit!=nil)
+        return _unit.length>0;
+    return false;
+}
+
+
 @end

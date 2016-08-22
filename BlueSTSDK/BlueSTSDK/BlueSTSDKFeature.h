@@ -50,7 +50,7 @@
 /**
  *  array of NSNumber with the feature data
  */
-@property(readonly,retain) NSArray *data;
+@property(readonly,retain) NSArray<NSNumber*> *data;
 
 /**
  *  build a BlueSTSDKFeatureSample
@@ -60,7 +60,7 @@
  *
  *  @return object that contains the data
  */
-+(instancetype) sampleWithTimestamp:(uint64_t)timestamp data:(NSArray*)data;
++(instancetype) sampleWithTimestamp:(uint64_t)timestamp data:(NSArray<NSNumber*>*)data;
 
 /**
  *  initialize a BlueSTSDKFeatureSample
@@ -70,7 +70,7 @@
  *
  *  @return object that contains the data
  */
--(instancetype) initWhitTimestamp: (uint64_t)timestamp data:(NSArray*)data;
+-(instancetype) initWhitTimestamp: (uint64_t)timestamp data:(NSArray<NSNumber*>*)data;
 
 @end
 

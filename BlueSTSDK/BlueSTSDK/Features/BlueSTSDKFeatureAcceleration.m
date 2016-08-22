@@ -29,7 +29,6 @@
 
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureAcceleration.h"
-#import "BlueSTSDKFeatureField.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
@@ -52,23 +51,21 @@ NSArray *sFieldDesc;
  */
 +(void)initialize{
     if(self == [BlueSTSDKFeatureAcceleration class]){
-        sFieldDesc = [NSArray arrayWithObjects:
-                      [BlueSTSDKFeatureField  createWithName: @"X"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      [BlueSTSDKFeatureField  createWithName: @"Y"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      [BlueSTSDKFeatureField  createWithName: @"Z"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      nil];
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:@"X"
+                                                        unit:FEATURE_UNIT
+                                                        type:FEATURE_TYPE
+                                                         min:@FEATURE_MIN
+                                                         max:@FEATURE_MAX],
+                [BlueSTSDKFeatureField createWithName:@"Y"
+                                                 unit:FEATURE_UNIT
+                                                 type:FEATURE_TYPE
+                                                  min:@FEATURE_MIN
+                                                  max:@FEATURE_MAX],
+                [BlueSTSDKFeatureField createWithName:@"Z"
+                                                 unit:FEATURE_UNIT
+                                                 type:FEATURE_TYPE
+                                                  min:@FEATURE_MIN
+                                                  max:@FEATURE_MAX]];
     }//if
 }//initialize
 
@@ -138,10 +135,7 @@ NSArray *sFieldDesc;
     accY= [rawData extractLeInt16FromOffset:offset+2];
     accZ= [rawData extractLeInt16FromOffset:offset+4];
     
-    NSArray *newData = [NSArray arrayWithObjects:[NSNumber numberWithFloat:accX],
-                        [NSNumber numberWithFloat:accY],
-                        [NSNumber numberWithFloat:accZ],
-                        nil];
+    NSArray *newData = @[@(accX), @(accY), @(accZ)];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:newData];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:6];

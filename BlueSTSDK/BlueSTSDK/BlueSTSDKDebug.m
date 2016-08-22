@@ -31,6 +31,11 @@
 
 #define MAX_MESSAGE_LENGTH 20
 
+/**
+ *  concurrent queue used for notify the update in different threads
+ */
+static dispatch_queue_t sNotificationQueue;
+
 @implementation BlueSTSDKDebug{
     /**
      *  peripheral that will send the information
@@ -51,29 +56,76 @@
      *  fifo structure that will contain the message that we will send until 
      *  we don't have a write ack
      */
-    NSMutableArray *mWriteMessageQueue;
+    NSMutableArray<NSData*> *mWriteMessageQueue;
+    
+    NSData *mLastFastSendMsg;
 }
 
 -(instancetype) initWithNode:(BlueSTSDKNode *)node periph:(CBPeripheral *)periph
          termChart:(CBCharacteristic*)termChar
           errChart:(CBCharacteristic*)errChar{
+    static dispatch_once_t onceToken;
+    //the first time we create the queue and the formatter that are sheared
+    //between all the nodes
+    dispatch_once(&onceToken, ^{
+        sNotificationQueue = dispatch_queue_create("BlueSTSDKDebug", DISPATCH_QUEUE_SERIAL);
+    });
     _parentNode=node;
     mTermChar=termChar;
     mErrChar=errChar;
     mPeriph=periph;
-    mWriteMessageQueue = [NSMutableArray array];
+    mWriteMessageQueue = [NSMutableArray<NSData*> array];
     return self;
 }
 
+-(void)sendFirstMessage{
+    NSData *fistPart = mWriteMessageQueue.firstObject;
+    [mPeriph writeValue:fistPart forCharacteristic:mTermChar type:CBCharacteristicWriteWithResponse];
+}
+
 -(NSUInteger) writeMessage:(NSString*)msg{
-    NSData *tempData = [msg dataUsingEncoding:NSUTF8StringEncoding];
-    uint8_t data[MAX_MESSAGE_LENGTH];
-    NSUInteger length=MIN(MAX_MESSAGE_LENGTH,tempData.length);
-    [tempData getBytes:data range:NSMakeRange(0, length)];
-    NSData *dataToSend = [NSData dataWithBytes:data length:length];
-    [mPeriph writeValue:dataToSend forCharacteristic:mTermChar type:CBCharacteristicWriteWithResponse];
-    [mWriteMessageQueue addObject:[NSString stringWithUTF8String:dataToSend.bytes]];
-    return length;
+    NSData *tempData = [msg dataUsingEncoding:NSISOLatin1StringEncoding];
+    return [self writeMessageData:tempData];
+}
+
+- (NSUInteger)writeMessageData:(NSData *)data {
+    uint8_t packageData[MAX_MESSAGE_LENGTH];
+    uint32_t offset =0;
+    @synchronized (mWriteMessageQueue) {
+        BOOL isEmptyQueue = mWriteMessageQueue.count==0;
+        while(offset+MAX_MESSAGE_LENGTH < data.length){
+            [data getBytes:packageData range:NSMakeRange(offset, MAX_MESSAGE_LENGTH)];
+            NSData *dataToSend = [NSData dataWithBytes:packageData length:MAX_MESSAGE_LENGTH];
+            offset+=MAX_MESSAGE_LENGTH;
+            [mWriteMessageQueue addObject:dataToSend];
+        }
+
+        NSUInteger length=data.length - offset;
+        if(length!=0) {
+            [data getBytes:packageData range:NSMakeRange(offset, length)];
+            NSData *dataToSend = [NSData dataWithBytes:packageData length:length];
+            [mWriteMessageQueue addObject:dataToSend];
+        }
+        if(isEmptyQueue) {
+            [self sendFirstMessage];
+        }
+    }
+    return data.length;
+}
+
+- (BOOL)writeMessageDataFast:(NSData *)data {
+    mLastFastSendMsg = data;
+    NSString *sentMsgStr = [NSString stringWithUTF8String:[data bytes]];
+    if(_parentNode.state==BlueSTSDKNodeStateConnected) {
+        [mPeriph writeValue:data forCharacteristic:mTermChar type:CBCharacteristicWriteWithoutResponse];
+
+        dispatch_async(sNotificationQueue, ^{
+            [_delegate debug:self didStdInSend:sentMsgStr error:nil];
+        });
+        return true;
+    } else{
+        return false;
+    }
 }
 
 @synthesize delegate = _delegate;
@@ -109,20 +161,44 @@
     //if the write comes from an our characteristics
     if([termChar.UUID isEqual:BlueSTSDKServiceDebug.termUuid]){
         //remove the message from the queue and sent the callback
-        NSString *temp = mWriteMessageQueue.firstObject;
-        [mWriteMessageQueue removeObjectAtIndex:0];
-        [self.delegate debug:self didStdInSend: temp error:error];
+        NSData *sentMsg=nil;
+       
+        @synchronized (mWriteMessageQueue) {
+            if(mWriteMessageQueue.count!=0){
+                sentMsg = mWriteMessageQueue.firstObject;
+                [mWriteMessageQueue removeObjectAtIndex:0];
+                if (mWriteMessageQueue.count != 0)
+                    [self sendFirstMessage];
+            }else{
+                sentMsg=mLastFastSendMsg;
+            }
+        }
+        if(sentMsg==nil)
+            return;
+         
+        NSString *sentMsgStr = [NSString stringWithUTF8String:[sentMsg bytes]];
+        dispatch_async(sNotificationQueue,^{
+            [_delegate debug:self didStdInSend:sentMsgStr error:error];
+        });
+
+
+
     }
 }
 
 -(void)receiveCharacteristicsUpdate:(CBCharacteristic*)termChar{
     if(self.delegate == nil)
         return;
-    NSString *temp = [[NSString alloc]initWithData:termChar.value encoding:NSUTF8StringEncoding];
+    NSString *temp = [[NSString alloc]initWithData:termChar.value encoding:NSISOLatin1StringEncoding];
     if([termChar.UUID isEqual:BlueSTSDKServiceDebug.termUuid]){
-        [self.delegate debug:self didStdOutReceived: temp];
+        dispatch_async(sNotificationQueue,^{
+            [self.delegate debug:self didStdOutReceived: temp];
+        });
+        
     }else if([termChar.UUID isEqual:BlueSTSDKServiceDebug.stdErrUuid]){
-        [self.delegate debug:self didStdErrReceived: temp];
+        dispatch_async(sNotificationQueue,^{
+            [self.delegate debug:self didStdErrReceived: temp];
+        });
     }
 }
 @end

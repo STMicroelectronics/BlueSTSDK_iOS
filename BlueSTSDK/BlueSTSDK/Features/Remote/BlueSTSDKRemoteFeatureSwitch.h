@@ -25,7 +25,7 @@
  *
  ******************************************************************************/
 
-#import <BlueSTSDK/BlueSTSDK.h>
+#import <BlueSTSDK/BlueSTSDKFeatureSwitch.h>
 
 /**
  *  Feature that contains an switch status from a remote node

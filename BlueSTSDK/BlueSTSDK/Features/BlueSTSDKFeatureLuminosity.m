@@ -48,13 +48,11 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureLuminosity class]){
-        sFieldDesc = [NSArray arrayWithObjects:
-                      [BlueSTSDKFeatureField  createWithName:FEATURE_NAME
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                     nil];
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
+                                                        unit:FEATURE_UNIT
+                                                        type:FEATURE_TYPE
+                                                         min:@FEATURE_MIN
+                                                         max:@FEATURE_MAX]];
     }//if
     
 }
@@ -98,7 +96,7 @@ static NSArray *sFieldDesc;
     
     uint16_t lux = [rawData extractLeUInt16FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObject:[NSNumber numberWithFloat:lux]];
+    NSArray *data = @[@(lux)];
     BlueSTSDKFeatureSample *sample =
         [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:2];

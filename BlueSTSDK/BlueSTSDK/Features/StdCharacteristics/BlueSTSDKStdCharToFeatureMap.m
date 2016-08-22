@@ -25,15 +25,19 @@
  *
  ******************************************************************************/
 
-#import <BlueSTSDK/BlueSTSDKFeaturePressure.h>
+#import "BlueSTSDKStdCharToFeatureMap.h"
+#import "../../Util/NSMutableDictionary+BlueSTSDKFeature.h"
+#import "BlueSTSDKFeatureHeartRate.h"
 
-/**
- *  Feature that contains an pressure read from a remote node
- *
- * @author STMicroelectronics - Central Labs.
- */
-@interface BlueSTSDKRemoteFeaturePressure : BlueSTSDKFeaturePressure
+@implementation BlueSTSDKStdCharToFeatureMap {
+}
 
-+(int)getNodeId:(BlueSTSDKFeatureSample*)sample;
++ (NSDictionary<CBUUID *, NSArray<Class> * > *)getManageStdCharacteristics {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    //Heart Rate
+    CBUUID *uuid = [CBUUID UUIDWithString:@"00002a37-0000-1000-8000-00805f9b34fb"];
+    [dict add:uuid feature:[BlueSTSDKFeatureHeartRate class]];
+    return dict;
+}
 
 @end

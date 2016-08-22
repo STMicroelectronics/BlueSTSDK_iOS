@@ -177,6 +177,10 @@ static NSInteger nodeFakeCount = 0;
     return [availableFeatures objectAtIndex:featureIdx];
 }
 
+-(NSArray*)getFeaturesOfType:(Class)type{
+    return [NSArray arrayWithObject:[self getFeatureOfType:type]];
+}
+
 -(BOOL)disableNotification:(BlueSTSDKFeature *)feature{
     NSTimer *timer = [notifyFeatures objectForKey:feature.name];
     if(timer==nil)

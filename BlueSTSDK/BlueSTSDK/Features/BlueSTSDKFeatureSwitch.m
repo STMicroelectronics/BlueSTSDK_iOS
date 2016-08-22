@@ -32,7 +32,7 @@
 #import "../Util/NSData+NumberConversion.h"
 
 #define FEATURE_NAME @"Switch"
-#define FEATURE_UNIT @""
+#define FEATURE_UNIT nil
 #define FEATURE_MIN 0
 #define FEATURE_MAX 256
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeUInt8
@@ -47,19 +47,18 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureSwitch class]){
-        sFieldDesc = [NSArray arrayWithObject:
-                      [BlueSTSDKFeatureField  createWithName: FEATURE_NAME
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
                                                         unit:FEATURE_UNIT
                                                         type:FEATURE_TYPE
                                                          min:@FEATURE_MIN
-                                                         max:@FEATURE_MAX ]];
+                                                         max:@FEATURE_MAX]];
     }
     
 }
 
 +(uint8_t)getSwitchStatus:(BlueSTSDKFeatureSample*)sample{
     if(sample.data.count>0)
-        return [(NSNumber*)[sample.data objectAtIndex:0] unsignedCharValue]!=0;
+        return [(NSNumber*) sample.data[0] unsignedCharValue]!=0;
     return false;
 }
 
@@ -100,8 +99,7 @@ static NSArray *sFieldDesc;
     
     uint8_t statusId= [rawData extractUInt8FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObject:
-                     [NSNumber numberWithUnsignedChar:statusId]];
+    NSArray *data = @[@(statusId)];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample
                                       sampleWithTimestamp:timestamp data:data ];

@@ -49,7 +49,7 @@
 #define FEATURE_CURRENT_MIN @10
 
 #define FEATURE_STATUS_NAME @"Status"
-#define FEATURE_STATUS_UNIT @""
+#define FEATURE_STATUS_UNIT nil
 #define FEATURE_STATIS_MAX @0xFF
 #define FEATURE_STATUS_MIN @0
 
@@ -63,28 +63,26 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureBattery class]){
-        sFieldDesc = [NSArray arrayWithObjects:
-                      [BlueSTSDKFeatureField  createWithName:FEATURE_LEVEL_NAME
-                                                      unit:FEATURE_LEVEL_UNIT
-                                                      type:BlueSTSDKFeatureFieldTypeFloat
-                                                       min:FEATURE_LEVEL_MIN
-                                                       max:FEATURE_LEVEL_MAX ],
-                      [BlueSTSDKFeatureField  createWithName:FEATURE_VOLTAGE_NAME
-                                                      unit:FEATURE_VOLTAGE_UNIT
-                                                      type:BlueSTSDKFeatureFieldTypeFloat
-                                                       min:FEATURE_VOLTAGE_MAX
-                                                       max:FEATURE_VOLTAGE_MIN ],
-                      [BlueSTSDKFeatureField  createWithName:FEATURE_CURRENT_NAME
-                                                      unit:FEATURE_CURRENT_UNIT
-                                                      type:BlueSTSDKFeatureFieldTypeFloat
-                                                       min:FEATURE_CURRENT_MAX
-                                                       max:FEATURE_CURRENT_MIN ],
-                      [BlueSTSDKFeatureField  createWithName:FEATURE_STATUS_NAME
-                                                      unit:FEATURE_STATUS_UNIT
-                                                      type:BlueSTSDKFeatureFieldTypeUInt8
-                                                       min:FEATURE_STATIS_MAX
-                                                       max:FEATURE_STATUS_MIN ],
-                      nil];
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_LEVEL_NAME
+                                                        unit:FEATURE_LEVEL_UNIT
+                                                        type:BlueSTSDKFeatureFieldTypeFloat
+                                                         min:FEATURE_LEVEL_MIN
+                                                         max:FEATURE_LEVEL_MAX],
+                [BlueSTSDKFeatureField createWithName:FEATURE_VOLTAGE_NAME
+                                                 unit:FEATURE_VOLTAGE_UNIT
+                                                 type:BlueSTSDKFeatureFieldTypeFloat
+                                                  min:FEATURE_VOLTAGE_MAX
+                                                  max:FEATURE_VOLTAGE_MIN],
+                [BlueSTSDKFeatureField createWithName:FEATURE_CURRENT_NAME
+                                                 unit:FEATURE_CURRENT_UNIT
+                                                 type:BlueSTSDKFeatureFieldTypeFloat
+                                                  min:FEATURE_CURRENT_MAX
+                                                  max:FEATURE_CURRENT_MIN],
+                [BlueSTSDKFeatureField createWithName:FEATURE_STATUS_NAME
+                                                 unit:FEATURE_STATUS_UNIT
+                                                 type:BlueSTSDKFeatureFieldTypeUInt8
+                                                  min:FEATURE_STATIS_MAX
+                                                  max:FEATURE_STATUS_MIN]];
     }//if
 }//initialize
 
@@ -181,12 +179,7 @@ static NSArray *sFieldDesc;
     uint8_t status = [rawData extractUInt8FromOffset:offset+6];
     
     
-    NSArray *data = [NSArray arrayWithObjects:
-                     [NSNumber numberWithFloat:percentage],
-                     [NSNumber numberWithFloat:voltage],
-                     [NSNumber numberWithFloat:current],
-                     [NSNumber numberWithUnsignedChar:status],
-                     nil];
+    NSArray *data = @[@(percentage), @(voltage), @(current), @(status)];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:7];

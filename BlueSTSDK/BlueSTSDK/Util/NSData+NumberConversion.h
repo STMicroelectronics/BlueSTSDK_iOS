@@ -62,6 +62,8 @@
  */
 -(int16_t) extractLeInt16FromOffset:(NSUInteger)offset;
 
+-(int16_t) extractBeInt16FromOffset:(NSUInteger)offset;
+
 /**
  *  extract an int32 from a little endian byte array
  *
@@ -82,6 +84,7 @@
  *      self[offset+2], self[offset+3]
  */
 -(uint32_t) extractBeUInt32FromOffset:(NSUInteger)offset;
+-(int32_t) extractBeInt32FromOffset:(NSUInteger)offset;
 
 /**
  *  extract a float (32bit) number from a little endian byte array
@@ -93,5 +96,6 @@
  */
 -(float) extractLeFloatFromOffset:(NSUInteger)offset;
 
+-(NSData *)int16ChangeEndianes;
 
 @end

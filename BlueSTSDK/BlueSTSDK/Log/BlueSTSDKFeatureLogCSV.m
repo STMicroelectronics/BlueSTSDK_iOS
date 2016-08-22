@@ -87,14 +87,18 @@
     [line appendString:@"HostTimestamp,NodeName,NodeTimestamp,RawData"];
     for (BlueSTSDKFeatureField *field in fields){
         [line appendString:@","];
-        [line appendString:field.unit && ![field.unit isEqualToString:@""] ? [NSString stringWithFormat:@"%@ (%@)", field.name, field.unit] : field.name];
+        if([field hasUnit]) {
+            [line appendString: [NSString stringWithFormat:@"%@ (%@)", field.name, field.unit]];
+        } else{
+            [line appendString:field.name];
+        }
     }
     [line appendString:@"\n"];
     
     [out writeData: [line dataUsingEncoding:NSUTF8StringEncoding]];
 }//printHeader
 
--(NSString *)stringBlobData:(NSData*)data{
+NSString *stringBlobData(NSData *data) {
     NSMutableString *temp = [NSMutableString string];
     //for each block in the data append the exadecimal value to the string
     [data enumerateByteRangesUsingBlock:^(const void *bytes,
@@ -113,12 +117,12 @@
  *  @param out  file where write the data
  *  @param data array of byte to write
  */
--(void) storeBlobData:(NSFileHandle*)out data:(NSData*)data{
-    NSString *temp = [self stringBlobData:data];
++(void) storeBlobData:(NSFileHandle*)out data:(NSData*)data{
+    NSString *temp = stringBlobData(data);
     [out writeData: [temp dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
--(NSString *)stringFeatureData:(NSArray*)data charSep:(char)charSep {
++(NSString *)stringFeatureData:(NSArray*)data charSep:(char)charSep {
     NSMutableString *temp = [NSMutableString string];
     for(NSNumber *n in data){
         [temp appendFormat:@"%@%c",n,charSep];
@@ -132,19 +136,16 @@
  *  @param out  file where write the data
  *  @param data array of NSNumber to print
  */
--(void) storeFeatureData:(NSFileHandle*)out data:(NSArray*)data charSep:(char)charSep{
-    NSString *temp = [self stringFeatureData:data charSep:charSep];
++(void) storeFeatureData:(NSFileHandle*)out data:(NSArray*)data charSep:(char)charSep{
+    NSString *temp = [BlueSTSDKFeatureLogCSV stringFeatureData:data charSep:charSep];
     [out writeData: [temp dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 
-
--(NSArray *)arrayFeatureData:(NSArray*)data {
-    NSMutableArray *temp = [NSMutableArray array];
+void appendTo(NSMutableArray<NSString *> *array, NSArray<NSNumber *> *data) {
     for(NSNumber *n in data){
-        [temp addObject:[n stringValue]];
+        [array addObject:n.stringValue];
     }//for
-    return temp;
 }
 
 /**
@@ -226,21 +227,17 @@
     
     NSInteger timeIntervalsec = (NSInteger)(timeInterval);
     NSInteger timeIntervalms = (NSInteger)((timeInterval - (NSTimeInterval)timeIntervalsec) * 1000.0);
-    NSMutableArray *fields = [NSMutableArray array];
-    
-    [fields addObjectsFromArray:@[
-                                  [NSString stringWithFormat:@"%ld%03ld",(long)timeIntervalsec,(long)timeIntervalms],
-                                  feature.parentNode.friendlyName,
-                                  [NSString stringWithFormat:@"%llu",sample.timestamp],
-                                  raw ? [self stringBlobData:raw] : @"",
-                                  ]];
-    [fields addObjectsFromArray:[self arrayFeatureData:sample.data]];
-    
+    NSMutableArray *fields = [@[[NSString stringWithFormat:@"%ld%03ld", (long) timeIntervalsec, (long) timeIntervalms],
+            feature.parentNode.friendlyName,
+            [NSString stringWithFormat:@"%llu", sample.timestamp],
+            raw ? stringBlobData(raw) : @""] mutableCopy];
+    appendTo(fields, sample.data);
     
     BOOL first = YES;
+    NSData * comaData =[NSData dataWithBytes:&comma length:1];
     for (NSString *field in fields) {
         if (!first) {
-            [data appendData:[NSData dataWithBytes:&comma length:1]];
+            [data appendData:comaData];
         }
         [data appendData:[field dataUsingEncoding:NSUTF8StringEncoding]];
         first = NO;

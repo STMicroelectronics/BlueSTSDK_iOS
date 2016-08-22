@@ -1,5 +1,5 @@
 /*******************************************************************************
- * COPYRIGHT(c) 2015 STMicroelectronics
+ * COPYRIGHT(c) 2016 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -25,15 +25,17 @@
  *
  ******************************************************************************/
 
-#import <BlueSTSDK/BlueSTSDKFeaturePressure.h>
 
-/**
- *  Feature that contains an pressure read from a remote node
- *
- * @author STMicroelectronics - Central Labs.
- */
-@interface BlueSTSDKRemoteFeaturePressure : BlueSTSDKFeaturePressure
+#import <BlueSTSDK/BlueSTSDK.h>
+#import "BlueSTSDKFeature_pro.h"
+#import "BlueSTSDKDeviceTimestampFeature.h"
 
-+(int)getNodeId:(BlueSTSDKFeatureSample*)sample;
 
+@implementation BlueSTSDKDeviceTimestampFeature {
+}
+
+-(uint32_t) update:(uint64_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
+    uint64_t time =(uint64_t) ([NSDate timeIntervalSinceReferenceDate]*1000);
+    return [super update:time data:data dataOffset:offset - 2];
+}
 @end

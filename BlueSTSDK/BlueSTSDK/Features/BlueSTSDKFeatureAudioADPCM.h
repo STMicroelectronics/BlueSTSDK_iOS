@@ -25,15 +25,52 @@
  *
  ******************************************************************************/
 
-#import <BlueSTSDK/BlueSTSDKFeaturePressure.h>
+#import "BlueSTSDKFeature.h"
+#import "BlueSTSDKDeviceTimestampFeature.h"
 
 /**
- *  Feature that contains an pressure read from a remote node
+ * Class that contains the information needed for decode a stream of ADPCM encoded data
  *
  * @author STMicroelectronics - Central Labs.
  */
-@interface BlueSTSDKRemoteFeaturePressure : BlueSTSDKFeaturePressure
+@interface ADPCMAudioSyncManager : NSObject
+    @property BOOL intra_flag;
+    @property int16_t adpcm_index_in;
+    @property int32_t adpcm_predsample_in;
 
-+(int)getNodeId:(BlueSTSDKFeatureSample*)sample;
+    /**
+     * create a new class instance
+     * @return  new class instance
+     */
+    +(instancetype)audioManager;
+
+    /**
+     * extract the sync data form a sample from the class BlueSTSDKFeatureAudioADPCMSync
+     * @param sample sample with the sync data
+     */
+    -(void)setSyncParam:(BlueSTSDKFeatureSample *)sample;
+
+@end
+
+/**
+ * Feature that export the audio data, encoded with an ADPCM algorithm
+ *
+ * @author STMicroelectronics - Central Labs.
+ */
+@interface BlueSTSDKFeatureAudioADPCM : BlueSTSDKDeviceTimestampFeature
+
+/**
+ * Object where read the sync information needed for decode the stream
+ */
+@property (retain, atomic, readonly) ADPCMAudioSyncManager *audioManager;
+
+
+/**
+ * Extract the last audio sample
+ * @param sample sample that contains the aduio data
+ * @return array of 40 16bit audio sample
+ */
++(NSData *)getLinearPCMAudio:(BlueSTSDKFeatureSample *)sample;
+
 
 @end

@@ -60,29 +60,26 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureMemsSensorFusionCompact class]){
-        sFieldDesc = [[NSArray alloc] initWithObjects:
-                      [BlueSTSDKFeatureField  createWithName: @"qi"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      [BlueSTSDKFeatureField  createWithName: @"qj"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      [BlueSTSDKFeatureField  createWithName: @"qk"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      [BlueSTSDKFeatureField  createWithName: @"qs"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      
-                      nil];
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:@"qi"
+                                                        unit:FEATURE_UNIT
+                                                        type:FEATURE_TYPE
+                                                         min:@FEATURE_MIN
+                                                         max:@FEATURE_MAX],
+                [BlueSTSDKFeatureField createWithName:@"qj"
+                                                 unit:FEATURE_UNIT
+                                                 type:FEATURE_TYPE
+                                                  min:@FEATURE_MIN
+                                                  max:@FEATURE_MAX],
+                [BlueSTSDKFeatureField createWithName:@"qk"
+                                                 unit:FEATURE_UNIT
+                                                 type:FEATURE_TYPE
+                                                  min:@FEATURE_MIN
+                                                  max:@FEATURE_MAX],
+                [BlueSTSDKFeatureField createWithName:@"qs"
+                                                 unit:FEATURE_UNIT
+                                                 type:FEATURE_TYPE
+                                                  min:@FEATURE_MIN
+                                                  max:@FEATURE_MAX]];
     }//if
 }//initialize
 
@@ -97,25 +94,25 @@ static NSArray *sFieldDesc;
 +(float)getQi:(BlueSTSDKFeatureSample*)sample{
     if(sample.data.count==0)
         return NAN;
-    return[[sample.data objectAtIndex:0] floatValue];
+    return[sample.data[0] floatValue];
 }
 
 +(float)getQj:(BlueSTSDKFeatureSample*)sample{
     if(sample.data.count<1)
         return NAN;
-    return[[sample.data objectAtIndex:1] floatValue];
+    return[sample.data[1] floatValue];
 }
 
 +(float)getQk:(BlueSTSDKFeatureSample*)sample{
     if(sample.data.count<2)
         return NAN;
-    return[[sample.data objectAtIndex:2] floatValue];
+    return[sample.data[2] floatValue];
 }
 
 +(float)getQs:(BlueSTSDKFeatureSample*)sample{
     if(sample.data.count<3)
         return NAN;
-    return[[sample.data objectAtIndex:3] floatValue];
+    return[sample.data[3] floatValue];
 }
 
 -(NSArray*) getFieldsDesc{
@@ -153,11 +150,7 @@ static NSArray *sFieldDesc;
         z= [rawData extractLeInt16FromOffset:offset+4]/SCALE_FACTOR;
         w = sqrt(1-(x*x+y*y+z*z));
         
-        NSArray *newData = [NSArray arrayWithObjects:[NSNumber numberWithFloat:x],
-                            [NSNumber numberWithFloat:y],
-                            [NSNumber numberWithFloat:z],
-                            [NSNumber numberWithFloat:w],
-                            nil];
+        NSArray *newData = @[@(x), @(y), @(z), @(w)];
         BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:newData];
         //since we recevive 3 quaternions at times, we delay the feature update
         // -> we put the task that do that in a serial queue

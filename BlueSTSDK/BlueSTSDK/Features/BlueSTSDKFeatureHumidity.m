@@ -48,13 +48,11 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureHumidity class]){
-        sFieldDesc = [[NSArray alloc] initWithObjects:
-                      [BlueSTSDKFeatureField  createWithName: FEATURE_NAME
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      nil];
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
+                                                        unit:FEATURE_UNIT
+                                                        type:FEATURE_TYPE
+                                                         min:@FEATURE_MIN
+                                                         max:@FEATURE_MAX]];
     }//if
 }//initialize
 
@@ -97,7 +95,7 @@ static NSArray *sFieldDesc;
     
     int16_t hum= [rawData extractLeInt16FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObject:[NSNumber numberWithFloat:hum/10.0f]];
+    NSArray *data = @[@(hum / 10.0f)];
     
     BlueSTSDKFeatureSample *sample =
         [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];

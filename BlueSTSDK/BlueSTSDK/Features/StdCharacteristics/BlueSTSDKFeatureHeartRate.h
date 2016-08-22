@@ -1,5 +1,5 @@
 /*******************************************************************************
- * COPYRIGHT(c) 2015 STMicroelectronics
+ * COPYRIGHT(c) 2016 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -25,15 +25,18 @@
  *
  ******************************************************************************/
 
-#import <BlueSTSDK/BlueSTSDKFeaturePressure.h>
+#import <Foundation/Foundation.h>
+#import "BlueSTSDKDeviceTimestampFeature.h"
 
 /**
- *  Feature that contains an pressure read from a remote node
+ * Feature that store the data from the standard heart rate characteristics
  *
  * @author STMicroelectronics - Central Labs.
  */
-@interface BlueSTSDKRemoteFeaturePressure : BlueSTSDKFeaturePressure
+@interface BlueSTSDKFeatureHeartRate : BlueSTSDKDeviceTimestampFeature
 
-+(int)getNodeId:(BlueSTSDKFeatureSample*)sample;
++(int32_t) getHeartRate:(BlueSTSDKFeatureSample *)sample;
++(int32_t) getEnergyExtended:(BlueSTSDKFeatureSample *)sample;
++(float) getRRInterval:(BlueSTSDKFeatureSample *)sample;
 
 @end

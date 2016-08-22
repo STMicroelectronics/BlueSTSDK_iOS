@@ -32,7 +32,7 @@
 #import "../Util/NSData+NumberConversion.h"
 
 #define FEATURE_NAME @"Activity"
-#define FEATURE_UNIT @""
+#define FEATURE_UNIT nil
 #define FEATURE_MIN 0
 #define FEATURE_MAX 6
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeUInt8
@@ -47,18 +47,16 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureActivity class]){
-        sFieldDesc = [[NSArray alloc] initWithObjects:
-                      [BlueSTSDKFeatureField  createWithName: FEATURE_NAME
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      [BlueSTSDKFeatureField  createWithName: @"Date"
-                                                      unit: @"s" //second
-                                                      type:BlueSTSDKFeatureFieldTypeDouble
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      nil];
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
+                                                        unit:FEATURE_UNIT
+                                                        type:FEATURE_TYPE
+                                                         min:@FEATURE_MIN
+                                                         max:@FEATURE_MAX],
+                [BlueSTSDKFeatureField createWithName:@"Date"
+                                                 unit:@"s" //second
+                                                 type:BlueSTSDKFeatureFieldTypeDouble
+                                                  min:@FEATURE_MIN
+                                                  max:@FEATURE_MAX]];
     }
     
 }
@@ -114,10 +112,8 @@ static NSArray *sFieldDesc;
     
     uint8_t activityId= [rawData extractUInt8FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObjects:
-                        [NSNumber numberWithUnsignedChar:activityId],
-                        [NSNumber numberWithDouble:[NSDate timeIntervalSinceReferenceDate]],
-                     nil];
+    NSArray *data = @[@(activityId),
+            @([NSDate timeIntervalSinceReferenceDate])];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:1];

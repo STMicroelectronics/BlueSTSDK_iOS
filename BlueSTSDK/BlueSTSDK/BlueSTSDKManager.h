@@ -50,7 +50,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 
 /**
  *  Start a discovery process, the discovery will stop when the use call
- * {@link BlueSTSDKManagerDelegate#discoveryStop}
+ * {@link BlueSTSDKManager#discoveryStop}
  */
 -(void)discoveryStart;
 

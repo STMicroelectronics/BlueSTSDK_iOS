@@ -29,6 +29,7 @@
 #define BlueSTSDK_BlueSTSDKNode_h
 
 #import <Foundation/Foundation.h>
+#import <CoreBluetooth/CBUUID.h>
 #import "BlueSTSDKManager.h"
 
 @class BlueSTSDKDebug;
@@ -124,6 +125,8 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
      *  STEVAL WESU1 board
      */
     BlueSTSDKNodeTypeSTEVAL_WESU1         = 0x01,
+    BlueSTSDKNodeTypeSensor_Tile = 0x02,
+    BlueSTSDKNodeTypeBlue_Coin = 0x03,
     /**
      *  nucleo + ble expansion board
      */
@@ -299,6 +302,8 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *  close the connection with this node
  */
 -(void) disconnect;
+
+-(void) addExternalCharacteristics:(NSDictionary<CBUUID*,NSArray<Class>* >*)userDefinedFeature;
 
 /**
  *  request to read the value of a particular feature, the feature will manage to notify you the new value

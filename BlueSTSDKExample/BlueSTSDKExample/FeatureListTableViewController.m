@@ -184,7 +184,7 @@ BlueSTSDKFeatureAutoConfigurableDelegate,BlueSTSDKNodeStateDelegate>
     NSString *desc = [feature description];
     //update the table with the new description, we have to do a dispathc
     //since the notifications are submited in a cuncurrent queue
-    dispatch_sync(dispatch_get_main_queue(),^{
+    dispatch_async(dispatch_get_main_queue(),^{
         [self.tableView beginUpdates];
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath: cellIndex];
         cell.detailTextLabel.text = desc;

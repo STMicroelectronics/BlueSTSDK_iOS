@@ -48,23 +48,21 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureGyroscope class]){
-        sFieldDesc = [[NSArray alloc] initWithObjects:
-                      [BlueSTSDKFeatureField  createWithName: @"X"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      [BlueSTSDKFeatureField  createWithName: @"Y"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      [BlueSTSDKFeatureField  createWithName: @"Z"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      nil];
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:@"X"
+                                                        unit:FEATURE_UNIT
+                                                        type:FEATURE_TYPE
+                                                         min:@FEATURE_MIN
+                                                         max:@FEATURE_MAX],
+                [BlueSTSDKFeatureField createWithName:@"Y"
+                                                 unit:FEATURE_UNIT
+                                                 type:FEATURE_TYPE
+                                                  min:@FEATURE_MIN
+                                                  max:@FEATURE_MAX],
+                [BlueSTSDKFeatureField createWithName:@"Z"
+                                                 unit:FEATURE_UNIT
+                                                 type:FEATURE_TYPE
+                                                  min:@FEATURE_MIN
+                                                  max:@FEATURE_MAX]];
     }//if
 }//initialize
 
@@ -121,10 +119,7 @@ static NSArray *sFieldDesc;
     gyroY= [rawData extractLeInt16FromOffset:offset+2];
     gyroZ= [rawData extractLeInt16FromOffset:offset+4];
     
-    NSArray *newData = [NSArray arrayWithObjects:[NSNumber numberWithFloat:gyroX/10.0f],
-                        [NSNumber numberWithFloat:gyroY/10.0f],
-                        [NSNumber numberWithFloat:gyroZ/10.0f],
-                        nil];
+    NSArray *newData = @[@(gyroX / 10.0f), @(gyroY / 10.0f), @(gyroZ / 10.0f)];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:newData];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:6];

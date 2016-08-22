@@ -73,6 +73,10 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureFieldType){
      *  8bit signed integer
      */
     BlueSTSDKFeatureFieldTypeInt8,
+    /**
+     * Array of 16bit singed integer
+     */
+    BlueSTSDKFeatureFieldTypeInt16Array
 };
 
 /**
@@ -134,5 +138,5 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureFieldType){
                min:(NSNumber*)min
                max:(NSNumber*)max;
 
-
+-(BOOL)hasUnit;
 @end

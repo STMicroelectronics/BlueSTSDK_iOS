@@ -57,7 +57,7 @@
                                              type:FEATURE_TYPE
                                               min:@FEATURE_MIN
                                               max:@FEATURE_MAX];
-    mFieldDesc = [NSArray arrayWithObject:temp];
+    mFieldDesc = @[temp];
     return self;
 }
 
@@ -104,8 +104,7 @@
     
     NSMutableArray *newData = [NSMutableArray arrayWithCapacity:nMic];
     for (uint32_t i=0; i<nMic; i++) {
-        NSNumber *data = [NSNumber numberWithUnsignedChar:
-                            [rawData extractUInt8FromOffset:offset+i]];
+        NSNumber *data = @([rawData extractUInt8FromOffset:offset + i]);
         [newData addObject:data];
     }
     

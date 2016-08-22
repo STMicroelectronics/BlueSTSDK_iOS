@@ -49,23 +49,21 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureMagnetometer class]){
-        sFieldDesc = [[NSArray alloc] initWithObjects:
-                      [BlueSTSDKFeatureField  createWithName: @"X"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      [BlueSTSDKFeatureField  createWithName: @"Y"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      [BlueSTSDKFeatureField  createWithName: @"Z"
-                                                      unit:FEATURE_UNIT
-                                                      type:FEATURE_TYPE
-                                                       min:@FEATURE_MIN
-                                                       max:@FEATURE_MAX ],
-                      nil];
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:@"X"
+                                                        unit:FEATURE_UNIT
+                                                        type:FEATURE_TYPE
+                                                         min:@FEATURE_MIN
+                                                         max:@FEATURE_MAX],
+                [BlueSTSDKFeatureField createWithName:@"Y"
+                                                 unit:FEATURE_UNIT
+                                                 type:FEATURE_TYPE
+                                                  min:@FEATURE_MIN
+                                                  max:@FEATURE_MAX],
+                [BlueSTSDKFeatureField createWithName:@"Z"
+                                                 unit:FEATURE_UNIT
+                                                 type:FEATURE_TYPE
+                                                  min:@FEATURE_MIN
+                                                  max:@FEATURE_MAX]];
     }//if
 }//initialize
 
@@ -124,10 +122,7 @@ static NSArray *sFieldDesc;
     magY= [rawData extractLeInt16FromOffset:offset+2];
     magZ= [rawData extractLeInt16FromOffset:offset+4];
     
-    NSArray *newData = [NSArray arrayWithObjects:[NSNumber numberWithFloat:magX],
-                        [NSNumber numberWithFloat:magY],
-                        [NSNumber numberWithFloat:magZ],
-                        nil];
+    NSArray *newData = @[@(magX), @(magY), @(magZ)];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:newData];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:6];

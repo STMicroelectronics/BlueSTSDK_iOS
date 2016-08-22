@@ -92,7 +92,9 @@ static dispatch_queue_t sNotificationQueue;
      *  set of {@link BlueSTSDKFeature} that are currently in notify mode
      */
     NSMutableSet *mNotifyFeature;
-    
+
+    NSMutableDictionary<CBUUID*,NSArray<Class>* >* mExternalCharFeature;
+
     /**
      *  true if the user ask to disconnect, it is used for understand if we lost
      * the connection with the node
@@ -151,13 +153,13 @@ static dispatch_queue_t sNotificationQueue;
     for (uint32_t i=0; i<nBit; i++) {
         featureMask_t test = 1<<i;
         if((mask & test)!=0){ //we select a bit in the mask
-            NSNumber *temp =[NSNumber numberWithUnsignedInt:test];
-            Class featureClass = [maskFeatureMap objectForKey: temp];
+            NSNumber *temp = @(test);
+            Class featureClass = maskFeatureMap[temp];
             if(featureClass!=nil){ //if exist a feature link to that bit
                 BlueSTSDKFeature *f = [self buildFeatureFromClass:featureClass];
                 if(f!=nil){
                     [mAvailableFeature addObject:f];
-                    [mMaskToFeature setObject:f forKey:temp];
+                    mMaskToFeature[temp] = f;
                 }else{
                     NSLog(@"Impossible build the feature %@",[featureClass description]);
                 }//if f
@@ -179,6 +181,7 @@ static dispatch_queue_t sNotificationQueue;
     mCharFeatureMap = [NSMutableArray array];
     mNotifyFeature = [NSMutableSet set];
     mAskForNotification = [NSMutableSet set];
+    mExternalCharFeature = [NSMutableDictionary dictionary];
     mFeatureCommand=nil;
     _debugConsole=nil;
     _configControl=nil;
@@ -322,7 +325,7 @@ static dispatch_queue_t sNotificationQueue;
     if(features.count == 0)
         return nil;
     //else
-    return [features objectAtIndex:0];
+    return features[0];
 }
 
 -(void)connect{
@@ -380,6 +383,14 @@ static dispatch_queue_t sNotificationQueue;
     
     [[BlueSTSDKManager sharedInstance]disconnect:mPeripheral];
 }//disconnect
+
+- (void)addExternalCharacteristics:(NSDictionary<CBUUID *, NSArray<Class>* > *)userDefinedFeature {
+    if(userDefinedFeature==nil)
+        return;
+
+    [mExternalCharFeature addEntriesFromDictionary:userDefinedFeature];
+}
+
 
 -(void)connectionError:(NSError*)error{
     NSLog(@"Connection Node:%@ Error:%@ (%d)",_name,
@@ -659,8 +670,8 @@ didDiscoverServices:(NSError *)error{
     uint32_t mask = 1<<31;
     for(uint32_t i=0; i<32; i++){
         if((featureMask & mask)!=0){
-            NSNumber *key = [NSNumber numberWithUnsignedInt:mask];
-            BlueSTSDKFeature *f = [mMaskToFeature objectForKey: key];
+            NSNumber *key = @(mask);
+            BlueSTSDKFeature *f = mMaskToFeature[key];
             if(f!=nil){
                 [f setEnabled:true];
                 [charFeature addObject:f];
@@ -686,9 +697,29 @@ didDiscoverServices:(NSError *)error{
     [f setEnabled:true];
     [mAvailableFeature addObject:f];
     BlueSTSDKCharacteristic* temp = [[BlueSTSDKCharacteristic alloc]
-                                   initWithChar:c features:[NSArray arrayWithObjects:f,nil]];
+            initWithChar:c features:@[f]];
     [mCharFeatureMap addObject: temp];
 }//buildGeneraPurposeFeatureFromChar
+
+- (void)buildKnowUUID:(CBCharacteristic *)characteristic
+             features:(NSArray<Class> *)features{
+    NSMutableArray *charFeature = [[NSMutableArray alloc] initWithCapacity:features.count];
+
+    for (Class c in features){
+        BlueSTSDKFeature *f = [self buildFeatureFromClass:c];
+        if(f!=nil){
+            [f setEnabled:true];
+            [charFeature addObject:f];
+            [mAvailableFeature addObject:f];
+        }//if
+    }
+
+    if(charFeature.count != 0){ //if we found some feature save it
+        BlueSTSDKCharacteristic* temp = [[BlueSTSDKCharacteristic alloc]
+                initWithChar:characteristic features:charFeature];
+        [mCharFeatureMap addObject: temp];
+    }//if
+}
 
 /**
  * if the service is know we build the link object, otherwise we scan
@@ -724,7 +755,9 @@ didDiscoverCharacteristicsForService:(CBService *)service
                 [self buildKnowFeatureFromChar:c];
             }else if ([BlueSTSDKFeatureCharacteristics isFeatureGeneralPurposeCharacteristics:c]){
                 [self buildGeneraPurposeFeatureFromChar:c];
-            }//if-else
+            }else if (mExternalCharFeature!=nil && mExternalCharFeature[c.UUID]!=nil)
+                [self buildKnowUUID:c features:mExternalCharFeature[c.UUID]];
+
         }//for char
     }//if else
     
@@ -765,7 +798,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
     
     NSData *resp = [data subdataWithRange:NSMakeRange(7, data.length-7)];
     
-    BlueSTSDKFeature *f = [mMaskToFeature objectForKey: [NSNumber numberWithUnsignedInt:featureMask]];
+    BlueSTSDKFeature *f = mMaskToFeature[@(featureMask)];
     if(f!=nil)
         [f parseCommandResponseWithTimestamp:timestamp commandType:commandType
                                        data: resp];

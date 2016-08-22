@@ -25,15 +25,19 @@
  *
  ******************************************************************************/
 
-#import <BlueSTSDK/BlueSTSDKFeaturePressure.h>
+#import <Foundation/Foundation.h>
+#import <CoreBluetooth/CBUUID.h>
 
 /**
- *  Feature that contains an pressure read from a remote node
+ * Utility class that return all the standard charateristics manage by the SDK
  *
  * @author STMicroelectronics - Central Labs.
  */
-@interface BlueSTSDKRemoteFeaturePressure : BlueSTSDKFeaturePressure
+@interface BlueSTSDKStdCharToFeatureMap : NSObject
 
-+(int)getNodeId:(BlueSTSDKFeatureSample*)sample;
-
+/**
+ * get all the standard characteristics managed by the SDK
+ * @return dictionary that link the uuid with the feature class that manage that characteristics
+ */
++(NSDictionary<CBUUID*,NSArray<Class>* >*) getManageStdCharacteristics;
 @end

@@ -25,15 +25,18 @@
  *
  ******************************************************************************/
 
-#import <BlueSTSDK/BlueSTSDKFeaturePressure.h>
+#import "BlueSTSDKFeature.h"
+#import "BlueSTSDKDeviceTimestampFeature.h"
 
 /**
- *  Feature that contains an pressure read from a remote node
+ * Feature that export the information needed for decode an ADPCM streem
  *
  * @author STMicroelectronics - Central Labs.
  */
-@interface BlueSTSDKRemoteFeaturePressure : BlueSTSDKFeaturePressure
+@interface BlueSTSDKFeatureAudioADPCMSync : BlueSTSDKDeviceTimestampFeature
 
-+(int)getNodeId:(BlueSTSDKFeatureSample*)sample;
+
++(int32_t)getPredictedSample:(BlueSTSDKFeatureSample *)sample;
++(int16_t)getIndex:(BlueSTSDKFeatureSample *)sample;
 
 @end

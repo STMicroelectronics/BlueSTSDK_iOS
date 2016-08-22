@@ -33,7 +33,7 @@
 #import "../Util/NSData+NumberConversion.h"
 
 #define FEATURE_NAME @"AccelerationEvent"
-#define FEATURE_UNIT @""
+#define FEATURE_UNIT nil
 #define FEATURE_MIN @0
 #define FEATURE_MAX_EVENT @256
 #define FEATURE_MAX_STEPS @(USHRT_MAX)
@@ -74,17 +74,16 @@ static NSArray *sEventTypeName;
                                               length:sizeof(ENABLE_COMMAND)];
         sDisableCommand = [NSData dataWithBytesNoCopy:(void*)&DISABLE_COMMAND
                                               length:sizeof(DISABLE_COMMAND)];
-        sFieldDesc = [NSArray arrayWithObjects:
-                      [BlueSTSDKFeatureField  createWithName: @"Event"
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:@"Event"
                                                         unit:FEATURE_UNIT
                                                         type:FEATURE_TYPE_EVENT
                                                          min:FEATURE_MIN
-                                                         max:FEATURE_MAX_EVENT ],
-                      [BlueSTSDKFeatureField  createWithName: @"nSteps"
-                                                        unit:FEATURE_UNIT
-                                                        type:FEATURE_TYPE_STEPS
-                                                         min:FEATURE_MIN
-                                                         max:FEATURE_MAX_STEPS ],nil];
+                                                         max:FEATURE_MAX_EVENT],
+                [BlueSTSDKFeatureField createWithName:@"nSteps"
+                                                 unit:FEATURE_UNIT
+                                                 type:FEATURE_TYPE_STEPS
+                                                  min:FEATURE_MIN
+                                                  max:FEATURE_MAX_STEPS]];
         
         sDetectableEventTypeName = @[@"None",@"Orientation", @"FreeFall",
                                      @"SingleTap", @"DoubleTap", @"WakeUp",
@@ -151,56 +150,56 @@ static NSArray *sEventTypeName;
 +(NSString*) detectableEventTypeToString:(BlueSTSDKFeatureAccelerationDetectableEventType)event{
     switch (event) {
         case BlueSTSDKFeatureEventTypeOrientation:
-            return [sDetectableEventTypeName objectAtIndex:1];
+            return sDetectableEventTypeName[1];
         case BlueSTSDKFeatureEventTypeFreeFall:
-            return [sDetectableEventTypeName objectAtIndex:2];
+            return sDetectableEventTypeName[2];
         case BlueSTSDKFeatureEventTypeSingleTap:
-            return [sDetectableEventTypeName objectAtIndex:3];
+            return sDetectableEventTypeName[3];
         case BlueSTSDKFeatureEventTypeDoubleTap:
-            return [sDetectableEventTypeName objectAtIndex:4];
+            return sDetectableEventTypeName[4];
         case BlueSTSDKFeatureEventTypeWakeUp:
-            return [sDetectableEventTypeName objectAtIndex:5];
+            return sDetectableEventTypeName[5];
         case BlueSTSDKFeatureEventTypeTilt:
-            return [sDetectableEventTypeName objectAtIndex:6];
+            return sDetectableEventTypeName[6];
         case BlueSTSDKFeatureEventTypePedometer:
-            return [sDetectableEventTypeName objectAtIndex:7];
+            return sDetectableEventTypeName[7];
         case BlueSTSDKFeatureEventTypeNone:
         default:
-            return [sDetectableEventTypeName objectAtIndex:0];
+            return sDetectableEventTypeName[0];
     }
 }
 
 +(NSString*) eventTypeToString:(BlueSTSDKFeatureAccelerometerEventType)event{
     switch (event) {
         case BlueSTSDKFeatureAccelerometerOrientationTopLeft:
-            return [sEventTypeName objectAtIndex:0];
+            return sEventTypeName[0];
         case BlueSTSDKFeatureAccelerometerOrientationTopRight:
-            return [sEventTypeName objectAtIndex:1];
+            return sEventTypeName[1];
         case BlueSTSDKFeatureAccelerometerOrientationBottomLeft:
-            return [sEventTypeName objectAtIndex:2];
+            return sEventTypeName[2];
         case BlueSTSDKFeatureAccelerometerOrientationBottomRight:
-            return [sEventTypeName objectAtIndex:3];
+            return sEventTypeName[3];
         case BlueSTSDKFeatureAccelerometerOrientationUp:
-            return [sEventTypeName objectAtIndex:4];
+            return sEventTypeName[4];
         case BlueSTSDKFeatureAccelerometerOrientationDown:
-            return [sEventTypeName objectAtIndex:5];
+            return sEventTypeName[5];
         case BlueSTSDKFeatureAccelerometerTilt:
-            return [sEventTypeName objectAtIndex:6];
+            return sEventTypeName[6];
         case BlueSTSDKFeatureAccelerometerFreeFall:
-            return [sEventTypeName objectAtIndex:7];
+            return sEventTypeName[7];
         case BlueSTSDKFeatureAccelerometerSingleTap:
-            return [sEventTypeName objectAtIndex:8];
+            return sEventTypeName[8];
         case BlueSTSDKFeatureAccelerometerDoubleTap:
-            return [sEventTypeName objectAtIndex:9];
+            return sEventTypeName[9];
         case BlueSTSDKFeatureAccelerometerWakeUp:
-            return [sEventTypeName objectAtIndex:10];
+            return sEventTypeName[10];
         case BlueSTSDKFeatureAccelerometerPedometer:
-            return [sEventTypeName objectAtIndex:11];
+            return sEventTypeName[11];
         case BlueSTSDKFeatureAccelerometerNoEvent:
-            return [sEventTypeName objectAtIndex:12];
+            return sEventTypeName[12];
         case BlueSTSDKFeatureAccelerometerError:
         default:
-            return [sEventTypeName objectAtIndex:13];
+            return sEventTypeName[13];
     }
 }
 
@@ -232,7 +231,7 @@ static NSArray *sEventTypeName;
 }
 
 -(NSNumber*) enumToObject:(BlueSTSDKFeatureAccelerometerEventType)type{
-    return [NSNumber numberWithUnsignedShort:(uint16_t)type];
+    return @((uint16_t) type);
 }
 
 -(BOOL)enableEvent:(BlueSTSDKFeatureAccelerationDetectableEventType)type enable:(BOOL)enable{
@@ -271,9 +270,8 @@ static NSArray *sEventTypeName;
     
     uint16_t nSteps= [rawData extractLeUInt16FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObjects:
-                     [self enumToObject: BlueSTSDKFeatureAccelerometerPedometer],
-                     [NSNumber numberWithUnsignedChar:nSteps],nil];
+    NSArray *data = @[[self enumToObject:BlueSTSDKFeatureAccelerometerPedometer],
+            [NSNumber numberWithUnsignedChar:nSteps]];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:2];
@@ -292,8 +290,7 @@ static NSArray *sEventTypeName;
     
     uint8_t eventId= [rawData extractUInt8FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObject:
-                     [NSNumber numberWithUnsignedChar:eventId]];
+    NSArray *data = @[@(eventId)];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:1];

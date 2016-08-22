@@ -52,6 +52,8 @@
 #import "../Features/Remote/BlueSTSDKRemoteFeatureTemperature.h"
 #import "../Features/Remote/BlueSTSDKRemoteFeaturePressure.h"
 #import "../Features/Remote/BlueSTSDKRemoteFeatureHumidity.h"
+#import "../Features/BlueSTSDKFeatureAudioADPCM.h"
+#import "../Features/BlueSTSDKFeatureAudioADPCMSync.h"
 
 #import "BlueSTSDKBleNodeDefines.h"
 #import "NSData+NumberConversion.h"
@@ -198,6 +200,16 @@ static NSDictionary *bleStarNucleoFeatureMap = nil;
 static NSDictionary *stevalWesu1FeatureMap = nil;
 
 /**
+ *  map that link a featureMask_t with a feature class, used for the sensor Tile node
+ */
+static NSDictionary *sensorTileFeatureMap = nil;
+
+/**
+ *  map that link a featureMask_t with a feature class, used for the blueCoin node
+ */
+static NSDictionary *blueCoinFeatureMap = nil;
+
+/**
  * contains the default map (featureMask_t,Feature class) for each know node id
  */
 static NSDictionary *boardFeatureMap = nil;
@@ -209,8 +221,10 @@ static NSDictionary *boardFeatureMap = nil;
                               
                               };
         nucleoFeatureMap = @{
+                             @0x40000000: [BlueSTSDKFeatureAudioADPCMSync class],
                              @0x20000000: [BlueSTSDKFeatureSwitch class],
                              @0x10000000: [BlueSTSDKFeatureDirectionOfArrival class], //Sound source of arrival
+                             @0x08000000: [BlueSTSDKFeatureAudioADPCM class],
                              @0x04000000: [BlueSTSDKFeatureMicLevel class], //Mic Level
                              @0x02000000: [BlueSTSDKFeatureProximity class], //proximity
                              @0x01000000: [BlueSTSDKFeatureLuminosity class], //luminosity
@@ -233,6 +247,50 @@ static NSDictionary *boardFeatureMap = nil;
                              @0x00000001: [BlueSTSDKFeaturePedometer class], //Pedometer
                            
                              };
+
+        sensorTileFeatureMap = @{
+                            @0x40000000: [BlueSTSDKFeatureAudioADPCMSync class],
+                            @0x20000000: [BlueSTSDKFeatureSwitch class],
+                            @0x10000000: [BlueSTSDKFeatureDirectionOfArrival class], //Sound source of arrival
+                            @0x08000000: [BlueSTSDKFeatureAudioADPCM class],
+                            @0x04000000: [BlueSTSDKFeatureMicLevel class], //Mic Level
+                            @0x00800000: [BlueSTSDKFeatureAcceleration class], //acc
+                            @0x00400000: [BlueSTSDKFeatureGyroscope class], //gyo
+                            @0x00200000: [BlueSTSDKFeatureMagnetometer class], //mag
+                            @0x00100000: [BlueSTSDKFeaturePressure class], //pressure
+                            @0x00080000: [BlueSTSDKFeatureHumidity class], //humidity
+                            @0x00040000: [BlueSTSDKFeatureTemperature class], //temperature
+                            @0x00010000: [BlueSTSDKFeatureTemperature class], //temperature
+                            @0x00000400: [BlueSTSDKFeatureAccelerometerEvent class], //Free fall detection
+                            @0x00000200: [BlueSTSDKFeatureFreeFall class], //Free fall detection
+                            @0x00000100: [BlueSTSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
+                            @0x00000080: [BlueSTSDKFeatureMemsSensorFusion class], //Mems sensor fusion
+                            @0x00000010: [BlueSTSDKFeatureActivity class], //Actvity
+                            @0x00000008: [BlueSTSDKFeatureCarryPosition class], //carry position recognition
+                            @0x00000002: [BlueSTSDKFeatureMemsGesture class], //Proximity Gesture
+                            @0x00000001: [BlueSTSDKFeaturePedometer class], //Pedometer
+                            };
+
+        blueCoinFeatureMap = @{
+                            @0x20000000: [BlueSTSDKFeatureSwitch class],
+                            @0x10000000: [BlueSTSDKFeatureDirectionOfArrival class], //Sound source of arrival
+                            @0x04000000: [BlueSTSDKFeatureMicLevel class], //Mic Level
+                            @0x00800000: [BlueSTSDKFeatureAcceleration class], //acc
+                            @0x00400000: [BlueSTSDKFeatureGyroscope class], //gyo
+                            @0x00200000: [BlueSTSDKFeatureMagnetometer class], //mag
+                            @0x00100000: [BlueSTSDKFeaturePressure class], //pressure
+                            @0x00080000: [BlueSTSDKFeatureHumidity class], //humidity
+                            @0x00040000: [BlueSTSDKFeatureTemperature class], //temperature
+                            @0x00010000: [BlueSTSDKFeatureTemperature class], //temperature
+                            @0x00000400: [BlueSTSDKFeatureAccelerometerEvent class], //Free fall detection
+                            @0x00000200: [BlueSTSDKFeatureFreeFall class], //Free fall detection
+                            @0x00000100: [BlueSTSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
+                            @0x00000080: [BlueSTSDKFeatureMemsSensorFusion class], //Mems sensor fusion
+                            @0x00000010: [BlueSTSDKFeatureActivity class], //Actvity
+                            @0x00000008: [BlueSTSDKFeatureCarryPosition class], //carry position recognition
+                            @0x00000002: [BlueSTSDKFeatureMemsGesture class], //Proximity Gesture
+                            @0x00000001: [BlueSTSDKFeaturePedometer class], //Pedometer
+                            };
         
         bleStarNucleoFeatureMap = @{
                              @0x20000000: [BlueSTSDKRemoteFeatureSwitch class],
@@ -260,6 +318,8 @@ static NSDictionary *boardFeatureMap = nil;
         boardFeatureMap = @{
                             @0x00: genericFeatureMap,
                             @0x01: stevalWesu1FeatureMap,
+                            @0x02: sensorTileFeatureMap,
+                            @0x03: blueCoinFeatureMap,
                             @0x80: nucleoFeatureMap,
                             @0x81: bleStarNucleoFeatureMap
                             };

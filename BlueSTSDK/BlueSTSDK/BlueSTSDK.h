@@ -62,6 +62,11 @@
 #import "BlueSTSDKRemoteFeatureTemperature.h"
 #import "BlueSTSDKRemoteFeatureSwitch.h"
 #import "BlueSTSDKRemoteFeaturePressure.h"
+#import "BlueSTSDKFeatureAudioADPCM.h"
+#import "BlueSTSDKFeatureAudioADPCMSync.h"
+
+#import "BlueSTSDKStdCharToFeatureMap.h"
+#import "BlueSTSDKFeatureHeartRate.h"
 
 #import "BlueSTSDKFeatureGenPurpose.h"
 
@@ -73,3 +78,6 @@
 #import "BlueSTSDKRegister.h"
 #import "BlueSTSDKRegisterDefines.h"
 #import "BlueSTSDKCommand.h"
+
+#import "NSMutableDictionary+BlueSTSDKFeature.h"
+#import "NSData+NumberConversion.h"

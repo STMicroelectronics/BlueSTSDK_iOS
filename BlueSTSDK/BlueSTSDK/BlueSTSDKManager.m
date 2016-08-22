@@ -1,4 +1,4 @@
-/*******************************************************************************
+		/*******************************************************************************
  * COPYRIGHT(c) 2015 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -32,6 +32,8 @@
 #import "BlueSTSDKManager_prv.h"
 #import "BlueSTSDKNode_prv.h"
 #import "BlueSTSDKNodeFake.h"
+
+#define RETRAY_START_SCANNING_DELAY (0.5) //half second
 
 @interface BlueSTSDKManager()<CBCentralManagerDelegate>
 @end
@@ -107,11 +109,20 @@
     [self discoveryStart:-1];
 }//discoveryStart
 
+-(void)discoveryStartObj:(NSNumber*)timeoutMs{
+    [self discoveryStart:timeoutMs.intValue];
+}
+
 -(void) discoveryStart:(int)timeoutMs{
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
                              [NSNumber numberWithBool:YES],
                              CBCentralManagerScanOptionAllowDuplicatesKey, nil];
-    
+    if(mCBCentralManager.state!=CBCentralManagerStatePoweredOn){
+        [self performSelector:@selector(discoveryStartObj:)
+                   withObject:[NSNumber numberWithInt:timeoutMs]
+                   afterDelay:RETRAY_START_SCANNING_DELAY];
+        return;
+    }
     [mCBCentralManager scanForPeripheralsWithServices:nil options:options];
     [self changeDiscoveryStatus:true];
     NSTimeInterval delay = -1.0f;
@@ -127,7 +138,13 @@
 }//discoveryStart
 
 -(void) discoveryStop{
+    if(mCBCentralManager.state!=CBCentralManagerStatePoweredOn)
+        return;
     [mCBCentralManager stopScan];
+    //remove perfom selector if we stop the discovery before the timeout
+    [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                             selector:@selector(discoveryStop)
+                                               object:nil];
     [self changeDiscoveryStatus:false];
 }
 
@@ -285,10 +302,14 @@
 #pragma mark - BlueSTSDKManager(prv)
 
 -(void)connect:(CBPeripheral*)peripheral{
+    if(mCBCentralManager.state!=CBCentralManagerStatePoweredOn)
+        return;
     [mCBCentralManager connectPeripheral:peripheral options:nil];
 }//connect
 
 -(void)disconnect:(CBPeripheral*)peripheral{
+    if(mCBCentralManager.state!=CBCentralManagerStatePoweredOn)
+        return;
     [mCBCentralManager cancelPeripheralConnection:peripheral];
 }//disconnect
 

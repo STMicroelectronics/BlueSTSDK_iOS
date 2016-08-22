@@ -53,7 +53,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  * we will automatically enable the notification for the out/error message
  * for disable the notification set it to nil
  */
-@property (nonatomic,weak,setter=setDelegate:,getter=getDelegate) id<BlueSTSDKDebugOutputDelegate> delegate;
+@property (nonatomic,retain,setter=setDelegate:,getter=getDelegate) id<BlueSTSDKDebugOutputDelegate> delegate;
 
 /**
  *  create a debug console
@@ -70,14 +70,28 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
           errChart:(CBCharacteristic*)errChar;
 
 /**
- *  send a message to the debug console, the message longher than the maximun size will
- * be splitted in several ble packages
+ *  send a message to the debug console, the message longer than the maximum size will
+ * be splited in several ble packages
  *
- *  @param msg message to write in the node debug console
+ *  @param msg message to write in the node debug console, the string will be converted in raw data using the utf8 encoding
  *  @return number of byte send
  */
 -(NSUInteger) writeMessage:(NSString*)msg;
 
+/**
+ *  send a message to the debug console, the message longer than the maximum size will
+ * be splited in several ble packages
+ *
+ *  @param data message to write in the node debug console
+ *  @return number of byte send
+ */
+-(NSUInteger) writeMessageData:(NSData*)data;
+
+/**
+ * send a message to the debug console, without reuqesti the ack and without
+ * using queue for spliting the message in multiple packages.
+ */
+- (BOOL)writeMessageDataFast:(NSData *)data ;
 @end
 
 /** Protocol used for notify an console update */

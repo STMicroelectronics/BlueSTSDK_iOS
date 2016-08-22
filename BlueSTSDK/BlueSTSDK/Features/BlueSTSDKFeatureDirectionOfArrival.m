@@ -48,13 +48,11 @@ static NSArray *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureDirectionOfArrival class]){
-        sFieldDesc = [[NSArray alloc] initWithObjects:
-                      [BlueSTSDKFeatureField  createWithName: FEATURE_NAME
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
                                                         unit:FEATURE_UNIT
                                                         type:FEATURE_TYPE
                                                          min:@FEATURE_MIN
-                                                         max:@FEATURE_MAX ],
-                      nil];
+                                                         max:@FEATURE_MAX]];
     }//if
 }//initialize
 
@@ -98,7 +96,7 @@ static NSArray *sFieldDesc;
     
     uint16_t angle= [rawData extractLeUInt16FromOffset:offset];
     
-    NSArray *data = [NSArray arrayWithObject:[NSNumber numberWithUnsignedShort:angle]];
+    NSArray *data = @[@(angle)];
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:2];
 }
