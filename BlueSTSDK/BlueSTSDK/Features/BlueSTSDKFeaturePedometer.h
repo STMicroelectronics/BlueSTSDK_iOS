@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeaturePedometer_h
+#define BlueSTSDK_BlueSTSDKFeaturePedometer_h
+
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -54,3 +58,5 @@
 +(uint16_t)getFrequency:(BlueSTSDKFeatureSample*)sample;
 
 @end
+
+#endif

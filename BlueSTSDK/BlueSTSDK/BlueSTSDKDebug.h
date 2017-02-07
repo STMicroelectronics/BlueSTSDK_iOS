@@ -25,8 +25,8 @@
  *
  ******************************************************************************/
 
-#ifndef W2STApp_BlueSTSDKDebug_h
-#define W2STApp_BlueSTSDKDebug_h
+#ifndef BlueSTSDK_BlueSTSDKDebug_h
+#define BlueSTSDK_BlueSTSDKDebug_h
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CBPeripheral.h>
@@ -53,7 +53,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  * we will automatically enable the notification for the out/error message
  * for disable the notification set it to nil
  */
-@property (nonatomic,retain,setter=setDelegate:,getter=getDelegate) id<BlueSTSDKDebugOutputDelegate> delegate;
+@property (nonatomic,retain,setter=setDelegate:,getter=getDelegate) id<BlueSTSDKDebugOutputDelegate> delegate DEPRECATED_ATTRIBUTE;
 
 /**
  *  create a debug console
@@ -68,6 +68,9 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(instancetype) initWithNode:(BlueSTSDKNode *)node periph:(CBPeripheral *)periph
          termChart:(CBCharacteristic*)termChar
           errChart:(CBCharacteristic*)errChar;
+
+-(void) addDebugOutputDelegate:(id<BlueSTSDKDebugOutputDelegate>)delegate;
+-(void) removeDebugOutputDelegate:(id<BlueSTSDKDebugOutputDelegate>)delegate;
 
 /**
  *  send a message to the debug console, the message longer than the maximum size will

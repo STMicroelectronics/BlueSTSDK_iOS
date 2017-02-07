@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureProximityGesture_h
+#define BlueSTSDK_BlueSTSDKFeatureProximityGesture_h
+
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -71,3 +75,5 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureProximityGestureType){
 +(BlueSTSDKFeatureProximityGestureType)getGestureType:(BlueSTSDKFeatureSample*)sample;
 
 @end
+
+#endif

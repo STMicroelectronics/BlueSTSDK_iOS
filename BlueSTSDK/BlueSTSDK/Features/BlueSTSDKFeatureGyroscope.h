@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureGyroscope_h
+#define BlueSTSDK_BlueSTSDKFeatureGyroscope_h
+
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -65,3 +69,5 @@
 
 
 @end
+
+#endif

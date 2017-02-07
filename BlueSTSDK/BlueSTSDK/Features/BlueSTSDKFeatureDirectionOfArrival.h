@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureDirectionOfArrival_h
+#define BlueSTSDK_BlueSTSDKFeatureDirectionOfArrival_h
+
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -44,3 +48,5 @@
 +(uint16_t)getAudioSourceAngle:(BlueSTSDKFeatureSample*)data;
 
 @end
+
+#endif

@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureAccelerometerEvent_h
+#define BlueSTSDK_BlueSTSDKFeatureAccelerometerEvent_h
+
 #import "BlueSTSDKFeature.h"
 
 @protocol BlueSTSDKFeatureAccelerationEnableTypeDelegate;
@@ -43,6 +46,7 @@
  */
 typedef NS_ENUM(NSInteger, BlueSTSDKFeatureAccelerometerEventType){
 
+    BlueSTSDKFeatureAccelerometerNoEvent=0x00,
     BlueSTSDKFeatureAccelerometerOrientationTopRight =0x01,
     BlueSTSDKFeatureAccelerometerOrientationBottomRight =0x02,
     BlueSTSDKFeatureAccelerometerOrientationBottomLeft =0x03,
@@ -55,13 +59,13 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureAccelerometerEventType){
     BlueSTSDKFeatureAccelerometerDoubleTap =0x40,
     BlueSTSDKFeatureAccelerometerWakeUp =0x80,
     BlueSTSDKFeatureAccelerometerPedometer =0x100,
-    BlueSTSDKFeatureAccelerometerNoEvent,
     BlueSTSDKFeatureAccelerometerError
 };
 
 typedef NS_ENUM(char, BlueSTSDKFeatureAccelerationDetectableEventType){
     
     BlueSTSDKFeatureEventTypeOrientation='o',
+    BlueSTSDKFeatureEventTypeMultiple='m',
     BlueSTSDKFeatureEventTypeFreeFall='f',
     BlueSTSDKFeatureEventTypeSingleTap='s',
     BlueSTSDKFeatureEventTypeDoubleTap='d',
@@ -129,6 +133,11 @@ typedef NS_ENUM(char, BlueSTSDKFeatureAccelerationDetectableEventType){
 +(BlueSTSDKFeatureAccelerometerEventType)getAccelerationEvent:(BlueSTSDKFeatureSample*)sample;
 
 /**
+ * extract the oritation event from a generic acceleration event
+ */
++(BlueSTSDKFeatureAccelerometerEventType)extractOrientationEvent:(BlueSTSDKFeatureAccelerometerEventType)event;
+
+/**
  * if you are running the pedometer, you get the number of detected steps otherwise
  * a negative number
  * @param sample sample read form the node
@@ -157,3 +166,5 @@ typedef NS_ENUM(char, BlueSTSDKFeatureAccelerationDetectableEventType){
 
 
 @end
+
+#endif

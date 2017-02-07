@@ -28,7 +28,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
-#include "Util/BlueSTSDKBleNodeDefines.h"
+#import "Util/BlueSTSDKBleNodeDefines.h"
 #import "BlueSTSDKManager_prv.h"
 #import "BlueSTSDKNode_prv.h"
 #import "BlueSTSDKNodeFake.h"

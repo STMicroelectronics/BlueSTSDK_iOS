@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeaturePressure_h
+#define BlueSTSDK_BlueSTSDKFeaturePressure_h
+
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -42,5 +46,6 @@
  */
 +(float)getPressure:(BlueSTSDKFeatureSample*)data;
 
-
 @end
+
+#endif

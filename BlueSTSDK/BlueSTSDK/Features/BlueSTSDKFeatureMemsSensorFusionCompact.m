@@ -47,7 +47,7 @@
  * @memberof BlueSTSDKFeatureMemsSensorFusionCompact
  *  array with the description of field exported by the feature
  */
-static NSArray *sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 
 @implementation BlueSTSDKFeatureMemsSensorFusionCompact{
@@ -115,7 +115,7 @@ static NSArray *sFieldDesc;
     return[sample.data[3] floatValue];
 }
 
--(NSArray*) getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
     return sFieldDesc;
 }
 

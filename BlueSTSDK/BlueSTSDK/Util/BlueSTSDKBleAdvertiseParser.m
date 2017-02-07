@@ -41,6 +41,8 @@
 #define NODE_ID_SENSOR_TILE 0x02
 #define NODE_ID_BLUE_COIN 0x03
 #define NODE_ID_NUCLEO_BIT 0x80
+#define NODE_ID_IS_SLEEPING_BIT 0x40
+#define NODE_ID_HAS_EXTENSION_BIT 0x20
 
 #define ADVERTISE_SIZE_COMPACT 6
 #define ADVERTISE_SIZE_FULL 12
@@ -52,8 +54,29 @@
 #define ADVERTISE_FIELD_POS_ADDRESS 6
 
 #define ADVERTISE_FIELD_SIZE_ADDRESS 6
-@implementation BlueSTSDKBleAdvertiseParser
 
+static uint8_t extractNodeType(uint8_t type){
+    if(type & NODE_ID_NUCLEO_BIT)
+        return type;
+    else
+        return type &(0x1F);
+}
+
+static BOOL extractIsSleepingBit(uint8_t type){
+    if(type & NODE_ID_NUCLEO_BIT)
+        return false;
+    else
+        return (type & NODE_ID_IS_SLEEPING_BIT)!=0;
+}
+
+static BOOL extractHasExtensionBit(uint8_t type){
+    if(type & NODE_ID_NUCLEO_BIT)
+        return false;
+    else
+        return (type & NODE_ID_HAS_EXTENSION_BIT)!=0;
+}
+
+@implementation BlueSTSDKBleAdvertiseParser
 
 /**
  *  convert an uint8_t into a BlueSTSDKNodeType value
@@ -119,7 +142,11 @@
                         PROTOCOL_VERSION_CURRENT_MIN, PROTOCOL_VERSION_CURRENT]
                 userInfo:nil];
     
-    _nodeId = [rawData extractUInt8FromOffset:ADVERTISE_FIELD_POS_NODE_ID];
+    uint8_t typeId =[rawData extractUInt8FromOffset:ADVERTISE_FIELD_POS_NODE_ID];
+    _nodeId = extractNodeType(typeId);
+    _isSleeping = extractIsSleepingBit(typeId);
+    _hasExtension = extractHasExtensionBit(typeId);
+    
     _nodeType = [self getNodeType: _nodeId];
     _featureMap = [rawData extractBeUInt32FromOffset:ADVERTISE_FIELD_POS_FEATURE_MAP];
     

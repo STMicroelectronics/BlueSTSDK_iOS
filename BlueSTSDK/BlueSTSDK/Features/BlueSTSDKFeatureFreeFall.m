@@ -41,7 +41,7 @@
  * @memberof BlueSTSDKFeatureFreeFall
  *  array with the description of field exported by the feature
  */
-static NSArray *sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 @implementation BlueSTSDKFeatureFreeFall
 
@@ -67,7 +67,7 @@ static NSArray *sFieldDesc;
     return self;
 }
 
--(NSArray*) getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
     return sFieldDesc;
 }
 

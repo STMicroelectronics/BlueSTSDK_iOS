@@ -117,6 +117,11 @@ static NSInteger nodeFakeCount = 0;
                           [[BlueSTSDKRemoteFeaturePressure alloc]initWhitNode:self],
                           [[BlueSTSDKRemoteFeatureTemperature alloc]initWhitNode:self],
                           [[BlueSTSDKRemoteFeatureHumidity alloc]initWhitNode:self]];
+    
+    for(BlueSTSDKFeature *f in availableFeatures ){
+        [f setEnabled:true];
+    }
+    
     notifyFeatures = [NSMutableDictionary dictionary];
     return self;
 }//init

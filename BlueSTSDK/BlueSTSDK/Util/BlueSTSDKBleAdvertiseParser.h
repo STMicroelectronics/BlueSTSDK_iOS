@@ -28,8 +28,8 @@
 #ifndef BlueSTSDK_BleAdvertiseParser_h
 #define BlueSTSDK_BleAdvertiseParser_h
 
-#include "BlueSTSDKBleNodeDefines.h"
-#include "../BlueSTSDKNode.h"
+#import "BlueSTSDKBleNodeDefines.h"
+#import "../BlueSTSDKNode.h"
 
 /**
  *  Class that parse the ble advertise package
@@ -70,6 +70,17 @@
  *  address, can be nil if not present in the advertise
  */
 @property (readonly) NSString *address;
+
+/**
+ * true if the board is in sleeping state
+ */
+@property (readonly) BOOL isSleeping;
+
+/**
+ * true if the board has some special extension
+ */
+@property (readonly) BOOL hasExtension;
+
 
 /**
  * parse the advertise data returned by the system

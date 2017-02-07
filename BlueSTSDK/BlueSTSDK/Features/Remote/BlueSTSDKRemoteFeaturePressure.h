@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKRemoteFeaturePressure_h
+#define BlueSTSDK_BlueSTSDKRemoteFeaturePressure_h
+
+
 #import <BlueSTSDK/BlueSTSDKFeaturePressure.h>
 
 /**
@@ -37,3 +41,5 @@
 +(int)getNodeId:(BlueSTSDKFeatureSample*)sample;
 
 @end
+
+#endif

@@ -36,6 +36,14 @@
  */
 static dispatch_queue_t sNotificationQueue;
 
+@interface BlueSTSDKDebug ()
+/**
+ *  set of delegate where notify the feature update
+ */
+@property(readonly,atomic,retain) NSMutableSet<id<BlueSTSDKDebugOutputDelegate>> *consoleDelegates;
+
+@end
+
 @implementation BlueSTSDKDebug{
     /**
      *  peripheral that will send the information
@@ -59,6 +67,7 @@ static dispatch_queue_t sNotificationQueue;
     NSMutableArray<NSData*> *mWriteMessageQueue;
     
     NSData *mLastFastSendMsg;
+    
 }
 
 -(instancetype) initWithNode:(BlueSTSDKNode *)node periph:(CBPeripheral *)periph
@@ -71,11 +80,36 @@ static dispatch_queue_t sNotificationQueue;
         sNotificationQueue = dispatch_queue_create("BlueSTSDKDebug", DISPATCH_QUEUE_SERIAL);
     });
     _parentNode=node;
+    _consoleDelegates = [NSMutableSet set];
     mTermChar=termChar;
     mErrChar=errChar;
     mPeriph=periph;
     mWriteMessageQueue = [NSMutableArray<NSData*> array];
     return self;
+}
+
+-(void) addDebugOutputDelegate:(id<BlueSTSDKDebugOutputDelegate>)delegate{
+    if(delegate==nil)
+        return;
+    @synchronized(_consoleDelegates){
+        [_consoleDelegates addObject:delegate];
+        if(_consoleDelegates.count==1){
+            [mPeriph setNotifyValue:true forCharacteristic:mTermChar];
+            [mPeriph setNotifyValue:true forCharacteristic:mErrChar];
+        }
+    }
+}
+-(void) removeDebugOutputDelegate:(id<BlueSTSDKDebugOutputDelegate>)delegate{
+    if(delegate==nil)
+        return;
+    @synchronized(_consoleDelegates){
+        [_consoleDelegates removeObject:delegate];
+        if(_consoleDelegates.count==0){
+            [mPeriph setNotifyValue:false forCharacteristic:mTermChar];
+            [mPeriph setNotifyValue:false forCharacteristic:mErrChar];
+        }
+    }
+    
 }
 
 -(void)sendFirstMessage{
@@ -118,16 +152,21 @@ static dispatch_queue_t sNotificationQueue;
     NSString *sentMsgStr = [NSString stringWithUTF8String:[data bytes]];
     if(_parentNode.state==BlueSTSDKNodeStateConnected) {
         [mPeriph writeValue:data forCharacteristic:mTermChar type:CBCharacteristicWriteWithoutResponse];
-
-        dispatch_async(sNotificationQueue, ^{
-            [_delegate debug:self didStdInSend:sentMsgStr error:nil];
-        });
+        @synchronized (_consoleDelegates) {
+            for(id<BlueSTSDKDebugOutputDelegate> delegate in _consoleDelegates){
+                dispatch_async(sNotificationQueue, ^{
+                    [delegate debug:self didStdInSend:sentMsgStr error:nil];
+                });
+            }//for
+        }//sync
         return true;
     } else{
         return false;
     }
 }
 
+
+///////////////////DEPRECATED///////////////////////////////////////////////////
 @synthesize delegate = _delegate;
 
 -(id<BlueSTSDKDebugOutputDelegate>) getDelegate{
@@ -147,16 +186,20 @@ static dispatch_queue_t sNotificationQueue;
     @synchronized(self){
         _delegate=delegate;
         BOOL enable = delegate!=nil; //enable if !=nil, disable if ==nil
-        [mPeriph setNotifyValue:enable forCharacteristic:mTermChar];
-        [mPeriph setNotifyValue:enable forCharacteristic:mErrChar];
+        if(enable)
+           [self addDebugOutputDelegate:delegate];
+        else
+           [self removeDebugOutputDelegate:delegate];
     }//setDelegate
 }
+
+///////////////////END DEPRECATED///////////////////////////////////////////////
 
 #pragma mark - BlueSTSDKDebug(Prv)
 
 -(void)receiveCharacteristicsWriteUpdate:(CBCharacteristic*)termChar
                                    error:(NSError *)error{
-    if(self.delegate == nil)
+    if(_consoleDelegates.count == 0)
         return;
     //if the write comes from an our characteristics
     if([termChar.UUID isEqual:BlueSTSDKServiceDebug.termUuid]){
@@ -177,28 +220,38 @@ static dispatch_queue_t sNotificationQueue;
             return;
          
         NSString *sentMsgStr = [NSString stringWithUTF8String:[sentMsg bytes]];
-        dispatch_async(sNotificationQueue,^{
-            [_delegate debug:self didStdInSend:sentMsgStr error:error];
-        });
-
-
-
+        if(_consoleDelegates.count==0)
+            return;
+        @synchronized (_consoleDelegates) {
+            for(id<BlueSTSDKDebugOutputDelegate> delegate in _consoleDelegates){
+                dispatch_async(sNotificationQueue,^{
+                    [delegate debug:self didStdInSend:sentMsgStr error:error];
+                });
+            }//for
+        }//sync
     }
 }
 
 -(void)receiveCharacteristicsUpdate:(CBCharacteristic*)termChar{
-    if(self.delegate == nil)
+    if(_consoleDelegates.count==0)
         return;
     NSString *temp = [[NSString alloc]initWithData:termChar.value encoding:NSISOLatin1StringEncoding];
     if([termChar.UUID isEqual:BlueSTSDKServiceDebug.termUuid]){
-        dispatch_async(sNotificationQueue,^{
-            [self.delegate debug:self didStdOutReceived: temp];
-        });
-        
+        @synchronized (_consoleDelegates) {
+            for(id<BlueSTSDKDebugOutputDelegate> delegate in _consoleDelegates){
+                dispatch_async(sNotificationQueue,^{
+                    [delegate debug:self didStdOutReceived: temp];
+                });
+            }//for
+        }//sync
     }else if([termChar.UUID isEqual:BlueSTSDKServiceDebug.stdErrUuid]){
-        dispatch_async(sNotificationQueue,^{
-            [self.delegate debug:self didStdErrReceived: temp];
-        });
-    }
+        @synchronized (_consoleDelegates) {
+            for(id<BlueSTSDKDebugOutputDelegate> delegate in _consoleDelegates){
+                dispatch_async(sNotificationQueue,^{
+                    [delegate debug:self didStdErrReceived: temp];
+                });
+            }//for
+        }//sync
+    }//if-else
 }
 @end

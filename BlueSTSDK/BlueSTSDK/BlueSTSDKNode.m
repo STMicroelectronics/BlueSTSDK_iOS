@@ -56,6 +56,8 @@ static dispatch_queue_t sNotificationQueue;
      * functionality is not present
      */
     CBCharacteristic *mFeatureCommand;
+    BOOL mFeatureCommandNotifyEnable;
+    NSMutableArray <NSData*>* mCommandQueue;
     
     /**
      *  remote ble peripheral
@@ -183,6 +185,7 @@ static dispatch_queue_t sNotificationQueue;
     mAskForNotification = [NSMutableSet set];
     mExternalCharFeature = [NSMutableDictionary dictionary];
     mFeatureCommand=nil;
+    mFeatureCommandNotifyEnable=false;
     _debugConsole=nil;
     _configControl=nil;
     _state=BlueSTSDKNodeStateIdle;
@@ -208,6 +211,8 @@ static dispatch_queue_t sNotificationQueue;
     _name = parser.name;
     _address = parser.address;
     _protocolVersion = parser.protocolVersion;
+    _hasExtension = parser.hasExtension;
+    _isSleeping = parser.isSleeping;
     
     [self updateTxPower: parser.txPower];
     
@@ -219,6 +224,7 @@ static dispatch_queue_t sNotificationQueue;
 -(NSString *) friendlyName {
     return [self friendlyName:NO];
 }
+
 
 /**
  * get the tag or the address and strip ':' or '-'
@@ -526,10 +532,23 @@ static dispatch_queue_t sNotificationQueue;
     return msg;
 }//prepareMessageWithMask
 
++(CBCharacteristicWriteType) getWriteTypeForChar:(CBCharacteristic*)characteristic{
+    
+    if(characteristic.properties & CBCharacteristicPropertyWrite)
+        return CBCharacteristicWriteWithResponse;
+    else
+        return CBCharacteristicWriteWithoutResponse;
+    
+}
 
 -(BOOL)sendCommandMessageToFeature:(BlueSTSDKFeature*)feature type:(uint8_t)commandType
                      data:(NSData*) commandData{
    
+    //the general purpose feature can not receive command
+    if([feature isKindOfClass:BlueSTSDKFeatureGenPurpose.class]){
+        return false;
+    }//if
+    
     //find the characteristic link with the feature
     CBCharacteristic *featureChar = [BlueSTSDKCharacteristic
                                      getCharFromFeature:feature in:mCharFeatureMap];
@@ -541,22 +560,23 @@ static dispatch_queue_t sNotificationQueue;
         return false;
     }//if
     
-    //the general purpose feature can not receive command
-    if([feature isKindOfClass:BlueSTSDKFeatureGenPurpose.class])
-        return false;
+    if(writeTo==mFeatureCommand && mFeatureCommandNotifyEnable==false){
+        [mPeripheral setNotifyValue:YES forCharacteristic:mFeatureCommand];
+    }
     
+    CBCharacteristicWriteType writeType = [BlueSTSDKNode getWriteTypeForChar:writeTo];
     //extract the feature bit mask
     featureMask_t featureMask = [BlueSTSDKFeatureCharacteristics extractFeatureMask:featureChar.UUID];
     
     //compose the message
     NSData *msg = [BlueSTSDKNode prepareMessageWithMask:featureMask type:commandType data:commandData];
     if(writeTo==mFeatureCommand)
-        [mPeripheral writeValue:msg forCharacteristic:writeTo type:CBCharacteristicWriteWithoutResponse];
+        [mPeripheral writeValue:msg forCharacteristic:writeTo type:writeType];
     else{ //write directly on the feature, we don't send the feature mask
         [mPeripheral writeValue:[msg subdataWithRange:NSMakeRange(sizeof(featureMask_t),
                                                                   msg.length-sizeof(featureMask_t))]
               forCharacteristic:writeTo
-                           type:CBCharacteristicWriteWithoutResponse];
+                           type:writeType];
     }
     return true;
 }//sendCommandMessageToFeature
@@ -569,7 +589,9 @@ static dispatch_queue_t sNotificationQueue;
     if(![BlueSTSDKNode charCanBeWrite:featureChar]){
         return false;
     }
-    [mPeripheral writeValue:data forCharacteristic:featureChar type:CBCharacteristicWriteWithoutResponse];
+    
+    CBCharacteristicWriteType writeType = [BlueSTSDKNode getWriteTypeForChar:featureChar];
+    [mPeripheral writeValue:data forCharacteristic:featureChar type:writeType];
     return true;
 }//writeDataToFeature
 
@@ -764,9 +786,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
     [mCharDiscoverServiceReq removeObject:service];
     if(mCharDiscoverServiceReq.count == 0){
         if(mFeatureCommand!=nil){
-            @synchronized(mAskForNotification){
-                [mAskForNotification addObject:mFeatureCommand.UUID];
-            }
+            mFeatureCommandNotifyEnable=false;
            [mPeripheral setNotifyValue:YES forCharacteristic:mFeatureCommand];
         }
         [self updateNodeStatus:BlueSTSDKNodeStateConnected];
@@ -905,11 +925,13 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
               characteristic.UUID.UUIDString,error.localizedDescription);
         [self updateNodeStatus:BlueSTSDKNodeStateLost];
     }else{
-        @synchronized(mAskForNotification){
-            [mAskForNotification containsObject:characteristic.UUID];
-        }//syncronized
+        if(characteristic==mFeatureCommand){
+            mFeatureCommandNotifyEnable=true;
+            return;
+        }
         dispatch_time_t when = dispatch_time(DISPATCH_TIME_NOW,
                 (int64_t)(RETRAY_ENABLE_NOTIFICATION_DELAY) * NSEC_PER_SEC);
+
         //we reuse the queue for the notification
         dispatch_after(when, sNotificationQueue, ^{
             @synchronized(mAskForNotification){

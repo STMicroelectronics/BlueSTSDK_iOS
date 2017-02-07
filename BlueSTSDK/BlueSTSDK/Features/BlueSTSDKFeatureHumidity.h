@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureHumidity_h
+#define BlueSTSDK_BlueSTSDKFeatureHumidity_h
+
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -45,3 +49,5 @@
 +(float)getHumidity:(BlueSTSDKFeatureSample*)data;
 
 @end
+
+#endif

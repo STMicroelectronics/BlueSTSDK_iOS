@@ -28,7 +28,7 @@
 #ifndef BlueSTSDK_BlueSTSDKFeature_prv_h
 #define BlueSTSDK_BlueSTSDKFeature_prv_h
 
-#include "BlueSTSDKFeature_pro.h"
+#import "BlueSTSDKFeature_pro.h"
 
 /**
  * This interface contains the protected and packages method that can be used

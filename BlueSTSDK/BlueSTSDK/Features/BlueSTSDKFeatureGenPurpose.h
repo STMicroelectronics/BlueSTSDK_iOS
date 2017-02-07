@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureGenPurpose_h
+#define BlueSTSDK_BlueSTSDKFeatureGenPurpose_h
+
+
 #import <CoreBluetooth/CBCharacteristic.h>
 #import "BlueSTSDKFeature.h"
 
@@ -61,6 +65,6 @@
 -(instancetype)initWhitNode:(BlueSTSDKNode *)node
             characteristics:(CBCharacteristic*)c;
 
-
-
 @end
+
+#endif

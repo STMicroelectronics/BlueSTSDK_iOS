@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureAcceleration_h
+#define BlueSTSDK_BlueSTSDKFeatureAcceleration_h
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -63,3 +66,4 @@
 +(float)getAccZ:(BlueSTSDKFeatureSample*)data;
 
 @end
+#endif

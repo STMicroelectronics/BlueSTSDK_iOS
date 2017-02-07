@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureMicLevel_h
+#define BlueSTSDK_BlueSTSDKFeatureMicLevel_h
+
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -46,3 +50,5 @@
 +(int8_t) getMicLevel:(BlueSTSDKFeatureSample*)data micId:(uint8_t)micId;
 
 @end
+
+#endif

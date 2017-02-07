@@ -25,7 +25,7 @@
  *
  ******************************************************************************/
 
-#include <math.h>
+#import <math.h>
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureHumidity.h"
 #import "BlueSTSDKFeatureField.h"
@@ -42,7 +42,7 @@
  * @memberof BlueSTSDKFeatureHumidity
  *  array with the description of field exported by the feature
  */
-static NSArray *sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*>*sFieldDesc;
 
 @implementation BlueSTSDKFeatureHumidity
 
@@ -69,7 +69,7 @@ static NSArray *sFieldDesc;
     return self;
 }
 
--(NSArray*) getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
     return sFieldDesc;
 }
 

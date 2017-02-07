@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureMemsGesture_h
+#define BlueSTSDK_BlueSTSDKFeatureMemsGesture_h
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -70,3 +73,5 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureMemsGestureType){
 +(BlueSTSDKFeatureMemsGestureType)getGestureType:(BlueSTSDKFeatureSample*)sample;
 
 @end
+
+#endif

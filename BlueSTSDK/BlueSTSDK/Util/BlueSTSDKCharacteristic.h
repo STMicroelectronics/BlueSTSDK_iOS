@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKCharacteristic_h
+#define BlueSTSDK_BlueSTSDKCharacteristic_h
+
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
@@ -81,3 +84,5 @@
 +(CBCharacteristic*) getCharFromFeature:(BlueSTSDKFeature*)feature
                                      in:(NSArray*)CharFeatureArray;
 @end
+
+#endif

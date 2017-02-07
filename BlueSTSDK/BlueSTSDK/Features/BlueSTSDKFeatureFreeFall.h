@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureFreeFall_h
+#define BlueSTSDK_BlueSTSDKFeatureFreeFall_h
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -42,3 +45,4 @@
 
 
 @end
+#endif

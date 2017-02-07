@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureCarryPosition_h
+#define BlueSTSDK_BlueSTSDKFeatureCarryPosition_h
+
 #import <Foundation/Foundation.h>
 #import "BlueSTSDKFeature.h"
 #import "BlueSTSDKFeatureField.h"
@@ -104,4 +107,5 @@
                                   dataOffset:(uint32_t)offset;
 @end
 
+#endif
 

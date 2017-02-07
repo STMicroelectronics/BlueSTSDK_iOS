@@ -24,7 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-#include <math.h>
+#import <math.h>
 
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureGyroscope.h"
@@ -42,7 +42,7 @@
  * @memberof BlueSTSDKFeatureGyroscope
  *  array with the description of field exported by the feature
  */
-static NSArray *sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*>*sFieldDesc;
 
 @implementation BlueSTSDKFeatureGyroscope
 
@@ -90,7 +90,7 @@ static NSArray *sFieldDesc;
     return self;
 }
 
--(NSArray*) getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
     return sFieldDesc;
 }
 

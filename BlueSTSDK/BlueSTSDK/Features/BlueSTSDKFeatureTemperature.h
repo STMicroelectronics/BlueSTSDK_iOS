@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureTemperature_h
+#define BlueSTSDK_BlueSTSDKFeatureTemperature_h
+
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -43,3 +47,5 @@
 +(float)getTemperature:(BlueSTSDKFeatureSample*)data;
 
 @end
+
+#endif

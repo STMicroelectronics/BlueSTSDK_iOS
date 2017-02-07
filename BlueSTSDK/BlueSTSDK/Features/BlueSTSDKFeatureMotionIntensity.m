@@ -1,5 +1,5 @@
 /*******************************************************************************
- * COPYRIGHT(c) 2015 STMicroelectronics
+ * COPYRIGHT(c) 2016 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -26,43 +26,38 @@
  ******************************************************************************/
 
 #import "BlueSTSDKFeature_prv.h"
-#import "BlueSTSDKFeaturePressure.h"
-
+#import "BlueSTSDKFeatureMotionIntensity.h"
 #import "BlueSTSDKFeatureField.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Pressure"
-#define FEATURE_UNIT @"mBar"
-#define FEATURE_MIN 900
-#define FEATURE_MAX 1100
-#define FEATURE_TYPE BlueSTSDKFeatureFieldTypeFloat
+#define FEATURE_NAME @"Motion Intensity"
+#define FEATURE_UNIT @"Intensity"
+#define FEATURE_MIN 0
+#define FEATURE_MAX 10
+#define FEATURE_TYPE BlueSTSDKFeatureFieldTypeUInt8
 
-/**
- * @memberof BlueSTSDKFeaturePressure
- *  array with the description of field exported by the feature
- */
 static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
-@implementation BlueSTSDKFeaturePressure
+@implementation BlueSTSDKFeatureMotionIntensity
 
 +(void)initialize{
-    if(self == [BlueSTSDKFeaturePressure class]){
+    if(self == [BlueSTSDKFeatureMotionIntensity class]){
         sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
                                                         unit:FEATURE_UNIT
                                                         type:FEATURE_TYPE
                                                          min:@FEATURE_MIN
                                                          max:@FEATURE_MAX]];
     }//if
-}//initialize
-
-
-+(float)getPressure:(BlueSTSDKFeatureSample *)sample{
-    if(sample.data.count==0)
-        return NAN;
-    return[[sample.data objectAtIndex:0] floatValue];
+    
 }
 
+
++(uint8_t)getMotionIntensity:(BlueSTSDKFeatureSample *)sample{
+    if(sample.data.count==0)
+        return NAN;
+    return[[sample.data objectAtIndex:0] unsignedCharValue];
+}
 
 -(instancetype) initWhitNode:(BlueSTSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
@@ -74,46 +69,39 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 }
 
 
-/**
- *  read int32 for build the pressure value, create the new sample and
- * and notify it to the delegate
- *
- *  @param timestamp data time stamp
- *  @param rawData   array of byte send by the node
- *  @param offset    offset where we have to start reading the data
- *
- *  @throw exception if there are no 4 bytes available in the rawdata array
- *  @return pressure information + number of read bytes (4)
- */
 -(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
-    if(rawData.length-offset < 4){
+    if(rawData.length-offset < 1){
         @throw [NSException
-                exceptionWithName:@"Invalid Pressure data"
-                reason:@"The feature need almost 4 byte for extract the data"
+                exceptionWithName:@"Invalid Motion Intensity data"
+                reason:@"The feature need almost 1 byte for extract the data"
                 userInfo:nil];
     }//if
+        
+    uint8_t motionId= [rawData extractUInt8FromOffset:offset];
     
-    int32_t press= [rawData extractLeInt32FromOffset:offset];
+    NSArray *data = @[@(motionId)];
     
-    NSArray *data = @[@(press / 100.0f)];
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
-    return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:4];
+    return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:1];
+    
 }
 
 @end
 
+
 #import "../BlueSTSDKFeature+fake.h"
 
-@implementation BlueSTSDKFeaturePressure (fake)
+@implementation BlueSTSDKFeatureMotionIntensity (fake)
 
 -(NSData*) generateFakeData{
-    NSMutableData *data = [NSMutableData dataWithCapacity:4];
+    NSMutableData *data = [NSMutableData dataWithCapacity:1];
     
-    int32_t temp = FEATURE_MIN*100 + rand()%((FEATURE_MAX-FEATURE_MIN)*100);
-    [data appendBytes:&temp length:4];
+    int8_t temp = FEATURE_MIN + rand()%((FEATURE_MAX-FEATURE_MIN));
+    [data appendBytes:&temp length:1];
     
     return data;
 }
 
 @end
+

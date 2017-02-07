@@ -39,7 +39,7 @@
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeUInt8
 
 @implementation BlueSTSDKFeatureMicLevel{
-    NSArray *mFieldDesc;
+    NSArray<BlueSTSDKFeatureField*> *mFieldDesc;
 }
 
 +(int8_t) getMicLevel:(BlueSTSDKFeatureSample*)sample micId:(uint8_t)micId{
@@ -61,7 +61,7 @@
     return self;
 }
 
--(NSArray*) getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
     return mFieldDesc;
 }
 

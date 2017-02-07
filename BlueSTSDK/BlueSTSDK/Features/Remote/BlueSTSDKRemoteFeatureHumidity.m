@@ -42,7 +42,7 @@
  * @memberof BlueSTSDKRemoteFeatureHumidity
  *  array with the description of field exported by the feature
  */
-static NSArray *sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 @interface BlueSTSDKRemoteFeatureHumidity ()<BlueSTSDKRemoteFeature>
 
@@ -76,7 +76,7 @@ static NSArray *sFieldDesc;
     return [self getNodeId:sample idPos:1];
 }
 
--(NSArray*) getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
     return sFieldDesc;
 }
 

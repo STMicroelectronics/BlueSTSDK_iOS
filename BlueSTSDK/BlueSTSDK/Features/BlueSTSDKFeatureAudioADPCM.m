@@ -38,7 +38,7 @@
 #define FEATURE_MAX INT16_MAX
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeInt16Array
 
-static NSArray *sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 @interface ADPCMEngine :NSObject
 
@@ -199,7 +199,7 @@ const static int8_t IndexTable[] = {-1,-1,-1,-1,2,4,6,8,-1,-1,-1,-1,2,4,6,8};
     return self;
 }
 
--(NSArray*) getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
     return sFieldDesc;
 }
 

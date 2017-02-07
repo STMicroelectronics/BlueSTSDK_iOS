@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureMagnetometer_h
+#define BlueSTSDK_BlueSTSDKFeatureMagnetometer_h
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -64,3 +67,5 @@
 +(float)getMagZ:(BlueSTSDKFeatureSample*)data;
 
 @end
+
+#endif

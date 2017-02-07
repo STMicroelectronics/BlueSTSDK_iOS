@@ -28,7 +28,7 @@
 #ifndef BlueSTSDK_BlueSTSDKFeature_pro_h
 #define BlueSTSDK_BlueSTSDKFeature_pro_h
 
-#include "BlueSTSDKFeature.h"
+#import "BlueSTSDKFeature.h"
 
 
 /**

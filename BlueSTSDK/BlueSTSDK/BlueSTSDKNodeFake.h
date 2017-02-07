@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+#ifndef BlueSTSDK_BlueSTSDKNode_fake_h
+#define BlueSTSDK_BlueSTSDKNode_fake_h
 
 #import <BlueSTSDK/BlueSTSDK.h>
 
@@ -54,3 +56,5 @@
  */
 -(instancetype)initWithName:(NSString *)name tag:(NSString *)tag address:(NSString *)address;
 @end
+
+#endif

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * COPYRIGHT(c) 2015 STMicroelectronics
+ * COPYRIGHT(c) 2016 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -25,37 +25,21 @@
  *
  ******************************************************************************/
 
-#ifndef BlueSTSDK_BlueSTSDKFeatureSwitch_h
-#define BlueSTSDK_BlueSTSDKFeatureSwitch_h
+#ifndef BlueSTSDK_BlueSTSDKFeatureCompass_h
+#define BlueSTSDK_BlueSTSDKFeatureCompass_h
 
 #import "BlueSTSDKFeature.h"
 
 /**
- *  Feature that contains a switch state
+ *  Feature that contains a compass data
  *
  * @author STMicroelectronics - Central Labs.
  */
-@interface BlueSTSDKFeatureSwitch : BlueSTSDKFeature
+@interface BlueSTSDKFeatureCompass : BlueSTSDKFeature
 
-/**
- * extract the switch status from a sample
- *
- *  @param data sample
- *
- *  @return 0 of the switch is off 1 is it is on
- */
-+(uint8_t) getSwitchStatus:(BlueSTSDKFeatureSample*)data;
 
-/**
- *  change the switch status
- *
- *  @param newStatus new switch status
- *
- *  @return true if the command is correctly send
- */
--(bool) setSwitchStatus:(uint8_t) newStatus;
-
++(float)getCompassAngle:(BlueSTSDKFeatureSample *)sample;
 
 @end
 
-#endif
+#endif //BlueSTSDK_BlueSTSDKFeatureCompass_h

@@ -28,9 +28,9 @@
 #ifndef BlueSTSDK_BlueSTSDKNode_prv_h
 #define BlueSTSDK_BlueSTSDKNode_prv_h
 
-#include <CoreBluetooth/CBPeripheral.h>
-#include <CoreBluetooth/CBCharacteristic.h>
-#include "BlueSTSDKNode_pro.h"
+#import <CoreBluetooth/CBPeripheral.h>
+#import <CoreBluetooth/CBCharacteristic.h>
+#import "BlueSTSDKNode_pro.h"
 
 /**
  * package method of the {@link BlueSTSDKNode} class

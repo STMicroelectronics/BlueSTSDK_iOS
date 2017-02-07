@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureActivity_h
+#define BlueSTSDK_BlueSTSDKFeatureActivity_h
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -90,3 +93,4 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureActivityType){
 +(NSDate*)getActivityDate:(BlueSTSDKFeatureSample*)sample;
 
 @end
+#endif

@@ -25,7 +25,7 @@
  *
  ******************************************************************************/
 
-#include <math.h>
+#import <math.h>
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureMagnetometer.h"
 #import "BlueSTSDKFeatureField.h"
@@ -43,7 +43,7 @@
  * @memberof BlueSTSDKFeatureMagnetometer
  *  array with the description of field exported by the feature
  */
-static NSArray *sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 @implementation BlueSTSDKFeatureMagnetometer
 
@@ -91,7 +91,7 @@ static NSArray *sFieldDesc;
     return self;
 }
 
--(NSArray*) getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
     return sFieldDesc;
 }
 

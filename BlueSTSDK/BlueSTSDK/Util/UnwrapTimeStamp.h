@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_UnwrapTimeStamp_h
+#define BlueSTSDK_UnwrapTimeStamp_h
+
 #import <Foundation/Foundation.h>
 
 /**
@@ -40,3 +43,5 @@
  */
 -(uint64_t) unwrap:(uint16_t)ts;
 @end
+
+#endif

@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKDeviceTimestampFeature_h
+#define BlueSTSDK_BlueSTSDKDeviceTimestampFeature_h
+
 
 #import <Foundation/Foundation.h>
 #import "BlueSTSDKFeature.h"
@@ -37,3 +40,5 @@
  */
 @interface BlueSTSDKDeviceTimestampFeature : BlueSTSDKFeature
 @end
+
+#endif

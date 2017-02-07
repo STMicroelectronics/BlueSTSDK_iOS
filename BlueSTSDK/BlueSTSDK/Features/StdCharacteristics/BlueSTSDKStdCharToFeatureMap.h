@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKStdCharToFeatureMap_h
+#define BlueSTSDK_BlueSTSDKStdCharToFeatureMap_h
+
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CBUUID.h>
 
@@ -41,3 +44,5 @@
  */
 +(NSDictionary<CBUUID*,NSArray<Class>* >*) getManageStdCharacteristics;
 @end
+
+#endif

@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+#ifndef BlueSTSDK_BlueSTSDKFeatureHeartRate_h
+#define BlueSTSDK_BlueSTSDKFeatureHeartRate_h
 
 #import <Foundation/Foundation.h>
 #import "BlueSTSDKDeviceTimestampFeature.h"
@@ -40,3 +42,5 @@
 +(float) getRRInterval:(BlueSTSDKFeatureSample *)sample;
 
 @end
+
+#endif

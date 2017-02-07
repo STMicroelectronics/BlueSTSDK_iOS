@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureAudioADPCMSync_h
+#define BlueSTSDK_BlueSTSDKFeatureAudioADPCMSync_h
+
+
 #import "BlueSTSDKFeature.h"
 #import "BlueSTSDKDeviceTimestampFeature.h"
 
@@ -40,3 +44,5 @@
 +(int16_t)getIndex:(BlueSTSDKFeatureSample *)sample;
 
 @end
+
+#endif

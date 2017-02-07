@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureAutoConfigurable_h
+#define BlueSTSDK_BlueSTSDKFeatureAutoConfigurable_h
+
+
 #import "BlueSTSDKFeature.h"
 
 @protocol BlueSTSDKFeatureAutoConfigurableDelegate;
@@ -116,3 +120,5 @@
 @optional -(void)didConfigurationFinished:(BlueSTSDKFeatureAutoConfigurable *)feature
                           status:(int32_t)status;
 @end
+
+#endif

@@ -30,12 +30,16 @@
 
 #import <Foundation/Foundation.h>
 #import "BlueSTSDKRegister.h"
+#import "BlueSTSDKCommand.h"
+#import "BluesTSDKFwVersion.h"
+#import "BlueSTSDKWeSUFeatureConfig.h"
 
-@interface BlueSTSDKRegisterDefines : NSObject
+
+@interface BlueSTSDKWeSURegisterDefines : NSObject
 
 /**
  * This enum contains the registers name */
-typedef NS_ENUM(NSInteger, BlueSTSDKRegisterName_e) {
+typedef NS_ENUM(NSInteger, BlueSTSDKWeSURegisterName_e) {
     BlueSTSDK_REGISTER_NAME_NONE,
     
     /*Mandatory registers*/
@@ -101,7 +105,10 @@ typedef NS_ENUM(NSInteger, BlueSTSDKRegisterName_e) {
     BlueSTSDK_REGISTER_NAME_GROUP_B_CALIBRATION_MAP,
     BlueSTSDK_REGISTER_NAME_GROUP_A_FEATURES_MAP,
     BlueSTSDK_REGISTER_NAME_GROUP_B_FEATURES_MAP,
+    BlueSTSDK_REGISTER_NAME_BLUENRG_INFO,
     
+    BlueSTSDK_REGISTER_NAME_MAGNETOMETER_CALIBRATION_START,
+   
     /*optional fullscale (FS) and output data rate (ODR)*/
     BlueSTSDK_REGISTER_NAME_ACCELEROMETER_CONFIG_FS,
     BlueSTSDK_REGISTER_NAME_ACCELEROMETER_CONFIG_ODR,
@@ -112,6 +119,10 @@ typedef NS_ENUM(NSInteger, BlueSTSDKRegisterName_e) {
     BlueSTSDK_REGISTER_NAME_PRESSURE_CONFIG_FS, //reserved, it not useful now
     BlueSTSDK_REGISTER_NAME_PRESSURE_CONFIG_ODR,
 
+    BlueSTSDK_REGISTER_NAME_MOTION_FX_CALIBRATION_LIC_STATUS,
+    BlueSTSDK_REGISTER_NAME_MOTION_AR_VALUE_LIC_STATUS,
+    BlueSTSDK_REGISTER_NAME_MOTION_CP_VALUE_LIC_STATUS,
+    
     /*optional commands*/
     BlueSTSDK_REGISTER_NAME_RTC_DATE_TIME,
     BlueSTSDK_REGISTER_NAME_DFU_REBOOT,
@@ -124,7 +135,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKRegisterName_e) {
  *
  * @return the register if exist otherwise nil
  */
-+(BlueSTSDKRegister *) lookUpWithRegisterName:(BlueSTSDKRegisterName_e)name;
++(BlueSTSDKRegister *) lookUpWithRegisterName:(BlueSTSDKWeSURegisterName_e)name;
 /**
  * Lookup the register through the name
  * @param address address of the register
@@ -140,7 +151,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKRegisterName_e) {
  *
  * @return the register name if exist, otherwise BlueSTSDK_REGISTER_NAME_NONE
  */
-+(BlueSTSDKRegisterName_e) lookUpRegisterNameWithAddress:(NSInteger)address target:(BlueSTSDKRegisterTarget_e)target;
++(BlueSTSDKWeSURegisterName_e) lookUpRegisterNameWithAddress:(NSInteger)address target:(BlueSTSDKRegisterTarget_e)target;
 
 /**
  * Get the list of available registers
@@ -148,5 +159,13 @@ typedef NS_ENUM(NSInteger, BlueSTSDKRegisterName_e) {
  * @return a dictionary with all registers
  */
 +(NSDictionary *)registers;
+
++(BlueSTSDKFwVersion*)extractFwVersion:(BlueSTSDKCommand *)answer;
+
++(BlueSTSDKWeSUFeatureConfig*)extractFeatureConfig:(BlueSTSDKCommand *)answer;
++(void)encodeFeaturConfing:(BlueSTSDKWeSUFeatureConfig*)config
+                forCommand:(BlueSTSDKCommand *)writeReq;
+
 @end
+
 #endif //BlueSTSDKRegisterDefines_h

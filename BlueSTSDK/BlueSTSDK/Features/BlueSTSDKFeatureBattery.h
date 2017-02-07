@@ -25,7 +25,14 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureBattery_h
+#define BlueSTSDK_BlueSTSDKFeatureBattery_h
+
+
 #import "BlueSTSDKFeature.h"
+
+@protocol BlueSTSDKFeatureBatteryDelegate;
+
 
 /**
  * this feature export the from the battery information from expansion board
@@ -107,5 +114,23 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureBatteryStatus){
  */
 +(float)getBatteryCurrent:(BlueSTSDKFeatureSample*)data;
 
+-(BOOL)readBatteryCapacity;
+
+-(BOOL)readMaxAbsorbedCurrent;
+
+-(void) addBatteryDelegate:(id<BlueSTSDKFeatureBatteryDelegate>)delegate;
+
+-(void) removeBatteryDelegate:(id<BlueSTSDKFeatureBatteryDelegate>)delegate;
 
 @end
+
+@protocol  BlueSTSDKFeatureBatteryDelegate <NSObject>
+
+@optional -(void)didCapacityRead:(BlueSTSDKFeatureBattery *)feature
+                        capacity:(uint16_t)capacity;
+
+@optional -(void)didMaxAssorbedCurrentRead:(BlueSTSDKFeatureBattery *)feature
+                                   current:(float)current;
+@end
+
+#endif

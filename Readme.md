@@ -33,7 +33,7 @@ Currently, bits are mapped in the following way:
    
    |Bit|15|14|13|12|11|10|9|8|7|6|5|4|3|2|1|0|
    |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-   |Feature|RFU|RFU|RFU|RFU|RFU|AccEvent|FreeFall|Sensor Fusion Compact|Sensor Fusion|RFU|RFU|Activity|Carry Position|ProximityGesture|MemsGesture|Pedometer|
+   |Feature|RFU|RFU|RFU|RFU|RFU|AccEvent|FreeFall|Sensor Fusion Compact|Sensor Fusion|Compass|Motion Intensity|Activity|Carry Position|ProximityGesture|MemsGesture|Pedometer|
 You can use one of the RFU bits or define a new device and decide how to map the feature. 
 To see how the data is exported by pre-defined features, consult the export method [<code> Feature.ExtractResult Feature.extractData(long,byte[],int)</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_Android/javadoc/com/st/BlueSTSDK/Feature.html#extractData-long-byte:A-int-).  within the feature class definition.
 
@@ -185,7 +185,7 @@ Note that each callback is performed asynchronously by a background thread.
     Otherwise you can register the characteristics before call the connect method:
 
     ```Objective-C
-    BlueSTSDKNode *node = ...;
+    BlueSTSDKNode *node = â€¦
     NSDictionary *map = [BlueSTSDKStdCharToFeatureMap getManageStdCharacteristics];
     [node addExternalCharacteristics: map];
     ```

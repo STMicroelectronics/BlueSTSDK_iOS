@@ -26,7 +26,7 @@
  ******************************************************************************/
 
 #import "BlueSTSDKStdCharToFeatureMap.h"
-#import "../../Util/NSMutableDictionary+BlueSTSDKFeature.h"
+#import "NSMutableDictionary+BlueSTSDKFeature.h"
 #import "BlueSTSDKFeatureHeartRate.h"
 
 @implementation BlueSTSDKStdCharToFeatureMap {

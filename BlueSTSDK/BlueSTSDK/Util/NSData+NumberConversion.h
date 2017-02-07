@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+#ifndef BlueSTSDK_NSData_NumberConversion_h
+#define BlueSTSDK_NSData_NumberConversion_h
 
 #import <Foundation/Foundation.h>
 
@@ -43,6 +45,7 @@
  *  @return (uint8_t)self[offset]
  */
 -(uint8_t) extractUInt8FromOffset:(NSUInteger)offset;
+-(int8_t) extractInt8FromOffset:(NSUInteger)offset;
 
 /**
  *  extract a uint16 from a little endian byte array
@@ -99,3 +102,5 @@
 -(NSData *)int16ChangeEndianes;
 
 @end
+
+#endif

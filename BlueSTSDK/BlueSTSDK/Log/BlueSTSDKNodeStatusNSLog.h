@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKNodeStatusNSLog_h
+#define BlueSTSDK_BlueSTSDKNodeStatusNSLog_h
+
 #import <Foundation/Foundation.h>
 #import "BlueSTSDKNode.h"
 
@@ -36,3 +39,5 @@
 @interface BlueSTSDKNodeStatusNSLog : NSObject<BlueSTSDKNodeStateDelegate>
 
 @end
+
+#endif

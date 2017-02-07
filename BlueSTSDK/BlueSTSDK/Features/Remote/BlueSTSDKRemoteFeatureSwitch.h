@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKRemoteFeatureSwitch_h
+#define BlueSTSDK_BlueSTSDKRemoteFeatureSwitch_h
+
 #import <BlueSTSDK/BlueSTSDKFeatureSwitch.h>
 
 /**
@@ -47,3 +50,5 @@
 -(bool) setSwitchStatus:(uint16_t)nodeId newStatus:(uint8_t) newStatus;
 
 @end
+
+#endif

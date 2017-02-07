@@ -42,6 +42,12 @@
  * @author STMicroelectronics - Central Labs.
  */
 @interface BlueSTSDKFeatureSample : NSObject
+
+/**
+ *  moment when the data arrive at the device
+ */
+@property(readonly,retain) NSDate *notificaitonTime;
+
 /**
  *  node time stamp at the moment of the data acquisition
  */
@@ -171,7 +177,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @note it is an abstract method, you have to overwrite it!
  *  @return array of BlueSTSDKFeatureField that describe the data exported by the feature
  */
--(NSArray*) getFieldsDesc;
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc;
 
 
 @end

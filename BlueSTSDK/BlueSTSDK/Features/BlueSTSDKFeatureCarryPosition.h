@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
+#ifndef BlueSTSDK_BlueSTSDKFeatureCarryPosition_h
+#define BlueSTSDK_BlueSTSDKFeatureCarryPosition_h
 
 #import "BlueSTSDKFeature.h"
 
@@ -81,3 +83,5 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureCarryPositionType){
 +(BlueSTSDKFeatureCarryPositionType)getPositionType:(BlueSTSDKFeatureSample*)sample;
 
 @end
+
+#endif

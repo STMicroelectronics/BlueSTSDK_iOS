@@ -104,7 +104,7 @@ static NSDateFormatter *sDateFormatter;
  */
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    self.debugInterface.delegate=self;
+    [self.debugInterface addDebugOutputDelegate:self];
     [self.userText becomeFirstResponder];
 }//viewDidAppear
 
@@ -115,7 +115,7 @@ static NSDateFormatter *sDateFormatter;
  */
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
-    self.debugInterface.delegate=nil;
+    [self.debugInterface removeDebugOutputDelegate:self];
 }//viewDidDisappear
 
 /**

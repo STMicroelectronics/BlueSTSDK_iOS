@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureMemsSensorFusionCompact_h
+#define BlueSTSDK_BlueSTSDKFeatureMemsSensorFusionCompact_h
+
+
 #import "BlueSTSDKFeatureMemsSensorFusion.h"
 
 /**
@@ -77,5 +81,6 @@
  */
 +(float)getQs:(BlueSTSDKFeatureSample*)data;
 
-
 @end
+
+#endif

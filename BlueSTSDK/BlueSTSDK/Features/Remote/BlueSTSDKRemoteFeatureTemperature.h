@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKRemoteFeatureTemperature_h
+#define BlueSTSDK_BlueSTSDKRemoteFeatureTemperature_h
+
+
 #import "BlueSTSDKFeatureTemperature.h"
 
 /**
@@ -37,3 +41,5 @@
 +(int)getNodeId:(BlueSTSDKFeatureSample*)sample;
 
 @end
+
+#endif

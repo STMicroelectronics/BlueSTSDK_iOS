@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureLuminosity_h
+#define BlueSTSDK_BlueSTSDKFeatureLuminosity_h
+
+
 #import "BlueSTSDKFeature.h"
 
 /**
@@ -47,3 +51,5 @@
 +(uint16_t)getLuminosity:(BlueSTSDKFeatureSample*)data;
 
 @end
+
+#endif

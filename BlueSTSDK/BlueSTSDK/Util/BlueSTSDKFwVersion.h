@@ -1,5 +1,5 @@
 /*******************************************************************************
- * COPYRIGHT(c) 2015 STMicroelectronics
+ * COPYRIGHT(c) 2016 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -25,36 +25,31 @@
  *
  ******************************************************************************/
 
-#ifndef BlueSTSDK_BlueSTSDKFeatureSwitch_h
-#define BlueSTSDK_BlueSTSDKFeatureSwitch_h
+#ifndef BlueSTSDK_BlueSTSDKFwVersion_h
+#define BlueSTSDK_BlueSTSDKFwVersion_h
 
-#import "BlueSTSDKFeature.h"
+#import <Foundation/Foundation.h>
 
-/**
- *  Feature that contains a switch state
- *
- * @author STMicroelectronics - Central Labs.
- */
-@interface BlueSTSDKFeatureSwitch : BlueSTSDKFeature
+@interface BlueSTSDKFwVersion : NSObject
 
-/**
- * extract the switch status from a sample
- *
- *  @param data sample
- *
- *  @return 0 of the switch is off 1 is it is on
- */
-+(uint8_t) getSwitchStatus:(BlueSTSDKFeatureSample*)data;
+@property (readonly, retain) NSString * name;
+@property (readonly, retain) NSString * mcuType;
+@property (readonly) NSInteger major;
+@property (readonly) NSInteger minor;
+@property (readonly) NSInteger patch;
 
-/**
- *  change the switch status
- *
- *  @param newStatus new switch status
- *
- *  @return true if the command is correctly send
- */
--(bool) setSwitchStatus:(uint8_t) newStatus;
 
++(instancetype) version:(NSString *)string;
++(instancetype) versionMajor:(NSInteger)major
+                        minor:(NSInteger)minor
+                        patch:(NSInteger)patch;
++(instancetype) versionWithName:(NSString*)name
+                        mcuType:(NSString*)mcuType
+                         major:(NSInteger)major
+                          minor:(NSInteger)minor
+                          patch:(NSInteger)patch;
+
+-(NSComparisonResult)compareVersion:(BlueSTSDKFwVersion *)version;
 
 @end
 

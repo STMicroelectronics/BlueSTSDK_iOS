@@ -44,7 +44,7 @@
  * @memberof BlueSTSDKFeatureAccelerometerEvent
  *  array with the description of field exported by the feature
  */
-static NSArray *sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 /**
  *  @memberof BlueSTSDKFeatureAccelerometerEvent
@@ -85,14 +85,14 @@ static NSArray *sEventTypeName;
                                                   min:FEATURE_MIN
                                                   max:FEATURE_MAX_STEPS]];
         
-        sDetectableEventTypeName = @[@"None",@"Orientation", @"FreeFall",
-                                     @"SingleTap", @"DoubleTap", @"WakeUp",
-                                     @"Tilt", @"Pedometer"];
+        sDetectableEventTypeName = @[@"None",@"Orientation", @"Free Fall",
+                                     @"Single Tap", @"Double Tap", @"Wake Up",
+                                     @"Tilt", @"Pedometer",@"Multiple"];
         
         sEventTypeName = @[@"Orientation Top Left",@"Orientation Top Right",
                            @"Orientation Bottom Left",@"Orientation Bottom Right",
                            @"Orientation Up",@"Orientation Down",@"Tilt",
-                           @"Free Fall",@"Single Tap",@"Double Tap",@"WakeUp",
+                           @"Free Fall",@"Single Tap",@"Double Tap",@"Wake Up",
                            @"Pedometer",@"No Event",@"Error"];
     }
     
@@ -112,38 +112,9 @@ static NSArray *sEventTypeName;
 }
 
 +(BlueSTSDKFeatureAccelerometerEventType)getAccelerationEvent:(BlueSTSDKFeatureSample*)sample{
-    if(sample.data.count>0){
-        uint16_t event = [(NSNumber*)[sample.data objectAtIndex:0] unsignedShortValue];
-        switch (event){
-            case 0x01:
-                return BlueSTSDKFeatureAccelerometerOrientationTopRight;
-            case 0x02:
-                return BlueSTSDKFeatureAccelerometerOrientationBottomRight;
-            case 0x03:
-                return BlueSTSDKFeatureAccelerometerOrientationBottomLeft;
-            case 0x04:
-                return BlueSTSDKFeatureAccelerometerOrientationTopLeft;
-            case 0x05:
-                return BlueSTSDKFeatureAccelerometerOrientationUp;
-            case 0x06:
-                return BlueSTSDKFeatureAccelerometerOrientationDown;
-            case 0x08:
-                return BlueSTSDKFeatureAccelerometerTilt;
-            case 0x10:
-                return BlueSTSDKFeatureAccelerometerFreeFall;
-            case 0x20:
-                return BlueSTSDKFeatureAccelerometerSingleTap;
-            case 0x40:
-                return BlueSTSDKFeatureAccelerometerDoubleTap;
-            case 0x80:
-                return BlueSTSDKFeatureAccelerometerWakeUp;
-            case 0x100:
-                return BlueSTSDKFeatureAccelerometerPedometer;
-            default:
-                return BlueSTSDKFeatureAccelerometerNoEvent;
-            }//switch */
-        }//if
-    //if
+    if(sample.data.count>0) {
+        return [(NSNumber*)[sample.data objectAtIndex:0] unsignedShortValue];
+    }//if
     return BlueSTSDKFeatureAccelerometerError;
 }
 
@@ -163,6 +134,8 @@ static NSArray *sEventTypeName;
             return sDetectableEventTypeName[6];
         case BlueSTSDKFeatureEventTypePedometer:
             return sDetectableEventTypeName[7];
+        case BlueSTSDKFeatureEventTypeMultiple:
+            return sDetectableEventTypeName[8];
         case BlueSTSDKFeatureEventTypeNone:
         default:
             return sDetectableEventTypeName[0];
@@ -203,17 +176,22 @@ static NSArray *sEventTypeName;
     }
 }
 
++(BlueSTSDKFeatureAccelerometerEventType)extractOrientationEvent:(BlueSTSDKFeatureAccelerometerEventType)event{
+    return event & 0x07;
+}
 
 +(int32_t) getPedometerSteps:(BlueSTSDKFeatureSample*)sample{
     if(sample.data.count>1){
-        if ([[sample.data objectAtIndex:0] unsignedShortValue]==BlueSTSDKFeatureAccelerometerPedometer) {
+        BlueSTSDKFeatureAccelerometerEventType eventType =
+            [[sample.data objectAtIndex:0] unsignedShortValue];
+        if ((eventType & BlueSTSDKFeatureAccelerometerPedometer)!=0) {
             return [[sample.data objectAtIndex:1] unsignedShortValue];
         }
     }
     return -1;
 }
 
--(NSArray*) getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
     return sFieldDesc;
 }
 
@@ -238,7 +216,6 @@ static NSArray *sEventTypeName;
     if( enable && ![self isEnableEvent:type] && mEnableType!= BlueSTSDKFeatureEventTypeNone){
         [self sendCommand:mEnableType data:sDisableCommand];
     }
-    
     return [self sendCommand:(uint8_t)type data:sEnableCommand];
 }
 
@@ -288,8 +265,8 @@ static NSArray *sEventTypeName;
                 userInfo:nil];
     }//if
     
-    uint8_t eventId= [rawData extractUInt8FromOffset:offset];
-    
+    uint8_t eventId= [rawData extractUInt8FromOffset:offset] ;
+
     NSArray *data = @[@(eventId)];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
@@ -297,6 +274,28 @@ static NSArray *sEventTypeName;
     
 }
 
+
+-(BlueSTSDKExtractResult*) extractEventAndPedomiterData:(uint64_t)timestamp
+                                                   data:(NSData*)rawData
+                                             dataOffset:(uint32_t)offset{
+    
+    if(rawData.length-offset < 3){
+        @throw [NSException
+                exceptionWithName:@"Invalid AccelerationEvent data"
+                reason:@"The feature need almost 3 byte for extract the data"
+                userInfo:nil];
+    }//if
+        
+    uint16_t eventId= [rawData extractUInt8FromOffset:offset] | BlueSTSDKFeatureAccelerometerPedometer;
+    uint16_t nSteps= [rawData extractLeUInt16FromOffset:offset+1];
+
+    NSArray *data = @[@(eventId),@(nSteps)];
+    
+    BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
+    return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:3];
+
+    
+}
 
 /**
  *  read int8 for build the position value, create the new sample and
@@ -311,7 +310,11 @@ static NSArray *sEventTypeName;
  */
 -(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
-    if(mEnableType == BlueSTSDKFeatureEventTypePedometer){
+    const NSUInteger dataLength =rawData.length-offset;
+    
+    if(dataLength>=3)
+        return [self extractEventAndPedomiterData:timestamp data:rawData dataOffset:offset];
+    else if(dataLength>=2 && mEnableType == BlueSTSDKFeatureEventTypePedometer){
         return [self extractPedometerData:timestamp data:rawData dataOffset:offset];
     }else
         return [self extractEventData:timestamp data:rawData dataOffset:offset];

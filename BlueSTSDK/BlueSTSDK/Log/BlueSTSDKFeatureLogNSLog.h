@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureLogNSLog_h
+#define BlueSTSDK_BlueSTSDKFeatureLogNSLog_h
+
 #import <Foundation/Foundation.h>
 
 #import "BlueSTSDKFeature.h"
@@ -59,3 +62,5 @@
  */
 -(instancetype)initWithTimestamp:(NSDate *)timestamp;
 @end
+
+#endif

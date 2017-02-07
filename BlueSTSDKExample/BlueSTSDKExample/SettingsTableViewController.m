@@ -27,7 +27,7 @@
 
 #import "SettingsTableViewController.h"
 
-#import <BlueSTSDK/BlueSTSDKRegisterDefines.h>
+#import <BlueSTSDK/BlueSTSDKWeSURegisterDefines.h>
 
 @interface SettingsTableViewController ()<BlueSTSDKConfigControlDelegate>
 
@@ -83,9 +83,9 @@
 
 #pragma mark - Table view data source
 
--(void)asyncReadWithRegisterName:(BlueSTSDKRegisterName_e)name target:(BlueSTSDKRegisterTarget_e)target {
+-(void)asyncReadWithRegisterName:(BlueSTSDKWeSURegisterName_e)name target:(BlueSTSDKRegisterTarget_e)target {
     if (self.configControl != nil && name != BlueSTSDK_REGISTER_NAME_NONE && target != BlueSTSDK_REGISTER_TARGET_BOTH) {
-        BlueSTSDKRegister *reg = [BlueSTSDKRegisterDefines lookUpWithRegisterName:name];
+        BlueSTSDKRegister *reg = [BlueSTSDKWeSURegisterDefines lookUpWithRegisterName:name];
         BlueSTSDKCommand *cmd = [BlueSTSDKCommand commandWithRegister:reg target:target];
         
         [self.configControl read:cmd];
@@ -334,7 +334,7 @@
 
 -(void) writeLocalName:(NSString *)name {
     if (self.configControl != nil) {
-        BlueSTSDKRegister *reg = [BlueSTSDKRegisterDefines lookUpWithRegisterName:BlueSTSDK_REGISTER_NAME_BLE_LOC_NAME];
+        BlueSTSDKRegister *reg = [BlueSTSDKWeSURegisterDefines lookUpWithRegisterName:BlueSTSDK_REGISTER_NAME_BLE_LOC_NAME];
         size_t s = reg.size * 2;
         unsigned char buffer[s];
         memset(buffer, 0x00, s);
@@ -352,7 +352,7 @@
 }
 -(void) writePubblicAddress:(NSString *)pubblicaddress {
     if (self.configControl != nil) {
-        BlueSTSDKRegister *reg = [BlueSTSDKRegisterDefines lookUpWithRegisterName:BlueSTSDK_REGISTER_NAME_BLE_PUB_ADDR];
+        BlueSTSDKRegister *reg = [BlueSTSDKWeSURegisterDefines lookUpWithRegisterName:BlueSTSDK_REGISTER_NAME_BLE_PUB_ADDR];
         size_t s = reg.size * 2;
         unsigned char buffer[s];
         unsigned int value = 0;
@@ -393,7 +393,7 @@
 }
 -(void) writeLedConfiguration:(NSString *)conf {
     if (self.configControl != nil) {
-        BlueSTSDKRegister *reg = [BlueSTSDKRegisterDefines lookUpWithRegisterName:BlueSTSDK_REGISTER_NAME_LED_CONFIG];
+        BlueSTSDKRegister *reg = [BlueSTSDKWeSURegisterDefines lookUpWithRegisterName:BlueSTSDK_REGISTER_NAME_LED_CONFIG];
         size_t s = reg.size * 2;
         unsigned char buffer[s];
         
@@ -418,7 +418,7 @@
 }
 -(void) writeLowPowerMode:(NSString *)mode {
     if (self.configControl != nil) {
-        BlueSTSDKRegister *reg = [BlueSTSDKRegisterDefines lookUpWithRegisterName:BlueSTSDK_REGISTER_NAME_PWR_MODE_CONFIG];
+        BlueSTSDKRegister *reg = [BlueSTSDKWeSURegisterDefines lookUpWithRegisterName:BlueSTSDK_REGISTER_NAME_PWR_MODE_CONFIG];
         size_t s = reg.size * 2;
         unsigned char buffer[s];
         
@@ -440,7 +440,7 @@
 }
 -(void) writeFWUpgrade:(NSString *)fwupgrade {
     if (self.configControl != nil) {
-        BlueSTSDKRegister *reg = [BlueSTSDKRegisterDefines lookUpWithRegisterName:BlueSTSDK_REGISTER_NAME_DFU_REBOOT];
+        BlueSTSDKRegister *reg = [BlueSTSDKWeSURegisterDefines lookUpWithRegisterName:BlueSTSDK_REGISTER_NAME_DFU_REBOOT];
         size_t s = reg.size * 2;
         unsigned char buffer[s];
         
@@ -473,7 +473,7 @@
     
     unsigned char buffer[payload.length];
     [payload getBytes:buffer length:payload.length];
-    BlueSTSDKRegisterName_e regname = [BlueSTSDKRegisterDefines lookUpRegisterNameWithAddress:reg.address target:cmd.target];
+    BlueSTSDKWeSURegisterName_e regname = [BlueSTSDKWeSURegisterDefines lookUpRegisterNameWithAddress:reg.address target:cmd.target];
     UITableViewCell *cell = nil;
     bool checksize = payload.length == reg.size * 2;
     NSString *text = @"";

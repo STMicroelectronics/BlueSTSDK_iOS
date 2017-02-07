@@ -28,8 +28,8 @@
 #ifndef BlueSTSDK_BlueSTSDKManager_prv_h
 #define BlueSTSDK_BlueSTSDKManager_prv_h
 
-#include <CoreBluetooth/CBPeripheral.h>
-#include "BlueSTSDKManager.h"
+#import <CoreBluetooth/CBPeripheral.h>
+#import "BlueSTSDKManager.h"
 
 /**
  *  private method of the class {@link BlueSTSDKManager} this method are used 

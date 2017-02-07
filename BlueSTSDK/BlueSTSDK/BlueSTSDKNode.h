@@ -58,24 +58,6 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 @interface BlueSTSDKNode : NSObject 
 
 /**
- *  possible node mode
- */
-typedef NS_ENUM(NSInteger, BlueSTSDKNodeMode){
-    /**
-     *  enter in the update mode through the usb port
-     */
-    BlueSTSDKNodeModeUSB_DFU,
-    /**
-     *  enter in the update mode through the ble connection
-     */
-    BlueSTSDKNodeModeOTA_BLE_DFU,
-    /**
-     *  normal state
-     */
-    BlueSTSDKNodeModeApplication
-};
-
-/**
  *  possible connection state
  */
 typedef NS_ENUM(NSInteger, BlueSTSDKNodeState){
@@ -187,6 +169,9 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *  object that we can use for access to the config node or nil if it is absent
  */
 @property (readonly) BlueSTSDKConfigControl *configControl;
+
+@property (readonly) BOOL isSleeping;
+@property (readonly) BOOL hasExtension;
 
 /**
  *  tx power used from the board

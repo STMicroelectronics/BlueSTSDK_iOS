@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKRemoteFeatureHumidity_h
+#define BlueSTSDK_BlueSTSDKRemoteFeatureHumidity_h
+
 #import "BlueSTSDKFeatureHumidity.h"
 
 /**
@@ -37,3 +40,5 @@
 +(int)getNodeId:(BlueSTSDKFeatureSample*)sample;
 
 @end
+
+#endif

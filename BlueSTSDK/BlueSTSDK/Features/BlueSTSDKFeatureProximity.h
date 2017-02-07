@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureProximity_h
+#define BlueSTSDK_BlueSTSDKFeatureProximity_h
+
+
 #import "BlueSTSDKFeature.h"
 
 
@@ -53,3 +57,5 @@
 +(uint16_t)outOfRangeValue;
 
 @end
+
+#endif

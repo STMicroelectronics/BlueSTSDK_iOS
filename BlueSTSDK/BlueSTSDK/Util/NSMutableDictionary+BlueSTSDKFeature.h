@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_NSMutableDictionary_BlueSTSDKFeature_h
+#define BlueSTSDK_NSMutableDictionary_BlueSTSDKFeature_h
+
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CBUUID.h>
 
@@ -39,3 +42,5 @@
 -(NSArray<Class> *) add:(CBUUID*)key feature:(Class)f;
 
 @end
+
+#endif

@@ -27,7 +27,7 @@
 
 #ifndef BlueSTSDK_BlueSTSDKDebug_prv_h
 #define BlueSTSDK_BlueSTSDKDebug_prv_h
-#include "BlueSTSDKDebug.h"
+#import "BlueSTSDKDebug.h"
 
 
 /**

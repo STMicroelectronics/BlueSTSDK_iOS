@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureAudioADPCM_h
+#define BlueSTSDK_BlueSTSDKFeatureAudioADPCM_h
+
+
 #import "BlueSTSDKFeature.h"
 #import "BlueSTSDKDeviceTimestampFeature.h"
 
@@ -72,5 +76,5 @@
  */
 +(NSData *)getLinearPCMAudio:(BlueSTSDKFeatureSample *)sample;
 
-
 @end
+#endif

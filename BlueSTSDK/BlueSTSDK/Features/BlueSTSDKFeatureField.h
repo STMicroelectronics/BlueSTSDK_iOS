@@ -25,6 +25,10 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureField_h
+#define BlueSTSDK_BlueSTSDKFeatureField_h
+
+
 #import <Foundation/Foundation.h>
 
 /**
@@ -73,6 +77,10 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureFieldType){
      *  8bit signed integer
      */
     BlueSTSDKFeatureFieldTypeInt8,
+    /**
+     * Array of 8bit unsinged integer
+     */
+    BlueSTSDKFeatureFieldTypeUInt8Array,
     /**
      * Array of 16bit singed integer
      */
@@ -140,3 +148,5 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureFieldType){
 
 -(BOOL)hasUnit;
 @end
+
+#endif

@@ -36,6 +36,10 @@
     return temp;
 }
 
+-(int8_t) extractInt8FromOffset:(NSUInteger)offset{
+    return (int8_t)[self extractUInt8FromOffset:offset];
+}
+
 -(uint16_t) extractLeUInt16FromOffset:(NSUInteger)offset{
     NSRange range = NSMakeRange(offset, 2);
     uint16_t temp;

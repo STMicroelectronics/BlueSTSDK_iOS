@@ -84,6 +84,8 @@
 		665DAB901C2152C300795077 /* BlueSTSDKFeaturePedometer.m in Sources */ = {isa = PBXBuildFile; fileRef = 665DAB8E1C2152C300795077 /* BlueSTSDKFeaturePedometer.m */; };
 		6660F9541C0D9961005ADB53 /* BlueSTSDKFeatureProximityGesture.h in Headers */ = {isa = PBXBuildFile; fileRef = 6660F9521C0D9961005ADB53 /* BlueSTSDKFeatureProximityGesture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6660F9551C0D9961005ADB53 /* BlueSTSDKFeatureProximityGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 6660F9531C0D9961005ADB53 /* BlueSTSDKFeatureProximityGesture.m */; };
+		666847B91DE85031001064A3 /* BlueSTSDKFwVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 666847B71DE85031001064A3 /* BlueSTSDKFwVersion.m */; };
+		666847BA1DE85031001064A3 /* BlueSTSDKFwVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 666847B81DE85031001064A3 /* BlueSTSDKFwVersion.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66766EE51CA3F67B00A13635 /* BlueSTSDKFeature+Remote.h in Headers */ = {isa = PBXBuildFile; fileRef = 66766EDF1CA3F67B00A13635 /* BlueSTSDKFeature+Remote.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		66766EE61CA3F67B00A13635 /* BlueSTSDKFeature+Remote.m in Sources */ = {isa = PBXBuildFile; fileRef = 66766EE01CA3F67B00A13635 /* BlueSTSDKFeature+Remote.m */; };
 		66766EE71CA3F67B00A13635 /* BlueSTSDKRemoteFeatureHumidity.h in Headers */ = {isa = PBXBuildFile; fileRef = 66766EE11CA3F67B00A13635 /* BlueSTSDKRemoteFeatureHumidity.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -92,8 +94,14 @@
 		66766EEA1CA3F67B00A13635 /* BlueSTSDKRemoteFeatureTemperature.m in Sources */ = {isa = PBXBuildFile; fileRef = 66766EE41CA3F67B00A13635 /* BlueSTSDKRemoteFeatureTemperature.m */; };
 		667BAAB91B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.h in Headers */ = {isa = PBXBuildFile; fileRef = 667BAAB71B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		667BAABA1B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.m in Sources */ = {isa = PBXBuildFile; fileRef = 667BAAB81B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.m */; };
+		667D27491E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 667D27471E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		667D274A1E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D27481E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m */; };
 		6684C94A1BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h in Headers */ = {isa = PBXBuildFile; fileRef = 6684C9481BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6684C94B1BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6684C9491BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.m */; };
+		668A12771E3A443F00D99490 /* BlueSTSDKFeatureCompass.h in Headers */ = {isa = PBXBuildFile; fileRef = 668A12751E3A443F00D99490 /* BlueSTSDKFeatureCompass.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		668A12781E3A443F00D99490 /* BlueSTSDKFeatureCompass.m in Sources */ = {isa = PBXBuildFile; fileRef = 668A12761E3A443F00D99490 /* BlueSTSDKFeatureCompass.m */; };
+		668A127B1E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.h in Headers */ = {isa = PBXBuildFile; fileRef = 668A12791E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		668A127C1E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.m in Sources */ = {isa = PBXBuildFile; fileRef = 668A127A1E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.m */; };
 		668C6EF71C74A9370076E009 /* BlueSTSDKFeatureDirectionOfArrival.h in Headers */ = {isa = PBXBuildFile; fileRef = 668C6EF51C74A9370076E009 /* BlueSTSDKFeatureDirectionOfArrival.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		668C6EF81C74A9370076E009 /* BlueSTSDKFeatureDirectionOfArrival.m in Sources */ = {isa = PBXBuildFile; fileRef = 668C6EF61C74A9370076E009 /* BlueSTSDKFeatureDirectionOfArrival.m */; };
 		6692CC6D1D54BC230078B6D2 /* BlueSTSDKDeviceTimestampFeature.m in Sources */ = {isa = PBXBuildFile; fileRef = 6692CC6C1D54BC230078B6D2 /* BlueSTSDKDeviceTimestampFeature.m */; };
@@ -124,8 +132,8 @@
 		EA01F0191B2F1BE800B35152 /* BlueSTSDKRegister.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F0111B2F1BE800B35152 /* BlueSTSDKRegister.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA01F01A1B2F1BE800B35152 /* BlueSTSDKRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F0121B2F1BE800B35152 /* BlueSTSDKRegister.m */; };
 		EA01F01E1B305A8800B35152 /* BlueSTSDKCommand_prv.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F01D1B305A8800B35152 /* BlueSTSDKCommand_prv.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		EAF17E451C6C738500F61D35 /* BlueSTSDKRegisterDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF17E431C6C738500F61D35 /* BlueSTSDKRegisterDefines.m */; };
-		EAF17E461C6C98D500F61D35 /* BlueSTSDKRegisterDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = EAF17E421C6C738500F61D35 /* BlueSTSDKRegisterDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EAF17E451C6C738500F61D35 /* BlueSTSDKWeSURegisterDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF17E431C6C738500F61D35 /* BlueSTSDKWeSURegisterDefines.m */; };
+		EAF17E461C6C98D500F61D35 /* BlueSTSDKWeSURegisterDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = EAF17E421C6C738500F61D35 /* BlueSTSDKWeSURegisterDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -221,6 +229,8 @@
 		665DAB8E1C2152C300795077 /* BlueSTSDKFeaturePedometer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeaturePedometer.m; sourceTree = "<group>"; };
 		6660F9521C0D9961005ADB53 /* BlueSTSDKFeatureProximityGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureProximityGesture.h; sourceTree = "<group>"; };
 		6660F9531C0D9961005ADB53 /* BlueSTSDKFeatureProximityGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureProximityGesture.m; sourceTree = "<group>"; };
+		666847B71DE85031001064A3 /* BlueSTSDKFwVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFwVersion.m; sourceTree = "<group>"; };
+		666847B81DE85031001064A3 /* BlueSTSDKFwVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFwVersion.h; sourceTree = "<group>"; };
 		66766EDF1CA3F67B00A13635 /* BlueSTSDKFeature+Remote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "BlueSTSDKFeature+Remote.h"; path = "Remote/BlueSTSDKFeature+Remote.h"; sourceTree = "<group>"; };
 		66766EE01CA3F67B00A13635 /* BlueSTSDKFeature+Remote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "BlueSTSDKFeature+Remote.m"; path = "Remote/BlueSTSDKFeature+Remote.m"; sourceTree = "<group>"; };
 		66766EE11CA3F67B00A13635 /* BlueSTSDKRemoteFeatureHumidity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKRemoteFeatureHumidity.h; path = Remote/BlueSTSDKRemoteFeatureHumidity.h; sourceTree = "<group>"; };
@@ -229,8 +239,14 @@
 		66766EE41CA3F67B00A13635 /* BlueSTSDKRemoteFeatureTemperature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlueSTSDKRemoteFeatureTemperature.m; path = Remote/BlueSTSDKRemoteFeatureTemperature.m; sourceTree = "<group>"; };
 		667BAAB71B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureFreeFall.h; sourceTree = "<group>"; };
 		667BAAB81B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureFreeFall.m; sourceTree = "<group>"; };
+		667D27471E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKWeSUFeatureConfig.h; path = Config/STWeSU/BlueSTSDKWeSUFeatureConfig.h; sourceTree = "<group>"; };
+		667D27481E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlueSTSDKWeSUFeatureConfig.m; path = Config/STWeSU/BlueSTSDKWeSUFeatureConfig.m; sourceTree = "<group>"; };
 		6684C9481BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureMicLevel.h; sourceTree = "<group>"; };
 		6684C9491BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureMicLevel.m; sourceTree = "<group>"; };
+		668A12751E3A443F00D99490 /* BlueSTSDKFeatureCompass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureCompass.h; sourceTree = "<group>"; };
+		668A12761E3A443F00D99490 /* BlueSTSDKFeatureCompass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureCompass.m; sourceTree = "<group>"; };
+		668A12791E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureMotionIntensity.h; sourceTree = "<group>"; };
+		668A127A1E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureMotionIntensity.m; sourceTree = "<group>"; };
 		668C6EF51C74A9370076E009 /* BlueSTSDKFeatureDirectionOfArrival.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureDirectionOfArrival.h; sourceTree = "<group>"; };
 		668C6EF61C74A9370076E009 /* BlueSTSDKFeatureDirectionOfArrival.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureDirectionOfArrival.m; sourceTree = "<group>"; };
 		6692CC6C1D54BC230078B6D2 /* BlueSTSDKDeviceTimestampFeature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKDeviceTimestampFeature.m; sourceTree = "<group>"; };
@@ -259,8 +275,8 @@
 		EAB52A181B4ECCBC00231B83 /* BlueSTSDKConfigControl_prv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKConfigControl_prv.h; path = Config/BlueSTSDKConfigControl_prv.h; sourceTree = "<group>"; };
 		EAB52A191B4ECCBC00231B83 /* BlueSTSDKConfigControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKConfigControl.h; path = Config/BlueSTSDKConfigControl.h; sourceTree = "<group>"; };
 		EAB52A1A1B4ECCBC00231B83 /* BlueSTSDKConfigControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlueSTSDKConfigControl.m; path = Config/BlueSTSDKConfigControl.m; sourceTree = "<group>"; };
-		EAF17E421C6C738500F61D35 /* BlueSTSDKRegisterDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKRegisterDefines.h; path = Config/STWeSU/BlueSTSDKRegisterDefines.h; sourceTree = "<group>"; };
-		EAF17E431C6C738500F61D35 /* BlueSTSDKRegisterDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlueSTSDKRegisterDefines.m; path = Config/STWeSU/BlueSTSDKRegisterDefines.m; sourceTree = "<group>"; };
+		EAF17E421C6C738500F61D35 /* BlueSTSDKWeSURegisterDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKWeSURegisterDefines.h; path = Config/STWeSU/BlueSTSDKWeSURegisterDefines.h; sourceTree = "<group>"; };
+		EAF17E431C6C738500F61D35 /* BlueSTSDKWeSURegisterDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlueSTSDKWeSURegisterDefines.m; path = Config/STWeSU/BlueSTSDKWeSURegisterDefines.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -434,12 +450,16 @@
 				668C6EF61C74A9370076E009 /* BlueSTSDKFeatureDirectionOfArrival.m */,
 				6693B8E61C897D5B00F24E33 /* BlueSTSDKFeatureSwitch.h */,
 				6693B8E71C897D5B00F24E33 /* BlueSTSDKFeatureSwitch.m */,
-				4EDA22214A3611DD1545F77C /* BlueSTSDKFeatureAudioADPCMSync.m */,
 				4EDA29EFDFD1762DCC92D490 /* BlueSTSDKFeatureAudioADPCMSync.h */,
-				4EDA2CA4BB3C7B11415067D7 /* BlueSTSDKFeatureAudioADPCM.m */,
+				4EDA22214A3611DD1545F77C /* BlueSTSDKFeatureAudioADPCMSync.m */,
 				4EDA283570D8F7398766AAAB /* BlueSTSDKFeatureAudioADPCM.h */,
+				4EDA2CA4BB3C7B11415067D7 /* BlueSTSDKFeatureAudioADPCM.m */,
 				4EDA20E878C6FE86D6CC736E /* BlueSTSDKDeviceTimestampFeature.h */,
 				6692CC6C1D54BC230078B6D2 /* BlueSTSDKDeviceTimestampFeature.m */,
+				668A12751E3A443F00D99490 /* BlueSTSDKFeatureCompass.h */,
+				668A12761E3A443F00D99490 /* BlueSTSDKFeatureCompass.m */,
+				668A12791E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.h */,
+				668A127A1E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.m */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -460,6 +480,8 @@
 		6652424B1B0B1C1400931F93 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				666847B71DE85031001064A3 /* BlueSTSDKFwVersion.m */,
+				666847B81DE85031001064A3 /* BlueSTSDKFwVersion.h */,
 				6652424C1B0B1C1400931F93 /* NSData+NumberConversion.h */,
 				6652424D1B0B1C1400931F93 /* NSData+NumberConversion.m */,
 				6652424F1B0B1C1400931F93 /* BlueSTSDKBleNodeDefines.h */,
@@ -470,8 +492,8 @@
 				665242531B0B1C1400931F93 /* BlueSTSDKBleAdvertiseParser.m */,
 				6648D9171C9B0D0B00AA63AB /* UnwrapTimeStamp.h */,
 				6648D9181C9B0D0B00AA63AB /* UnwrapTimeStamp.m */,
-				4EDA212E740E3778727E7D32 /* NSMutableDictionary+BlueSTSDKFeature.m */,
 				4EDA233ABADE75BDCE19B543 /* NSMutableDictionary+BlueSTSDKFeature.h */,
+				4EDA212E740E3778727E7D32 /* NSMutableDictionary+BlueSTSDKFeature.m */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -503,8 +525,10 @@
 		EAF17E411C6C737500F61D35 /* STWeSU */ = {
 			isa = PBXGroup;
 			children = (
-				EAF17E421C6C738500F61D35 /* BlueSTSDKRegisterDefines.h */,
-				EAF17E431C6C738500F61D35 /* BlueSTSDKRegisterDefines.m */,
+				667D27471E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h */,
+				667D27481E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m */,
+				EAF17E421C6C738500F61D35 /* BlueSTSDKWeSURegisterDefines.h */,
+				EAF17E431C6C738500F61D35 /* BlueSTSDKWeSURegisterDefines.m */,
 			);
 			name = STWeSU;
 			sourceTree = "<group>";
@@ -516,6 +540,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				667D27491E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h in Headers */,
+				666847BA1DE85031001064A3 /* BlueSTSDKFwVersion.h in Headers */,
 				66766EE91CA3F67B00A13635 /* BlueSTSDKRemoteFeatureTemperature.h in Headers */,
 				66DBB6B01CAEB3CB00CCF412 /* BlueSTSDKRemoteFeaturePressure.h in Headers */,
 				66766EE71CA3F67B00A13635 /* BlueSTSDKRemoteFeatureHumidity.h in Headers */,
@@ -562,9 +588,11 @@
 				4EDA2C49BCE96404A64B6839 /* BlueSTSDKFeatureAudioADPCMSync.h in Headers */,
 				4EDA2B430AFA1FB62C53CB52 /* BlueSTSDKFeatureAudioADPCM.h in Headers */,
 				66C4A3C41B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.h in Headers */,
+				668A12771E3A443F00D99490 /* BlueSTSDKFeatureCompass.h in Headers */,
+				668A127B1E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.h in Headers */,
 				665242821B0B1EEC00931F93 /* BlueSTSDKNode_prv.h in Headers */,
 				665242741B0B1C1400931F93 /* NSData+NumberConversion.h in Headers */,
-				EAF17E461C6C98D500F61D35 /* BlueSTSDKRegisterDefines.h in Headers */,
+				EAF17E461C6C98D500F61D35 /* BlueSTSDKWeSURegisterDefines.h in Headers */,
 				665242841B0B1F5400931F93 /* BlueSTSDKFeature_prv.h in Headers */,
 				665242871B0B202500931F93 /* BlueSTSDKManager_prv.h in Headers */,
 				665242891B0B20AC00931F93 /* BlueSTSDKDebug_prv.h in Headers */,
@@ -626,7 +654,7 @@
 		665241E71B0B1BB100931F93 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = STCentralLab;
 				TargetAttributes = {
 					665241EF1B0B1BB100931F93 = {
@@ -678,11 +706,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				666847B91DE85031001064A3 /* BlueSTSDKFwVersion.m in Sources */,
 				66BC2BD71D40AA2C00F91A5F /* BlueSTSDKStdCharToFeatureMap.m in Sources */,
+				668A127C1E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.m in Sources */,
 				6611A1B81CAAC86F00476E8B /* BlueSTSDKRemoteFeaturePressure.m in Sources */,
 				6602184B1B903A37006246E9 /* BlueSTSDKFeatureCarryPostion.m in Sources */,
 				6692CC6D1D54BC230078B6D2 /* BlueSTSDKDeviceTimestampFeature.m in Sources */,
 				665242261B0B1C0800931F93 /* BlueSTSDKManager.m in Sources */,
+				667D274A1E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m in Sources */,
 				66DBB6B11CAEB3F900CCF412 /* BlueSTSDKRemoteFeatureSwitch.m in Sources */,
 				667BAABA1B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.m in Sources */,
 				662D8BD91B0B6C88006B7538 /* BlueSTSDKNodeFake.m in Sources */,
@@ -702,7 +733,7 @@
 				66BC2BD51D40AA2C00F91A5F /* BlueSTSDKFeatureHeartRate.m in Sources */,
 				665242711B0B1C1400931F93 /* BlueSTSDKFeatureLogNSLog.m in Sources */,
 				665DAB901C2152C300795077 /* BlueSTSDKFeaturePedometer.m in Sources */,
-				EAF17E451C6C738500F61D35 /* BlueSTSDKRegisterDefines.m in Sources */,
+				EAF17E451C6C738500F61D35 /* BlueSTSDKWeSURegisterDefines.m in Sources */,
 				665242591B0B1C1400931F93 /* BlueSTSDKFeatureBattery.m in Sources */,
 				665242751B0B1C1400931F93 /* NSData+NumberConversion.m in Sources */,
 				6660F9551C0D9961005ADB53 /* BlueSTSDKFeatureProximityGesture.m in Sources */,
@@ -723,6 +754,7 @@
 				6652427B1B0B1C1400931F93 /* BlueSTSDKBleAdvertiseParser.m in Sources */,
 				6652425F1B0B1C1400931F93 /* BlueSTSDKFeatureHumidity.m in Sources */,
 				6652427A1B0B1C1400931F93 /* BlueSTSDKCharacteristic.m in Sources */,
+				668A12781E3A443F00D99490 /* BlueSTSDKFeatureCompass.m in Sources */,
 				66C4A3C51B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.m in Sources */,
 				6652426D1B0B1C1400931F93 /* BlueSTSDKFeatureMagnetometer.m in Sources */,
 				66E6EA461BAAC0BD000A5968 /* BlueSTSDKConfigControl.m in Sources */,
@@ -765,8 +797,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -777,6 +811,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -813,8 +848,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -824,6 +861,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -845,7 +883,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -867,7 +905,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;

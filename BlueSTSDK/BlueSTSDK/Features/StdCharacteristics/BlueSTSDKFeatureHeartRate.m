@@ -58,7 +58,7 @@
  * @memberof BlueSTSDKFeatureHeartRate
  *  array with the description of field exported by the feature
  */
-NSArray *sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 @implementation BlueSTSDKFeatureHeartRate
 
@@ -87,13 +87,13 @@ NSArray *sFieldDesc;
 
 + (int32_t)getHeartRate:(BlueSTSDKFeatureSample *)sample {
     if(sample.data.count>=HEART_RATE_INDEX)
-        return [sample.data[HEART_RATE_INDEX] integerValue];
+        return [sample.data[HEART_RATE_INDEX] intValue];
     return -1;
 }
 
 + (int32_t)getEnergyExtended:(BlueSTSDKFeatureSample *)sample {
     if(sample.data.count>=ENERGY_INDEX)
-        return [sample.data[ENERGY_INDEX] integerValue];
+        return [sample.data[ENERGY_INDEX] intValue];
     return -1;
 }
 
@@ -121,7 +121,7 @@ NSArray *sFieldDesc;
  *
  *  @return the field descriptor for this feature
  */
--(NSArray*) getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
     return sFieldDesc;
 }//getFieldsDesc
 

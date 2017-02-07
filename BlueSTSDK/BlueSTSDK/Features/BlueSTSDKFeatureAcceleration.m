@@ -25,7 +25,7 @@
  *
  ******************************************************************************/
 
-#include <math.h>
+#import <math.h>
 
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureAcceleration.h"
@@ -42,7 +42,7 @@
  * @memberof BlueSTSDKFeatureAcceleration
  *  array with the description of field exported by the feature
  */
-NSArray *sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 @implementation BlueSTSDKFeatureAcceleration
 
@@ -105,7 +105,7 @@ NSArray *sFieldDesc;
  *
  *  @return the field descriptor for this feature
  */
--(NSArray*) getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
     return sFieldDesc;
 }//getFieldsDesc
 

@@ -53,13 +53,25 @@
 #define FEATURE_STATIS_MAX @0xFF
 #define FEATURE_STATUS_MIN @0
 
+
+#define COMMAND_GET_BATTERY_CAPACITY 0x01
+
+#define COMMAND_GET_MAX_ASSORBED_CURRENT 0x02
+
+/**
+ *  queue used for notify things to the delegate
+ */
+static dispatch_queue_t sNotificationQueue;
+
 /**
  * @memberof BlueSTSDKFeatureBattery
  *  array with the description of field exported by the feature
  */
-static NSArray *sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
-@implementation BlueSTSDKFeatureBattery
+@implementation BlueSTSDKFeatureBattery{
+    NSMutableSet<id<BlueSTSDKFeatureBatteryDelegate>> *mFeatureBatteryDelegates;
+}
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureBattery class]){
@@ -144,12 +156,114 @@ static NSArray *sFieldDesc;
 
 -(instancetype) initWhitNode:(BlueSTSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sNotificationQueue = dispatch_queue_create("BlueSTSDKFeatureBattery",
+                                                   DISPATCH_QUEUE_CONCURRENT);
+    });
+    mFeatureBatteryDelegates = [NSMutableSet set];
     return self;
 }
 
--(NSArray*) getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
     return sFieldDesc;
 }
+
+
+/*
+ /**
+ * the most significative bit in the staus tell us if the current has an high resolution or not
+ * @param status battery status
+ * @return true if the  MSB is 1 -> we use high precision current, false otherwise
+ */
+static bool hasHeightResolutionCurrent(uint8_t status){
+    return (status & 0x80)!=0;
+}
+
+/***
+ * remove the most MSB for extract only the battery status value
+ * @param status battery status
+ * @return the status with the MSB set to 0
+ */
+static uint8_t getBatteryStatus(uint8_t status){
+    return (status & 0x7F);
+}
+
+-(void) addBatteryDelegate:(id<BlueSTSDKFeatureBatteryDelegate>)delegate{
+    [mFeatureBatteryDelegates addObject:delegate];
+}
+
+-(void) removeBatteryDelegate:(id<BlueSTSDKFeatureBatteryDelegate>)delegate{
+    [mFeatureBatteryDelegates removeObject:delegate];
+}
+
+/**
+ * Send the command used for read the board battery capacity. The value will be notified with the
+ * callback {@link FeatureBattery.FeatureBatteryListener#onCapacityRead(FeatureBattery, int)}
+ * @return true if the command is correctly sent
+ */
+-(BOOL)readBatteryCapacity{
+    return [super sendCommand:COMMAND_GET_BATTERY_CAPACITY data:[NSData data]];
+}
+
+/**
+ * Send the command used for read the biggest current assorbed by the system.
+ * The value will be notified with the callback
+ * {@link FeatureBattery.FeatureBatteryListener#onMaxAssorbedCurrentRead(FeatureBattery, float)}
+ * @return true if the command is correctly sent
+ */
+-(BOOL)readMaxAbsorbedCurrent{
+    return [super sendCommand:COMMAND_GET_MAX_ASSORBED_CURRENT data:[NSData data]];
+}
+
+-(void)notifyBatteryCapacity:(uint16_t)capacity{
+    for (id<BlueSTSDKFeatureBatteryDelegate> delegate in mFeatureBatteryDelegates) {
+        if( [delegate respondsToSelector:@selector(didCapacityRead:capacity:)]){
+            dispatch_async(sNotificationQueue, ^(){
+                [delegate didCapacityRead: self capacity:capacity];
+            });
+        }//if
+    }//for
+}
+
+-(void)notifyMaxAssorbedCurrent:(float)current{
+    for (id<BlueSTSDKFeatureBatteryDelegate> delegate in mFeatureBatteryDelegates) {
+        if( [delegate respondsToSelector:@selector(didMaxAssorbedCurrentRead:current:)]){
+            dispatch_async(sNotificationQueue, ^(){
+                [delegate didMaxAssorbedCurrentRead: self current:current];
+            });
+        }//if
+    }//for
+}
+
+
+/**
+ *  this function is called when the node rensponse to a command, for this feature
+ * it extarct the status and call the correct delegate. if the status is 100 the
+ * feature is considered configurated and the stop signal is send
+ *
+ *  @param timestamp   package id
+ *  @param commandType command type
+ *  @param data        command data
+ */
+-(void) parseCommandResponseWithTimestamp:(uint64_t)timestamp
+                              commandType:(uint8_t)commandType
+                                     data:(NSData*)data{
+    if(commandType == COMMAND_GET_BATTERY_CAPACITY){
+        uint16_t capacity = [data extractLeUInt16FromOffset:0];
+        [self notifyBatteryCapacity:capacity];
+        return;
+    }
+    if(commandType == COMMAND_GET_MAX_ASSORBED_CURRENT){
+        float current = [data extractLeInt16FromOffset:0]/10.0f;
+        [self notifyMaxAssorbedCurrent:current];
+        return;
+    }
+    //if is an unknow command call the super method
+    [super parseCommandResponseWithTimestamp:timestamp
+                                 commandType:commandType
+                                        data:data];
+}//parseCommandResponseWithTimestamp
 
 /**
 *  read 3*int16+uint8 for build the battery value, create the new sample and
@@ -176,10 +290,14 @@ static NSArray *sFieldDesc;
     //the data arrive in mV we store it in V
     float voltage = [rawData extractLeInt16FromOffset:offset+2]/1000.0f;
     float current = [rawData extractLeInt16FromOffset:offset+4];
-    uint8_t status = [rawData extractUInt8FromOffset:offset+6];
     
+    uint8_t tempStatus = [rawData extractUInt8FromOffset:offset+6];
     
-    NSArray *data = @[@(percentage), @(voltage), @(current), @(status)];
+    if(hasHeightResolutionCurrent(tempStatus))
+        current=current/10.0f;
+    
+    NSArray *data = @[@(percentage), @(voltage), @(current),
+                      @(getBatteryStatus(tempStatus))];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:7];

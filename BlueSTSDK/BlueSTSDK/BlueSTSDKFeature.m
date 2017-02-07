@@ -44,6 +44,7 @@
     self = [super init];
     _timestamp=timestamp;
     _data=data;
+    _notificaitonTime = [NSDate date];
     return self;
 }
 
@@ -135,7 +136,7 @@ static NSNumberFormatter *sFormatter;
 }
 
 //this function must be implemented in a subclass, this implementation only throw an exception
--(NSArray*)getFieldsDesc{
+-(NSArray<BlueSTSDKFeatureField*>*)getFieldsDesc{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must overwrite %@ in a subclass]",
                                            NSStringFromSelector(_cmd)]
@@ -223,7 +224,7 @@ static NSNumberFormatter *sFormatter;
 
 #pragma mark - BlueSTSDKFeature(fake)
 
-#include "BlueSTSDKFeature+fake.h"
+#import "BlueSTSDKFeature+fake.h"
 
 @implementation BlueSTSDKFeature(fake)
 

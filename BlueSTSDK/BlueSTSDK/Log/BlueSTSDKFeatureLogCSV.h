@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef BlueSTSDK_BlueSTSDKFeatureLogCSV_h
+#define BlueSTSDK_BlueSTSDKFeatureLogCSV_h
+
 #import <Foundation/Foundation.h>
 
 #import "BlueSTSDKFeature.h"
@@ -130,3 +133,4 @@
 +(void) clearLogFolder;
 
 @end
+#endif
