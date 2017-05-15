@@ -31,7 +31,7 @@
 #import <Foundation/Foundation.h>
 #import "BlueSTSDKRegister.h"
 #import "BlueSTSDKCommand.h"
-#import "BluesTSDKFwVersion.h"
+#import "BlueSTSDKFwVersion.h"
 #import "BlueSTSDKWeSUFeatureConfig.h"
 
 

@@ -48,7 +48,7 @@
  *  @return proximity value or out of range
  */
 +(uint16_t)getProximityDistance:(BlueSTSDKFeatureSample*)data;
-
++(BOOL)isOutOfRangeSample:(BlueSTSDKFeatureSample*)sample;
 /**
  *  is a special value returned when the sensor detect an object out of its range
  *

@@ -35,25 +35,35 @@
 #define FEATURE_NAME @"Proximity"
 #define FEATURE_UNIT @"mm"
 #define FEATURE_MIN 0
-#define FEATURE_MAX 255
+#define FEATURE_LOW_RANGE_MAX (0xFE)
+#define FEATURE_HIGHT_RANGE_MAX (0x7FFE)
+
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeUInt16
-#define FEATURE_OUT_OF_RANGE_VALUE 510
+#define FEATURE_OUT_OF_RANGE_VALUE (0xFFFF)
 
 /**
  * @memberof BlueSTSDKFeatureProximity
  *  array with the description of field exported by the feature
  */
-static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*> *sLowRangeFieldDesc;
+static NSArray<BlueSTSDKFeatureField*> *sHightRangeFieldDesc;
 
-@implementation BlueSTSDKFeatureProximity
+@implementation BlueSTSDKFeatureProximity{
+    NSArray<BlueSTSDKFeatureField*> *mCurrentFeatureField;
+}
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureProximity class]){
-        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
+        sLowRangeFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
                                                         unit:FEATURE_UNIT
                                                         type:FEATURE_TYPE
                                                          min:@FEATURE_MIN
-                                                         max:@FEATURE_MAX]];
+                                                         max:@FEATURE_LOW_RANGE_MAX]];
+        sHightRangeFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
+                                                                unit:FEATURE_UNIT
+                                                                type:FEATURE_TYPE
+                                                                 min:@FEATURE_MIN
+                                                                 max:@FEATURE_HIGHT_RANGE_MAX]];
     }//if
     
 }
@@ -65,6 +75,11 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     return[[sample.data objectAtIndex:0] intValue];
 }
 
++(BOOL)isOutOfRangeSample:(BlueSTSDKFeatureSample*)sample{
+    return [BlueSTSDKFeatureProximity getProximityDistance:sample] ==
+        [BlueSTSDKFeatureProximity outOfRangeValue];
+}
+
 +(uint16_t)outOfRangeValue{
     return FEATURE_OUT_OF_RANGE_VALUE;
 }
@@ -72,13 +87,39 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 -(instancetype) initWhitNode:(BlueSTSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
+    mCurrentFeatureField = sLowRangeFieldDesc;
     return self;
 }
 
 -(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc{
-    return sFieldDesc;
+    return mCurrentFeatureField;
 }
 
+
+ static BOOL isLowRangeSensor(uint16_t value){
+     return (value & 0x8000)==0;
+ }
+ 
+ static uint16_t extractRangeValue(uint16_t value){
+     return (value & ~0x8000);
+ }
+ 
+ static uint16_t getLowRangeValue(uint16_t value){
+     uint16_t rangeValue = extractRangeValue(value);
+     if(rangeValue > FEATURE_LOW_RANGE_MAX){
+         rangeValue = FEATURE_OUT_OF_RANGE_VALUE;
+     }
+     return rangeValue;
+ }
+
+ static uint16_t getHighRangeSample(uint16_t value){
+     uint16_t rangeValue = extractRangeValue(value);
+     if(rangeValue > FEATURE_HIGHT_RANGE_MAX){
+         rangeValue = FEATURE_OUT_OF_RANGE_VALUE;
+     }
+     return rangeValue;
+ }
+ 
 
 /**
  *  read uint16 for build the distance value, create the new sample and
@@ -101,12 +142,29 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     }//if
     
     uint16_t distance = [rawData extractLeUInt16FromOffset:offset];
+    if(isLowRangeSensor(distance))
+        distance = getLowRangeValue(distance);
+    else
+        distance = getHighRangeSample(distance);
     
     NSArray *data = @[@(distance)];
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:2];
 
 }
+
+-(NSString*) description{
+    NSMutableString *s = [NSMutableString stringWithString:@"Ts:"];
+    BlueSTSDKFeatureSample *sample = self.lastSample;
+    [s appendFormat:@"%lld %@:",sample.timestamp,FEATURE_NAME];
+    uint16_t distance = [sample.data[0] unsignedShortValue];
+    if(distance != FEATURE_OUT_OF_RANGE_VALUE){
+        [s appendFormat:@"%u",distance];
+    }else{
+        [s appendFormat:@"%@",@"Out Of Range"];
+    }
+    return s;
+}//description
 
 @end
 
@@ -118,7 +176,7 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 -(NSData*) generateFakeData{
     NSMutableData *data = [NSMutableData dataWithCapacity:2];
     
-    int16_t temp = FEATURE_MIN + rand()%((FEATURE_MAX-FEATURE_MIN));
+    int16_t temp = FEATURE_MIN + rand()%((FEATURE_LOW_RANGE_MAX-FEATURE_MIN));
     [data appendBytes:&temp length:2];
     
     return data;

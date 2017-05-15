@@ -133,12 +133,12 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 /**
  *  node name, is not guaranteed that this string is unique
  */
-@property (retain, readonly) NSString *name;
+@property (retain, readonly,nonnull) NSString *name;
 
 /**
  *  node address, if available in the advertise otherwise nil
  */
-@property (retain, readonly) NSString *address;
+@property (retain, readonly,nonnull) NSString *address;
 
 /**
  *  version of the protocol
@@ -148,27 +148,27 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 /**
  *  unique string that identify the node
  */
-@property (retain, readonly) NSString *tag;
+@property (retain, readonly,nonnull) NSString *tag;
 
 /**
  *  date of the last rssi update package
  */
-@property (readonly) NSDate *rssiLastUpdate;
+@property (readonly,nullable) NSDate *rssiLastUpdate;
 
 /**
  *  last rssi signal value
  */
-@property (retain, readonly) NSNumber *RSSI;
+@property (retain, readonly,nullable) NSNumber *RSSI;
 
 /**
  *  object that we can use for access to the debug console or nil if it is absent
  */
-@property (retain, readonly) BlueSTSDKDebug *debugConsole;
+@property (retain, readonly,nullable) BlueSTSDKDebug *debugConsole;
 
 /**
  *  object that we can use for access to the config node or nil if it is absent
  */
-@property (readonly) BlueSTSDKConfigControl *configControl;
+@property (readonly,nullable) BlueSTSDKConfigControl *configControl;
 
 @property (readonly) BOOL isSleeping;
 @property (readonly) BOOL hasExtension;
@@ -176,21 +176,21 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 /**
  *  tx power used from the board
  */
-@property (retain, readonly) NSNumber *txPower;
+@property (retain, readonly,nonnull) NSNumber *txPower;
 
 /**
  *  return a friendly name composed with name and tag or address
  *
  *  @return a string represent the friendly name
  */
--(NSString *) friendlyName;
+-(nonnull NSString *) friendlyName;
 
 /**
  *  return the address if available otherwise the tag
  *
  *  @return a string represent the address
  */
--(NSString *)addressEx;
+-(nonnull NSString *)addressEx;
 
 /**
  *  convert the enum value to a string
@@ -199,35 +199,35 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *
  *  @return a string representation of the enum value
  */
-+(NSString*) stateToString:(BlueSTSDKNodeState)state;
++(nonnull NSString*) stateToString:(BlueSTSDKNodeState)state;
 
 /**
  *  add a delegate where notify the change in the connection parameters
  *
  *  @param delegate object where notify change of rssi or transmission power
  */
--(void) addBleConnectionParamiterDelegate:(id<BlueSTSDKNodeBleConnectionParamDelegate>)delegate;
+-(void) addBleConnectionParamiterDelegate:(nonnull id<BlueSTSDKNodeBleConnectionParamDelegate>)delegate;
 
 /**
  *  remove a delegate of type {@link BlueSTSDKNodeBleConnectionParamDelegate}
  *
  *  @param delegate delegate to remove
  */
--(void) removeBleConnectionParamiterDelegate:(id<BlueSTSDKNodeBleConnectionParamDelegate>)delegate;
+-(void) removeBleConnectionParamiterDelegate:(nonnull id<BlueSTSDKNodeBleConnectionParamDelegate>)delegate;
 
 /**
  *  add a delegate where notify change of the node connection status
  *
  *  @param delegate delegate to add
  */
--(void) addNodeStatusDelegate:(id<BlueSTSDKNodeStateDelegate>)delegate;
+-(void) addNodeStatusDelegate:(nonnull id<BlueSTSDKNodeStateDelegate>)delegate;
 
 /**
  *  remove a delegate of type {@link BlueSTSDKNodeStateDelegate}
  *
  *  @param delegate delegate to remove
  */
--(void) removeNodeStatusDelegate:(id<BlueSTSDKNodeStateDelegate>)delegate;
+-(void) removeNodeStatusDelegate:(nonnull id<BlueSTSDKNodeStateDelegate>)delegate;
 
 /**
  *  compare two nodes, the node are equal if the tag value is the same
@@ -236,7 +236,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *
  *  @return true if node.tag == self.tag
  */
--(BOOL) equals:(BlueSTSDKNode *)node;
+-(BOOL) equals:(nonnull BlueSTSDKNode *)node;
 
 /**
  *  get the available features, there is a feature for each bit set in the advertise,
@@ -244,13 +244,12 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *
  *  @return array of {@link BlueSTSDKFeature} that the node can export
  */
--(NSArray*) getFeatures;
+-(nonnull NSArray<BlueSTSDKFeature*>*) getFeatures;
 
 /** get all the available feature of a specific type 
  * @param type type of features to serach
  * @return array of {@link BlueSTSDKFeature} exported by the node*/
--(NSArray*)getFeaturesOfType:(Class)type;
-
+-(nonnull NSArray<BlueSTSDKFeature*>*)getFeaturesOfType:(nonnull Class)type;
 /**
  *  return the first feature of the specific type or null if it is not available
  *
@@ -259,7 +258,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *  @return null if the feature doesn't exit, otherwise the class that impement 
  * the request feature
  */
--(BlueSTSDKFeature*)getFeatureOfType:(Class)type;
+-(nullable BlueSTSDKFeature*)getFeatureOfType:(nonnull Class)type;
 
 /**
  *  request to update the rssi value
@@ -288,7 +287,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  */
 -(void) disconnect;
 
--(void) addExternalCharacteristics:(NSDictionary<CBUUID*,NSArray<Class>* >*)userDefinedFeature;
+-(void) addExternalCharacteristics:(nonnull NSDictionary<CBUUID*,NSArray<Class>* >*)userDefinedFeature;
 
 /**
  *  request to read the value of a particular feature, the feature will manage to notify you the new value
@@ -297,7 +296,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *
  *  @return true if the request is send correctly
  */
--(BOOL) readFeature:(BlueSTSDKFeature*)feature;
+-(BOOL) readFeature:(nonnull BlueSTSDKFeature*)feature;
 
 /**
  *  tell if the notifications for a feature are enabled
@@ -306,7 +305,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *
  *  @return true if you enable the notification for this feature
  */
--(BOOL) isEnableNotification:(BlueSTSDKFeature*)feature;
+-(BOOL) isEnableNotification:(nonnull BlueSTSDKFeature*)feature;
 
 /**
  *  enable the notification for a particular feature, the feature will manage 
@@ -316,7 +315,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *
  *  @return true if the request is send correctly
  */
--(BOOL) enableNotification:(BlueSTSDKFeature*)feature;
+-(BOOL) enableNotification:(nonnull BlueSTSDKFeature*)feature;
 
 /**
  *  disable the notification for a particular feature
@@ -325,7 +324,14 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *
  *  @return true if the request is send correctly
  */
--(BOOL) disableNotification:(BlueSTSDKFeature*)feature;
+-(BOOL) disableNotification:(nonnull BlueSTSDKFeature*)feature;
+
+/**
+ * string rappresentation of type enum
+ * @param type to transform in string
+ * @return string rappresentation of type enum
+ */
++(nonnull NSString*)nodeTypeToString:(BlueSTSDKNodeType)type;
 
 @end
 
@@ -342,7 +348,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *  @param newState  new node status
  *  @param prevState old node status
  */
-- (void) node:(BlueSTSDKNode *)node didChangeState:(BlueSTSDKNodeState)newState prevState:(BlueSTSDKNodeState)prevState;
+- (void) node:(nonnull BlueSTSDKNode *)node didChangeState:(BlueSTSDKNodeState)newState prevState:(BlueSTSDKNodeState)prevState;
 @end
 
 /**
@@ -357,7 +363,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *  @param node    node that has a new rssi value
  *  @param newRssi new rssi value for the nodes
  */
-- (void) node:(BlueSTSDKNode *)node didChangeRssi:(NSInteger)newRssi;
+- (void) node:(nonnull BlueSTSDKNode *)node didChangeRssi:(NSInteger)newRssi;
 
 @optional
 /**
@@ -367,7 +373,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *  @param newPower new tx power for the node
  *  @note implement this method is optional
  */
-- (void) node:(BlueSTSDKNode *)node didChangeTxPower:(NSInteger)newPower;
+- (void) node:(nonnull BlueSTSDKNode *)node didChangeTxPower:(NSInteger)newPower;
 
 @end
 

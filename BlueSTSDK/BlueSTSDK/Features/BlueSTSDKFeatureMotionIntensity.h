@@ -31,13 +31,19 @@
 #import "BlueSTSDKFeature.h"
 
 /**
- *  Feature that contains a compass data
+ *  Feature that use the osxMotionId algorithm to extract the node motion intensty
  *
  * @author STMicroelectronics - Central Labs.
  */
 @interface BlueSTSDKFeatureMotionIntensity : BlueSTSDKFeature
 
-+(uint8_t)getMotionIntensity:(BlueSTSDKFeatureSample *)sample;
+/**
+ * Extrac the motion intensity from a sample
+ *
+ * @param sample sample read from the node
+ * @return motion intensity value or a negative value if is not a valid sample
+ */
++(int8_t)getMotionIntensity:(BlueSTSDKFeatureSample *)sample;
 
 @end
 

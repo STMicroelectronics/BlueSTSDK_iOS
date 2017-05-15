@@ -35,8 +35,8 @@
 #import "Util/BlueSTSDKCharacteristic.h"
 #import "Util/BlueSTSDKBleAdvertiseParser.h"
 #import "Util/BlueSTSDKBleNodeDefines.h"
-#import "util/NSData+NumberConversion.h"
-#import "util/UnwrapTimeStamp.h"
+#import "Util/NSData+NumberConversion.h"
+#import "Util/UnwrapTimeStamp.h"
 
 #define RETRAY_ENABLE_NOTIFICATION_DELAY 1.0f
 #define TAG_NAME_CHAR_NUM 6
@@ -945,6 +945,22 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
     }//if-else
 }//didUpdateNotificationStateForCharacteristic
 
++(NSString*)nodeTypeToString:(BlueSTSDKNodeType)type{
+    
+    switch (type) {
+        case BlueSTSDKNodeTypeNucleo:
+            return @"NUCLEO";
+        case BlueSTSDKNodeTypeSensor_Tile:
+            return @"SENSOR_TILE";
+        case BlueSTSDKNodeTypeBlue_Coin:
+            return @"BLUE_COIN";
+        case BlueSTSDKNodeTypeSTEVAL_WESU1:
+            return @"STEVAL_WESU1";
+        case BlueSTSDKNodeTypeGeneric:
+            return @"GENERIC";
+    }
+    
+}
 
 
 +(NSString*) stateToString:(BlueSTSDKNodeState)state{

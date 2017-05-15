@@ -170,7 +170,6 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 }
 
 
-/*
  /**
  * the most significative bit in the staus tell us if the current has an high resolution or not
  * @param status battery status

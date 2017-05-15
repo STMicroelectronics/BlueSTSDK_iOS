@@ -46,7 +46,7 @@
 /**
  *  moment when the data arrive at the device
  */
-@property(readonly,retain) NSDate *notificaitonTime;
+@property(readonly,retain,nullable) NSDate *notificaitonTime;
 
 /**
  *  node time stamp at the moment of the data acquisition
@@ -56,7 +56,7 @@
 /**
  *  array of NSNumber with the feature data
  */
-@property(readonly,retain) NSArray<NSNumber*> *data;
+@property(readonly,retain) NSArray< NSNumber* > * _Nonnull data;
 
 /**
  *  build a BlueSTSDKFeatureSample
@@ -66,7 +66,7 @@
  *
  *  @return object that contains the data
  */
-+(instancetype) sampleWithTimestamp:(uint64_t)timestamp data:(NSArray<NSNumber*>*)data;
++(instancetype _Nonnull ) sampleWithTimestamp:(uint64_t)timestamp data:(NSArray<NSNumber*>* _Nonnull)data;
 
 /**
  *  initialize a BlueSTSDKFeatureSample
@@ -76,7 +76,7 @@
  *
  *  @return object that contains the data
  */
--(instancetype) initWhitTimestamp: (uint64_t)timestamp data:(NSArray<NSNumber*>*)data;
+-(instancetype _Nonnull) initWhitTimestamp: (uint64_t)timestamp data:(NSArray<NSNumber*>* _Nonnull)data;
 
 @end
 
@@ -87,7 +87,7 @@
  * notification when the node will update the values
  * @note That all the notification will be submited in a concurrent queue,
  * so the callback will be run in a background thread
- * \par
+ *
  * @note This class is abstract, you have to extend it and implement the missing function
  * @author STMicroelectronics - Central Labs.
  */
@@ -104,22 +104,22 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 /**
  *  name of the feature
  */
-@property (readonly,retain, nonatomic) NSString *name;
+@property (readonly,retain, nonatomic,nonnull) NSString *name;
 
 /**
  *  node that export this feature
  */
-@property (readonly,retain,nonatomic) BlueSTSDKNode *parentNode;
+@property (readonly,retain,nonatomic,nonnull) BlueSTSDKNode *parentNode;
 
 /**
  *  system time when we receive the last update
  */
-@property (readonly) NSDate* lastUpdate;
+@property (readonly,nullable) NSDate* lastUpdate;
 
 /**
  *  object that contains the last data received from the node
  */
-@property (readonly,atomic) BlueSTSDKFeatureSample *lastSample;
+@property (readonly,atomic,nullable) BlueSTSDKFeatureSample *lastSample;
 
 
 /**
@@ -127,7 +127,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @return string represent the current feature data
  */
--(NSString*) description;
+-(nonnull NSString*) description;
 
 /**
  *  register a new {@link BlueSTSDKFeatureDelegate}, this protocol is used for 
@@ -135,14 +135,14 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @param delegate class where do the callback for notify an update
  */
--(void) addFeatureDelegate:(id<BlueSTSDKFeatureDelegate>)delegate;
+-(void) addFeatureDelegate:(nonnull id<BlueSTSDKFeatureDelegate>)delegate;
 
 /**
  *  remove a previous register delegate
  *
  *  @param delegate delegate to remove
  */
--(void) removeFeatureDelegate:(id<BlueSTSDKFeatureDelegate>)delegate;
+-(void) removeFeatureDelegate:(nonnull id<BlueSTSDKFeatureDelegate>)delegate;
 
 /**
  *  register a new {@link BlueSTSDKFeatureLogDelegate} this protocol will be called when
@@ -152,14 +152,14 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @param delegate class where to the callback
  */
--(void) addFeatureLoggerDelegate:(id<BlueSTSDKFeatureLogDelegate>)delegate;
+-(void) addFeatureLoggerDelegate:(nonnull id<BlueSTSDKFeatureLogDelegate>)delegate;
 
 /**
  *  remove a previous register delegate
  *
  *  @param delegate delegate to remove
  */
--(void) removeFeatureLoggerDelegate:(id<BlueSTSDKFeatureLogDelegate>)delegate;
+-(void) removeFeatureLoggerDelegate:(nonnull id<BlueSTSDKFeatureLogDelegate>)delegate;
 
 /**
  *  <b>abstract method</b>, build a feature that is exported by the node
@@ -168,7 +168,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @return pointer to a feature
  */
--(instancetype) initWhitNode: (BlueSTSDKNode*)node;
+-(nonnull instancetype) initWhitNode: (nonnull BlueSTSDKNode*)node;
 
 
 /**
@@ -177,7 +177,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @note it is an abstract method, you have to overwrite it!
  *  @return array of BlueSTSDKFeatureField that describe the data exported by the feature
  */
--(NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc;
+-(nonnull NSArray<BlueSTSDKFeatureField*>*) getFieldsDesc;
 
 
 @end
@@ -192,7 +192,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @param sample  last data read from the feature
  */
 @required
-- (void)didUpdateFeature:(BlueSTSDKFeature *)feature sample:(BlueSTSDKFeatureSample*) sample;
+- (void)didUpdateFeature:(nonnull BlueSTSDKFeature *)feature sample:(nonnull BlueSTSDKFeatureSample*) sample;
 
 @end
 
@@ -210,7 +210,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @param sample  data extracted by the feature
  */
 @required
-- (void)feature:(BlueSTSDKFeature *)feature rawData:(NSData*)raw sample:(BlueSTSDKFeatureSample*)sample;
+- (void)feature:(nonnull BlueSTSDKFeature *)feature rawData:(nonnull NSData*)raw sample:(nonnull BlueSTSDKFeatureSample*)sample;
 @end
 
 #endif

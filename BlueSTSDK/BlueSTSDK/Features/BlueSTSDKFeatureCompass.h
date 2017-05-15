@@ -28,16 +28,21 @@
 #ifndef BlueSTSDK_BlueSTSDKFeatureCompass_h
 #define BlueSTSDK_BlueSTSDKFeatureCompass_h
 
-#import "BlueSTSDKFeature.h"
+#import "BlueSTSDKFeatureAutoConfigurable.h"
 
 /**
  *  Feature that contains a compass data
  *
  * @author STMicroelectronics - Central Labs.
  */
-@interface BlueSTSDKFeatureCompass : BlueSTSDKFeature
+@interface BlueSTSDKFeatureCompass : BlueSTSDKFeatureAutoConfigurable
 
 
+/**
+ * Extract the compas value
+ * @param sample sample read from the node
+ * @return angle in degree, respect the magnetic north.
+ */
 +(float)getCompassAngle:(BlueSTSDKFeatureSample *)sample;
 
 @end

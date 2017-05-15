@@ -114,21 +114,60 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureBatteryStatus){
  */
 +(float)getBatteryCurrent:(BlueSTSDKFeatureSample*)data;
 
+/**
+ * Ask to read the node battery capacity
+ *
+ * @return true if the request is sent
+ */
 -(BOOL)readBatteryCapacity;
 
+
+/**
+ * Ask to read the maximu node assorbed current
+ *
+ * @return true if the request is sent
+ */
 -(BOOL)readMaxAbsorbedCurrent;
 
+
+/**
+ * Add a delegate to receive the battery capacyt and the max absorbed current
+ *
+ * @param delegate object where notify the data
+ */
 -(void) addBatteryDelegate:(id<BlueSTSDKFeatureBatteryDelegate>)delegate;
 
+
+/**
+ * Remove the delate
+ *
+ * @param delegate delegate to remove
+ */
 -(void) removeBatteryDelegate:(id<BlueSTSDKFeatureBatteryDelegate>)delegate;
 
 @end
 
+/**
+ * Delegate used to notify the node battery capacity and the max current
+ */
 @protocol  BlueSTSDKFeatureBatteryDelegate <NSObject>
 
+
+ /**
+  *callback called when the battery capacity is read
+  *
+  *@param feature feature used to read the battery capacity
+  *@param capacity battery capacity in mAh
+  */
 @optional -(void)didCapacityRead:(BlueSTSDKFeatureBattery *)feature
                         capacity:(uint16_t)capacity;
 
+ /**
+  *callback called when the max assorbed current is read
+  *
+  *@param feature feature used to read the value
+  *@param current current in mA
+  */
 @optional -(void)didMaxAssorbedCurrentRead:(BlueSTSDKFeatureBattery *)feature
                                    current:(float)current;
 @end

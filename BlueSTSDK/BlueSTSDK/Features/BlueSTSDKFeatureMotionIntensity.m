@@ -53,9 +53,9 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 }
 
 
-+(uint8_t)getMotionIntensity:(BlueSTSDKFeatureSample *)sample{
++(int8_t)getMotionIntensity:(BlueSTSDKFeatureSample *)sample{
     if(sample.data.count==0)
-        return NAN;
+        return -1;
     return[[sample.data objectAtIndex:0] unsignedCharValue];
 }
 

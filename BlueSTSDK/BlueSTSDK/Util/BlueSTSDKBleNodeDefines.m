@@ -33,7 +33,7 @@
 #import "../Features/BlueSTSDKFeatureMemsSensorFusion.h"
 #import "../Features/BlueSTSDKFeatureHumidity.h"
 #import "../Features/BlueSTSDKFeatureTemperature.h"
-#import "../Features/BlueSTSDKFEaturePressure.h"
+#import "../Features/BlueSTSDKFeaturePressure.h"
 #import "../Features/BlueSTSDKFeatureMemsSensorFusionCompact.h"
 #import "../Features/BlueSTSDKFeatureLuminosity.h"
 #import "../Features/BlueSTSDKFeatureProximity.h"
