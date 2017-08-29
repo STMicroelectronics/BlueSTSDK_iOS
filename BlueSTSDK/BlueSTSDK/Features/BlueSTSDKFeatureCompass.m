@@ -28,11 +28,12 @@
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureCompass.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
 
-#define FEATURE_NAME @"Compass"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Compass",nil)
 #define FEATURE_UNIT @"°"
 #define FEATURE_MIN 0
 #define FEATURE_MAX 360
@@ -85,8 +86,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     
     if(rawData.length-offset < 2){
         @throw [NSException
-                exceptionWithName:@"Invalid Compass data"
-                reason:@"The feature need almost 2 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Compass data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 2 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     

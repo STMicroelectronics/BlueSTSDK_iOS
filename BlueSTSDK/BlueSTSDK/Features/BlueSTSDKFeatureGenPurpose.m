@@ -29,13 +29,13 @@
 
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureGenPurpose.h"
-
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"General Purpose"
-#define FEATURE_UNIT @"RawData"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"General Purpose",nil)
+#define FEATURE_UNIT BLUESTSDK_LOCALIZE(@"RawData",nil)
 #define FEATURE_MIN 0
 #define FEATURE_MAX 255
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeUInt8
@@ -113,7 +113,7 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     BlueSTSDKFeatureSample *sample = self.lastSample;
     [s appendFormat:@"%llu ",sample.timestamp];
     NSArray *datas = sample.data;
-    [s appendString:@"Data: "];
+    [s appendString:BLUESTSDK_LOCALIZE(@"Data: ",nil)];
     for (NSNumber *n in datas) {
        [s appendFormat:@" %X ",[n unsignedCharValue]];
     }//for

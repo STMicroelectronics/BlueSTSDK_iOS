@@ -28,27 +28,28 @@
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureBattery.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Battery"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Battery",nil)
 
-#define FEATURE_LEVEL_NAME @"Level"
+#define FEATURE_LEVEL_NAME BLUESTSDK_LOCALIZE(@"Level",nil)
 #define FEATURE_LEVEL_UNIT @"%"
 #define FEATURE_LEVEL_MAX @100
 #define FEATURE_LEVEL_MIN @0
 
-#define FEATURE_VOLTAGE_NAME @"Voltage"
+#define FEATURE_VOLTAGE_NAME BLUESTSDK_LOCALIZE(@"Voltage",nil)
 #define FEATURE_VOLTAGE_UNIT @"V"
 #define FEATURE_VOLTAGE_MAX @-10
 #define FEATURE_VOLTAGE_MIN @10
 
-#define FEATURE_CURRENT_NAME @"Current"
+#define FEATURE_CURRENT_NAME BLUESTSDK_LOCALIZE(@"Current",nil)
 #define FEATURE_CURRENT_UNIT @"mA"
 #define FEATURE_CURRENT_MAX @-10
 #define FEATURE_CURRENT_MIN @10
 
-#define FEATURE_STATUS_NAME @"Status"
+#define FEATURE_STATUS_NAME BLUESTSDK_LOCALIZE(@"Status",nil)
 #define FEATURE_STATUS_UNIT nil
 #define FEATURE_STATIS_MAX @0xFF
 #define FEATURE_STATUS_MIN @0
@@ -122,15 +123,15 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 +(NSString*)getBatteryStatusStr:(BlueSTSDKFeatureSample*)sample{
     switch ([BlueSTSDKFeatureBattery getBatteryStatus:sample]){
         case BlueSTSDKFeatureBatteryStatusLowBattery:
-            return @"Low battery";
+            return BLUESTSDK_LOCALIZE(@"Low battery",nil);
         case BlueSTSDKFeatureBatteryStatusDischarging:
-            return @"Discharging";
+            return BLUESTSDK_LOCALIZE(@"Discharging",nil);
         case BlueSTSDKFeatureBatteryStatusPluggedNotCharging:
-            return @"Plugged";
+            return BLUESTSDK_LOCALIZE(@"Plugged",nil);
         case BlueSTSDKFeatureBatteryStatusCharging:
-            return @"Charging";
+            return BLUESTSDK_LOCALIZE(@"Charging",nil);
         case BlueSTSDKFeatureBatteryStatusError:
-            return @"Error";
+            return BLUESTSDK_LOCALIZE(@"Error",nil);
     }//switch
 }//getBatteryStatusStr
 
@@ -280,8 +281,8 @@ static uint8_t getBatteryStatus(uint8_t status){
     
     if(rawData.length-offset < 7){
         @throw [NSException
-                exceptionWithName:@"Invalid Battery data"
-                reason:@"The feature need 7 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Battery data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need 7 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     

@@ -1,10 +1,10 @@
-#BlueST SDK
+# BlueST SDK
 
 BlueST is a multi-platform library (Android and iOS supported) that permits easy access to the data exported by a Bluetooth Low Energy (BLE) device that implements the BlueST protocol.
 
-##BlueST Protocol
+## BlueST Protocol
 
-###Advertise
+### Advertise
 The library will show only the device that has a vendor-specific field formatted in the following way:
 
 |Length|  1       |1           | 1                |1          | 4              | 6        |
@@ -27,13 +27,13 @@ Currently used values are:
  - The feature mask is a bit field that provides information regarding what characteristics/features are exported by the board.
 Currently, bits are mapped in the following way:
   
-   |Bit|31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|
-   |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-   |Feature|RFU|ADPCM Audio sync|Switch|Direction of arrival|ADPCM Audio|MicLevel|Proximity|Lux|Acc|Gyro|Mag|Pressure|Humidity|Temperature|Battery|Second Temperature|
-   
-   |Bit|15|14|13|12|11|10|9|8|7|6|5|4|3|2|1|0|
-   |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-   |Feature|RFU|RFU|RFU|RFU|RFU|AccEvent|FreeFall|Sensor Fusion Compact|Sensor Fusion|Compass|Motion Intensity|Activity|Carry Position|ProximityGesture|MemsGesture|Pedometer|
+      |Bit|31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|
+      |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+      |Feature|RFU|ADPCM Sync|Switch|Direction of arrival|ADPC Audio|MicLevel|Proximity|Lux|Acc|Gyro|Mag|Pressure|Humidity|Temperature|Battery|Second Temperature|
+
+      |Bit|15|14|13|12|11|10|9|8|7|6|5|4|3|2|1|0|
+      |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+      |Feature|RFU|RFU|RFU|RFU|Beam forming|AccEvent|FreeFall|Sensor Fusion Compact|Sensor Fusion|Compass|Motion intensity|Activity|Carry Position|ProximityGesture|MemsGesture|Pedometer|
 You can use one of the RFU bits or define a new device and decide how to map the feature. 
 To see how the data is exported by pre-defined features, consult the export method [<code> Feature.ExtractResult Feature.extractData(long,byte[],int)</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_Android/javadoc/com/st/BlueSTSDK/Feature.html#extractData-long-byte:A-int-).  within the feature class definition.
 
@@ -72,14 +72,14 @@ For this type of feature the characteristic data format must be:
 |  Name  |  NodeID   | Remote timestamp | Feature Data  | ..... |
 
 
-###Special Services
-####[Debug](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_debug.html)
-If available, the debug service must have the UUID <code>0000000-0000E-11e1-9ab4-0002a5d5c51b</code> and will contains 2 characteristics:
+### Special Services
+#### [Debug](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_debug.html)
+If available, the debug service must have the UUID <code>00000000-000E-11e1-9ab4-0002a5d5c51b</code> and will contains 2 characteristics:
 
 - <code>00000001-000E-11e1-ac36-0002a5d5c51b</code> (Notify/Write) is used to send string commands to the board and to notify the user of the result.
 - <code>00000002-000E-11e1-ac36-0002a5d5c51b</code> (Notify) is used by the board to notify the user of an error message.
 
-####Configuration
+#### Configuration
 If available, the configuration service must have the UUID <code>00000000-000F-11e1-9ab4-0002a5d5c51b</code> and will contain 2 characteristics:
 
 - <code>00000002-000F-11e1-ac36-0002a5d5c51b</code> (Notify/Write): it can be used to send command/data to a specific feature.
@@ -106,12 +106,19 @@ If available, the configuration service must have the UUID <code>00000000-000F-1
 
 - <code>00000001-000F-11e1-ac36-0002a5d5c51b</code> (Read/Write/Notify): if available it is used to access the board configuration register that can be modified using the [<code>BlueSTSDKConfigControl</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_config_control.html) class.
 
-###Example
-The ST Bluemicrosystem1 and ST Bluemicrosystem3 firmware implements this protocol, you can find 
-the project source here: [Bluemicrosystem](http://www.st.com/bluemicrosystem)
+### Example
+The SDK is compatible with different ST firmware as:
+ - [FP-SNS-MOTENV1](http://www.st.com/content/st_com/en/products/embedded-software/mcus-embedded-software/stm32-embedded-software/stm32-ode-function-pack-sw/fp-sns-motenv1.html): STM32 ODE function pack for IoT node with BLE connectivity and environmental and motion sensors
+ - [FP-SNS-ALLMEMS1](http://www.st.com/content/st_com/en/products/embedded-software/mcus-embedded-software/stm32-embedded-software/stm32-ode-function-pack-sw/fp-sns-allmems1.html): STM32 ODE function pack for IoT node with BLE connectivity, digital microphone, environmental and motion sensors
+ - [FP-SNS-FLIGHT1](http://www.st.com/content/st_com/en/products/embedded-software/mcus-embedded-software/stm32-embedded-software/stm32-ode-function-pack-sw/fp-sns-flight1.html): STM32 ODE function pack for IoT node with NFC, BLE connectivity and environmental, motion and time-of-flight sensors
+ - [FP-NET-BLESTAR1](http://www.st.com/content/st_com/en/products/embedded-software/mcus-embedded-software/stm32-embedded-software/stm32-ode-function-pack-sw/fp-net-blestar1.html): STM32 ODE function pack for creating a BLE star network connected via Wi-Fi to IBM Watson IoT cloud
 
-##How to install the library
-###As an external library
+And it is used in different application as:
+ - [ST BlueMS](https://github.com/STMicroelectronics-CentralLabs/STBlueMS_iOS)
+ - [ST SensNet](https://github.com/STMicroelectronics-CentralLabs/STSensNet_iOS)
+
+## How to install the library
+### As an external library
 1. Clone the repository or add it as submodule:
   
   ```Shell
@@ -120,16 +127,16 @@ the project source here: [Bluemicrosystem](http://www.st.com/bluemicrosystem)
 2. In the application project, in the general tab, file open the BlueSTSDK project file as "Linked external frameworks or library"
 3. Add the BlueSTSDK framework as enbeded library 
 
-##Main library actors
+## Main library actors
 
-###[Manager](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_manager.html)
+### [Manager](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_manager.html)
 This is a singleton class that starts/stops the discovery process and stores the retrieved nodes.
 Before starting the scanning process, it is also possible to define a new deviceId and to register/add new features to already-defined devices
 
 The Manager will notify a node discovery through the [<code>BlueSTSDKManagerDelegate</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/com/html/protocol_blue_s_t_s_d_k_manager_delegate-p.html) delegate.
 Note that each callback is performed asynchronously by a background thread.
 
-###[Node](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_node.html)
+### [Node](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_node.html)
 This class represents a remote device.
 
 From this class you can recover what features are exported by a node and read/write data from/to the device.
@@ -149,7 +156,7 @@ A node can be in one of following states:
 Note that each callback is performed asynchronously by a background thread.
 
 
-###[Feature](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature.html)
+### [Feature](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature.html)
 This class represent data exported by the node.
 
 Each Feature has an array of  [<code>BlueSTSDKFeatureField</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature_field.html) that describes the data exported.
@@ -160,7 +167,7 @@ The data exported by the Sample can be extracted using the static utility method
 
 Note that each callback is performed asynchronously by a background thread.
 
-####How to add a new Feature
+#### How to add a new Feature
 
  1. Extend the class Feature: 
     1.  Implement the getFieldDesc that usually return an static array of [<code>BlueSTSDKFeatureField</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature_field.html) that that will describe the data exported by the new  feature
@@ -185,15 +192,15 @@ Note that each callback is performed asynchronously by a background thread.
     Otherwise you can register the characteristics before call the connect method:
 
     ```Objective-C
-    BlueSTSDKNode *node = â€¦
+    BlueSTSDKNode *node = ...
     NSDictionary *map = [BlueSTSDKStdCharToFeatureMap getManageStdCharacteristics];
     [node addExternalCharacteristics: map];
     ```
  
-##Docs
+## Docs
 You can find the documentation at this link: [Documentation](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_iOS/doc/html)
 
-##License
+## License
 COPYRIGHT(c) 2015 STMicroelectronics
 
  Redistribution and use in source and binary forms, with or without modification,

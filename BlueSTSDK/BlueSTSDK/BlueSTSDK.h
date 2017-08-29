@@ -65,6 +65,7 @@
 #import "BlueSTSDKFeatureAudioADPCM.h"
 #import "BlueSTSDKFeatureAudioADPCMSync.h"
 #import "BlueSTSDKFeatureCompass.h"
+#import "BlueSTSDKFeatureBeamForming.h"
 #import "BlueSTSDKFeatureMotionIntensity.h"
 
 #import "BlueSTSDKStdCharToFeatureMap.h"
@@ -85,7 +86,7 @@
 #import "BlueSTSDKWeSUFeatureConfig.h"
 
 #import "BlueSTSDKFwVersion.h"
-
+#import "BlueSTSDK_LocalizeUtil.h"
 #import "NSMutableDictionary+BlueSTSDKFeature.h"
 #import "NSData+NumberConversion.h"
 

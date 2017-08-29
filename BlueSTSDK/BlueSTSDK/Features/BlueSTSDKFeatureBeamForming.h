@@ -1,5 +1,5 @@
 /*******************************************************************************
- * COPYRIGHT(c) 2015 STMicroelectronics
+ * COPYRIGHT(c) 2017 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -25,24 +25,29 @@
  *
  ******************************************************************************/
 
-#ifndef BlueSTSDK_BlueSTSDKFeatureAudioADPCMSync_h
-#define BlueSTSDK_BlueSTSDKFeatureAudioADPCMSync_h
-
+#import <Foundation/Foundation.h>
 
 #import "BlueSTSDKFeature.h"
-#import "BlueSTSDKDeviceTimestampFeature.h"
 
-/**
- * Feature that export the information needed for decode an ADPCM stream
- *
- * @author STMicroelectronics - Central Labs.
- */
-@interface BlueSTSDKFeatureAudioADPCMSync : BlueSTSDKDeviceTimestampFeature
+typedef NS_ENUM(UInt8,BlueSTSDKFeatureBeamFormingDirection){
+    BlueSTSDKFeatureBeamFormingDirection_TOP=1,
+    BlueSTSDKFeatureBeamFormingDirection_TOP_RIGHT=2,
+    BlueSTSDKFeatureBeamFormingDirection_RIGHT=3,
+    BlueSTSDKFeatureBeamFormingDirection_BOTTOM_RIGHT=4,
+    BlueSTSDKFeatureBeamFormingDirection_BOTTOM=5,
+    BlueSTSDKFeatureBeamFormingDirection_BOTTOM_LEFT=6,
+    BlueSTSDKFeatureBeamFormingDirection_LEFT=7,
+    BlueSTSDKFeatureBeamFormingDirection_TOP_LEFT=8,
+    BlueSTSDKFeatureBeamFormingDirection_UNKNOWN=0xFF
+};
 
+@interface BlueSTSDKFeatureBeamForming : BlueSTSDKFeature
 
-+(int32_t)getPredictedSample:(BlueSTSDKFeatureSample *)sample;
-+(int16_t)getIndex:(BlueSTSDKFeatureSample *)sample;
++(BlueSTSDKFeatureBeamFormingDirection)getDirection:(BlueSTSDKFeatureSample *)sample;
+
+-(void) enableBeanForming:(BOOL)enabled;
+-(void)useStrongBeanFormingAlgorithm:(BOOL)enabled;
+
+-(void) setDirection:(BlueSTSDKFeatureBeamFormingDirection)direction;
 
 @end
-
-#endif

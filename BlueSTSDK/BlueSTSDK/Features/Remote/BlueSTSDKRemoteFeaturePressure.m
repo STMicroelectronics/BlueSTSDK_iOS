@@ -29,10 +29,11 @@
 #import "BlueSTSDKFeature_pro.h"
 #import "BlueSTSDKFeature+Remote.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Remote Pressure"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Remote Pressure",nil)
 // census degree
 #define FEATURE_UNIT @"mBar"
 #define FEATURE_MIN 900

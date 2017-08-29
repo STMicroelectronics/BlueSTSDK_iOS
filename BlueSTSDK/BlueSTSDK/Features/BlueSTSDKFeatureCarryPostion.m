@@ -28,10 +28,11 @@
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureCarryPosition.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Carry Position"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Carry Position",nil)
 #define FEATURE_UNIT nil
 #define FEATURE_MIN 0
 #define FEATURE_MAX 6
@@ -93,8 +94,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     
     if(rawData.length-offset < 1){
         @throw [NSException
-                exceptionWithName:@"Invalid Carry Position data"
-                reason:@"The feature need almost 1 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Carry Position data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 1 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     

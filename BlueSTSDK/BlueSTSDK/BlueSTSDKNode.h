@@ -250,6 +250,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  * @param type type of features to serach
  * @return array of {@link BlueSTSDKFeature} exported by the node*/
 -(nonnull NSArray<BlueSTSDKFeature*>*)getFeaturesOfType:(nonnull Class)type;
+
 /**
  *  return the first feature of the specific type or null if it is not available
  *

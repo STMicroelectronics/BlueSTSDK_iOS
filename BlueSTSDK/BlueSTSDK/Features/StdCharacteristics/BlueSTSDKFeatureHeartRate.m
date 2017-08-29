@@ -27,20 +27,22 @@
 
 #import "BlueSTSDKFeatureHeartRate.h"
 #import "BlueSTSDKFeature_pro.h"
+#import "BlueSTSDK_LocalizeUtil.h"
+
 #import "../../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Heart Rate"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Heart Rate",nil)
 
 #define HEART_RATE_INDEX (0)
 
-#define HEART_RATE_NAME @"Heart Rate Measurement"
+#define HEART_RATE_NAME BLUESTSDK_LOCALIZE(@"Heart Rate Measurement",nil)
 #define HEART_RATE_UNIT @"bpm"
 #define HEART_RATE_MIN (0)
 #define HEART_RATE_MAX (1<<16)
 #define HEART_RATE_TYPE BlueSTSDKFeatureFieldTypeUInt16
 
 #define ENERGY_INDEX (1)
-#define ENERGY_NAME @"Energy Expended"
+#define ENERGY_NAME BLUESTSDK_LOCALIZE(@"Energy Expended",nil)
 #define ENERGY_UNIT @"kJ"
 #define ENERGY_MIN 0
 #define ENERGY_MAX (1<<16)
@@ -48,7 +50,7 @@
 
 
 #define RR_INTERVAL_INDEX (2)
-#define RR_INTERVAL_NAME @"RR-Interval"
+#define RR_INTERVAL_NAME BLUESTSDK_LOCALIZE(@"RR-Interval",nil)
 #define RR_INTERVAL_UNIT @"s"
 #define RR_INTERVAL_MIN 0
 #define RR_INTERVAL_MAX HUGE_VALF
@@ -154,8 +156,8 @@ static BOOL hasRRInterval(uint8_t flags){
 
     if(rawData.length-offset < 2){
         @throw [NSException
-                exceptionWithName:@"Invalid Heart rate data"
-                           reason:@"The feature need almost 2 bytes for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Heart rate data",nil)
+                           reason:BLUESTSDK_LOCALIZE(@"The feature need almost 2 bytes for extract the data",nil)
                          userInfo:nil];
     }//if
 

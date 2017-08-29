@@ -60,6 +60,7 @@
 
 #import "BlueSTSDKBleNodeDefines.h"
 #import "NSData+NumberConversion.h"
+#import "BlueSTSDKFeatureBeamForming.h"
 
 //all the sdk characteristics will end with this string
 #define COMMON_CHAR_UUID @"-11E1-AC36-0002A5D5C51B"
@@ -219,11 +220,42 @@ static NSDictionary *boardFeatureMap = nil;
 
 +(void)initialize{
     if(self == [BlueSTSDKBoardFeatureMap class]){
-        
-        genericFeatureMap = @{
-                              
-                              };
+        genericFeatureMap = @{ // only feature that exports sensors data
+                //@0x80000000:
+                @0x40000000: [BlueSTSDKFeatureAudioADPCMSync class],
+                @0x20000000: [BlueSTSDKFeatureSwitch class],
+                //@0x10000000:
+                @0x08000000: [BlueSTSDKFeatureAudioADPCM class],
+                @0x04000000: [BlueSTSDKFeatureMicLevel class], //Mic Level
+                @0x02000000: [BlueSTSDKFeatureProximity class], //proximity
+                @0x01000000: [BlueSTSDKFeatureLuminosity class], //luminosity
+                @0x00800000: [BlueSTSDKFeatureAcceleration class], //acc
+                @0x00400000: [BlueSTSDKFeatureGyroscope class], //gyo
+                @0x00200000: [BlueSTSDKFeatureMagnetometer class], //mag
+                @0x00100000: [BlueSTSDKFeaturePressure class], //pressure
+                @0x00080000: [BlueSTSDKFeatureHumidity class], //humidity
+                @0x00040000: [BlueSTSDKFeatureTemperature class], //temperature
+                //@0x00020000:
+                //@0x00010000:
+                //@0x00008000:
+                //@0x00004000:
+                //@0x00002000:
+                //@0x00001000:
+                //@0x00000800:
+                @0x00000400: [BlueSTSDKFeatureAccelerometerEvent class], //Free fall detection
+                //@0x00000200:
+                //@0x00000100:
+                //@0x00000080:
+                //@0x00000040:
+                //@0x00000020:
+                //@0x00000010:
+                //@0x00000008:
+                //@0x00000004:
+                //@0x00000002:
+                //@0x00000001:
+        };
         nucleoFeatureMap = @{
+                           //@0x80000000:
                              @0x40000000: [BlueSTSDKFeatureAudioADPCMSync class],
                              @0x20000000: [BlueSTSDKFeatureSwitch class],
                              @0x10000000: [BlueSTSDKFeatureDirectionOfArrival class], //Sound source of arrival
@@ -237,7 +269,13 @@ static NSDictionary *boardFeatureMap = nil;
                              @0x00100000: [BlueSTSDKFeaturePressure class], //pressure
                              @0x00080000: [BlueSTSDKFeatureHumidity class], //humidity
                              @0x00040000: [BlueSTSDKFeatureTemperature class], //temperature
+                             @0x00020000: [BlueSTSDKFeatureBeamForming class],
                              @0x00010000: [BlueSTSDKFeatureTemperature class], //temperature
+                           //@0x00008000:
+                           //@0x00004000:
+                           //@0x00002000:
+                           //@0x00001000:
+                             @0x00000800: [BlueSTSDKFeatureBeamForming class],
                              @0x00000400: [BlueSTSDKFeatureAccelerometerEvent class], //Free fall detection
                              @0x00000200: [BlueSTSDKFeatureFreeFall class], //Free fall detection
                              @0x00000100: [BlueSTSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
@@ -249,7 +287,6 @@ static NSDictionary *boardFeatureMap = nil;
                              @0x00000004: [BlueSTSDKFeatureProximityGesture class], //Proximity Gesture
                              @0x00000002: [BlueSTSDKFeatureMemsGesture class], //mems Gesture
                              @0x00000001: [BlueSTSDKFeaturePedometer class], //Pedometer
-                           
                              };
 
         sensorTileFeatureMap = @{
@@ -290,6 +327,7 @@ static NSDictionary *boardFeatureMap = nil;
                             @0x00080000: [BlueSTSDKFeatureHumidity class], //humidity
                             @0x00040000: [BlueSTSDKFeatureTemperature class], //temperature
                             @0x00010000: [BlueSTSDKFeatureTemperature class], //temperature
+                            @0x00000800: [BlueSTSDKFeatureBeamForming class],
                             @0x00000400: [BlueSTSDKFeatureAccelerometerEvent class], //Free fall detection
                             @0x00000100: [BlueSTSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
                             @0x00000040: [BlueSTSDKFeatureCompass class],

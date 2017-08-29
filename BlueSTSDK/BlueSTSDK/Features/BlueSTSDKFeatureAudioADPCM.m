@@ -30,8 +30,9 @@
 
 #import "../Util/NSData+NumberConversion.h"
 #import "BlueSTSDKFeatureAudioADPCMSync.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
-#define FEATURE_NAME @"AudioPCM"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"AudioPCM",nil)
 
 #define FEATURE_UNIT nil
 #define FEATURE_MIN INT16_MIN
@@ -207,8 +208,8 @@ const static int8_t IndexTable[] = {-1,-1,-1,-1,2,4,6,8,-1,-1,-1,-1,2,4,6,8};
 
     if((rawData.length-offset)!= 20){
         @throw [NSException
-                exceptionWithName:@"Invalid Audio ADPCM data"
-                           reason:@"The feature need almost 20 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Audio ADPCM data",nil)
+                           reason:BLUESTSDK_LOCALIZE(@"The feature need almost 20 byte for extract the data",nil)
                          userInfo:nil];
     }//if
 
@@ -226,6 +227,8 @@ const static int8_t IndexTable[] = {-1,-1,-1,-1,2,4,6,8,-1,-1,-1,-1,2,4,6,8};
             sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:20];
 }
+
+
 
 + (NSData *)getLinearPCMAudio:(BlueSTSDKFeatureSample *)sample {
     if(sample.data==nil){
@@ -247,7 +250,7 @@ const static int8_t IndexTable[] = {-1,-1,-1,-1,2,4,6,8,-1,-1,-1,-1,2,4,6,8};
 }//notifyUpdateWithSample
 
 -(NSString*) description{
-    NSMutableString *s = [NSMutableString stringWithString:@"Data:"];
+    NSMutableString *s = [NSMutableString stringWithString:BLUESTSDK_LOCALIZE(@"Data:",nil)];
     BlueSTSDKFeatureSample *sample = self.lastSample;
     NSArray<NSNumber *> *datas = sample.data;
     for (NSUInteger i = 0; i < datas.count; i++) {

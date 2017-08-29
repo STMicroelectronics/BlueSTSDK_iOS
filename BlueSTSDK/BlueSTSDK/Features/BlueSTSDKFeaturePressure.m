@@ -29,10 +29,12 @@
 #import "BlueSTSDKFeaturePressure.h"
 
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
+
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Pressure"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Pressure",nil)
 #define FEATURE_UNIT @"mBar"
 #define FEATURE_MIN 900
 #define FEATURE_MAX 1100
@@ -89,8 +91,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     
     if(rawData.length-offset < 4){
         @throw [NSException
-                exceptionWithName:@"Invalid Pressure data"
-                reason:@"The feature need almost 4 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Pressure data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 4 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     

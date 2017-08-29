@@ -27,12 +27,13 @@
 
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureProximity.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "BlueSTSDKFeatureField.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Proximity"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Proximity",nil)
 #define FEATURE_UNIT @"mm"
 #define FEATURE_MIN 0
 #define FEATURE_LOW_RANGE_MAX (0xFE)
@@ -136,8 +137,8 @@ static NSArray<BlueSTSDKFeatureField*> *sHightRangeFieldDesc;
     
     if(rawData.length-offset < 2){
         @throw [NSException
-                exceptionWithName:@"Invalid Proximity data"
-                reason:@"The feature need almost 2 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Proximity data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 2 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     
@@ -161,7 +162,7 @@ static NSArray<BlueSTSDKFeatureField*> *sHightRangeFieldDesc;
     if(distance != FEATURE_OUT_OF_RANGE_VALUE){
         [s appendFormat:@"%u",distance];
     }else{
-        [s appendFormat:@"%@",@"Out Of Range"];
+        [s appendFormat:@"%@",BLUESTSDK_LOCALIZE(@"Out Of Range",nil)];
     }
     return s;
 }//description

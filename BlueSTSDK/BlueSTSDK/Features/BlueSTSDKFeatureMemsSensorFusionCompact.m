@@ -29,9 +29,11 @@
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureMemsSensorFusionCompact.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
+
 
 //#define FEATURE_NAME @"MemsSensorFusion (Compact)"
-#define FEATURE_NAME @"MemsSensorFusionCompact"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"MemsSensorFusionCompact",nil)
 #define FEATURE_UNIT @""
 #define FEATURE_MIN -1.0f
 #define FEATURE_MAX 1.0
@@ -134,8 +136,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     
     if(rawData.length-offset < 6){
         @throw [NSException
-                exceptionWithName:@"Invalid SensorFunsionCompact data"
-                reason:@"The feature need almost 6 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid SensorFunsionCompact data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 6 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     

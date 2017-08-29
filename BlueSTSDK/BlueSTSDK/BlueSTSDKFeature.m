@@ -28,6 +28,7 @@
 #import "BlueSTSDKNode_prv.h"
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 @interface BlueSTSDKFeature()
 //@property (readwrite,atomic) BlueSTSDKFeatureSample *lastSample;
@@ -91,7 +92,8 @@ static NSNumberFormatter *sFormatter;
  */
 -(instancetype) initWhitNode: (BlueSTSDKNode*)node{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must overwrite %@ in a subclass]",
+                                   reason:[NSString stringWithFormat:
+                                           @"You must overwrite %@ in a subclass",
                                            NSStringFromSelector(_cmd)]
                                  userInfo:nil];
     return nil;
@@ -138,7 +140,8 @@ static NSNumberFormatter *sFormatter;
 //this function must be implemented in a subclass, this implementation only throw an exception
 -(NSArray<BlueSTSDKFeatureField*>*)getFieldsDesc{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must overwrite %@ in a subclass]",
+                                   reason:[NSString stringWithFormat:
+                                           @"You must overwrite %@ in a subclass",
                                            NSStringFromSelector(_cmd)]
                                  userInfo:nil];
     return nil;
@@ -148,7 +151,8 @@ static NSNumberFormatter *sFormatter;
 //this function must be implemented in a subclass, this implementation only throw an exception
 -(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must overwrite %@ in a subclass]",
+                                   reason:[NSString stringWithFormat:
+                                           @"You must overwrite %@ in a subclass",
                                            NSStringFromSelector(_cmd)]
                                  userInfo:nil];
     return nil;
@@ -230,7 +234,8 @@ static NSNumberFormatter *sFormatter;
 
 -(NSData*) generateFakeData{
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must overwrite %@ in a subclass]",
+                                   reason:[NSString stringWithFormat:
+                                           @"You must overwrite %@ in a subclass",
                                            NSStringFromSelector(_cmd)]
                                  userInfo:nil];
     return nil;

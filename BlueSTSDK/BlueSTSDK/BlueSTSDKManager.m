@@ -32,6 +32,10 @@
 #import "BlueSTSDKManager_prv.h"
 #import "BlueSTSDKNode_prv.h"
 #import "BlueSTSDKNodeFake.h"
+#import "BlueSTSDK_LocalizeUtil.h"
+
+
+#define RETRAY_START_SCANNING_DELAY (0.5) //half second
 
 #define RETRAY_START_SCANNING_DELAY (0.5) //half second
 
@@ -276,8 +280,8 @@
 
     if(![self checkFeatureMask:features])
         @throw [NSException
-                exceptionWithName:@"Invalid feature key data"
-                reason:@"the key must have only one bit set to 1"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid feature key data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"the key must have only one bit set to 1",nil)
                 userInfo:nil];
     NSMutableDictionary *addToMe = [mNodeFeatureMap objectForKey:
                                   [NSNumber numberWithUnsignedChar:nodeId]];

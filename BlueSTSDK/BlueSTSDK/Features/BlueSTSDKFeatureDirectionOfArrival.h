@@ -45,7 +45,9 @@
  *
  *  @return direction of the audio source
  */
-+(uint16_t)getAudioSourceAngle:(BlueSTSDKFeatureSample*)data;
++(int16_t)getAudioSourceAngle:(BlueSTSDKFeatureSample*)data;
+
+-(void)enableLowSensitivity:(BOOL)enable;
 
 @end
 

@@ -69,6 +69,8 @@
 @property (retain, atomic, readonly) ADPCMAudioSyncManager *audioManager;
 
 
+
+
 /**
  * Extract the last audio sample
  * @param sample sample that contains the aduio data

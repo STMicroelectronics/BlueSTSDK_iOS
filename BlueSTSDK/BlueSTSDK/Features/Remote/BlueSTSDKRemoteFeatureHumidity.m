@@ -29,10 +29,11 @@
 #import "BlueSTSDKFeature_pro.h"
 #import "BlueSTSDKFeature+Remote.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Remote Humidity"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Remote Humidity",nil)
 #define FEATURE_UNIT @"%"
 #define FEATURE_MIN 0
 #define FEATURE_MAX 100

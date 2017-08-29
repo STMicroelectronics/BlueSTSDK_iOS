@@ -28,10 +28,11 @@
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureTemperature.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Temperature"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Temperature",nil)
  // census degree
 #define FEATURE_UNIT @"\u2103"
 #define FEATURE_MIN 0
@@ -90,8 +91,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     
     if(rawData.length-offset < 2){
         @throw [NSException
-                exceptionWithName:@"Invalid Temperature data"
-                reason:@"The feature need almost 2 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Temperature data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 2 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     

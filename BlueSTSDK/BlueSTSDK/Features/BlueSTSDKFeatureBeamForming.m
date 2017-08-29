@@ -1,5 +1,5 @@
 /*******************************************************************************
- * COPYRIGHT(c) 2015 STMicroelectronics
+ * COPYRIGHT(c) 2017 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -25,30 +25,26 @@
  *
  ******************************************************************************/
 
-#import <math.h>
+#import "BlueSTSDKFeatureBeamForming.h"
 #import "BlueSTSDKFeature_prv.h"
-#import "BlueSTSDKFeatureHumidity.h"
-#import "BlueSTSDKFeatureField.h"
+
 #import "BlueSTSDK_LocalizeUtil.h"
 
-#import "../Util/NSData+NumberConversion.h"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Beam Forming",nil)
 
-#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Humidity",nil)
-#define FEATURE_UNIT @"%"
-#define FEATURE_MIN 0
-#define FEATURE_MAX 100
-#define FEATURE_TYPE BlueSTSDKFeatureFieldTypeFloat
+#define FEATURE_UNIT nil
+#define FEATURE_MIN INT8_MIN
+#define FEATURE_MAX INT8_MAX
+#define FEATURE_TYPE BlueSTSDKFeatureFieldTypeInt8
 
-/**
- * @memberof BlueSTSDKFeatureHumidity
- *  array with the description of field exported by the feature
- */
-static NSArray<BlueSTSDKFeatureField*>*sFieldDesc;
+static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
-@implementation BlueSTSDKFeatureHumidity
+@implementation BlueSTSDKFeatureBeamForming {
+
+}
 
 +(void)initialize{
-    if(self == [BlueSTSDKFeatureHumidity class]){
+    if(self == [BlueSTSDKFeatureBeamForming class]){
         sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
                                                         unit:FEATURE_UNIT
                                                         type:FEATURE_TYPE
@@ -58,12 +54,12 @@ static NSArray<BlueSTSDKFeatureField*>*sFieldDesc;
 }//initialize
 
 
-+(float)getHumidity:(BlueSTSDKFeatureSample *)sample{
++(BlueSTSDKFeatureBeamFormingDirection)getDirection:(BlueSTSDKFeatureSample *)sample{
     if(sample.data.count==0)
-        return NAN;
-    return[[sample.data objectAtIndex:0] floatValue];
-}
+        return BlueSTSDKFeatureBeamFormingDirection_UNKNOWN;
+    return (BlueSTSDKFeatureBeamFormingDirection) [sample.data[0] unsignedCharValue];
 
+}
 
 -(instancetype) initWhitNode:(BlueSTSDKNode *)node{
     self = [super initWhitNode:node name:FEATURE_NAME];
@@ -75,49 +71,68 @@ static NSArray<BlueSTSDKFeatureField*>*sFieldDesc;
 }
 
 /**
- *  read int16 for build the humidity value, create the new sample and
+ *  read int32 for build the pressure value, create the new sample and
  * and notify it to the delegate
  *
  *  @param timestamp data time stamp
  *  @param rawData   array of byte send by the node
  *  @param offset    offset where we have to start reading the data
  *
- *  @throw exception if there are no 2 bytes available in the rawdata array
- *  @return humidity + number of read bytes (2)
+ *  @throw exception if there are no 4 bytes available in the rawdata array
+ *  @return pressure information + number of read bytes (4)
  */
 -(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
-    
-    if(rawData.length-offset < 2){
+
+    if(rawData.length-offset < 1){
         @throw [NSException
-                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Humidity data",nil)
-                reason:BLUESTSDK_LOCALIZE(@"The feature need 2 byte for extract the data",nil)
-                userInfo:nil];
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Beam Forming data",nil)
+                           reason:BLUESTSDK_LOCALIZE(@"The feature need almost 1 byte to extract the data",nil)
+                         userInfo:nil];
     }//if
-    
-    int16_t hum= [rawData extractLeInt16FromOffset:offset];
-    
-    NSArray *data = @[@(hum / 10.0f)];
-    
-    BlueSTSDKFeatureSample *sample =
-        [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
-    return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:2];
 
+    uint8_t temp;
+    [rawData getBytes:&temp range:NSMakeRange(offset, 1)];
+
+    NSArray *data = @[@(temp)];
+    BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
+    return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:1];
 }
 
-@end
 
+#define ENABLE_BEAMFORMING_COMMAND (0xAA)
+#define ENABLE_BEAMFORMING_ON (0x01)
+#define ENABLE_BEAMFORMING_OFF (0x00)
 
-#import "../BlueSTSDKFeature+fake.h"
-
-@implementation BlueSTSDKFeatureHumidity (fake)
-
--(NSData*) generateFakeData{
-    NSMutableData *data = [NSMutableData dataWithCapacity:2];
-    
-    int16_t temp = FEATURE_MIN*10 + rand()%((FEATURE_MAX-FEATURE_MIN)*10);
-    [data appendBytes:&temp length:2];
-    
-    return data;
+- (void)enableBeanForming:(BOOL)enabled {
+    uint8_t commandData;
+    if(enabled){
+        commandData = ENABLE_BEAMFORMING_ON;
+    }else{
+        commandData = ENABLE_BEAMFORMING_OFF;
+    }
+    [self sendCommand:ENABLE_BEAMFORMING_COMMAND data:[NSData dataWithBytes:&commandData length:1]];
 }
 
+
+#define BF_COMMAND_TYPE_CHANGE_TYPE (0xCC)
+#define COMMAND_STRONG_BF (0x01)
+#define COMMAND_ASR_READY_BF (0x00)
+
+- (void)useStrongBeanFormingAlgorithm:(BOOL)enabled {
+    uint8_t commandData;
+    if(enabled){
+        commandData = COMMAND_STRONG_BF;
+    }else{
+        commandData = COMMAND_ASR_READY_BF;
+    }
+    [self sendCommand:BF_COMMAND_TYPE_CHANGE_TYPE data:[NSData dataWithBytes:&commandData length:1]];
+}
+
+
+#define CHANGE_DIRECTION_COMMAND (0xBB)
+
+-(void) setDirection:(BlueSTSDKFeatureBeamFormingDirection)direction{
+    NSData *temp = [NSData dataWithBytes:&direction length:1];
+    [self sendCommand:CHANGE_DIRECTION_COMMAND data:temp];
+}
 @end

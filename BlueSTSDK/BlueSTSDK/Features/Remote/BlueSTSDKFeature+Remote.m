@@ -31,11 +31,7 @@
 #import "BlueSTSDKFeature_pro.h"
 #import "BlueSTSDKFeature+Remote.h"
 #import "BlueSTSDKFeatureField.h"
-
-/**
- * Name of the filed that will contain the source node id
- */
-#define REMOTE_DEVICE_DATA_NAME @"Node Id"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 /**
  * Max number of remote nodes
@@ -65,7 +61,7 @@ static BlueSTSDKFeatureField *sFieldDesc;
 +(BlueSTSDKFeatureField*) getNodeIdFieldDesc{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sFieldDesc = [BlueSTSDKFeatureField  createWithName:REMOTE_DEVICE_DATA_NAME
+        sFieldDesc = [BlueSTSDKFeatureField  createWithName:BLUESTSDK_LOCALIZE(@"Node Id",nil)
                                                        unit:@""
                                                        type:BlueSTSDKFeatureFieldTypeUInt16
                                                         min:@DATA_MIN
@@ -91,8 +87,8 @@ static BlueSTSDKFeatureField *sFieldDesc;
 
     if(rawData.length-offset < 3){ //2 bytes for the ts + 1 for some data
         @throw [NSException
-                exceptionWithName:@"Invalid Remote data"
-                reason:@"There are not enough bytes available to read"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Remote data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"There are not enough bytes available to read",nil)
                 userInfo:nil];
     }//if
     

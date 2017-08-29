@@ -29,10 +29,11 @@
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureGyroscope.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Gyroscope"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Gyroscope",nil)
 #define FEATURE_UNIT @"dps"
 #define FEATURE_MAX ((float)(1<<15)/10.0f)
 #define FEATURE_MIN (-FEATURE_MAX)
@@ -109,8 +110,8 @@ static NSArray<BlueSTSDKFeatureField*>*sFieldDesc;
     
     if(rawData.length-offset < 6){
         @throw [NSException
-                exceptionWithName:@"Invalid Gyroscope data"
-                reason:@"The feature need 6 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Gyroscope data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need 6 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     

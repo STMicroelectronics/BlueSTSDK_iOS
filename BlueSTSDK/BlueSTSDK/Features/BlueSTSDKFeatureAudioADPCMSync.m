@@ -29,22 +29,23 @@
 
 #import "BlueSTSDKFeature_pro.h"
 #import "BlueSTSDKFeatureAudioADPCMSync.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"AudioSync"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"AudioSync",nil)
 
 #define FEATURE_INDEX_INDEX 0
 
 #define FEATURE_INDEX_UNIT nil
-#define FEATURE_INDEX_NAME @"ADPCM_Index"
+#define FEATURE_INDEX_NAME BLUESTSDK_LOCALIZE(@"ADPCM_Index",nil)
 #define FEATURE_INDEX_MIN INT16_MIN
 #define FEATURE_INDEX_MAX INT16_MAX
 #define FEATURE_INDEX_TYPE BlueSTSDKFeatureFieldTypeInt16
 
 #define FEATURE_PREDSAMPLE_INDEX 1
 #define FEATURE_PREDSAMPLE_UNIT @""
-#define FEATURE_PREDSAMPLE_NAME @"ADPCM_Predsample"
+#define FEATURE_PREDSAMPLE_NAME BLUESTSDK_LOCALIZE(@"ADPCM_Predsample",nil)
 #define FEATURE_PREDSAMPLE_MIN INT32_MIN
 #define FEATURE_PREDSAMPLE_MAX INT32_MAX
 #define FEATURE_PREDSAMPLE_TYPE BlueSTSDKFeatureFieldTypeInt32
@@ -87,8 +88,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
         if((rawData.length-offset) < 6){
             @throw [NSException
-                    exceptionWithName:@"Invalid Audio ADPCM Sync data"
-                               reason:@"The feature need almost 6 byte for extract the data"
+                    exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Audio ADPCM Sync data",nil)
+                               reason:BLUESTSDK_LOCALIZE(@"The feature need almost 6 byte for extract the data",nil)
                              userInfo:nil];
         }//if
 

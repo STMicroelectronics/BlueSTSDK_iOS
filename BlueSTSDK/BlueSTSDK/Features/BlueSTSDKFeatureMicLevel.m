@@ -28,11 +28,12 @@
 #import "BlueSTSDKFeatureMicLevel.h"
 #import "BlueSTSDKFeatureField.h"
 #import "BlueSTSDKFeature_prv.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Mic Level"
-#define FEATURE_DATA_NAME @"Mic"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Mic Level",nil)
+#define FEATURE_DATA_NAME BLUESTSDK_LOCALIZE(@"Mic",nil)
 #define FEATURE_UNIT @"db"
 #define FEATURE_MIN 0
 #define FEATURE_MAX 128
@@ -81,8 +82,8 @@
     int32_t nMic = (uint32_t)rawData.length-offset;
     if( nMic <= 0){
         @throw [NSException
-                exceptionWithName:@"Invalid Mic Level data"
-                reason:@"The feature need 1 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Mic Level data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need 1 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     
@@ -90,7 +91,7 @@
     if(mFieldDesc.count!=nMic){
         NSMutableArray *newFileDesc = [NSMutableArray arrayWithCapacity:nMic];
         for(int32_t i =0 ; i< nMic ; i++){
-            NSString *name = [NSString stringWithFormat:FEATURE_DATA_NAME @" %d",i+1];
+            NSString *name = [NSString stringWithFormat:@"%@ %d",FEATURE_DATA_NAME,i+1];
             BlueSTSDKFeatureField *temp = [BlueSTSDKFeatureField
                                            createWithName:name
                                            unit:FEATURE_UNIT

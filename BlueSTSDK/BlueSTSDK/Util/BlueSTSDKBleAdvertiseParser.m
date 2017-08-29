@@ -30,6 +30,7 @@
 #import "BlueSTSDKManager_prv.h"
 #import "BlueSTSDKBleAdvertiseParser.h"
 #import "NSData+NumberConversion.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 
 #define PROTOCOL_VERSION_CURRENT 0x01
@@ -90,8 +91,8 @@ static BOOL extractHasExtensionBit(uint8_t type){
     BlueSTSDKNodeType nodetype = BlueSTSDKNodeTypeGeneric;
     if(![BlueSTSDKManager.sharedInstance isValidNodeId:type])
         @throw [NSException
-                exceptionWithName:@"Invalid Manufactured data"
-                reason:@"Invalid Node Type"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Manufactured data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"Invalid Node Type",nil)
                 userInfo:nil];
    
     if (type == NODE_ID_STEVAL_WESU1)
@@ -119,8 +120,9 @@ static BOOL extractHasExtensionBit(uint8_t type){
     
     if(len != ADVERTISE_SIZE_COMPACT && len != ADVERTISE_SIZE_FULL)
         @throw [NSException
-                exceptionWithName:@"Invalid Manufactured data"
-                reason:[NSString stringWithFormat:@"Manufactured data must be %d bytes or %d byte",
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Manufactured data",nil)
+                reason:[NSString stringWithFormat:
+                        BLUESTSDK_LOCALIZE(@"Manufactured data must be %d bytes or %d byte",nil),
                             ADVERTISE_SIZE_COMPACT, ADVERTISE_SIZE_FULL]
                 userInfo:nil];
 
@@ -137,8 +139,9 @@ static BOOL extractHasExtensionBit(uint8_t type){
     
     if(!(_protocolVersion >= PROTOCOL_VERSION_CURRENT_MIN && _protocolVersion <= PROTOCOL_VERSION_CURRENT))
         @throw [NSException
-                exceptionWithName:@"Invalid Protocol version"
-                reason:[NSString stringWithFormat:@"Supported protocol version are from %d to %d",
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Protocol version",nil)
+                reason:[NSString stringWithFormat:
+                        BLUESTSDK_LOCALIZE(@"Supported protocol version are from %d to %d",nil),
                         PROTOCOL_VERSION_CURRENT_MIN, PROTOCOL_VERSION_CURRENT]
                 userInfo:nil];
     

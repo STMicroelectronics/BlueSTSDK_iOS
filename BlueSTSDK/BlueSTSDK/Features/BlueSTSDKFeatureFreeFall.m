@@ -28,10 +28,11 @@
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureFreeFall.h"
 #import "BlueSTSDKFeatureField.h"
+#include "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"FreeFall"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"FreeFall",nil)
 #define FEATURE_UNIT nil
 #define FEATURE_MIN 0
 #define FEATURE_MAX 1
@@ -88,8 +89,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     
     if(rawData.length-offset < 1){
         @throw [NSException
-                exceptionWithName:@"Invalid FreeFall data"
-                reason:@"The feature need almost 1 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid FreeFall data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 1 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     

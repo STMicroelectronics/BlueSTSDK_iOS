@@ -29,10 +29,11 @@
 #import "BlueSTSDKFeature_pro.h"
 #import "BlueSTSDKFeature+Remote.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Remote Temperature"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Remote Temperature",nil)
 // census degree
 #define FEATURE_UNIT @"\u2103"
 #define FEATURE_MIN 0

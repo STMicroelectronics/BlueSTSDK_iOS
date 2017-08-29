@@ -29,11 +29,12 @@
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureMagnetometer.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
 
-#define FEATURE_NAME @"Magnetometer"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Magnetometer",nil)
 #define FEATURE_UNIT @"mGa"
 #define FEATURE_MIN -2000
 #define FEATURE_MAX 2000
@@ -111,8 +112,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     
     if(rawData.length-offset < 6){
         @throw [NSException
-                exceptionWithName:@"Invalid Magnetometer data"
-                reason:@"The feature need 6 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Magnetometer data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need 6 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     

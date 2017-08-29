@@ -28,11 +28,12 @@
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureMotionIntensity.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Motion Intensity"
-#define FEATURE_UNIT @"Intensity"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Motion Intensity",nil)
+#define FEATURE_UNIT BLUESTSDK_LOCALIZE(@"Intensity",nil)
 #define FEATURE_MIN 0
 #define FEATURE_MAX 10
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeUInt8
@@ -73,8 +74,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     
     if(rawData.length-offset < 1){
         @throw [NSException
-                exceptionWithName:@"Invalid Motion Intensity data"
-                reason:@"The feature need almost 1 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Motion Intensity data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 1 byte for extract the data",nil)
                 userInfo:nil];
     }//if
         

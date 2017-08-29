@@ -29,11 +29,12 @@
 
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureAcceleration.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Accelerometer"
-#define FEATURE_UNIT @"mg"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Accelerometer",nil)
+#define FEATURE_UNIT BLUESTSDK_LOCALIZE(@"mg",nil)
 #define FEATURE_MIN -2000
 #define FEATURE_MAX 2000
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeFloat
@@ -124,8 +125,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     
     if(rawData.length-offset < 6){
         @throw [NSException
-                exceptionWithName:@"Invalid Acceleration data"
-                reason:@"The feature need 6 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Acceleration data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need 6 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     

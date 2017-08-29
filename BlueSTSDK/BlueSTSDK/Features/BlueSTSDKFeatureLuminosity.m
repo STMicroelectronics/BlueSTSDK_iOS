@@ -27,12 +27,12 @@
 
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureLuminosity.h"
-
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Luminosity"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Luminosity",nil)
 #define FEATURE_UNIT @"Lux"
 #define FEATURE_MIN 0
 #define FEATURE_MAX 1000
@@ -89,8 +89,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     
     if(rawData.length-offset < 2){
         @throw [NSException
-                exceptionWithName:@"Invalid Luminosity data"
-                reason:@"The feature need 2 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Luminosity data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need 2 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     

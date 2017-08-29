@@ -12,8 +12,10 @@
 		4EDA22010C07030C2C5174AA /* NSMutableDictionary+BlueSTSDKFeature.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDA212E740E3778727E7D32 /* NSMutableDictionary+BlueSTSDKFeature.m */; };
 		4EDA223AA46E9FCF0F33D87B /* BlueSTSDKFeatureAudioADPCM.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDA2CA4BB3C7B11415067D7 /* BlueSTSDKFeatureAudioADPCM.m */; };
 		4EDA2718985F6845A6B4D54E /* BlueSTSDKFeatureAudioADPCMSync.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDA22214A3611DD1545F77C /* BlueSTSDKFeatureAudioADPCMSync.m */; };
+		4EDA29707C81A63F363EE1BF /* BlueSTSDKFeatureBeamForming.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EDA298D6F16A489DFC3FFE3 /* BlueSTSDKFeatureBeamForming.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4EDA2B430AFA1FB62C53CB52 /* BlueSTSDKFeatureAudioADPCM.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EDA283570D8F7398766AAAB /* BlueSTSDKFeatureAudioADPCM.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4EDA2C49BCE96404A64B6839 /* BlueSTSDKFeatureAudioADPCMSync.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EDA29EFDFD1762DCC92D490 /* BlueSTSDKFeatureAudioADPCMSync.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4EDA2CEDEB8BA6EDA39EB662 /* BlueSTSDKFeatureBeamForming.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EDA2FCEC8131ABA2D8CCF0B /* BlueSTSDKFeatureBeamForming.m */; };
 		6602184A1B903A37006246E9 /* BlueSTSDKFeatureCarryPosition.h in Headers */ = {isa = PBXBuildFile; fileRef = 660218481B903A37006246E9 /* BlueSTSDKFeatureCarryPosition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6602184B1B903A37006246E9 /* BlueSTSDKFeatureCarryPostion.m in Sources */ = {isa = PBXBuildFile; fileRef = 660218491B903A37006246E9 /* BlueSTSDKFeatureCarryPostion.m */; };
 		66105DA31B0CC7190050E399 /* BlueSTSDKFeature+fake.h in Headers */ = {isa = PBXBuildFile; fileRef = 66C9E6571B0C67380091CFD0 /* BlueSTSDKFeature+fake.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -96,6 +98,7 @@
 		667BAABA1B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.m in Sources */ = {isa = PBXBuildFile; fileRef = 667BAAB81B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.m */; };
 		667D27491E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 667D27471E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		667D274A1E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D27481E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m */; };
+		66802F2A1EA6630C0055C851 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66802F291EA6630C0055C851 /* Localizable.strings */; };
 		6684C94A1BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h in Headers */ = {isa = PBXBuildFile; fileRef = 6684C9481BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6684C94B1BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6684C9491BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.m */; };
 		668A12771E3A443F00D99490 /* BlueSTSDKFeatureCompass.h in Headers */ = {isa = PBXBuildFile; fileRef = 668A12751E3A443F00D99490 /* BlueSTSDKFeatureCompass.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -115,6 +118,7 @@
 		66BC2BD71D40AA2C00F91A5F /* BlueSTSDKStdCharToFeatureMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BC2BD31D40AA2C00F91A5F /* BlueSTSDKStdCharToFeatureMap.m */; };
 		66C4A3C41B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.h in Headers */ = {isa = PBXBuildFile; fileRef = 66C4A3C21B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66C4A3C51B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C4A3C31B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.m */; };
+		66C777871EA5F12D00C75A20 /* BlueSTSDK_LocalizeUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 66C777861EA5F12D00C75A20 /* BlueSTSDK_LocalizeUtil.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66DBB6AF1CAEB3C300CCF412 /* BlueSTSDKRemoteFeatureSwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 6611A1B51CAAC86F00476E8B /* BlueSTSDKRemoteFeatureSwitch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66DBB6B01CAEB3CB00CCF412 /* BlueSTSDKRemoteFeaturePressure.h in Headers */ = {isa = PBXBuildFile; fileRef = 6611A1B31CAAC86F00476E8B /* BlueSTSDKRemoteFeaturePressure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66DBB6B11CAEB3F900CCF412 /* BlueSTSDKRemoteFeatureSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6611A1B61CAAC86F00476E8B /* BlueSTSDKRemoteFeatureSwitch.m */; };
@@ -152,8 +156,10 @@
 		4EDA22214A3611DD1545F77C /* BlueSTSDKFeatureAudioADPCMSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureAudioADPCMSync.m; sourceTree = "<group>"; };
 		4EDA233ABADE75BDCE19B543 /* NSMutableDictionary+BlueSTSDKFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+BlueSTSDKFeature.h"; sourceTree = "<group>"; };
 		4EDA283570D8F7398766AAAB /* BlueSTSDKFeatureAudioADPCM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureAudioADPCM.h; sourceTree = "<group>"; };
+		4EDA298D6F16A489DFC3FFE3 /* BlueSTSDKFeatureBeamForming.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureBeamForming.h; sourceTree = "<group>"; };
 		4EDA29EFDFD1762DCC92D490 /* BlueSTSDKFeatureAudioADPCMSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureAudioADPCMSync.h; sourceTree = "<group>"; };
 		4EDA2CA4BB3C7B11415067D7 /* BlueSTSDKFeatureAudioADPCM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureAudioADPCM.m; sourceTree = "<group>"; };
+		4EDA2FCEC8131ABA2D8CCF0B /* BlueSTSDKFeatureBeamForming.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureBeamForming.m; sourceTree = "<group>"; };
 		660218481B903A37006246E9 /* BlueSTSDKFeatureCarryPosition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureCarryPosition.h; sourceTree = "<group>"; };
 		660218491B903A37006246E9 /* BlueSTSDKFeatureCarryPostion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureCarryPostion.m; sourceTree = "<group>"; };
 		6611A1B31CAAC86F00476E8B /* BlueSTSDKRemoteFeaturePressure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKRemoteFeaturePressure.h; path = Remote/BlueSTSDKRemoteFeaturePressure.h; sourceTree = "<group>"; };
@@ -241,6 +247,7 @@
 		667BAAB81B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureFreeFall.m; sourceTree = "<group>"; };
 		667D27471E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKWeSUFeatureConfig.h; path = Config/STWeSU/BlueSTSDKWeSUFeatureConfig.h; sourceTree = "<group>"; };
 		667D27481E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlueSTSDKWeSUFeatureConfig.m; path = Config/STWeSU/BlueSTSDKWeSUFeatureConfig.m; sourceTree = "<group>"; };
+		66802F291EA6630C0055C851 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		6684C9481BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureMicLevel.h; sourceTree = "<group>"; };
 		6684C9491BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureMicLevel.m; sourceTree = "<group>"; };
 		668A12751E3A443F00D99490 /* BlueSTSDKFeatureCompass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureCompass.h; sourceTree = "<group>"; };
@@ -260,6 +267,7 @@
 		66BC2BD31D40AA2C00F91A5F /* BlueSTSDKStdCharToFeatureMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKStdCharToFeatureMap.m; sourceTree = "<group>"; };
 		66C4A3C21B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureGenPurpose.h; sourceTree = "<group>"; };
 		66C4A3C31B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureGenPurpose.m; sourceTree = "<group>"; };
+		66C777861EA5F12D00C75A20 /* BlueSTSDK_LocalizeUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDK_LocalizeUtil.h; sourceTree = "<group>"; };
 		66C9E6571B0C67380091CFD0 /* BlueSTSDKFeature+fake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BlueSTSDKFeature+fake.h"; sourceTree = "<group>"; };
 		66E22C2F1B73989500989E09 /* BlueSTSDKFeatureActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureActivity.h; sourceTree = "<group>"; };
 		66E22C301B73989500989E09 /* BlueSTSDKFeatureActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureActivity.m; sourceTree = "<group>"; };
@@ -327,6 +335,7 @@
 				665241F21B0B1BB100931F93 /* BlueSTSDK */,
 				665241FF1B0B1BB100931F93 /* BlueSTSDKTests */,
 				665241F11B0B1BB100931F93 /* Products */,
+				66802F291EA6630C0055C851 /* Localizable.strings */,
 			);
 			sourceTree = "<group>";
 		};
@@ -460,6 +469,8 @@
 				668A12761E3A443F00D99490 /* BlueSTSDKFeatureCompass.m */,
 				668A12791E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.h */,
 				668A127A1E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.m */,
+				4EDA2FCEC8131ABA2D8CCF0B /* BlueSTSDKFeatureBeamForming.m */,
+				4EDA298D6F16A489DFC3FFE3 /* BlueSTSDKFeatureBeamForming.h */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -480,6 +491,7 @@
 		6652424B1B0B1C1400931F93 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				66C777861EA5F12D00C75A20 /* BlueSTSDK_LocalizeUtil.h */,
 				666847B71DE85031001064A3 /* BlueSTSDKFwVersion.m */,
 				666847B81DE85031001064A3 /* BlueSTSDKFwVersion.h */,
 				6652424C1B0B1C1400931F93 /* NSData+NumberConversion.h */,
@@ -542,6 +554,7 @@
 			files = (
 				667D27491E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h in Headers */,
 				666847BA1DE85031001064A3 /* BlueSTSDKFwVersion.h in Headers */,
+				66C777871EA5F12D00C75A20 /* BlueSTSDK_LocalizeUtil.h in Headers */,
 				66766EE91CA3F67B00A13635 /* BlueSTSDKRemoteFeatureTemperature.h in Headers */,
 				66DBB6B01CAEB3CB00CCF412 /* BlueSTSDKRemoteFeaturePressure.h in Headers */,
 				66766EE71CA3F67B00A13635 /* BlueSTSDKRemoteFeatureHumidity.h in Headers */,
@@ -592,6 +605,7 @@
 				668A127B1E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.h in Headers */,
 				665242821B0B1EEC00931F93 /* BlueSTSDKNode_prv.h in Headers */,
 				665242741B0B1C1400931F93 /* NSData+NumberConversion.h in Headers */,
+				4EDA29707C81A63F363EE1BF /* BlueSTSDKFeatureBeamForming.h in Headers */,
 				EAF17E461C6C98D500F61D35 /* BlueSTSDKWeSURegisterDefines.h in Headers */,
 				665242841B0B1F5400931F93 /* BlueSTSDKFeature_prv.h in Headers */,
 				665242871B0B202500931F93 /* BlueSTSDKManager_prv.h in Headers */,
@@ -689,6 +703,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66802F2A1EA6630C0055C851 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -762,6 +777,7 @@
 				4EDA2718985F6845A6B4D54E /* BlueSTSDKFeatureAudioADPCMSync.m in Sources */,
 				4EDA223AA46E9FCF0F33D87B /* BlueSTSDKFeatureAudioADPCM.m in Sources */,
 				4EDA22010C07030C2C5174AA /* NSMutableDictionary+BlueSTSDKFeature.m in Sources */,
+				4EDA2CEDEB8BA6EDA39EB662 /* BlueSTSDKFeatureBeamForming.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

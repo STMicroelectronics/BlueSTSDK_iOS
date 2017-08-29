@@ -27,6 +27,8 @@
 
 #import "BlueSTSDKFeatureLogCSV.h"
 #import "BlueSTSDKNode.h"
+#import "BlueSTSDK_LocalizeUtil.h"
+
 #import "../Features/BlueSTSDKFeatureField.h"
 
 
@@ -73,18 +75,18 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"dd/MM/yyyy HH:mm:ss"];
     
-    NSMutableString *line = [NSMutableString stringWithString:@"Logged started on,"];
+    NSMutableString *line = [NSMutableString stringWithString:BLUESTSDK_LOCALIZE(@"Logged started on,",nil)];
     [line appendString:[dateFormatter stringFromDate:self.startupTimestamp]];
-    [line appendString:@"\nFeature,"];
+    [line appendString:BLUESTSDK_LOCALIZE(@"\nFeature,",nil)];
     [line appendString:f.name];
-    [line appendString:@"\nNodes"];
+    [line appendString:BLUESTSDK_LOCALIZE(@"\nNodes",nil)];
     for (BlueSTSDKNode *node in mNodes){
         [line appendString:@","];
         [line appendString:node.friendlyName];
     }
     [line appendString:@"\n\n"];
     
-    [line appendString:@"HostTimestamp,NodeName,NodeTimestamp,RawData"];
+    [line appendString:BLUESTSDK_LOCALIZE(@"HostTimestamp,NodeName,NodeTimestamp,RawData",nil)];
     for (BlueSTSDKFeatureField *field in fields){
         [line appendString:@","];
         if([field hasUnit]) {

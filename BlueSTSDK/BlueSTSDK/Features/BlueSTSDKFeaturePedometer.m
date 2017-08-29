@@ -31,18 +31,20 @@
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeaturePedometer.h"
 #import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
+
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Pedometer"
-#define FEATURE_STEPS_DATA_NAME @"Steps"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Pedometer",nil)
+#define FEATURE_STEPS_DATA_NAME BLUESTSDK_LOCALIZE(@"Steps",nil)
 #define FEATURE_STEPS_UNIT nil
 #define FEATURE_STEPS_MIN @0
 #define FEATURE_STEPS_MAX @(UINT_MAX)
 #define FEATURE_STEPS_TYPE BlueSTSDKFeatureFieldTypeUInt32
 
-#define FEATURE_FREQ_DATA_NAME @"Frequency"
-#define FEATURE_FREQ_UNIT @"steps/min"
+#define FEATURE_FREQ_DATA_NAME BLUESTSDK_LOCALIZE(@"Frequency",nil)
+#define FEATURE_FREQ_UNIT BLUESTSDK_LOCALIZE(@"steps/min",nil)
 #define FEATURE_FREQ_MIN @0
 #define FEATURE_FREQ_MAX @(FLT_MAX)
 #define FEATURE_FREQ_TYPE BlueSTSDKFeatureFieldTypeUInt16
@@ -95,8 +97,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     
     if(rawData.length-offset < 6){
         @throw [NSException
-                exceptionWithName:@"Invalid Pedometer data"
-                reason:@"The feature need almost 6 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Pedometer data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 6 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     

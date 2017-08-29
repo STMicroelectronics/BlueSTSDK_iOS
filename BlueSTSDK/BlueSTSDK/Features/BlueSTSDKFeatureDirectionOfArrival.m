@@ -27,12 +27,11 @@
 
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureDirectionOfArrival.h"
-
-#import "BlueSTSDKFeatureField.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"Direction of arrival"
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Direction of arrival",nil)
 #define FEATURE_UNIT @"\u00B0"
 #define FEATURE_MIN 0
 #define FEATURE_MAX 360
@@ -57,10 +56,24 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 }//initialize
 
 
-+(uint16_t)getAudioSourceAngle:(BlueSTSDKFeatureSample *)sample{
++(int16_t)getAudioSourceAngle:(BlueSTSDKFeatureSample *)sample{
     if(sample.data.count==0)
         return SHRT_MIN;
-    return[[sample.data objectAtIndex:0] unsignedShortValue];
+    return[sample.data[0] unsignedShortValue];
+}
+
+#define CHANGE_SL_SENSITIVITY (0xCC)
+#define ENABLE_LOW_SENSITIVITY (0X00)
+#define ENABLE_HIGH_SENSITIVITY (0X01)
+
+- (void)enableLowSensitivity:(BOOL)enable {
+    uint8_t commandData;
+    if(enable){
+        commandData = ENABLE_LOW_SENSITIVITY;
+    }else{
+        commandData = ENABLE_HIGH_SENSITIVITY;
+    }
+    [self sendCommand:CHANGE_SL_SENSITIVITY data:[NSData dataWithBytes:&commandData length:1]];
 }
 
 
@@ -73,6 +86,16 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     return sFieldDesc;
 }
 
+static int16_t normalizeAngle(int16_t angle){
+
+    while (angle<0){
+        angle+=360;
+    }
+    while (angle>360){
+        angle-=360;
+    }
+    return angle;
+}
 
 /**
  *  read int32 for build the pressure value, create the new sample and
@@ -89,19 +112,21 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     
     if(rawData.length-offset < 2){
         @throw [NSException
-                exceptionWithName:@"Invalid Source Of Arrival data"
-                reason:@"The feature need almost 2 bytes for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Source Of Arrival data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 2 bytes for extract the data",nil)
                 userInfo:nil];
     }//if
     
-    uint16_t angle= [rawData extractLeUInt16FromOffset:offset];
-    
+    int16_t angle= [rawData extractLeInt16FromOffset:offset];
+    angle = normalizeAngle(angle);
     NSArray *data = @[@(angle)];
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:2];
 }
 
 @end
+
+
 
 #import "../BlueSTSDKFeature+fake.h"
 

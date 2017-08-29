@@ -31,6 +31,7 @@
 #import "BlueSTSDKFeatureGenPurpose.h"
 #import "BlueSTSDKDebug_prv.h"
 #import "BlueSTSDKConfigControl_prv.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "Util/BlueSTSDKCharacteristic.h"
 #import "Util/BlueSTSDKBleAdvertiseParser.h"
@@ -966,23 +967,23 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
 +(NSString*) stateToString:(BlueSTSDKNodeState)state{
     switch (state) {
         case BlueSTSDKNodeStateConnected:
-            return @"Connected";
+            return BLUESTSDK_LOCALIZE(@"Connected",nil);
         case BlueSTSDKNodeStateConnecting:
-            return @"Connecting";
+            return BLUESTSDK_LOCALIZE(@"Connecting",nil);
         case BlueSTSDKNodeStateDead:
-            return @"Dead";
+            return BLUESTSDK_LOCALIZE(@"Dead",nil);
         case BlueSTSDKNodeStateDisconnecting:
-            return @"Disconnecting";
+            return BLUESTSDK_LOCALIZE(@"Disconnecting",nil);
         case BlueSTSDKNodeStateIdle:
-            return @"Idle";
+            return BLUESTSDK_LOCALIZE(@"Idle",nil);
         case BlueSTSDKNodeStateInit:
-            return @"Init";
+            return BLUESTSDK_LOCALIZE(@"Init",nil);
         case BlueSTSDKNodeStateLost:
-            return @"Lost";
+            return BLUESTSDK_LOCALIZE(@"Lost",nil);
         case BlueSTSDKNodeStateUnreachable:
-            return @"Unreachable";
+            return BLUESTSDK_LOCALIZE(@"Unreachable",nil);
         default:
-            return@"Invalid Enum value";
+            return BLUESTSDK_LOCALIZE(@"Invalid Enum value",nil);
     }//switch
 }//stateToString
 

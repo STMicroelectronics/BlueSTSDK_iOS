@@ -30,9 +30,9 @@
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureField.h"
 #import "BlueSTSDKFeatureAccelerometerEvent.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME @"AccelerationEvent"
 #define FEATURE_UNIT nil
 #define FEATURE_MIN @0
 #define FEATURE_MAX_EVENT @256
@@ -74,32 +74,47 @@ static NSArray *sEventTypeName;
                                               length:sizeof(ENABLE_COMMAND)];
         sDisableCommand = [NSData dataWithBytesNoCopy:(void*)&DISABLE_COMMAND
                                               length:sizeof(DISABLE_COMMAND)];
-        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:@"Event"
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:BLUESTSDK_LOCALIZE(@"Event",nil)
                                                         unit:FEATURE_UNIT
                                                         type:FEATURE_TYPE_EVENT
                                                          min:FEATURE_MIN
                                                          max:FEATURE_MAX_EVENT],
-                [BlueSTSDKFeatureField createWithName:@"nSteps"
+                [BlueSTSDKFeatureField createWithName:BLUESTSDK_LOCALIZE(@"nSteps",nil)
                                                  unit:FEATURE_UNIT
                                                  type:FEATURE_TYPE_STEPS
                                                   min:FEATURE_MIN
                                                   max:FEATURE_MAX_STEPS]];
         
-        sDetectableEventTypeName = @[@"None",@"Orientation", @"Free Fall",
-                                     @"Single Tap", @"Double Tap", @"Wake Up",
-                                     @"Tilt", @"Pedometer",@"Multiple"];
+        sDetectableEventTypeName = @[BLUESTSDK_LOCALIZE(@"None",nil),
+                                     BLUESTSDK_LOCALIZE(@"Orientation",nil),
+                                     BLUESTSDK_LOCALIZE(@"Free Fall",nil),
+                                     BLUESTSDK_LOCALIZE(@"Single Tap",nil),
+                                     BLUESTSDK_LOCALIZE(@"Double Tap",nil),
+                                     BLUESTSDK_LOCALIZE(@"Wake Up",nil),
+                                     BLUESTSDK_LOCALIZE(@"Tilt",nil),
+                                     BLUESTSDK_LOCALIZE(@"Pedometer",nil),
+                                     BLUESTSDK_LOCALIZE(@"Multiple",nil)];
         
-        sEventTypeName = @[@"Orientation Top Left",@"Orientation Top Right",
-                           @"Orientation Bottom Left",@"Orientation Bottom Right",
-                           @"Orientation Up",@"Orientation Down",@"Tilt",
-                           @"Free Fall",@"Single Tap",@"Double Tap",@"Wake Up",
-                           @"Pedometer",@"No Event",@"Error"];
+        sEventTypeName = @[BLUESTSDK_LOCALIZE(@"Orientation Top Left",nil),
+                           BLUESTSDK_LOCALIZE(@"Orientation Top Right",nil),
+                           BLUESTSDK_LOCALIZE(@"Orientation Bottom Left",nil),
+                           BLUESTSDK_LOCALIZE(@"Orientation Bottom Right",nil),
+                           BLUESTSDK_LOCALIZE(@"Orientation Up",nil),
+                           BLUESTSDK_LOCALIZE(@"Orientation Down",nil),
+                           BLUESTSDK_LOCALIZE(@"Tilt",nil),
+                           BLUESTSDK_LOCALIZE(@"Free Fall",nil),
+                           BLUESTSDK_LOCALIZE(@"Single Tap",nil),
+                           BLUESTSDK_LOCALIZE(@"Double Tap",nil),
+                           BLUESTSDK_LOCALIZE(@"Wake Up",nil),
+                           BLUESTSDK_LOCALIZE(@"Pedometer",nil),
+                           BLUESTSDK_LOCALIZE(@"No Event",nil),
+                           BLUESTSDK_LOCALIZE(@"Error",nil)];
     }
     
 }
 
 -(instancetype) initWhitNode: (BlueSTSDKNode*)node{
-    self = [super initWhitNode:node name:FEATURE_NAME];
+    self = [super initWhitNode:node name: BLUESTSDK_LOCALIZE(@"AccelerationEvent",nil)];
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sNotificationQueue = dispatch_queue_create("BlueSTSDKFeatureAccelerometerEvent",
@@ -240,8 +255,8 @@ static NSArray *sEventTypeName;
                                      dataOffset:(uint32_t)offset{
     if(rawData.length-offset < 2){
         @throw [NSException
-                exceptionWithName:@"Invalid Pedometer data"
-                reason:@"The feature need almost 2 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Pedometer data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 2 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     
@@ -260,8 +275,8 @@ static NSArray *sEventTypeName;
                                      dataOffset:(uint32_t)offset{
     if(rawData.length-offset < 1){
         @throw [NSException
-                exceptionWithName:@"Invalid AccelerationEvent data"
-                reason:@"The feature need almost 1 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid AccelerationEvent data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 1 byte for extract the data",nil)
                 userInfo:nil];
     }//if
     
@@ -281,8 +296,8 @@ static NSArray *sEventTypeName;
     
     if(rawData.length-offset < 3){
         @throw [NSException
-                exceptionWithName:@"Invalid AccelerationEvent data"
-                reason:@"The feature need almost 3 byte for extract the data"
+                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid AccelerationEvent data",nil)
+                reason:BLUESTSDK_LOCALIZE(@"The feature need almost 3 byte for extract the data",nil)
                 userInfo:nil];
     }//if
         
