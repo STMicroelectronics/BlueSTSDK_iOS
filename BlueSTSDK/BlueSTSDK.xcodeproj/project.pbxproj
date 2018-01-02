@@ -101,6 +101,8 @@
 		66802F2A1EA6630C0055C851 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66802F291EA6630C0055C851 /* Localizable.strings */; };
 		6684C94A1BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h in Headers */ = {isa = PBXBuildFile; fileRef = 6684C9481BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6684C94B1BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6684C9491BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.m */; };
+		6689FF1C1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 6689FF1A1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6689FF1D1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 6689FF1B1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.m */; };
 		668A12771E3A443F00D99490 /* BlueSTSDKFeatureCompass.h in Headers */ = {isa = PBXBuildFile; fileRef = 668A12751E3A443F00D99490 /* BlueSTSDKFeatureCompass.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		668A12781E3A443F00D99490 /* BlueSTSDKFeatureCompass.m in Sources */ = {isa = PBXBuildFile; fileRef = 668A12761E3A443F00D99490 /* BlueSTSDKFeatureCompass.m */; };
 		668A127B1E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.h in Headers */ = {isa = PBXBuildFile; fileRef = 668A12791E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -247,9 +249,11 @@
 		667BAAB81B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureFreeFall.m; sourceTree = "<group>"; };
 		667D27471E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKWeSUFeatureConfig.h; path = Config/STWeSU/BlueSTSDKWeSUFeatureConfig.h; sourceTree = "<group>"; };
 		667D27481E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlueSTSDKWeSUFeatureConfig.m; path = Config/STWeSU/BlueSTSDKWeSUFeatureConfig.m; sourceTree = "<group>"; };
-		66802F291EA6630C0055C851 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		66802F291EA6630C0055C851 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		6684C9481BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureMicLevel.h; sourceTree = "<group>"; };
 		6684C9491BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureMicLevel.m; sourceTree = "<group>"; };
+		6689FF1A1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureSDLogging.h; sourceTree = "<group>"; };
+		6689FF1B1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureSDLogging.m; sourceTree = "<group>"; };
 		668A12751E3A443F00D99490 /* BlueSTSDKFeatureCompass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureCompass.h; sourceTree = "<group>"; };
 		668A12761E3A443F00D99490 /* BlueSTSDKFeatureCompass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureCompass.m; sourceTree = "<group>"; };
 		668A12791E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureMotionIntensity.h; sourceTree = "<group>"; };
@@ -471,6 +475,8 @@
 				668A127A1E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.m */,
 				4EDA2FCEC8131ABA2D8CCF0B /* BlueSTSDKFeatureBeamForming.m */,
 				4EDA298D6F16A489DFC3FFE3 /* BlueSTSDKFeatureBeamForming.h */,
+				6689FF1A1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.h */,
+				6689FF1B1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.m */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -554,6 +560,7 @@
 			files = (
 				667D27491E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h in Headers */,
 				666847BA1DE85031001064A3 /* BlueSTSDKFwVersion.h in Headers */,
+				6689FF1C1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.h in Headers */,
 				66C777871EA5F12D00C75A20 /* BlueSTSDK_LocalizeUtil.h in Headers */,
 				66766EE91CA3F67B00A13635 /* BlueSTSDKRemoteFeatureTemperature.h in Headers */,
 				66DBB6B01CAEB3CB00CCF412 /* BlueSTSDKRemoteFeaturePressure.h in Headers */,
@@ -668,7 +675,7 @@
 		665241E71B0B1BB100931F93 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = STCentralLab;
 				TargetAttributes = {
 					665241EF1B0B1BB100931F93 = {
@@ -777,6 +784,7 @@
 				4EDA2718985F6845A6B4D54E /* BlueSTSDKFeatureAudioADPCMSync.m in Sources */,
 				4EDA223AA46E9FCF0F33D87B /* BlueSTSDKFeatureAudioADPCM.m in Sources */,
 				4EDA22010C07030C2C5174AA /* NSMutableDictionary+BlueSTSDKFeature.m in Sources */,
+				6689FF1D1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.m in Sources */,
 				4EDA2CEDEB8BA6EDA39EB662 /* BlueSTSDKFeatureBeamForming.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -808,14 +816,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -859,14 +873,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

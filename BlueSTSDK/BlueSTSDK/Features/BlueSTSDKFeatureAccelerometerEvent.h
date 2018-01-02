@@ -33,8 +33,11 @@
 @protocol BlueSTSDKFeatureAccelerationEnableTypeDelegate;
 
 /**
- *  Feature containing the event that are detected from the accelerometer data
- *  only one event type can be detected at time.
+ * Feature containing the event that are detected from the accelerometer data
+ * This class doesn't remember witch event is enable or not, the user has to
+ * enable or disable the needed events.
+ * when the notificatio is enable the default event is detected, when the notification
+ * is disable all the enabled events are disabled.
  *
  * @author STMicroelectronics - Central Labs.
  */
@@ -76,6 +79,12 @@ typedef NS_ENUM(char, BlueSTSDKFeatureAccelerationDetectableEventType){
     
 };
 
+/**
+ * event enable by defaout when the notification are enabled
+ */
+@property (readonly) BlueSTSDKFeatureAccelerationDetectableEventType DEFAULT_ENABLED_EVENT
+    NS_SWIFT_NAME(DEFAULT_ENABLED_EVENT);
+
 +(NSString*) detectableEventTypeToString:(BlueSTSDKFeatureAccelerationDetectableEventType)event;
 +(NSString*) eventTypeToString:(BlueSTSDKFeatureAccelerometerEventType)event;
 
@@ -88,23 +97,6 @@ typedef NS_ENUM(char, BlueSTSDKFeatureAccelerationDetectableEventType){
  *  @return true if the command is correctly send to the node
  */
 -(BOOL) enableEvent:(BlueSTSDKFeatureAccelerationDetectableEventType) type enable:(BOOL)enable;
-
-/**
- *  get the event that is currently enabled
- *
- *  @return event that is currently enable on the node
- */
--(BlueSTSDKFeatureAccelerationDetectableEventType) getEnalbledEvent;
-
-/**
- *  tell if the event type is currently enabled
- *
- *  @param type event to enable
- *
- *  @return true id the event is enabled
- */
--(BOOL) isEnableEvent:(BlueSTSDKFeatureAccelerationDetectableEventType) type;
-
 
 /**
  *  register a delegate for this feature

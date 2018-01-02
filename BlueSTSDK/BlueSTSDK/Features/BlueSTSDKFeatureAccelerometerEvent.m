@@ -65,7 +65,8 @@ static NSArray *sEventTypeName;
      */
     NSMutableSet *mFeatureEnableTypeDelegate;
 
-    BlueSTSDKFeatureAccelerationDetectableEventType mEnableType;
+    BOOL mIsPedometerEnabled;
+
 }
 
 +(void)initialize{
@@ -122,13 +123,14 @@ static NSArray *sEventTypeName;
     });
     
     mFeatureEnableTypeDelegate = [NSMutableSet set];
-    mEnableType = BlueSTSDKFeatureEventTypeNone;
+    mIsPedometerEnabled=false;
+    _DEFAULT_ENABLED_EVENT=BlueSTSDKFeatureEventTypeMultiple;
     return self;
 }
 
 +(BlueSTSDKFeatureAccelerometerEventType)getAccelerationEvent:(BlueSTSDKFeatureSample*)sample{
     if(sample.data.count>0) {
-        return [(NSNumber*)[sample.data objectAtIndex:0] unsignedShortValue];
+        return (BlueSTSDKFeatureAccelerometerEventType)[sample.data[0] unsignedShortValue];
     }//if
     return BlueSTSDKFeatureAccelerometerError;
 }
@@ -198,9 +200,9 @@ static NSArray *sEventTypeName;
 +(int32_t) getPedometerSteps:(BlueSTSDKFeatureSample*)sample{
     if(sample.data.count>1){
         BlueSTSDKFeatureAccelerometerEventType eventType =
-            [[sample.data objectAtIndex:0] unsignedShortValue];
+                [BlueSTSDKFeatureAccelerometerEvent getAccelerationEvent:sample];
         if ((eventType & BlueSTSDKFeatureAccelerometerPedometer)!=0) {
-            return [[sample.data objectAtIndex:1] unsignedShortValue];
+            return [sample.data[1] unsignedShortValue];
         }
     }
     return -1;
@@ -228,18 +230,17 @@ static NSArray *sEventTypeName;
 }
 
 -(BOOL)enableEvent:(BlueSTSDKFeatureAccelerationDetectableEventType)type enable:(BOOL)enable{
-    if( enable && ![self isEnableEvent:type] && mEnableType!= BlueSTSDKFeatureEventTypeNone){
-        [self sendCommand:mEnableType data:sDisableCommand];
+
+    if(type == BlueSTSDKFeatureEventTypePedometer){
+        mIsPedometerEnabled=enable;
     }
-    return [self sendCommand:(uint8_t)type data:sEnableCommand];
-}
 
--(BOOL)isEnableEvent:(BlueSTSDKFeatureAccelerationDetectableEventType)type{
-    return mEnableType == type;
-}
-
--(BlueSTSDKFeatureAccelerationDetectableEventType) getEnalbledEvent{
-    return mEnableType;
+    if(type != BlueSTSDKFeatureEventTypeNone){
+        return [self sendCommand:(uint8_t)type data: enable? sEnableCommand : sDisableCommand];
+    }else{
+        [self notifyEventEnableChange:BlueSTSDKFeatureEventTypeNone newStatus:true];
+        return true;
+    }
 }
 
 -(void) addFeatureAccelerationEnableTypeDelegate:(id<BlueSTSDKFeatureAccelerationEnableTypeDelegate>)delegate{
@@ -329,7 +330,7 @@ static NSArray *sEventTypeName;
     
     if(dataLength>=3)
         return [self extractEventAndPedomiterData:timestamp data:rawData dataOffset:offset];
-    else if(dataLength>=2 && mEnableType == BlueSTSDKFeatureEventTypePedometer){
+    else if(dataLength>=2 && mIsPedometerEnabled){
         return [self extractPedometerData:timestamp data:rawData dataOffset:offset];
     }else
         return [self extractEventData:timestamp data:rawData dataOffset:offset];
@@ -352,12 +353,6 @@ static NSArray *sEventTypeName;
     [data getBytes:&newStatus length:1];
     BlueSTSDKFeatureAccelerationDetectableEventType event =
         (BlueSTSDKFeatureAccelerationDetectableEventType) commandType;
-    
-    if(newStatus)
-        mEnableType = event;
-    else if(mEnableType==event){
-        mEnableType = BlueSTSDKFeatureEventTypeNone;
-    }
     
     [self notifyEventEnableChange:event
                         newStatus:newStatus];

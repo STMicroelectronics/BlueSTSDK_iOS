@@ -46,7 +46,7 @@
 /**
  *  moment when the data arrive at the device
  */
-@property(readonly,retain,nullable) NSDate *notificaitonTime;
+@property(readonly,retain,nonnull) NSDate *notificaitonTime;
 
 /**
  *  node time stamp at the moment of the data acquisition

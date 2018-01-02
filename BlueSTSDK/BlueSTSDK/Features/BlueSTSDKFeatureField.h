@@ -90,22 +90,22 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureFieldType){
 /**
  *  field name
  */
-@property (readonly) NSString *name;
+@property (readonly) NSString * _Nonnull name;
 
 /**
  *  data unit for the field
  */
-@property (readonly) NSString *unit;
+@property (readonly)  NSString * _Nullable unit;
 
 /**
  *  minimum field value
  */
-@property (readonly) NSNumber *min;
+@property (readonly) NSNumber * _Nonnull min;
 
 /**
  *  maximum field value
  */
-@property (readonly) NSNumber *max;
+@property (readonly) NSNumber * _Nonnull max;
 
 /**
  *  type used for store the field value
@@ -123,11 +123,11 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureFieldType){
  *
  *  @return object of type BlueSTSDKFeatureFieldType
  */
-+(instancetype)createWithName:(NSString *)name
-                                     unit:(NSString*)unit
++(instancetype _Nonnull )createWithName:(NSString * _Nonnull)name
+                                     unit:(NSString* _Nullable)unit
                                      type:(BlueSTSDKFeatureFieldType)type
-                                      min:(NSNumber*)min
-                                      max:(NSNumber*)max;
+                                      min:(NSNumber* _Nonnull)min
+                                      max:(NSNumber* _Nonnull)max;
 
 /**
  *  initialize an object of type BlueSTSDKFeatureFieldType
@@ -140,11 +140,11 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureFieldType){
  *
  *  @return object of type BlueSTSDKFeatureFieldType
  */
--(instancetype) initWithName:(NSString *)name
-              unit:(NSString*)unit
+-(instancetype _Nonnull ) initWithName:(NSString *_Nonnull)name
+              unit:(NSString* _Nullable)unit
               type:(BlueSTSDKFeatureFieldType)type
-               min:(NSNumber*)min
-               max:(NSNumber*)max;
+               min:(NSNumber* _Nonnull)min
+               max:(NSNumber* _Nonnull)max;
 
 -(BOOL)hasUnit;
 @end

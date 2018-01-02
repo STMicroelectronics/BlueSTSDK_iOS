@@ -71,15 +71,15 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 }
 
 /**
- *  read int32 for build the pressure value, create the new sample and
+ *  read a byte for build the beamforming direction, create the new sample and
  * and notify it to the delegate
  *
  *  @param timestamp data time stamp
  *  @param rawData   array of byte send by the node
  *  @param offset    offset where we have to start reading the data
  *
- *  @throw exception if there are no 4 bytes available in the rawdata array
- *  @return pressure information + number of read bytes (4)
+ *  @throw exception if there are no bytes available in the rawdata array
+ *  @return pressure information + number of read bytes (1)
  */
 -(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
 

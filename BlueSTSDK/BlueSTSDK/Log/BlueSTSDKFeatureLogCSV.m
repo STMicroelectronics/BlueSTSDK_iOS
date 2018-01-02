@@ -86,7 +86,7 @@
     }
     [line appendString:@"\n\n"];
     
-    [line appendString:BLUESTSDK_LOCALIZE(@"HostTimestamp,NodeName,NodeTimestamp,RawData",nil)];
+    [line appendString:BLUESTSDK_LOCALIZE(@"Date,HostTimestamp,NodeName,NodeTimestamp,RawData",nil)];
     for (BlueSTSDKFeatureField *field in fields){
         [line appendString:@","];
         if([field hasUnit]) {
@@ -219,17 +219,18 @@ void appendTo(NSMutableArray<NSString *> *array, NSArray<NSNumber *> *data) {
 - (void)feature:(BlueSTSDKFeature *)feature rawData:(NSData*)raw sample:(BlueSTSDKFeatureSample *)sample{
     static const char comma=',';
     NSMutableData *data = [[NSMutableData alloc] init];
-
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"dd/MM/yyyy HH:mm:ss.SSS"];
+    
     NSFileHandle *file = [self openDumpFileForFeature:feature];
 
     //prepare fields
-    //NSInteger timeIntervalms = (NSInteger)(] * -1000);
-    //NSTimeInterval timeInterval = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval timeInterval = [self.startupTimestamp timeIntervalSinceNow] * -1;
+    NSString *date = [dateFormatter stringFromDate:sample.notificaitonTime];
     
+    NSTimeInterval timeInterval = [self.startupTimestamp timeIntervalSinceNow] * -1;
     NSInteger timeIntervalsec = (NSInteger)(timeInterval);
     NSInteger timeIntervalms = (NSInteger)((timeInterval - (NSTimeInterval)timeIntervalsec) * 1000.0);
-    NSMutableArray *fields = [@[[NSString stringWithFormat:@"%ld%03ld", (long) timeIntervalsec, (long) timeIntervalms],
+    NSMutableArray *fields = [@[date,[NSString stringWithFormat:@"%ld%03ld", (long) timeIntervalsec, (long) timeIntervalms],
             feature.parentNode.friendlyName,
             [NSString stringWithFormat:@"%llu", sample.timestamp],
             raw ? stringBlobData(raw) : @""] mutableCopy];

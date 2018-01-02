@@ -334,6 +334,16 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  */
 +(nonnull NSString*)nodeTypeToString:(BlueSTSDKNodeType)type;
 
+/**
+ *  write a data into a feature characteristics
+ *
+ *  @param f receiver feature
+ *  @param data data to send to the feature
+ *
+ *  @return true if the command is correctly send
+ */
+-(BOOL)writeDataToFeature:(nonnull BlueSTSDKFeature*)f data:(nonnull NSData*)data;
+
 @end
 
 /**

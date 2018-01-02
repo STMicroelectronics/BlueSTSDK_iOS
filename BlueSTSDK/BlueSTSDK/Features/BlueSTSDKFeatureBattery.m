@@ -59,6 +59,8 @@
 
 #define COMMAND_GET_MAX_ASSORBED_CURRENT 0x02
 
+#define UNKNOW_CURRENT_VALUE ((int16_t)(0x8000))
+
 /**
  *  queue used for notify things to the delegate
  */
@@ -180,6 +182,10 @@ static bool hasHeightResolutionCurrent(uint8_t status){
     return (status & 0x80)!=0;
 }
 
+static bool hasUnknownCurrent(int16_t current){
+    return current == UNKNOW_CURRENT_VALUE;
+}
+
 /***
  * remove the most MSB for extract only the battery status value
  * @param status battery status
@@ -265,6 +271,16 @@ static uint8_t getBatteryStatus(uint8_t status){
                                         data:data];
 }//parseCommandResponseWithTimestamp
 
+static float extractCurrent(int16_t current,bool hightRes){
+    if(hasUnknownCurrent(current))
+        return NAN;
+    
+    if(hightRes)
+        return ((float)current)*0.1f;
+    
+    return current;
+}
+
 /**
 *  read 3*int16+uint8 for build the battery value, create the new sample and
 * and notify it to the delegate
@@ -289,13 +305,13 @@ static uint8_t getBatteryStatus(uint8_t status){
     float percentage =  [rawData extractLeUInt16FromOffset:offset]/10.0f;
     //the data arrive in mV we store it in V
     float voltage = [rawData extractLeInt16FromOffset:offset+2]/1000.0f;
-    float current = [rawData extractLeInt16FromOffset:offset+4];
+    int16_t tempCurrent = [rawData extractLeInt16FromOffset:offset+4];
+    
     
     uint8_t tempStatus = [rawData extractUInt8FromOffset:offset+6];
     
-    if(hasHeightResolutionCurrent(tempStatus))
-        current=current/10.0f;
-    
+    float current = extractCurrent(tempCurrent,hasHeightResolutionCurrent(tempStatus));
+        
     NSArray *data = @[@(percentage), @(voltage), @(current),
                       @(getBatteryStatus(tempStatus))];
     

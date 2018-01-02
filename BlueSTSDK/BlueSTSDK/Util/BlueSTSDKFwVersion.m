@@ -112,4 +112,10 @@
     return self;
 }
 
+-(nonnull NSString*) getVersionNumberStr{
+    return [NSString stringWithFormat:@"%ld.%ld.%ld",
+            (long)_major, (long)_minor, (long)_patch];
+}
+
+
 @end

@@ -103,18 +103,6 @@
 -(BOOL)sendCommandMessageToFeature:(BlueSTSDKFeature*)f type:(uint8_t)commandType
                               data:(NSData*) commandData;
 
-/**
- * @protected
- *  write a data into a feature characteristics
- *
- *  @param f receiver feature
- *  @param data data to send to the feature
- *
- *  @return true if the command is correctly send
- */
--(BOOL)writeDataToFeature:(BlueSTSDKFeature*)f data:(NSData*)data;
-
-
 @end
 
 

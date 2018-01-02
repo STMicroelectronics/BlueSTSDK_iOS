@@ -67,6 +67,7 @@
 #import "BlueSTSDKFeatureCompass.h"
 #import "BlueSTSDKFeatureBeamForming.h"
 #import "BlueSTSDKFeatureMotionIntensity.h"
+#import "BlueSTSDKFeatureSDLogging.h"
 
 #import "BlueSTSDKStdCharToFeatureMap.h"
 #import "BlueSTSDKFeatureHeartRate.h"

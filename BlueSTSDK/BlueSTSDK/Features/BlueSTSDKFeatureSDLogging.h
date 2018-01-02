@@ -1,5 +1,5 @@
 /*******************************************************************************
- * COPYRIGHT(c) 2016 STMicroelectronics
+ * COPYRIGHT(c) 2017 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -25,32 +25,61 @@
  *
  ******************************************************************************/
 
-#ifndef BlueSTSDK_BlueSTSDKFwVersion_h
-#define BlueSTSDK_BlueSTSDKFwVersion_h
+#import "BlueSTSDKFeature.h"
 
-#import <Foundation/Foundation.h>
+typedef NS_ENUM(uint8_t,BlueSTSDKFeatureSDLoggingStatus){
+    BlueSTSDKFeatureSDLoggingStatusSTOPPED=0,
+    BlueSTSDKFeatureSDLoggingStatusSTARTED=1,
+    BlueSTSDKFeatureSDLoggingStatusNO_SD=2,
+    BlueSTSDKFeatureSDLoggingStatusIO_ERROR =0xFF
+};
 
-@interface BlueSTSDKFwVersion : NSObject
+/**
+ * Class to manage the loggin on the SD
+ */
+@interface BlueSTSDKFeatureSDLogging : BlueSTSDKFeature
 
-@property (readonly, retain) NSString * _Nullable name;
-@property (readonly, retain) NSString * _Nullable mcuType;
-@property (readonly) NSInteger major;
-@property (readonly) NSInteger minor;
-@property (readonly) NSInteger patch;
++(BlueSTSDKFeatureSDLoggingStatus) getStatus:(BlueSTSDKFeatureSample *)data;
+
+/**
+ *tell if the board is currently loggin on the sd
+ *
+ *@param data status data
+ *@return true if the node is logging on the sd
+ */
++(BOOL)isLogging:(BlueSTSDKFeatureSample*)data;
 
 
-+(nonnull instancetype) version:(nonnull NSString *)string;
-+(nonnull instancetype) versionMajor:(NSInteger)major
-                        minor:(NSInteger)minor
-                        patch:(NSInteger)patch;
-+(nonnull instancetype) versionWithName:(nullable NSString*)name
-                        mcuType:(nullable NSString*)mcuType
-                         major:(NSInteger)major
-                          minor:(NSInteger)minor
-                          patch:(NSInteger)patch;
+/**
+ *tell how many seconds there are between one samplig and another.
 
--(NSComparisonResult)compareVersion:(nonnull BlueSTSDKFwVersion *)version;
--(nonnull NSString*) getVersionNumberStr;
+ @param data status data
+ @return sampling interval
+ */
++(uint32_t)getLogInterval:(BlueSTSDKFeatureSample*)data;
+
+
+/**
+ * get the list of feature that are currently logged
+
+ @param node node where the logging is happaning
+ @param data status data
+ @return list of feature that the node is logging
+ */
++(NSSet<BlueSTSDKFeature*>*)getLoggedFeature:(BlueSTSDKNode*)node data:(BlueSTSDKFeatureSample*)data;
+
+
+/**
+ * Start the logging
+ * @param featureToLog list of feature that the node has to log
+ * @param seconds interval between 2 sensor reads, in seconds
+ */
+-(void)sartLoggingFeature:(NSSet<BlueSTSDKFeature*>*)featureToLog evrey:(uint32_t)seconds;
+
+/**
+ * stop the logging
+ */
+-(void)stopLogging NS_SWIFT_NAME(stopLogging()); 
+
+
 @end
-
-#endif

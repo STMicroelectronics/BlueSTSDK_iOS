@@ -135,7 +135,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureBatteryStatus){
  *
  * @param delegate object where notify the data
  */
--(void) addBatteryDelegate:(id<BlueSTSDKFeatureBatteryDelegate>)delegate;
+-(void) addBatteryDelegate:(id<BlueSTSDKFeatureBatteryDelegate>)delegate NS_SWIFT_NAME(addBatteryDelegate(_:));
 
 
 /**
@@ -143,7 +143,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureBatteryStatus){
  *
  * @param delegate delegate to remove
  */
--(void) removeBatteryDelegate:(id<BlueSTSDKFeatureBatteryDelegate>)delegate;
+-(void) removeBatteryDelegate:(id<BlueSTSDKFeatureBatteryDelegate>)delegate NS_SWIFT_NAME(removeBatteryDelegate(_:));
 
 @end
 

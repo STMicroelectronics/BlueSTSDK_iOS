@@ -37,8 +37,6 @@
 
 #define RETRAY_START_SCANNING_DELAY (0.5) //half second
 
-#define RETRAY_START_SCANNING_DELAY (0.5) //half second
-
 @interface BlueSTSDKManager()<CBCentralManagerDelegate>
 @end
 

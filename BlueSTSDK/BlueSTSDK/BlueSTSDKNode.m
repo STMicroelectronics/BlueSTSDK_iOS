@@ -468,6 +468,7 @@ static dispatch_queue_t sNotificationQueue;
 }//isEnableNotification
 
 -(BOOL) enableNotification:(BlueSTSDKFeature*)feature{
+   // NSLog(@"Enable: %@",feature.name);
     if(![feature enabled])
         return false;
     
@@ -489,6 +490,8 @@ static dispatch_queue_t sNotificationQueue;
 }//enableNotification
 
 -(BOOL) disableNotification:(BlueSTSDKFeature*)feature{
+   // NSLog(@"Disable: %@",feature.name);
+
     if(![feature enabled])
         return false;
     CBCharacteristic *c=[self extractCharacteristicsFromFeature:feature];
@@ -939,6 +942,7 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
                 //if the uuid is still there we didn't receive data ->
                 //subscribe again to the characteristics
                 if([mAskForNotification containsObject:characteristic.UUID]){
+                   // NSLog(@"enable: %@",characteristic.UUID.UUIDString);
                     [mPeripheral setNotifyValue:YES forCharacteristic:characteristic]; //request again
                 }//if
             }//syncronized
