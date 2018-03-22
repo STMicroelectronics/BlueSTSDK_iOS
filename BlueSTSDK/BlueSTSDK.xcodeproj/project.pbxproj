@@ -112,6 +112,8 @@
 		6692CC6D1D54BC230078B6D2 /* BlueSTSDKDeviceTimestampFeature.m in Sources */ = {isa = PBXBuildFile; fileRef = 6692CC6C1D54BC230078B6D2 /* BlueSTSDKDeviceTimestampFeature.m */; };
 		6693B8E81C897D5B00F24E33 /* BlueSTSDKFeatureSwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 6693B8E61C897D5B00F24E33 /* BlueSTSDKFeatureSwitch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6693B8E91C897D5B00F24E33 /* BlueSTSDKFeatureSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693B8E71C897D5B00F24E33 /* BlueSTSDKFeatureSwitch.m */; };
+		66A47C642040434000986ADA /* BlueSTSDKFeatureCOSensor.h in Headers */ = {isa = PBXBuildFile; fileRef = 66A47C622040434000986ADA /* BlueSTSDKFeatureCOSensor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		66A47C652040434000986ADA /* BlueSTSDKFeatureCOSensor.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A47C632040434000986ADA /* BlueSTSDKFeatureCOSensor.m */; };
 		66AD532E1C21606100B0F512 /* BlueSTSDKFeatureAccelerometerEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 66AD532C1C21606100B0F512 /* BlueSTSDKFeatureAccelerometerEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66AD532F1C21606100B0F512 /* BlueSTSDKFeatureAccelerometerEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AD532D1C21606100B0F512 /* BlueSTSDKFeatureAccelerometerEvent.m */; };
 		66BC2BD41D40AA2C00F91A5F /* BlueSTSDKFeatureHeartRate.h in Headers */ = {isa = PBXBuildFile; fileRef = 66BC2BD01D40AA2C00F91A5F /* BlueSTSDKFeatureHeartRate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -263,6 +265,8 @@
 		6692CC6C1D54BC230078B6D2 /* BlueSTSDKDeviceTimestampFeature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKDeviceTimestampFeature.m; sourceTree = "<group>"; };
 		6693B8E61C897D5B00F24E33 /* BlueSTSDKFeatureSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureSwitch.h; sourceTree = "<group>"; };
 		6693B8E71C897D5B00F24E33 /* BlueSTSDKFeatureSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureSwitch.m; sourceTree = "<group>"; };
+		66A47C622040434000986ADA /* BlueSTSDKFeatureCOSensor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureCOSensor.h; sourceTree = "<group>"; };
+		66A47C632040434000986ADA /* BlueSTSDKFeatureCOSensor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureCOSensor.m; sourceTree = "<group>"; };
 		66AD532C1C21606100B0F512 /* BlueSTSDKFeatureAccelerometerEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureAccelerometerEvent.h; sourceTree = "<group>"; };
 		66AD532D1C21606100B0F512 /* BlueSTSDKFeatureAccelerometerEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureAccelerometerEvent.m; sourceTree = "<group>"; };
 		66BC2BD01D40AA2C00F91A5F /* BlueSTSDKFeatureHeartRate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureHeartRate.h; sourceTree = "<group>"; };
@@ -477,6 +481,8 @@
 				4EDA298D6F16A489DFC3FFE3 /* BlueSTSDKFeatureBeamForming.h */,
 				6689FF1A1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.h */,
 				6689FF1B1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.m */,
+				66A47C622040434000986ADA /* BlueSTSDKFeatureCOSensor.h */,
+				66A47C632040434000986ADA /* BlueSTSDKFeatureCOSensor.m */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -612,6 +618,7 @@
 				668A127B1E3A487500D99490 /* BlueSTSDKFeatureMotionIntensity.h in Headers */,
 				665242821B0B1EEC00931F93 /* BlueSTSDKNode_prv.h in Headers */,
 				665242741B0B1C1400931F93 /* NSData+NumberConversion.h in Headers */,
+				66A47C642040434000986ADA /* BlueSTSDKFeatureCOSensor.h in Headers */,
 				4EDA29707C81A63F363EE1BF /* BlueSTSDKFeatureBeamForming.h in Headers */,
 				EAF17E461C6C98D500F61D35 /* BlueSTSDKWeSURegisterDefines.h in Headers */,
 				665242841B0B1F5400931F93 /* BlueSTSDKFeature_prv.h in Headers */,
@@ -765,6 +772,7 @@
 				665242691B0B1C1400931F93 /* BlueSTSDKFeatureProximity.m in Sources */,
 				66FC1DE91C19D21D0015F7A2 /* BlueSTSDKFeatureMemsGesture.m in Sources */,
 				665242631B0B1C1400931F93 /* BlueSTSDKFeatureMemsSensorFusion.m in Sources */,
+				66A47C652040434000986ADA /* BlueSTSDKFeatureCOSensor.m in Sources */,
 				6652425D1B0B1C1400931F93 /* BlueSTSDKFeatureGyroscope.m in Sources */,
 				665242281B0B1C0800931F93 /* BlueSTSDKNode.m in Sources */,
 				6693B8E91C897D5B00F24E33 /* BlueSTSDKFeatureSwitch.m in Sources */,

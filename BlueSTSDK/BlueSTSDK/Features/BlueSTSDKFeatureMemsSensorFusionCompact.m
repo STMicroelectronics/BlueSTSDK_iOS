@@ -33,7 +33,7 @@
 
 
 //#define FEATURE_NAME @"MemsSensorFusion (Compact)"
-#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"MemsSensorFusionCompact",nil)
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"MEMS Sensor Fusion (Compact)",nil)
 #define FEATURE_UNIT @""
 #define FEATURE_MIN -1.0f
 #define FEATURE_MAX 1.0

@@ -961,6 +961,8 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
             return @"BLUE_COIN";
         case BlueSTSDKNodeTypeSTEVAL_WESU1:
             return @"STEVAL_WESU1";
+        case BlueSTSDKNodeTypeSTEVAL_IDB008VX:
+            return @"STEVAL_IDB008VX";
         case BlueSTSDKNodeTypeGeneric:
             return @"GENERIC";
     }

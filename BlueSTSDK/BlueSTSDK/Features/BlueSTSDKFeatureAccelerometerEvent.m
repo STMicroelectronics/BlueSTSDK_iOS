@@ -115,7 +115,7 @@ static NSArray *sEventTypeName;
 }
 
 -(instancetype) initWhitNode: (BlueSTSDKNode*)node{
-    self = [super initWhitNode:node name: BLUESTSDK_LOCALIZE(@"AccelerationEvent",nil)];
+    self = [super initWhitNode:node name: BLUESTSDK_LOCALIZE(@"Accelerometer Events",nil)];
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sNotificationQueue = dispatch_queue_create("BlueSTSDKFeatureAccelerometerEvent",

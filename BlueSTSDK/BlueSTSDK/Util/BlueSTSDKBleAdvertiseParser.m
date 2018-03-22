@@ -41,6 +41,7 @@
 #define NODE_ID_STEVAL_WESU1 0x01
 #define NODE_ID_SENSOR_TILE 0x02
 #define NODE_ID_BLUE_COIN 0x03
+#define NODE_ID_STEVAL_IDB008VX 0x04
 #define NODE_ID_NUCLEO_BIT 0x80
 #define NODE_ID_IS_SLEEPING_BIT 0x40
 #define NODE_ID_HAS_EXTENSION_BIT 0x20
@@ -89,18 +90,14 @@ static BOOL extractHasExtensionBit(uint8_t type){
  */
 -(BlueSTSDKNodeType) getNodeType:(uint8_t) type {
     BlueSTSDKNodeType nodetype = BlueSTSDKNodeTypeGeneric;
-    if(![BlueSTSDKManager.sharedInstance isValidNodeId:type])
-        @throw [NSException
-                exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Manufactured data",nil)
-                reason:BLUESTSDK_LOCALIZE(@"Invalid Node Type",nil)
-                userInfo:nil];
-   
     if (type == NODE_ID_STEVAL_WESU1)
         nodetype =  BlueSTSDKNodeTypeSTEVAL_WESU1;
     else if(type == NODE_ID_SENSOR_TILE)
         nodetype = BlueSTSDKNodeTypeSensor_Tile;
     else if(type == NODE_ID_BLUE_COIN)
         nodetype = BlueSTSDKNodeTypeBlue_Coin;
+    else if(type == NODE_ID_STEVAL_IDB008VX)
+        nodetype = BlueSTSDKNodeTypeSTEVAL_IDB008VX;
     else if ((type & NODE_ID_NUCLEO_BIT) == NODE_ID_NUCLEO_BIT)
         nodetype =  BlueSTSDKNodeTypeNucleo;
     

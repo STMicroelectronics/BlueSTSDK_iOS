@@ -18,22 +18,26 @@ The library will show only the device that has a vendor-specific field formatted
  - The Device Id is a number that identifies the type of device. It is used to select different types of feature mask and can manage more than 32 features.
 Currently used values are:
     - 0x00 for a generic device
-    - 0x01 is reserved for the STEVAL-WESU1 board
+    - 0x01 is reserved for the [STEVAL-WESU1](http://www.st.com/en/evaluation-tools/steval-wesu1.html) board
+    - 0x02 is reserved for the [STEVAL-STLKT01V1 (SensorTile)](http://www.st.com/content/st_com/en/products/evaluation-tools/solution-evaluation-tools/sensor-solution-eval-boards/steval-stlkt01v1.html) board
+    - 0x03 is reserved for the [STEVAL-BCNKT01V1 (BlueCoin)](http://www.st.com/content/st_com/en/products/evaluation-tools/solution-evaluation-tools/sensor-solution-eval-boards/steval-bcnkt01v1.html) board
+    - 0x04 is reserved for the [STEVAL-IDB008V1/2 (BlueNRG-2)](http://www.st.com/content/st_com/en/products/evaluation-tools/solution-evaluation-tools/communication-and-connectivity-solution-eval-boards/steval-idb008v2.html) board
     - 0x80 for a generic Nucleo board
     - 0x81 for a Nucleo board exporting remote feature
 
-  You should use a value between 0x02 and 0x7F for your custom board, as values between 0x80 and 0xFF are reserved for ST Nucleo boards.
+  You should use a value between 0x04 and 0x7F for your custom board, as values between 0x80 and 0xFF are reserved for ST Nucleo boards.
  
  - The feature mask is a bit field that provides information regarding what characteristics/features are exported by the board.
 Currently, bits are mapped in the following way:
-  
-      |Bit|31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|
-      |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-      |Feature|RFU|ADPCM Sync|Switch|Direction of arrival|ADPC Audio|MicLevel|Proximity|Lux|Acc|Gyro|Mag|Pressure|Humidity|Temperature|Battery|Second Temperature|
 
-      |Bit|15|14|13|12|11|10|9|8|7|6|5|4|3|2|1|0|
-      |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-      |Feature|RFU|RFU|RFU|RFU|Beam forming|AccEvent|FreeFall|Sensor Fusion Compact|Sensor Fusion|Compass|Motion intensity|Activity|Carry Position|ProximityGesture|MemsGesture|Pedometer|
+  |Bit|31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|
+  |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+  |Feature|RFU|ADPCM Sync|Switch|Direction of arrival|ADPC Audio|MicLevel|Proximity|Lux|Acc|Gyro|Mag|Pressure|Humidity|Temperature|Battery|Second Temperature|
+
+  |Bit|15|14|13|12|11|10|9|8|7|6|5|4|3|2|1|0|
+  |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+  |Feature|CO Sensor|RFU|RFU|SD Logging|Beam forming|AccEvent|FreeFall|Sensor Fusion Compact|Sensor Fusion|Motion intensity|Compass|Activity|Carry Position|ProximityGesture|MemsGesture|Pedometer|
+
 You can use one of the RFU bits or define a new device and decide how to map the feature. 
 To see how the data is exported by pre-defined features, consult the export method [<code> Feature.ExtractResult Feature.extractData(long,byte[],int)</code>](https://stmicroelectronics-centralLabs.github.io/BlueSTSDK_Android/javadoc/com/st/BlueSTSDK/Feature.html#extractData-long-byte:A-int-).  within the feature class definition.
 

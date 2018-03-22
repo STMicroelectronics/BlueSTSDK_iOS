@@ -32,6 +32,7 @@
 #import "../Util/NSData+NumberConversion.h"
 
 #define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Direction of arrival",nil)
+#define FEATURE_DATA_NAME BLUESTSDK_LOCALIZE(@"Angle",nil)
 #define FEATURE_UNIT @"\u00B0"
 #define FEATURE_MIN 0
 #define FEATURE_MAX 360
@@ -47,7 +48,7 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureDirectionOfArrival class]){
-        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_DATA_NAME
                                                         unit:FEATURE_UNIT
                                                         type:FEATURE_TYPE
                                                          min:@FEATURE_MIN

@@ -293,13 +293,14 @@
 }
 
 -(NSDictionary*)getFeaturesForNode:(uint8_t)nodeId{
-    return [mNodeFeatureMap objectForKey:
-            [NSNumber numberWithUnsignedChar:nodeId]];
+    NSNumber * key = [NSNumber numberWithUnsignedChar:nodeId];
+    NSDictionary *maskToFeatureClass = [mNodeFeatureMap objectForKey:key];
+    if(maskToFeatureClass == nil)
+        return [BlueSTSDKBoardFeatureMap defaultMaskToFeatureMap];
+    else
+        return maskToFeatureClass;
 }
 
--(bool)isValidNodeId:(uint8_t)nodeId{
-    return [self getFeaturesForNode:nodeId]!=nil;
-}
 
 #pragma mark - BlueSTSDKManager(prv)
 

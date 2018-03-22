@@ -33,6 +33,7 @@
 #import "../Util/NSData+NumberConversion.h"
 
 #define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Carry Position",nil)
+#define FEATURE_DATA_NAME BLUESTSDK_LOCALIZE(@"Position",nil)
 #define FEATURE_UNIT nil
 #define FEATURE_MIN 0
 #define FEATURE_MAX 6

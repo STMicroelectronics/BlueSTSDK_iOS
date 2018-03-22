@@ -143,15 +143,6 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(void)addFeatureForNode:(uint8_t)nodeId features:(NSDictionary*)features;
 
 /**
- *  Check that the nodeId is recognized by the manager
- *
- *  @param nodeId board id to check
- *
- *  @return true if the nodeId is manage by this manager
- */
--(bool)isValidNodeId:(uint8_t)nodeId;
-
-/**
  *  Get the singleton instance of the manager
  *
  *  @return instance of the BlueSTSDKManager

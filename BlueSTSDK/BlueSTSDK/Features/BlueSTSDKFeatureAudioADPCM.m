@@ -32,8 +32,8 @@
 #import "BlueSTSDKFeatureAudioADPCMSync.h"
 #import "BlueSTSDK_LocalizeUtil.h"
 
-#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"AudioPCM",nil)
-
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Audio",nil)
+#define FEATURE_DATA_NAME BLUESTSDK_LOCALIZE(@"ADPCM",nil)
 #define FEATURE_UNIT nil
 #define FEATURE_MIN INT16_MIN
 #define FEATURE_MAX INT16_MAX
@@ -182,7 +182,7 @@ const static int8_t IndexTable[] = {-1,-1,-1,-1,2,4,6,8,-1,-1,-1,-1,2,4,6,8};
 
 +(void)initialize {
     if (self == [BlueSTSDKFeatureAudioADPCM class]) {
-        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_DATA_NAME
                                                         unit:FEATURE_UNIT
                                                         type:FEATURE_TYPE
                                                          min:@FEATURE_MIN

@@ -35,6 +35,7 @@
 
 #define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Compass",nil)
 #define FEATURE_UNIT @"°"
+#define FEATURE_DATA_NAME BLUESTSDK_LOCALIZE(@"Angle",nil)
 #define FEATURE_MIN 0
 #define FEATURE_MAX 360
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeFloat
@@ -45,7 +46,7 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureCompass class]){
-        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_DATA_NAME
                                                         unit:FEATURE_UNIT
                                                         type:FEATURE_TYPE
                                                          min:@FEATURE_MIN

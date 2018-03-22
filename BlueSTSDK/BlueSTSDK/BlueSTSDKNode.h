@@ -106,9 +106,10 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
     /**
      *  STEVAL WESU1 board
      */
-    BlueSTSDKNodeTypeSTEVAL_WESU1         = 0x01,
+    BlueSTSDKNodeTypeSTEVAL_WESU1 = 0x01,
     BlueSTSDKNodeTypeSensor_Tile = 0x02,
     BlueSTSDKNodeTypeBlue_Coin = 0x03,
+    BlueSTSDKNodeTypeSTEVAL_IDB008VX = 0x04,
     /**
      *  nucleo + ble expansion board
      */
@@ -138,7 +139,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 /**
  *  node address, if available in the advertise otherwise nil
  */
-@property (retain, readonly,nonnull) NSString *address;
+@property (retain, readonly,nullable) NSString *address;
 
 /**
  *  version of the protocol

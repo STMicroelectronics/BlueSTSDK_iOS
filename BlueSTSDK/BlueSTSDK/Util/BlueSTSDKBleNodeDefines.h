@@ -200,7 +200,7 @@ typedef uint32_t featureMask_t;
  *  @return map needed for build a feature class that manage a specific characteristics
  */
 +(NSDictionary*) boardFeatureMap;
-
++(NSDictionary*) defaultMaskToFeatureMap;
 @end
 
 

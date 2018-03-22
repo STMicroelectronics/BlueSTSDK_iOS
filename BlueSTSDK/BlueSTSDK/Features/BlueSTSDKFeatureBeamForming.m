@@ -30,11 +30,12 @@
 
 #import "BlueSTSDK_LocalizeUtil.h"
 
-#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Beam Forming",nil)
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"BeamForming",nil)
+#define FEATURE_DATA_NAME BLUESTSDK_LOCALIZE(@"BeamForming",nil)
 
 #define FEATURE_UNIT nil
-#define FEATURE_MIN INT8_MIN
-#define FEATURE_MAX INT8_MAX
+#define FEATURE_MIN 0
+#define FEATURE_MAX 7
 #define FEATURE_TYPE BlueSTSDKFeatureFieldTypeInt8
 
 static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
@@ -45,7 +46,7 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 +(void)initialize{
     if(self == [BlueSTSDKFeatureBeamForming class]){
-        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_NAME
+        sFieldDesc = @[[BlueSTSDKFeatureField createWithName:FEATURE_DATA_NAME
                                                         unit:FEATURE_UNIT
                                                         type:FEATURE_TYPE
                                                          min:@FEATURE_MIN

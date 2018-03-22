@@ -33,7 +33,8 @@
 
 #import "../Util/NSData+NumberConversion.h"
 
-#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Activity",nil)
+#define FEATURE_NAME BLUESTSDK_LOCALIZE(@"Activity Recognition",nil)
+#define FEATURE_DATA_NAME BLUESTSDK_LOCALIZE(@"Activity",nil)
 #define FEATURE_UNIT nil
 #define FEATURE_MIN 0
 #define FEATURE_MAX 6
@@ -55,7 +56,7 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
                                                          min:@FEATURE_MIN
                                                          max:@FEATURE_MAX],
                 [BlueSTSDKFeatureField createWithName:BLUESTSDK_LOCALIZE(@"Date",nil)
-                                                 unit:@"s" //second
+                                                 unit:@"ms" // milli second
                                                  type:BlueSTSDKFeatureFieldTypeDouble
                                                   min:@FEATURE_MIN
                                                   max:@FEATURE_MAX]];
@@ -76,7 +77,7 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 
 +(NSDate*)getActivityDate:(BlueSTSDKFeatureSample*)sample{
     if(sample.data.count>1){
-        NSTimeInterval time = [(NSNumber*)[sample.data objectAtIndex:0] doubleValue];
+        NSTimeInterval time = [(NSNumber*)[sample.data objectAtIndex:0] doubleValue]/1000.0;
         return [NSDate dateWithTimeIntervalSinceReferenceDate:time];
     }
     return nil;
@@ -115,7 +116,7 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     uint8_t activityId= [rawData extractUInt8FromOffset:offset];
     
     NSArray *data = @[@(activityId),
-            @([NSDate timeIntervalSinceReferenceDate])];
+            @([NSDate timeIntervalSinceReferenceDate]*1000.0)];
     
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:1];
