@@ -100,7 +100,7 @@
     mNodeFeatureMap = [NSMutableDictionary dictionaryWithCapacity:defaultValue.count];
     //for each key in defaultValue, add a new entry in the mNodeFeatureMap
     [defaultValue enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
-        [mNodeFeatureMap setObject:[NSMutableDictionary dictionaryWithDictionary:object]
+        [self->mNodeFeatureMap setObject:[NSMutableDictionary dictionaryWithDictionary:object]
                              forKey:key];
     }];
     
@@ -281,15 +281,14 @@
                 exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid feature key data",nil)
                 reason:BLUESTSDK_LOCALIZE(@"the key must have only one bit set to 1",nil)
                 userInfo:nil];
-    NSMutableDictionary *addToMe = [mNodeFeatureMap objectForKey:
-                                  [NSNumber numberWithUnsignedChar:nodeId]];
+    NSNumber *key = [NSNumber numberWithUnsignedChar:nodeId];
+    NSMutableDictionary *addToMe = [mNodeFeatureMap objectForKey: key];
     if(addToMe==nil){
-        [mNodeFeatureMap setObject:[NSMutableDictionary dictionaryWithDictionary:features]
-                             forKey:[NSNumber numberWithUnsignedChar:nodeId]];
-    }else{
-        [addToMe addEntriesFromDictionary:features];
+        //if not exist, copy the default one and add to the map
+        addToMe = [NSMutableDictionary dictionaryWithDictionary:[BlueSTSDKBoardFeatureMap defaultMaskToFeatureMap]];
+        [mNodeFeatureMap setObject:addToMe forKey:key];
     }
-    
+    [addToMe addEntriesFromDictionary:features];
 }
 
 -(NSDictionary*)getFeaturesForNode:(uint8_t)nodeId{

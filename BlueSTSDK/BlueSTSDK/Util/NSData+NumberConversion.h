@@ -55,6 +55,7 @@
  *  @return uint16 build with the byte self[offset] and self[offset+1]
  */
 -(uint16_t) extractLeUInt16FromOffset:(NSUInteger)offset;
+-(uint16_t) extractBeUInt16FromOffset:(NSUInteger)offset;
 
 /**
  *  extract an int16 from a little endian byte array

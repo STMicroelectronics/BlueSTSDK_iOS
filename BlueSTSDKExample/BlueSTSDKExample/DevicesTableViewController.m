@@ -244,20 +244,20 @@ BlueSTSDKNodeStateDelegate>
     prevState:(BlueSTSDKNodeState)prevState{
     if(newState == BlueSTSDKNodeStateConnected)
         dispatch_sync(dispatch_get_main_queue(),^{
-            [networkCheckConnHud hide:true];
-            networkCheckConnHud=nil;
+            [self->networkCheckConnHud hide:true];
+            self->networkCheckConnHud=nil;
             [self performSegueWithIdentifier:DEMO_SEGUE_ID sender:self];
         });
     else if (newState == BlueSTSDKNodeStateDead || newState == BlueSTSDKNodeStateUnreachable){
         NSString *str = [NSString stringWithFormat:@"Cannot connect with the device: %@", node.name ];
         dispatch_sync(dispatch_get_main_queue(),^{
-            [networkCheckConnHud hide:true];
-            networkCheckConnHud=nil;
-            networkCheckConnHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            networkCheckConnHud.mode=MBProgressHUDModeText;
-            networkCheckConnHud.labelText=str;
-            [networkCheckConnHud show:YES];
-            [networkCheckConnHud hide:true afterDelay:ERROR_MSG_TIMEOUT];
+            [self->networkCheckConnHud hide:true];
+            self->networkCheckConnHud=nil;
+            self->networkCheckConnHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            self->networkCheckConnHud.mode=MBProgressHUDModeText;
+            self->networkCheckConnHud.labelText=str;
+            [self->networkCheckConnHud show:YES];
+            [self->networkCheckConnHud hide:true afterDelay:ERROR_MSG_TIMEOUT];
         });
     }//if-else
 }

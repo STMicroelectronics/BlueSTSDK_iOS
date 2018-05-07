@@ -170,7 +170,7 @@ static NSDateFormatter *sDateFormatter;
                                                                attributes:sOutAttribute];
     [mDisplayString appendAttributedString:temp];
     dispatch_async(dispatch_get_main_queue(),^{
-        _console.attributedText = mDisplayString;
+        self->_console.attributedText = self->mDisplayString;
     });
 }//didStdOutReceived
 
@@ -187,7 +187,7 @@ static NSDateFormatter *sDateFormatter;
                                                                attributes:sErrorAttribute];
     [mDisplayString appendAttributedString:temp];
     dispatch_async(dispatch_get_main_queue(),^{
-        _console.attributedText = mDisplayString;
+        self->_console.attributedText = self->mDisplayString;
     });
 }//didStdErrReceived
 
@@ -205,7 +205,7 @@ static NSDateFormatter *sDateFormatter;
                                                                attributes:sInAttribute];
     [mDisplayString appendAttributedString:temp];
     dispatch_async(dispatch_get_main_queue(),^{
-        _console.attributedText = mDisplayString;
+        self->_console.attributedText = self->mDisplayString;
         //after update the gui we can send a new message
         [self sendMessage];
     });

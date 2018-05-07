@@ -81,7 +81,7 @@ BlueSTSDKFeatureAutoConfigurableDelegate,BlueSTSDKNodeStateDelegate>
                                               style:UIAlertActionStyleDefault
                                             handler:^(UIAlertAction *action) {
                                                 [self performSegueWithIdentifier:OPEN_DEBUG_VIEW_SEGUE_NAME
-                                                                          sender:mActionConsole];
+                                                                          sender:self->mActionConsole];
                                             }];
     
     //when trigger start a segue that open the settings view
@@ -89,7 +89,7 @@ BlueSTSDKFeatureAutoConfigurableDelegate,BlueSTSDKNodeStateDelegate>
                                                style:UIAlertActionStyleDefault
                                              handler:^(UIAlertAction *action) {
                                                  [self performSegueWithIdentifier:SHOW_SETTINGS_VIEW_SEGUE_NAME
-                                                                           sender:mActionSettings];
+                                                                           sender:self->mActionSettings];
                                              }];
     
     

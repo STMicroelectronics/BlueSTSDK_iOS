@@ -938,12 +938,12 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
 
         //we reuse the queue for the notification
         dispatch_after(when, sNotificationQueue, ^{
-            @synchronized(mAskForNotification){
+            @synchronized(self->mAskForNotification){
                 //if the uuid is still there we didn't receive data ->
                 //subscribe again to the characteristics
-                if([mAskForNotification containsObject:characteristic.UUID]){
+                if([self->mAskForNotification containsObject:characteristic.UUID]){
                    // NSLog(@"enable: %@",characteristic.UUID.UUIDString);
-                    [mPeripheral setNotifyValue:YES forCharacteristic:characteristic]; //request again
+                    [self->mPeripheral setNotifyValue:YES forCharacteristic:characteristic]; //request again
                 }//if
             }//syncronized
         });
