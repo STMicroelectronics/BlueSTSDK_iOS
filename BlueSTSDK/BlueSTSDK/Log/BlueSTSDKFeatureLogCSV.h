@@ -126,7 +126,7 @@
  *
  *  @return array of log files
  */
-+(NSArray*) getAllLogFiles;
++(NSArray<NSURL *>*) getAllLogFiles;
 /**
  *  clear log folder from all csv files
  */

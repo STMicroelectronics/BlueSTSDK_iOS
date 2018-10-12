@@ -39,7 +39,7 @@
 @property (readonly) NSInteger patch;
 
 
-+(nonnull instancetype) version:(nonnull NSString *)string;
++(nullable instancetype) version:(nonnull NSString *)string;
 +(nonnull instancetype) versionMajor:(NSInteger)major
                         minor:(NSInteger)minor
                         patch:(NSInteger)patch;

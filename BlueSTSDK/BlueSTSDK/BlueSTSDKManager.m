@@ -59,7 +59,7 @@
     /**
      *  set with the discovered nodes, of type BlueSTSDKNode
      */
-    NSMutableArray *mDiscoveredNode;
+    NSMutableArray<BlueSTSDKNode*> *mDiscoveredNode;
     
     /**
      * contains the map (featureMask_t,Feature class) for each know node id
@@ -174,7 +174,7 @@
     
 }//resetDiscovery
 
--(NSArray*) nodes{
+-(NSArray<BlueSTSDKNode*> *) nodes{
     return mDiscoveredNode; //[mDiscoveredNode allObjects];
 }
 
@@ -291,7 +291,7 @@
     [addToMe addEntriesFromDictionary:features];
 }
 
--(NSDictionary*)getFeaturesForNode:(uint8_t)nodeId{
+-(NSDictionary<NSNumber*,Class>*)getFeaturesForNode:(uint8_t)nodeId{
     NSNumber * key = [NSNumber numberWithUnsignedChar:nodeId];
     NSDictionary *maskToFeatureClass = [mNodeFeatureMap objectForKey:key];
     if(maskToFeatureClass == nil)
@@ -327,7 +327,6 @@
      advertisementData:(NSDictionary *)advertisementData
                   RSSI:(NSNumber *)RSSI{
     NSString *tag = peripheral.identifier.UUIDString;
-    
     BlueSTSDKNode *node = [self nodeWithTag:tag];
     if(node == nil){
         @try {
@@ -347,7 +346,7 @@
  * when the system stop the discovery process we notify it to the user
  */
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central{
-    CBCentralManagerState state = [central state];
+    CBManagerState state = [central state];
     if(state!=CBCentralManagerStatePoweredOn){
         [self changeDiscoveryStatus:false];
     }else{

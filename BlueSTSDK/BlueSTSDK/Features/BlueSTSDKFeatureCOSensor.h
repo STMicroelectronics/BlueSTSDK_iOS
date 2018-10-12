@@ -38,6 +38,6 @@
 
 @protocol BlueSTSDKCOSensorFeatureDelegate <BlueSTSDKFeatureDelegate>
 @optional
--(void)didUpdateFeature:(BlueSTSDKFeatureCOSensor *)feature sensitivity:(float)newSensitivity;
+-(void)didUpdateFeature:(nonnull BlueSTSDKFeatureCOSensor *)feature sensitivity:(float)newSensitivity NS_SWIFT_NAME(didUpdate(_:sensitivity:));
 @end
 

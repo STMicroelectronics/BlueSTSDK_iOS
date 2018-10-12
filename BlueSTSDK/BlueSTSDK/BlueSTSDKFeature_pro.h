@@ -41,7 +41,8 @@
     /** number of read bytes */
     @property(readonly) uint32_t nReadBytes;
     /** sample data build from the raw data */
-    @property(readonly,retain) BlueSTSDKFeatureSample *sample;
+    @property(readonly,retain,nullable) BlueSTSDKFeatureSample *sample;
+
 
 
 /**
@@ -53,7 +54,7 @@
  *
  *  @return new object of type BlueSTSDKExtractResult
  */
-+(instancetype) resutlWithSample:(BlueSTSDKFeatureSample*)sample
++(nonnull instancetype) resutlWithSample:(nullable BlueSTSDKFeatureSample*)sample
                        nReadData:(uint32_t)nReadData;
 
 /**
@@ -65,7 +66,7 @@
  *
  *  @return new object of type BlueSTSDKExtractResult
  */
--(instancetype) initWhitSample: (BlueSTSDKFeatureSample*)sample
+-(nonnull instancetype) initWhitSample: (nullable BlueSTSDKFeatureSample*)sample
                      nReadData:(uint32_t)nReadData;
 
 @end
@@ -164,7 +165,7 @@
  *
  *  @return object that contains the sample extracted and the number of bytes read
  */
--(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
+-(nonnull BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(nonnull NSData*)data dataOffset:(uint32_t)offset;
 
 /**
  *  @protected

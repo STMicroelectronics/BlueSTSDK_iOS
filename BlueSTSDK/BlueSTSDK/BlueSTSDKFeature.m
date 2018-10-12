@@ -161,10 +161,12 @@ static NSNumberFormatter *sFormatter;
 
 -(uint32_t) update:(uint64_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset{
     BlueSTSDKExtractResult *temp = [self extractData:timestamp data:data dataOffset:offset];
-    self.lastSample = temp.sample;
-    [self notifyUpdateWithSample:temp.sample];
+    if(temp.sample!=nil){
+        self.lastSample = temp.sample;
+        [self notifyUpdateWithSample:temp.sample];
+    }
     if(temp.nReadBytes!=data.length)
-    [self logFeatureUpdate:[data subdataWithRange:NSMakeRange(offset, temp.nReadBytes)]
+        [self logFeatureUpdate:[data subdataWithRange:NSMakeRange(offset, temp.nReadBytes)]
                     sample:temp.sample];
     else
         [self logFeatureUpdate:data

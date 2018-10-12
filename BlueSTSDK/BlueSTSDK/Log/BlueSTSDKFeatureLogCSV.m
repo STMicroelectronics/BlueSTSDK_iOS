@@ -225,16 +225,20 @@ void appendTo(NSMutableArray<NSString *> *array, NSArray<NSNumber *> *data) {
     NSFileHandle *file = [self openDumpFileForFeature:feature];
 
     //prepare fields
-    NSString *date = [dateFormatter stringFromDate:sample.notificaitonTime];
+    NSDate *notificaitonTime = sample!=nil ? sample.notificaitonTime : [NSDate date];
+    uint64_t timestamp = sample != nil ? sample.timestamp : notificaitonTime.timeIntervalSince1970*100;
+    NSString *date = [dateFormatter stringFromDate: notificaitonTime];
     
     NSTimeInterval timeInterval = [self.startupTimestamp timeIntervalSinceNow] * -1;
     NSInteger timeIntervalsec = (NSInteger)(timeInterval);
     NSInteger timeIntervalms = (NSInteger)((timeInterval - (NSTimeInterval)timeIntervalsec) * 1000.0);
     NSMutableArray *fields = [@[date,[NSString stringWithFormat:@"%ld%03ld", (long) timeIntervalsec, (long) timeIntervalms],
             feature.parentNode.friendlyName,
-            [NSString stringWithFormat:@"%llu", sample.timestamp],
+            [NSString stringWithFormat:@"%llu", timestamp],
             raw ? stringBlobData(raw) : @""] mutableCopy];
-    appendTo(fields, sample.data);
+    
+    if(sample!=nil)
+        appendTo(fields, sample.data);
     
     BOOL first = YES;
     NSData * comaData =[NSData dataWithBytes:&comma length:1];
@@ -303,12 +307,12 @@ void appendTo(NSMutableArray<NSString *> *array, NSArray<NSNumber *> *data) {
 +(NSInteger) countAllLogFiles{
     return [[BlueSTSDKFeatureLogCSV getAllLogFiles] count];
 }
-+(NSArray*) getAllLogFiles{
++(NSArray<NSURL *>*) getAllLogFiles{
     NSError *error;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *documentsDirectory = [BlueSTSDKFeatureLogCSV getDumpFileDirectoryUrl];
     //get all the file in the directory
-    NSArray *files = [fileManager contentsOfDirectoryAtURL:documentsDirectory
+    NSArray<NSURL *> *files = [fileManager contentsOfDirectoryAtURL:documentsDirectory
                                 includingPropertiesForKeys:@[NSURLNameKey, NSURLIsDirectoryKey]
                                                    options:(NSDirectoryEnumerationSkipsHiddenFiles |
                                                             NSDirectoryEnumerationSkipsSubdirectoryDescendants)

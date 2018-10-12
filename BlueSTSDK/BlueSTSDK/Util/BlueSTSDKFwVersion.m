@@ -88,9 +88,7 @@
                                       options:0
                                         range:NSMakeRange(0, [str length])];
     if([matches count]==0)
-        @throw [NSException exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid Version",nil)
-                                       reason:BLUESTSDK_LOCALIZE(@"Format not Recognized",nil)
-                                     userInfo:nil];
+        return nil;
 
     for (NSTextCheckingResult *match in matches) {
         if([match numberOfRanges]!=6)

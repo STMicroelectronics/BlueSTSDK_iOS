@@ -45,8 +45,8 @@ typedef NS_ENUM(UInt8,BlueSTSDKFeatureBeamFormingDirection){
 
 +(BlueSTSDKFeatureBeamFormingDirection)getDirection:(BlueSTSDKFeatureSample *)sample;
 
--(void) enableBeanForming:(BOOL)enabled;
--(void)useStrongBeanFormingAlgorithm:(BOOL)enabled;
+-(void) enablebeamForming:(BOOL)enabled;
+-(void)useStrongbeamFormingAlgorithm:(BOOL)enabled;
 
 -(void) setDirection:(BlueSTSDKFeatureBeamFormingDirection)direction;
 

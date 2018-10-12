@@ -28,7 +28,7 @@
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureFreeFall.h"
 #import "BlueSTSDKFeatureField.h"
-#include "BlueSTSDK_LocalizeUtil.h"
+#import "BlueSTSDK_LocalizeUtil.h"
 
 #import "../Util/NSData+NumberConversion.h"
 

@@ -55,5 +55,9 @@
     }//syncronized
 }
 
+-(uint64_t) getNext{
+    return [self unwrap:(mLastTs+1)];
+}
+
 
 @end

@@ -78,23 +78,23 @@ static dispatch_queue_t sNotificationQueue;
     /**
      *  map the feature  bitmask with the build feature
      */
-    NSMutableDictionary *mMaskToFeature;
+    NSMutableDictionary<NSNumber*, BlueSTSDKFeature* > *mMaskToFeature;
     
     /**
      *  array of BlueSTSDKCharacteristics it contains the mapping between
      * CBCharacteristics and {@link BlueSTSDKFeature}
      */
-    NSMutableArray *mCharFeatureMap;
+    NSMutableArray<BlueSTSDKCharacteristic* > *mCharFeatureMap;
     
     /**
      *  array of {@link BlueSTSDKFeature} that the node export
      */
-    NSMutableArray *mAvailableFeature;
+    NSMutableArray< BlueSTSDKFeature*> *mAvailableFeature;
     
     /**
      *  set of {@link BlueSTSDKFeature} that are currently in notify mode
      */
-    NSMutableSet *mNotifyFeature;
+    NSMutableSet< BlueSTSDKFeature*> *mNotifyFeature;
 
     NSMutableDictionary<CBUUID*,NSArray<Class>* >* mExternalCharFeature;
 
@@ -149,8 +149,6 @@ static dispatch_queue_t sNotificationQueue;
  */
 -(void)buildAvailableFeatures:(featureMask_t)mask maskFeatureMap:(NSDictionary*)maskFeatureMap{
     uint32_t nBit = 8*sizeof(featureMask_t);
-    mAvailableFeature = [NSMutableArray arrayWithCapacity:nBit];
-    mMaskToFeature = [NSMutableDictionary dictionaryWithCapacity:nBit];
     if(maskFeatureMap==nil)
         return;
     for (uint32_t i=0; i<nBit; i++) {
@@ -185,6 +183,8 @@ static dispatch_queue_t sNotificationQueue;
     mNotifyFeature = [NSMutableSet set];
     mAskForNotification = [NSMutableSet set];
     mExternalCharFeature = [NSMutableDictionary dictionary];
+    mAvailableFeature = [NSMutableArray array];
+    mMaskToFeature = [NSMutableDictionary dictionary];
     mFeatureCommand=nil;
     mFeatureCommandNotifyEnable=false;
     _debugConsole=nil;
@@ -203,10 +203,6 @@ static dispatch_queue_t sNotificationQueue;
 
     BlueSTSDKBleAdvertiseParser *parser = [BlueSTSDKBleAdvertiseParser
                                          advertiseParserWithAdvertise:advertisementData];
-    NSDictionary *maskFeatureMap = [[BlueSTSDKManager sharedInstance]getFeaturesForNode: parser.nodeId];
-    
-    [self buildAvailableFeatures: parser.featureMap maskFeatureMap:maskFeatureMap];
-    
     _type = parser.nodeType;
     _typeId = parser.nodeId;
     _name = parser.name;
@@ -214,6 +210,7 @@ static dispatch_queue_t sNotificationQueue;
     _protocolVersion = parser.protocolVersion;
     _hasExtension = parser.hasExtension;
     _isSleeping = parser.isSleeping;
+    _advertiseBitMask = parser.featureMap;
     
     [self updateTxPower: parser.txPower];
     
@@ -437,7 +434,8 @@ static dispatch_queue_t sNotificationQueue;
  */
 +(BOOL) charCanBeNotify:(CBCharacteristic *)c{
     return (c.properties & (CBCharacteristicPropertyNotify |
-                            CBCharacteristicPropertyNotifyEncryptionRequired))!=0;
+                            CBCharacteristicPropertyNotifyEncryptionRequired |
+                            CBCharacteristicPropertyIndicate))!=0;
 }
 
 /**
@@ -690,6 +688,7 @@ didDiscoverServices:(NSError *)error{
  *  @param c characteristic that will export one or more features
  */
 -(void)buildKnowFeatureFromChar:(CBCharacteristic*)c{
+    NSDictionary<NSNumber*,Class> *maskFeatureMap = [[BlueSTSDKManager sharedInstance] getFeaturesForNode: self.typeId];
     featureMask_t featureMask = [BlueSTSDKFeatureCharacteristics extractFeatureMask:c.UUID];
     NSMutableArray *charFeature = [[NSMutableArray alloc] initWithCapacity:1];
     
@@ -697,11 +696,16 @@ didDiscoverServices:(NSError *)error{
     for(uint32_t i=0; i<32; i++){
         if((featureMask & mask)!=0){
             NSNumber *key = @(mask);
-            BlueSTSDKFeature *f = mMaskToFeature[key];
-            if(f!=nil){
-                [f setEnabled:true];
-                [charFeature addObject:f];
-            }//if
+            Class featureClass = maskFeatureMap[key];
+            if(featureClass!=nil ){
+                BlueSTSDKFeature *f = [self buildFeatureFromClass:featureClass];
+                if(f!=nil){
+                    [mAvailableFeature addObject:f];
+                    [charFeature addObject:f];
+                    mMaskToFeature[key] = f;
+                    [f setEnabled:true];
+                }//if
+            }//if feature class
         }//if
         mask = mask >>1;
     }//for
@@ -779,6 +783,8 @@ didDiscoverCharacteristicsForService:(CBService *)service
         for (CBCharacteristic *c in service.characteristics) {            
             if ([BlueSTSDKFeatureCharacteristics isFeatureCharacteristics: c]){
                 [self buildKnowFeatureFromChar:c];
+            }else if ([BlueSTSDKFeatureCharacteristics getExtendedFeatureInCharacteristics: c]!=nil){
+                [self buildKnowUUID:c features:[BlueSTSDKFeatureCharacteristics getExtendedFeatureInCharacteristics: c]];
             }else if ([BlueSTSDKFeatureCharacteristics isFeatureGeneralPurposeCharacteristics:c]){
                 [self buildGeneraPurposeFeatureFromChar:c];
             }else if (mExternalCharFeature!=nil && mExternalCharFeature[c.UUID]!=nil)
@@ -858,10 +864,15 @@ didDiscoverCharacteristicsForService:(CBService *)service
         NSLog(@"Receive a notification for a characteristics that isn't handle by the sdk");
         return;
     }//if
-    
-    //extract the timestamp and add the offset for extend the ts from 16bit to 32
-    uint16_t timeStamp16 = [newData extractLeUInt16FromOffset: 0];
-    uint64_t timestamp = [mUnwrapUtil unwrap:timeStamp16];
+
+    uint64_t timestamp=0;
+    if([newData length]>=2){
+        //extract the timestamp and add the offset for extend the ts from 16bit to 32
+        uint16_t timeStamp16 = [newData extractLeUInt16FromOffset: 0];
+        timestamp = [mUnwrapUtil unwrap:timeStamp16];
+    }else{
+        timestamp =[mUnwrapUtil getNext];
+    }
     
     uint32_t offset=2; // =2 since we already read 2 byte for the timestamp
     for(BlueSTSDKFeature *f in features){
@@ -963,6 +974,8 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
             return @"STEVAL_WESU1";
         case BlueSTSDKNodeTypeSTEVAL_IDB008VX:
             return @"STEVAL_IDB008VX";
+        case BlueSTSDKNodeTypeSTEVAL_BCN002V1:
+            return @"STEVAL_BCN002V1";
         case BlueSTSDKNodeTypeGeneric:
             return @"GENERIC";
     }
@@ -993,5 +1006,14 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
     }//switch
 }//stateToString
 
+-(BOOL) isExportingFeature:(Class)featureClass{
+    NSDictionary<NSNumber*,Class> *maskFeatureMap = [[BlueSTSDKManager sharedInstance] getFeaturesForNode: self.typeId];
+    NSArray<NSNumber*>* maskArray = [maskFeatureMap allKeysForObject:featureClass];
+    if(maskArray.count>0){
+        uint32_t mask = (uint32_t) maskArray[0].unsignedIntValue;
+        return (self.advertiseBitMask & mask) != 0;
+    }
+    return false;
+}
 
 @end

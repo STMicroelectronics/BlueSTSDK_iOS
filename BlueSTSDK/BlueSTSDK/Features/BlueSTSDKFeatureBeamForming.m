@@ -104,7 +104,7 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 #define ENABLE_BEAMFORMING_ON (0x01)
 #define ENABLE_BEAMFORMING_OFF (0x00)
 
-- (void)enableBeanForming:(BOOL)enabled {
+- (void)enablebeamForming:(BOOL)enabled {
     uint8_t commandData;
     if(enabled){
         commandData = ENABLE_BEAMFORMING_ON;
@@ -119,7 +119,7 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
 #define COMMAND_STRONG_BF (0x01)
 #define COMMAND_ASR_READY_BF (0x00)
 
-- (void)useStrongBeanFormingAlgorithm:(BOOL)enabled {
+- (void)useStrongbeamFormingAlgorithm:(BOOL)enabled {
     uint8_t commandData;
     if(enabled){
         commandData = COMMAND_STRONG_BF;

@@ -66,26 +66,48 @@
 
 //all the sdk characteristics will end with this string
 #define COMMON_CHAR_UUID @"-11E1-AC36-0002A5D5C51B"
-//all the features characteristics will end with this string
-#define COMMON_FEATURE_UUID @"-0001" COMMON_CHAR_UUID
+//all the features characteristics exported in the advertise feature mask will end with this string
+#define BASE_FEATURE_COMMON_UUID @"-0001" COMMON_CHAR_UUID
+//all the features characteristics not exported will end with this string
+#define EXTENDED_FEATURE_COMMON_UUID @"-0002" COMMON_CHAR_UUID
 //all the general purpose characteristics will end with this string
 #define COMMON_GP_FEATURE_UUID @"-0003" COMMON_CHAR_UUID
 //all the sdk service will end with this string
 #define COMMON_SERVICE_UUID "-11E1-9AB4-0002A5D5C51B"
 
+static NSDictionary<CBUUID*,NSArray<Class>*> *EXTENDED_FEATURE_MAP = nil;
+
+
 @implementation BlueSTSDKFeatureCharacteristics
+
++(CBUUID*) buildExtendedFeatureCharacteristicsWithPrefix:(uint32_t) prefix{
+    NSString *uuidString = [NSString stringWithFormat:@"%08X%@",prefix,EXTENDED_FEATURE_COMMON_UUID];
+    return [CBUUID UUIDWithString: uuidString];
+}
+
++(void)initialize{
+    if(self == [BlueSTSDKFeatureCharacteristics class]){
+        EXTENDED_FEATURE_MAP = @{
+                                 };
+    }
+    
+}
 
 +(featureMask_t)extractFeatureMask:(CBUUID *)uuid{
     return [uuid.data extractBeUInt32FromOffset:0];
 }//extractFeatureMask
 
 +(bool) isFeatureCharacteristics:(CBCharacteristic*) c{
-    return [ c.UUID.UUIDString hasSuffix:COMMON_FEATURE_UUID];
+    return [ c.UUID.UUIDString hasSuffix:BASE_FEATURE_COMMON_UUID];
 }//isFeatureCharacteristics
 
 +(bool) isFeatureGeneralPurposeCharacteristics:(CBCharacteristic*) c{
     return [ c.UUID.UUIDString hasSuffix:COMMON_GP_FEATURE_UUID];
 }//isFeatureGeneralPurposeCharacteristics
+
++(nullable NSArray<Class>*)getExtendedFeatureInCharacteristics:(CBCharacteristic*) c{
+    return EXTENDED_FEATURE_MAP[c.UUID];
+}
 
 @end
 
@@ -189,14 +211,12 @@
 /**
  *  map that link a featureMask_t with a feature class, used for the generic nucleo node
  */
-static NSDictionary *DEFAULT_MASK_TO_FEATURE = nil;
+static NSDictionary<NSNumber*,Class> *DEFAULT_MASK_TO_FEATURE = nil;
 
 /**
  *  map that link a featureMask_t with a feature class, used for the generic nucleo node
  */
-static NSDictionary *bleStarNucleoFeatureMap = nil;
-
-
+static NSDictionary<NSNumber*,Class> *bleStarNucleoFeatureMap = nil;
 
 /**
  * contains the default map (featureMask_t,Feature class) for each know node id
@@ -255,11 +275,11 @@ static NSDictionary *boardFeatureMap = nil;
     }//if
 }//initialize
 
-+(NSDictionary*) boardFeatureMap{
++(NSDictionary<NSNumber*,NSDictionary<NSNumber*,Class>*>*) boardFeatureMap{
     return boardFeatureMap;
 }
 
-+(NSDictionary*) defaultMaskToFeatureMap{
++(NSDictionary<NSNumber*,Class>*) defaultMaskToFeatureMap{
     return DEFAULT_MASK_TO_FEATURE;
 }
 

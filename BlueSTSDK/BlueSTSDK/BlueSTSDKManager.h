@@ -89,7 +89,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @return array of {@link BlueSTSDKNode} with all the discovered nodes
  */
--(NSArray *) nodes;
+-(NSArray<BlueSTSDKNode*> *) nodes;
 
 /**
  *  Tell if the manager is in a discovery state
@@ -166,7 +166,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *    so this parameter is only for have a consistent method sign with the others delegate)
  *  @param node new node discovered
  */
-- (void)manager:(BlueSTSDKManager *)manager didDiscoverNode:(BlueSTSDKNode *)node;
+- (void)manager:(nonnull BlueSTSDKManager *)manager didDiscoverNode:(nonnull BlueSTSDKNode *)node;
 
 /**
  *  Function called when the status of the manager change
@@ -175,7 +175,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *    so this parameter is only for have a consistent method sign with the others delegate)
  *  @param enable true if the manger start a scan process, false if it end the scanning
  */
-- (void)manager:(BlueSTSDKManager *)manager didChangeDiscovery:(BOOL)enable;
+- (void)manager:(nonnull BlueSTSDKManager *)manager didChangeDiscovery:(BOOL)enable;
 @end
 
 #endif

@@ -116,7 +116,7 @@ static dispatch_queue_t sNotificationQueue;
     for (id<BlueSTSDKFeatureDelegate> delegate in self.featureDelegates) {
         //check if the delegate is a co de
         if ([delegate.class conformsToProtocol:@protocol(BlueSTSDKCOSensorFeatureDelegate)]){
-            id<BlueSTSDKCOSensorFeatureDelegate> CODelegate = delegate;
+            const id<BlueSTSDKCOSensorFeatureDelegate> CODelegate = (id<BlueSTSDKCOSensorFeatureDelegate>) delegate;
             if( [CODelegate respondsToSelector:@selector(didUpdateFeature:sensitivity:)]){
                 dispatch_async(sNotificationQueue, ^(){
                     [CODelegate didUpdateFeature:self sensitivity:newSensitivity];

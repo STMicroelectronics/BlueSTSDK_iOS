@@ -42,6 +42,9 @@
  * @return unwrapped timestamp
  */
 -(uint64_t) unwrap:(uint16_t)ts;
+
+-(uint64_t) getNext;
+
 @end
 
 #endif

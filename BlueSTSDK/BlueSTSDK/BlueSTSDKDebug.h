@@ -106,7 +106,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @param debug class that receive the message
  *  @param msg   message
  */
--(void) debug:(BlueSTSDKDebug*)debug didStdOutReceived:(NSString*) msg;
+-(void) debug:(nonnull BlueSTSDKDebug*)debug didStdOutReceived:(nonnull NSString*) msg;
 
 /**
  *  called when we receive a message that the node write in the stderr stream
@@ -114,7 +114,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @param debug class that receive the message
  *  @param msg   message
  */
--(void) debug:(BlueSTSDKDebug*)debug didStdErrReceived:(NSString*) msg;
+-(void) debug:(nonnull BlueSTSDKDebug*)debug didStdErrReceived:(nonnull NSString*) msg;
 
 /**
  *  called when we successfully send a message to the node stdin
@@ -122,7 +122,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @param debug class that send the message
  *  @param msg   message send
  *  @param error if present, it is the reason why message was not send */
--(void) debug:(BlueSTSDKDebug*)debug didStdInSend:(NSString*) msg error:(NSError*)error;
+-(void) debug:(nonnull BlueSTSDKDebug*)debug didStdInSend:(nonnull NSString*) msg error:(nullable NSError*)error;
 @end
 
 #endif

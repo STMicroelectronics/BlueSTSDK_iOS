@@ -110,6 +110,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
     BlueSTSDKNodeTypeSensor_Tile = 0x02,
     BlueSTSDKNodeTypeBlue_Coin = 0x03,
     BlueSTSDKNodeTypeSTEVAL_IDB008VX = 0x04,
+    BlueSTSDKNodeTypeSTEVAL_BCN002V1 = 0x05,
     /**
      *  nucleo + ble expansion board
      */
@@ -173,6 +174,8 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 
 @property (readonly) BOOL isSleeping;
 @property (readonly) BOOL hasExtension;
+
+@property (readonly) uint32_t advertiseBitMask;
 
 /**
  *  tx power used from the board
@@ -344,6 +347,15 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  *  @return true if the command is correctly send
  */
 -(BOOL)writeDataToFeature:(nonnull BlueSTSDKFeature*)f data:(nonnull NSData*)data;
+
+
+/**
+ * tell if the node is exporting a specific feature in the advertise
+ *
+ * @param featureClass feature to test
+ * @return true if the corrisponding bit in the advertise is set to 1
+ */
+-(BOOL)isExportingFeature:(Class)featureClass;
 
 @end
 

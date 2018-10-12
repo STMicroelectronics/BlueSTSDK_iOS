@@ -49,7 +49,7 @@ typedef uint32_t featureMask_t;
  *
  *  @return characteristics feature mask
  */
-+(featureMask_t)extractFeatureMask:(CBUUID *)uuid;
++(featureMask_t)extractFeatureMask:(nonnull CBUUID *)uuid;
 
 /**
  *  tell if a characteristics has a valid uuid for be manage by this sdk
@@ -58,7 +58,7 @@ typedef uint32_t featureMask_t;
  *
  *  @return true if the characteristics can be manage by this sdk
  */
-+(bool) isFeatureCharacteristics:(CBCharacteristic*) c;
++(bool) isFeatureCharacteristics:(nonnull CBCharacteristic*) c;
 
 /**
  *  tell if a characteristics has a valid uudi for be manage by this sdk as a
@@ -68,8 +68,9 @@ typedef uint32_t featureMask_t;
  *
  *  @return true if the characteristics can be manage by this sdk as general purpose characteristics
  */
-+(bool) isFeatureGeneralPurposeCharacteristics:(CBCharacteristic*) c;
++(bool) isFeatureGeneralPurposeCharacteristics:(nonnull CBCharacteristic*) c;
 
++(nullable NSArray<Class>*)getExtendedFeatureInCharacteristics:(nonnull CBCharacteristic*) c;
 
 @end
 
@@ -199,8 +200,14 @@ typedef uint32_t featureMask_t;
  *
  *  @return map needed for build a feature class that manage a specific characteristics
  */
-+(NSDictionary*) boardFeatureMap;
-+(NSDictionary*) defaultMaskToFeatureMap;
++(NSDictionary<NSNumber*,NSDictionary<NSNumber*,Class>*>*)boardFeatureMap;
+
+/**
+ * if the board doesn't have a specific device id the map returned by this feature will be used
+ *
+ * @return the default map used to convert the bit in the advertise mask into feature.
+ */
++(NSDictionary<NSNumber*,Class>*)defaultMaskToFeatureMap;
 @end
 
 
