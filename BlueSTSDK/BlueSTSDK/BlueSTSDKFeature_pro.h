@@ -44,7 +44,6 @@
     @property(readonly,retain,nullable) BlueSTSDKFeatureSample *sample;
 
 
-
 /**
  *  build a object of type BlueSTSDKExtractResult with the sample and nReadData
  *  data
@@ -79,12 +78,12 @@
 @interface BlueSTSDKFeature()
 
 //we redefine the property for be read write, when the user see it in read only
-@property (readwrite,atomic) BlueSTSDKFeatureSample *lastSample;
+@property (readwrite,atomic) BlueSTSDKFeatureSample * _Nullable lastSample;
 
 /**
  *  set of delegate where notify the feature update
  */
-@property(readonly,atomic,retain) NSMutableSet *featureDelegates;
+@property(readonly,atomic,retain) NSMutableSet * _Nonnull featureDelegates;
 
 /**
  * @protected
@@ -95,7 +94,7 @@
  *
  *  @return pointer to the feature
  */
--(instancetype) initWhitNode: (BlueSTSDKNode*)node name:(NSString*)name;
+-(instancetype _Nonnull ) initWhitNode: (BlueSTSDKNode*_Nonnull)node name:(NSString*_Nonnull)name;
 
 /**
  *  @protected
@@ -104,7 +103,7 @@
  *  @par protected function
  *  @param sample new sample data that we want notify
  */
--(void) notifyUpdateWithSample:(BlueSTSDKFeatureSample*)sample;
+-(void) notifyUpdateWithSample:(BlueSTSDKFeatureSample*_Nullable)sample;
 
 /**
  * @protected
@@ -115,7 +114,7 @@
  *  @param rawData raw data used for extract the new data
  *  @param sample object with the extracted data
  */
--(void) logFeatureUpdate:(NSData*)rawData sample:(BlueSTSDKFeatureSample*)sample;
+-(void) logFeatureUpdate:(NSData*_Nonnull)rawData sample:(BlueSTSDKFeatureSample*_Nullable)sample;
 
 /**
  *  @protected
@@ -127,7 +126,7 @@
  *
  *  @return true if the command is correctly send to the node
  */
--(bool) sendCommand:(uint8_t)commandType data:(NSData*)commandData;
+-(bool) sendCommand:(uint8_t)commandType data:(NSData*_Nullable)commandData;
 
 /**
  * @protected
@@ -141,7 +140,7 @@
  */
 -(void) parseCommandResponseWithTimestamp:(uint64_t)timestamp
                               commandType:(uint8_t)commandType
-                                     data:(NSData*)data;
+                                     data:(NSData*_Nonnull)data;
 
 /**
  *  @protected
@@ -150,7 +149,7 @@
  *  @par protected function
  *  @param data data to write into the feature
  */
--(void)writeData:(NSData*)data;
+-(void)writeData:(NSData*_Nonnull)data;
 
 
 /**
@@ -183,7 +182,7 @@
  *
  *  @return number of read byte
  */
--(uint32_t) update:(uint64_t)timestamp data:(NSData*)data dataOffset:(uint32_t)offset;
+-(uint32_t) update:(uint64_t)timestamp data:(NSData*_Nonnull)data dataOffset:(uint32_t)offset;
 
 @end
 

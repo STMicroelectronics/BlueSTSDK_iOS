@@ -83,14 +83,14 @@ typedef uint32_t featureMask_t;
  *
  *  @return uuid of the debug service
  */
-+(CBUUID*) serviceUuid;
++(CBUUID*_Nonnull) serviceUuid;
 
 /**
  *  uuid of the characteristics where the node will notify error message
  *
  *  @return uuid where the node will notify error message
  */
-+(CBUUID*) stdErrUuid;
++(CBUUID*_Nonnull) stdErrUuid;
 
 /**
  *  uuid of the characteristics where the node will notify the output message
@@ -98,7 +98,7 @@ typedef uint32_t featureMask_t;
  *
  *  @return terminal uuid
  */
-+(CBUUID*) termUuid;
++(CBUUID*_Nonnull) termUuid;
 
 /**
  *  tell if the characteristics is a valid characteristics for the debug service
@@ -107,7 +107,7 @@ typedef uint32_t featureMask_t;
  *
  *  @return true if c has stdErrUuid or temrUuid uuid
  */
-+(bool) isDebugCharacteristics:(CBCharacteristic*) c;
++(bool) isDebugCharacteristics:(CBCharacteristic*_Nonnull) c;
 
 @end
 
@@ -121,7 +121,7 @@ typedef uint32_t featureMask_t;
  *
  *  @return uuid of the service config
  */
-+(CBUUID*) serviceUuid;
++(CBUUID*_Nonnull) serviceUuid;
 
 /**
  *  uuid of the config control characteristic, with this characteristic the user
@@ -129,7 +129,7 @@ typedef uint32_t featureMask_t;
  *
  *  @return uuid of the command characteristic
  */
-+(CBUUID*) configControlUuid;
++(CBUUID*_Nonnull) configControlUuid;
 
 /**
  *  uuid of the command characteristic, the user can send command and receive the
@@ -137,7 +137,7 @@ typedef uint32_t featureMask_t;
  *
  *  @return uuid of the command characteristic
  */
-+(CBUUID*) featureCommandUuid;
++(CBUUID*_Nonnull) featureCommandUuid;
 
 /**
  *  tell if the characteristics is a valid characteristics for the config service
@@ -146,7 +146,7 @@ typedef uint32_t featureMask_t;
  *
  *  @return true if it is valid
  */
-+(bool) isConfigCharacteristics:(CBCharacteristic*) c;
++(bool) isConfigCharacteristics:(CBCharacteristic*_Nonnull) c;
 
 /**
  *  tell if the characteristics is the config control characteristics
@@ -155,7 +155,7 @@ typedef uint32_t featureMask_t;
  *
  *  @return true if it is valid
  */
-+(bool) isConfigControlCharacteristic:(CBCharacteristic*) c;
++(bool) isConfigControlCharacteristic:(CBCharacteristic*_Nonnull) c;
 
 /**
  *  tell if the characteristics is the feature command characteristics
@@ -164,7 +164,7 @@ typedef uint32_t featureMask_t;
  *
  *  @return true if it is valid
  */
-+(bool) isConfigFeatureCommandCharacteristic:(CBCharacteristic*) c;
++(bool) isConfigFeatureCommandCharacteristic:(CBCharacteristic*_Nonnull) c;
 @end
 
 /**
@@ -177,14 +177,14 @@ typedef uint32_t featureMask_t;
  *
  *  @return class with the utility function for the debug service
  */
-+(BlueSTSDKServiceDebug*) debugService;
++(BlueSTSDKServiceDebug*_Nonnull) debugService;
 
 /**
  *  class with the utility function for the configuration service
  *
  *  @return class with the utility function for the configuration service
  */
-+(BlueSTSDKServiceConfig*) configService;
++(BlueSTSDKServiceConfig*_Nonnull) configService;
 
 @end
 
@@ -200,14 +200,14 @@ typedef uint32_t featureMask_t;
  *
  *  @return map needed for build a feature class that manage a specific characteristics
  */
-+(NSDictionary<NSNumber*,NSDictionary<NSNumber*,Class>*>*)boardFeatureMap;
++(NSDictionary<NSNumber*,NSDictionary<NSNumber*,Class>*>*_Nonnull)boardFeatureMap;
 
 /**
  * if the board doesn't have a specific device id the map returned by this feature will be used
  *
  * @return the default map used to convert the bit in the advertise mask into feature.
  */
-+(NSDictionary<NSNumber*,Class>*)defaultMaskToFeatureMap;
++(NSDictionary<NSNumber*,Class>*_Nonnull)defaultMaskToFeatureMap;
 @end
 
 

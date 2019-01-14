@@ -29,10 +29,14 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 
 #import "Util/BlueSTSDKBleNodeDefines.h"
+#import "Util/BlueSTSDK_LocalizeUtil.h"
 #import "BlueSTSDKManager_prv.h"
 #import "BlueSTSDKNode_prv.h"
 #import "BlueSTSDKNodeFake.h"
 #import "BlueSTSDK_LocalizeUtil.h"
+
+
+#define RETRAY_START_SCANNING_DELAY (0.5) //half second
 
 
 #define RETRAY_START_SCANNING_DELAY (0.5) //half second

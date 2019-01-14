@@ -162,6 +162,18 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 -(void) removeFeatureLoggerDelegate:(nonnull id<BlueSTSDKFeatureLogDelegate>)delegate;
 
 /**
+ * Disable the notification for this specific feature
+ * @return true if the connand is correcly sent
+ */
+-(bool) disableNotification;
+
+/**
+ * enable the notification for this specific feature
+ * @return true if the connand is correcly sent
+ */
+-(bool) enableNotification;
+
+/**
  *  <b>abstract method</b>, build a feature that is exported by the node
  *  @note it is an abstract method, you have to overwrite it!
  *  @param node node that export this feature

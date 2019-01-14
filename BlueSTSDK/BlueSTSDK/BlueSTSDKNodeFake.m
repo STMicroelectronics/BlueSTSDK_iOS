@@ -40,7 +40,6 @@
 #import "BlueSTSDKFeaturePressure.h"
 #import "BlueSTSDKFeatureProximity.h"
 #import "BlueSTSDKFeatureTemperature.h"
-#import "BlueSTSDKFeatureActivity.h"
 #import "BlueSTSDKFeatureCarryPosition.h"
 #import "BlueSTSDKFeatureMicLevel.h"
 #import "BlueSTSDKFeatureMemsSensorFusion.h"
@@ -107,7 +106,6 @@ static NSInteger nodeFakeCount = 0;
                           [[BlueSTSDKFeatureTemperature alloc] initWhitNode:self],
                           [[BlueSTSDKFeatureMemsSensorFusion alloc] initWhitNode:self],
                           [[BlueSTSDKFeatureMemsSensorFusionCompact alloc] initWhitNode:self],
-                          [[BlueSTSDKFeatureActivity alloc] initWhitNode:self],
                           [[BlueSTSDKFeatureCarryPosition alloc] initWhitNode:self],
                           [[BlueSTSDKFeatureMicLevel alloc] initWhitNode:self],
                           [[BlueSTSDKFeatureProximityGesture alloc] initWhitNode:self],

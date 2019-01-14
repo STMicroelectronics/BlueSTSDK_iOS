@@ -20,6 +20,7 @@
 		6602184B1B903A37006246E9 /* BlueSTSDKFeatureCarryPostion.m in Sources */ = {isa = PBXBuildFile; fileRef = 660218491B903A37006246E9 /* BlueSTSDKFeatureCarryPostion.m */; };
 		66105DA31B0CC7190050E399 /* BlueSTSDKFeature+fake.h in Headers */ = {isa = PBXBuildFile; fileRef = 66C9E6571B0C67380091CFD0 /* BlueSTSDKFeature+fake.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		6611A1B81CAAC86F00476E8B /* BlueSTSDKRemoteFeaturePressure.m in Sources */ = {isa = PBXBuildFile; fileRef = 6611A1B41CAAC86F00476E8B /* BlueSTSDKRemoteFeaturePressure.m */; };
+		6621E68121A5B067001F13A8 /* BlueSTSDKFeatureEulerAngle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6621E68021A5B067001F13A8 /* BlueSTSDKFeatureEulerAngle.swift */; };
 		662D8BD81B0B6C88006B7538 /* BlueSTSDKNodeFake.h in Headers */ = {isa = PBXBuildFile; fileRef = 662D8BD61B0B6C88006B7538 /* BlueSTSDKNodeFake.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		662D8BD91B0B6C88006B7538 /* BlueSTSDKNodeFake.m in Sources */ = {isa = PBXBuildFile; fileRef = 662D8BD71B0B6C88006B7538 /* BlueSTSDKNodeFake.m */; };
 		6648D9191C9B0D0B00AA63AB /* UnwrapTimeStamp.h in Headers */ = {isa = PBXBuildFile; fileRef = 6648D9171C9B0D0B00AA63AB /* UnwrapTimeStamp.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -99,6 +100,7 @@
 		667D27491E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 667D27471E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		667D274A1E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D27481E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m */; };
 		66802F2A1EA6630C0055C851 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66802F291EA6630C0055C851 /* Localizable.strings */; };
+		6683E0C421AD52A400095EA3 /* BlueSTSDKFeatureFFTAmplitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6683E0C321AD52A400095EA3 /* BlueSTSDKFeatureFFTAmplitude.swift */; };
 		6684C94A1BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h in Headers */ = {isa = PBXBuildFile; fileRef = 6684C9481BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6684C94B1BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6684C9491BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.m */; };
 		6689FF1C1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 6689FF1A1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -116,6 +118,7 @@
 		66A47C652040434000986ADA /* BlueSTSDKFeatureCOSensor.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A47C632040434000986ADA /* BlueSTSDKFeatureCOSensor.m */; };
 		66AD532E1C21606100B0F512 /* BlueSTSDKFeatureAccelerometerEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 66AD532C1C21606100B0F512 /* BlueSTSDKFeatureAccelerometerEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66AD532F1C21606100B0F512 /* BlueSTSDKFeatureAccelerometerEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AD532D1C21606100B0F512 /* BlueSTSDKFeatureAccelerometerEvent.m */; };
+		66ADF42E2177215800BBC511 /* BlueSTSDKFeatureAudioCalssification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66ADF42D2177215800BBC511 /* BlueSTSDKFeatureAudioCalssification.swift */; };
 		66BC2BD41D40AA2C00F91A5F /* BlueSTSDKFeatureHeartRate.h in Headers */ = {isa = PBXBuildFile; fileRef = 66BC2BD01D40AA2C00F91A5F /* BlueSTSDKFeatureHeartRate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66BC2BD51D40AA2C00F91A5F /* BlueSTSDKFeatureHeartRate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66BC2BD11D40AA2C00F91A5F /* BlueSTSDKFeatureHeartRate.m */; };
 		66BC2BD61D40AA2C00F91A5F /* BlueSTSDKStdCharToFeatureMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 66BC2BD21D40AA2C00F91A5F /* BlueSTSDKStdCharToFeatureMap.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -126,13 +129,13 @@
 		66DBB6AF1CAEB3C300CCF412 /* BlueSTSDKRemoteFeatureSwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 6611A1B51CAAC86F00476E8B /* BlueSTSDKRemoteFeatureSwitch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66DBB6B01CAEB3CB00CCF412 /* BlueSTSDKRemoteFeaturePressure.h in Headers */ = {isa = PBXBuildFile; fileRef = 6611A1B31CAAC86F00476E8B /* BlueSTSDKRemoteFeaturePressure.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66DBB6B11CAEB3F900CCF412 /* BlueSTSDKRemoteFeatureSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6611A1B61CAAC86F00476E8B /* BlueSTSDKRemoteFeatureSwitch.m */; };
-		66E22C311B73989500989E09 /* BlueSTSDKFeatureActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 66E22C2F1B73989500989E09 /* BlueSTSDKFeatureActivity.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		66E22C321B73989500989E09 /* BlueSTSDKFeatureActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E22C301B73989500989E09 /* BlueSTSDKFeatureActivity.m */; };
+		66E2390F217F630100E8B2CB /* BlueSTSDKFeatureActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E2390E217F630100E8B2CB /* BlueSTSDKFeatureActivity.swift */; };
 		66E6EA461BAAC0BD000A5968 /* BlueSTSDKConfigControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB52A1A1B4ECCBC00231B83 /* BlueSTSDKConfigControl.m */; };
 		66E6EA471BAAC0D8000A5968 /* BlueSTSDKConfigControl.h in Headers */ = {isa = PBXBuildFile; fileRef = EAB52A191B4ECCBC00231B83 /* BlueSTSDKConfigControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66E6EA481BAAC0E0000A5968 /* BlueSTSDKConfigControl_prv.h in Headers */ = {isa = PBXBuildFile; fileRef = EAB52A181B4ECCBC00231B83 /* BlueSTSDKConfigControl_prv.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		66E6EA4E1BAB0B21000A5968 /* BlueSTSDKNode_pro.h in Headers */ = {isa = PBXBuildFile; fileRef = 66E6EA4D1BAB0A73000A5968 /* BlueSTSDKNode_pro.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66E6EA4F1BAB0B29000A5968 /* BlueSTSDKFeature_pro.h in Headers */ = {isa = PBXBuildFile; fileRef = 66E6EA4C1BAB097B000A5968 /* BlueSTSDKFeature_pro.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		66F2784121809F4B00D56759 /* BlueSTSDKFeatureAILogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F2784021809F4B00D56759 /* BlueSTSDKFeatureAILogging.swift */; };
 		66FC1DE81C19D21D0015F7A2 /* BlueSTSDKFeatureMemsGesture.h in Headers */ = {isa = PBXBuildFile; fileRef = 66FC1DE61C19D21D0015F7A2 /* BlueSTSDKFeatureMemsGesture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		66FC1DE91C19D21D0015F7A2 /* BlueSTSDKFeatureMemsGesture.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FC1DE71C19D21D0015F7A2 /* BlueSTSDKFeatureMemsGesture.m */; };
 		EA01F0151B2F1BE800B35152 /* BlueSTSDKCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = EA01F00D1B2F1BE800B35152 /* BlueSTSDKCommand.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -170,6 +173,7 @@
 		6611A1B41CAAC86F00476E8B /* BlueSTSDKRemoteFeaturePressure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlueSTSDKRemoteFeaturePressure.m; path = Remote/BlueSTSDKRemoteFeaturePressure.m; sourceTree = "<group>"; };
 		6611A1B51CAAC86F00476E8B /* BlueSTSDKRemoteFeatureSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKRemoteFeatureSwitch.h; path = Remote/BlueSTSDKRemoteFeatureSwitch.h; sourceTree = "<group>"; };
 		6611A1B61CAAC86F00476E8B /* BlueSTSDKRemoteFeatureSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlueSTSDKRemoteFeatureSwitch.m; path = Remote/BlueSTSDKRemoteFeatureSwitch.m; sourceTree = "<group>"; };
+		6621E68021A5B067001F13A8 /* BlueSTSDKFeatureEulerAngle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueSTSDKFeatureEulerAngle.swift; sourceTree = "<group>"; };
 		662D8BD61B0B6C88006B7538 /* BlueSTSDKNodeFake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKNodeFake.h; sourceTree = "<group>"; };
 		662D8BD71B0B6C88006B7538 /* BlueSTSDKNodeFake.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKNodeFake.m; sourceTree = "<group>"; };
 		6648D9171C9B0D0B00AA63AB /* UnwrapTimeStamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnwrapTimeStamp.h; sourceTree = "<group>"; };
@@ -252,6 +256,7 @@
 		667D27471E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKWeSUFeatureConfig.h; path = Config/STWeSU/BlueSTSDKWeSUFeatureConfig.h; sourceTree = "<group>"; };
 		667D27481E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlueSTSDKWeSUFeatureConfig.m; path = Config/STWeSU/BlueSTSDKWeSUFeatureConfig.m; sourceTree = "<group>"; };
 		66802F291EA6630C0055C851 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 2483028224; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		6683E0C321AD52A400095EA3 /* BlueSTSDKFeatureFFTAmplitude.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueSTSDKFeatureFFTAmplitude.swift; sourceTree = "<group>"; };
 		6684C9481BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureMicLevel.h; sourceTree = "<group>"; };
 		6684C9491BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureMicLevel.m; sourceTree = "<group>"; };
 		6689FF1A1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureSDLogging.h; sourceTree = "<group>"; };
@@ -269,6 +274,7 @@
 		66A47C632040434000986ADA /* BlueSTSDKFeatureCOSensor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureCOSensor.m; sourceTree = "<group>"; };
 		66AD532C1C21606100B0F512 /* BlueSTSDKFeatureAccelerometerEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureAccelerometerEvent.h; sourceTree = "<group>"; };
 		66AD532D1C21606100B0F512 /* BlueSTSDKFeatureAccelerometerEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureAccelerometerEvent.m; sourceTree = "<group>"; };
+		66ADF42D2177215800BBC511 /* BlueSTSDKFeatureAudioCalssification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueSTSDKFeatureAudioCalssification.swift; sourceTree = "<group>"; };
 		66BC2BD01D40AA2C00F91A5F /* BlueSTSDKFeatureHeartRate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureHeartRate.h; sourceTree = "<group>"; };
 		66BC2BD11D40AA2C00F91A5F /* BlueSTSDKFeatureHeartRate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureHeartRate.m; sourceTree = "<group>"; };
 		66BC2BD21D40AA2C00F91A5F /* BlueSTSDKStdCharToFeatureMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKStdCharToFeatureMap.h; sourceTree = "<group>"; };
@@ -277,10 +283,10 @@
 		66C4A3C31B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureGenPurpose.m; sourceTree = "<group>"; };
 		66C777861EA5F12D00C75A20 /* BlueSTSDK_LocalizeUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDK_LocalizeUtil.h; sourceTree = "<group>"; };
 		66C9E6571B0C67380091CFD0 /* BlueSTSDKFeature+fake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BlueSTSDKFeature+fake.h"; sourceTree = "<group>"; };
-		66E22C2F1B73989500989E09 /* BlueSTSDKFeatureActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureActivity.h; sourceTree = "<group>"; };
-		66E22C301B73989500989E09 /* BlueSTSDKFeatureActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureActivity.m; sourceTree = "<group>"; };
+		66E2390E217F630100E8B2CB /* BlueSTSDKFeatureActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueSTSDKFeatureActivity.swift; sourceTree = "<group>"; };
 		66E6EA4C1BAB097B000A5968 /* BlueSTSDKFeature_pro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeature_pro.h; sourceTree = "<group>"; };
 		66E6EA4D1BAB0A73000A5968 /* BlueSTSDKNode_pro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKNode_pro.h; sourceTree = "<group>"; };
+		66F2784021809F4B00D56759 /* BlueSTSDKFeatureAILogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueSTSDKFeatureAILogging.swift; sourceTree = "<group>"; };
 		66FC1DE61C19D21D0015F7A2 /* BlueSTSDKFeatureMemsGesture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlueSTSDKFeatureMemsGesture.h; sourceTree = "<group>"; };
 		66FC1DE71C19D21D0015F7A2 /* BlueSTSDKFeatureMemsGesture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlueSTSDKFeatureMemsGesture.m; sourceTree = "<group>"; };
 		EA01F00D1B2F1BE800B35152 /* BlueSTSDKCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlueSTSDKCommand.h; path = Config/BlueSTSDKCommand.h; sourceTree = "<group>"; };
@@ -423,8 +429,6 @@
 				660218491B903A37006246E9 /* BlueSTSDKFeatureCarryPostion.m */,
 				667BAAB71B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.h */,
 				667BAAB81B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.m */,
-				66E22C2F1B73989500989E09 /* BlueSTSDKFeatureActivity.h */,
-				66E22C301B73989500989E09 /* BlueSTSDKFeatureActivity.m */,
 				6652422A1B0B1C1400931F93 /* BlueSTSDKFeatureAcceleration.h */,
 				6652422B1B0B1C1400931F93 /* BlueSTSDKFeatureAcceleration.m */,
 				6652422C1B0B1C1400931F93 /* BlueSTSDKFeatureAutoConfigurable.h */,
@@ -483,6 +487,11 @@
 				6689FF1B1FA0C82000A5C309 /* BlueSTSDKFeatureSDLogging.m */,
 				66A47C622040434000986ADA /* BlueSTSDKFeatureCOSensor.h */,
 				66A47C632040434000986ADA /* BlueSTSDKFeatureCOSensor.m */,
+				66ADF42D2177215800BBC511 /* BlueSTSDKFeatureAudioCalssification.swift */,
+				66E2390E217F630100E8B2CB /* BlueSTSDKFeatureActivity.swift */,
+				66F2784021809F4B00D56759 /* BlueSTSDKFeatureAILogging.swift */,
+				6621E68021A5B067001F13A8 /* BlueSTSDKFeatureEulerAngle.swift */,
+				6683E0C321AD52A400095EA3 /* BlueSTSDKFeatureFFTAmplitude.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -578,7 +587,6 @@
 				6602184A1B903A37006246E9 /* BlueSTSDKFeatureCarryPosition.h in Headers */,
 				667BAAB91B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.h in Headers */,
 				668C6EF71C74A9370076E009 /* BlueSTSDKFeatureDirectionOfArrival.h in Headers */,
-				66E22C311B73989500989E09 /* BlueSTSDKFeatureActivity.h in Headers */,
 				665242231B0B1C0800931F93 /* BlueSTSDKFeature.h in Headers */,
 				665242271B0B1C0800931F93 /* BlueSTSDKNode.h in Headers */,
 				665242211B0B1C0800931F93 /* BlueSTSDKDebug.h in Headers */,
@@ -594,11 +602,11 @@
 				6660F9541C0D9961005ADB53 /* BlueSTSDKFeatureProximityGesture.h in Headers */,
 				665242581B0B1C1400931F93 /* BlueSTSDKFeatureBattery.h in Headers */,
 				665242661B0B1C1400931F93 /* BlueSTSDKFeaturePressure.h in Headers */,
-				6652425C1B0B1C1400931F93 /* BlueSTSDKFeatureGyroscope.h in Headers */,
 				665242561B0B1C1400931F93 /* BlueSTSDKFeatureAutoConfigurable.h in Headers */,
 				665242641B0B1C1400931F93 /* BlueSTSDKFeatureMemsSensorFusionCompact.h in Headers */,
 				66E6EA4E1BAB0B21000A5968 /* BlueSTSDKNode_pro.h in Headers */,
 				66E6EA4F1BAB0B29000A5968 /* BlueSTSDKFeature_pro.h in Headers */,
+				6652425C1B0B1C1400931F93 /* BlueSTSDKFeatureGyroscope.h in Headers */,
 				6652425E1B0B1C1400931F93 /* BlueSTSDKFeatureHumidity.h in Headers */,
 				6652426A1B0B1C1400931F93 /* BlueSTSDKFeatureTemperature.h in Headers */,
 				665242621B0B1C1400931F93 /* BlueSTSDKFeatureMemsSensorFusion.h in Headers */,
@@ -606,6 +614,7 @@
 				66BC2BD61D40AA2C00F91A5F /* BlueSTSDKStdCharToFeatureMap.h in Headers */,
 				66BC2BD41D40AA2C00F91A5F /* BlueSTSDKFeatureHeartRate.h in Headers */,
 				4EDA2129F1880B43889392EB /* BlueSTSDKDeviceTimestampFeature.h in Headers */,
+				6652425C1B0B1C1400931F93 /* BlueSTSDKFeatureGyroscope.h in Headers */,
 				4EDA2054E3F3E1A5CC55C21A /* NSMutableDictionary+BlueSTSDKFeature.h in Headers */,
 				66E6EA471BAAC0D8000A5968 /* BlueSTSDKConfigControl.h in Headers */,
 				6684C94A1BD7B95000BF836B /* BlueSTSDKFeatureMicLevel.h in Headers */,
@@ -688,6 +697,7 @@
 					665241EF1B0B1BB100931F93 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = 9L4QA9SNQK;
+						LastSwiftMigration = 1000;
 					};
 					665241FA1B0B1BB100931F93 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -742,11 +752,12 @@
 				6602184B1B903A37006246E9 /* BlueSTSDKFeatureCarryPostion.m in Sources */,
 				6692CC6D1D54BC230078B6D2 /* BlueSTSDKDeviceTimestampFeature.m in Sources */,
 				665242261B0B1C0800931F93 /* BlueSTSDKManager.m in Sources */,
+				6683E0C421AD52A400095EA3 /* BlueSTSDKFeatureFFTAmplitude.swift in Sources */,
+				66ADF42E2177215800BBC511 /* BlueSTSDKFeatureAudioCalssification.swift in Sources */,
 				667D274A1E09798500B6968E /* BlueSTSDKWeSUFeatureConfig.m in Sources */,
 				66DBB6B11CAEB3F900CCF412 /* BlueSTSDKRemoteFeatureSwitch.m in Sources */,
 				667BAABA1B8CB99500CADD2E /* BlueSTSDKFeatureFreeFall.m in Sources */,
 				662D8BD91B0B6C88006B7538 /* BlueSTSDKNodeFake.m in Sources */,
-				66E22C321B73989500989E09 /* BlueSTSDKFeatureActivity.m in Sources */,
 				665242241B0B1C0800931F93 /* BlueSTSDKFeature.m in Sources */,
 				665242571B0B1C1400931F93 /* BlueSTSDKFeatureAutoConfigurable.m in Sources */,
 				EA01F0161B2F1BE800B35152 /* BlueSTSDKCommand.m in Sources */,
@@ -762,7 +773,9 @@
 				66BC2BD51D40AA2C00F91A5F /* BlueSTSDKFeatureHeartRate.m in Sources */,
 				665242711B0B1C1400931F93 /* BlueSTSDKFeatureLogNSLog.m in Sources */,
 				665DAB901C2152C300795077 /* BlueSTSDKFeaturePedometer.m in Sources */,
+				66E2390F217F630100E8B2CB /* BlueSTSDKFeatureActivity.swift in Sources */,
 				EAF17E451C6C738500F61D35 /* BlueSTSDKWeSURegisterDefines.m in Sources */,
+				66F2784121809F4B00D56759 /* BlueSTSDKFeatureAILogging.swift in Sources */,
 				665242591B0B1C1400931F93 /* BlueSTSDKFeatureBattery.m in Sources */,
 				665242751B0B1C1400931F93 /* NSData+NumberConversion.m in Sources */,
 				6660F9551C0D9961005ADB53 /* BlueSTSDKFeatureProximityGesture.m in Sources */,
@@ -787,6 +800,7 @@
 				668A12781E3A443F00D99490 /* BlueSTSDKFeatureCompass.m in Sources */,
 				66C4A3C51B13689C00990DC0 /* BlueSTSDKFeatureGenPurpose.m in Sources */,
 				6652426D1B0B1C1400931F93 /* BlueSTSDKFeatureMagnetometer.m in Sources */,
+				6621E68121A5B067001F13A8 /* BlueSTSDKFeatureEulerAngle.swift in Sources */,
 				66E6EA461BAAC0BD000A5968 /* BlueSTSDKConfigControl.m in Sources */,
 				6652425B1B0B1C1400931F93 /* BlueSTSDKFeatureField.m in Sources */,
 				4EDA2718985F6845A6B4D54E /* BlueSTSDKFeatureAudioADPCMSync.m in Sources */,
@@ -930,6 +944,7 @@
 		665242071B0B1BB100931F93 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
@@ -946,12 +961,15 @@
 				PROVISIONING_PROFILE = "";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
 		665242081B0B1BB100931F93 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
@@ -967,12 +985,14 @@
 				PROVISIONING_PROFILE = "";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
 		6652420A1B0B1BB100931F93 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -991,6 +1011,7 @@
 		6652420B1B0B1BB100931F93 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",

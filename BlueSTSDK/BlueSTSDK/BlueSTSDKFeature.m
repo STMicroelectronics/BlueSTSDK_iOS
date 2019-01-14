@@ -123,6 +123,14 @@ static NSNumberFormatter *sFormatter;
     _enabled=enabled;
 }
 
+-(bool)enableNotification{
+    return [_parentNode enableNotification:self];
+}
+
+-(bool)disableNotification{
+    return [_parentNode disableNotification:self];
+}
+
 -(void) addFeatureDelegate:(id<BlueSTSDKFeatureDelegate>)delegate{
     [_featureDelegates addObject:delegate];
 }

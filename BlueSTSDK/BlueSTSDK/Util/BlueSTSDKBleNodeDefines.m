@@ -38,7 +38,6 @@
 #import "../Features/BlueSTSDKFeatureLuminosity.h"
 #import "../Features/BlueSTSDKFeatureProximity.h"
 #import "../Features/BlueSTSDKFeatureBattery.h"
-#import "../Features/BlueSTSDKFeatureActivity.h"
 #import "../Features/BlueSTSDKFeatureFreeFall.h"
 #import "../Features/BlueSTSDKFeatureCarryPosition.h"
 #import "../Features/BlueSTSDKFeatureMicLevel.h"
@@ -58,7 +57,7 @@
 #import "../Features/BlueSTSDKFeatureMotionIntensity.h"
 #import "../Features/BlueSTSDKFeatureSDLogging.h"
 #import "../Features/BlueSTSDKFeatureCOSensor.h"
-
+#import "BlueSTSDK/BlueSTSDK-Swift.h"
 
 #import "BlueSTSDKBleNodeDefines.h"
 #import "NSData+NumberConversion.h"
@@ -88,6 +87,9 @@ static NSDictionary<CBUUID*,NSArray<Class>*> *EXTENDED_FEATURE_MAP = nil;
 +(void)initialize{
     if(self == [BlueSTSDKFeatureCharacteristics class]){
         EXTENDED_FEATURE_MAP = @{
+                                 [BlueSTSDKFeatureCharacteristics buildExtendedFeatureCharacteristicsWithPrefix: 0x3]:@[[BlueSTSDKFeatureAudioSceneCalssification class]],
+                                 [BlueSTSDKFeatureCharacteristics buildExtendedFeatureCharacteristicsWithPrefix: 0x4]:@[[BlueSTSDKFeatureAILogging class]],
+                                 [BlueSTSDKFeatureCharacteristics buildExtendedFeatureCharacteristicsWithPrefix: 0x5]:@[[BlueSTSDKFeatureFFTAmplitude class]]
                                  };
     }
     
@@ -213,6 +215,8 @@ static NSDictionary<CBUUID*,NSArray<Class>*> *EXTENDED_FEATURE_MAP = nil;
  */
 static NSDictionary<NSNumber*,Class> *DEFAULT_MASK_TO_FEATURE = nil;
 
+static NSDictionary<NSNumber*,Class> *SENSOR_TILE_101_FEATURE_MASK = nil;
+
 /**
  *  map that link a featureMask_t with a feature class, used for the generic nucleo node
  */
@@ -226,39 +230,75 @@ static NSDictionary *boardFeatureMap = nil;
 +(void)initialize{
     if(self == [BlueSTSDKBoardFeatureMap class]){
         DEFAULT_MASK_TO_FEATURE = @{
-                           //@0x80000000:
-                             @0x40000000: [BlueSTSDKFeatureAudioADPCMSync class],
-                             @0x20000000: [BlueSTSDKFeatureSwitch class],
-                             @0x10000000: [BlueSTSDKFeatureDirectionOfArrival class], //Sound source of arrival
-                             @0x08000000: [BlueSTSDKFeatureAudioADPCM class],
-                             @0x04000000: [BlueSTSDKFeatureMicLevel class], //Mic Level
-                             @0x02000000: [BlueSTSDKFeatureProximity class], //proximity
-                             @0x01000000: [BlueSTSDKFeatureLuminosity class], //luminosity
-                             @0x00800000: [BlueSTSDKFeatureAcceleration class], //acc
-                             @0x00400000: [BlueSTSDKFeatureGyroscope class], //gyo
-                             @0x00200000: [BlueSTSDKFeatureMagnetometer class], //mag
-                             @0x00100000: [BlueSTSDKFeaturePressure class], //pressure
-                             @0x00080000: [BlueSTSDKFeatureHumidity class], //humidity
-                             @0x00040000: [BlueSTSDKFeatureTemperature class], //temperature
-                             @0x00020000: [BlueSTSDKFeatureBattery class],
-                             @0x00010000: [BlueSTSDKFeatureTemperature class], //temperature
-                             @0x00008000: [BlueSTSDKFeatureCOSensor class],
-                           //@0x00004000:
-                           //@0x00002000:
-                             @0x00001000: [BlueSTSDKFeatureSDLogging class],
-                             @0x00000800: [BlueSTSDKFeatureBeamForming class],
-                             @0x00000400: [BlueSTSDKFeatureAccelerometerEvent class], //Free fall detection
-                             @0x00000200: [BlueSTSDKFeatureFreeFall class], //Free fall detection
-                             @0x00000100: [BlueSTSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
-                             @0x00000080: [BlueSTSDKFeatureMemsSensorFusion class], //Mems sensor fusion
-                             @0x00000040: [BlueSTSDKFeatureCompass class],
-                             @0x00000020: [BlueSTSDKFeatureMotionIntensity class],
-                             @0x00000010: [BlueSTSDKFeatureActivity class], //Actvity
-                             @0x00000008: [BlueSTSDKFeatureCarryPosition class], //carry position recognition
-                             @0x00000004: [BlueSTSDKFeatureProximityGesture class], //Proximity Gesture
-                             @0x00000002: [BlueSTSDKFeatureMemsGesture class], //mems Gesture
-                             @0x00000001: [BlueSTSDKFeaturePedometer class], //Pedometer
-                             };
+           //@0x80000000:
+             @0x40000000: [BlueSTSDKFeatureAudioADPCMSync class],
+             @0x20000000: [BlueSTSDKFeatureSwitch class],
+             @0x10000000: [BlueSTSDKFeatureDirectionOfArrival class], //Sound source of arrival
+             @0x08000000: [BlueSTSDKFeatureAudioADPCM class],
+             @0x04000000: [BlueSTSDKFeatureMicLevel class], //Mic Level
+             @0x02000000: [BlueSTSDKFeatureProximity class], //proximity
+             @0x01000000: [BlueSTSDKFeatureLuminosity class], //luminosity
+             @0x00800000: [BlueSTSDKFeatureAcceleration class], //acc
+             @0x00400000: [BlueSTSDKFeatureGyroscope class], //gyo
+             @0x00200000: [BlueSTSDKFeatureMagnetometer class], //mag
+             @0x00100000: [BlueSTSDKFeaturePressure class], //pressure
+             @0x00080000: [BlueSTSDKFeatureHumidity class], //humidity
+             @0x00040000: [BlueSTSDKFeatureTemperature class], //temperature
+             @0x00020000: [BlueSTSDKFeatureBattery class],
+             @0x00010000: [BlueSTSDKFeatureTemperature class], //temperature
+             @0x00008000: [BlueSTSDKFeatureCOSensor class],
+           //@0x00004000:
+           //@0x00002000:
+             @0x00001000: [BlueSTSDKFeatureSDLogging class],
+             @0x00000800: [BlueSTSDKFeatureBeamForming class],
+             @0x00000400: [BlueSTSDKFeatureAccelerometerEvent class], //Free fall detection
+             @0x00000200: [BlueSTSDKFeatureFreeFall class], //Free fall detection
+             @0x00000100: [BlueSTSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
+             @0x00000080: [BlueSTSDKFeatureMemsSensorFusion class], //Mems sensor fusion
+             @0x00000040: [BlueSTSDKFeatureCompass class],
+             @0x00000020: [BlueSTSDKFeatureMotionIntensity class],
+             @0x00000010: [BlueSTSDKFeatureActivity class], //Actvity
+             @0x00000008: [BlueSTSDKFeatureCarryPosition class], //carry position recognition
+             @0x00000004: [BlueSTSDKFeatureProximityGesture class], //Proximity Gesture
+             @0x00000002: [BlueSTSDKFeatureMemsGesture class], //mems Gesture
+             @0x00000001: [BlueSTSDKFeaturePedometer class], //Pedometer
+             };
+        
+        SENSOR_TILE_101_FEATURE_MASK = @{
+             @0x80000000: [BlueSTSDKFeatureFFTAmplitude class],
+             @0x40000000: [BlueSTSDKFeatureAudioADPCMSync class],
+             @0x20000000: [BlueSTSDKFeatureSwitch class],
+             @0x10000000: [BlueSTSDKFeatureDirectionOfArrival class], //Sound source of arrival
+             @0x08000000: [BlueSTSDKFeatureAudioADPCM class],
+             @0x04000000: [BlueSTSDKFeatureMicLevel class], //Mic Level
+             @0x02000000: [BlueSTSDKFeatureProximity class], //proximity
+             @0x01000000: [BlueSTSDKFeatureLuminosity class], //luminosity
+             @0x00800000: [BlueSTSDKFeatureAcceleration class], //acc
+             @0x00400000: [BlueSTSDKFeatureGyroscope class], //gyo
+             @0x00200000: [BlueSTSDKFeatureMagnetometer class], //mag
+             @0x00100000: [BlueSTSDKFeaturePressure class], //pressure
+             @0x00080000: [BlueSTSDKFeatureHumidity class], //humidity
+             @0x00040000: [BlueSTSDKFeatureTemperature class], //temperature
+             @0x00020000: [BlueSTSDKFeatureBattery class],
+             @0x00010000: [BlueSTSDKFeatureTemperature class], //temperature
+             @0x00008000: [BlueSTSDKFeatureCOSensor class],
+             @0x00004000: [BlueSTSDKFeatureEulerAngle class],
+             //@0x00002000:
+             @0x00001000: [BlueSTSDKFeatureSDLogging class],
+             @0x00000800: [BlueSTSDKFeatureBeamForming class],
+             @0x00000400: [BlueSTSDKFeatureAccelerometerEvent class], //Free fall detection
+             @0x00000200: [BlueSTSDKFeatureFreeFall class], //Free fall detection
+             @0x00000100: [BlueSTSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact
+             @0x00000080: [BlueSTSDKFeatureMemsSensorFusion class], //Mems sensor fusion
+             @0x00000040: [BlueSTSDKFeatureCompass class],
+             @0x00000020: [BlueSTSDKFeatureMotionIntensity class],
+             @0x00000010: [BlueSTSDKFeatureActivity class], //Actvity
+             @0x00000008: [BlueSTSDKFeatureCarryPosition class], //carry position recognition
+             @0x00000004: [BlueSTSDKFeatureProximityGesture class], //Proximity Gesture
+             @0x00000002: [BlueSTSDKFeatureMemsGesture class], //mems Gesture
+             @0x00000001: [BlueSTSDKFeaturePedometer class], //Pedometer
+             };
+        
 
         bleStarNucleoFeatureMap = @{
                              @0x20000000: [BlueSTSDKRemoteFeatureSwitch class],
@@ -270,6 +310,7 @@ static NSDictionary *boardFeatureMap = nil;
         
         
         boardFeatureMap = @{
+                            @0x06: SENSOR_TILE_101_FEATURE_MASK,
                             @0x81: bleStarNucleoFeatureMap
                            };
     }//if

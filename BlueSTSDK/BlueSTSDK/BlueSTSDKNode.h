@@ -111,6 +111,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
     BlueSTSDKNodeTypeBlue_Coin = 0x03,
     BlueSTSDKNodeTypeSTEVAL_IDB008VX = 0x04,
     BlueSTSDKNodeTypeSTEVAL_BCN002V1 = 0x05,
+    BlueSTSDKNodeTypeSensor_Tile_101 = 0x06,
     /**
      *  nucleo + ble expansion board
      */
@@ -355,7 +356,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  * @param featureClass feature to test
  * @return true if the corrisponding bit in the advertise is set to 1
  */
--(BOOL)isExportingFeature:(Class)featureClass;
+-(BOOL)isExportingFeature:(Class _Nonnull )featureClass;
 
 @end
 

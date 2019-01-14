@@ -46,14 +46,14 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
 /**
  *  node that export this console
  */
-@property (readonly,strong) BlueSTSDKNode* parentNode;
+@property (readonly,strong) BlueSTSDKNode* _Nonnull parentNode;
 
 /**
  *  delegate used for notify new message in the console, when you set a delegate
  * we will automatically enable the notification for the out/error message
  * for disable the notification set it to nil
  */
-@property (nonatomic,retain,setter=setDelegate:,getter=getDelegate) id<BlueSTSDKDebugOutputDelegate> delegate DEPRECATED_ATTRIBUTE;
+@property (nonatomic,retain,setter=setDelegate:,getter=getDelegate) id<BlueSTSDKDebugOutputDelegate> _Nullable delegate DEPRECATED_ATTRIBUTE;
 
 /**
  *  create a debug console
@@ -65,12 +65,10 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @return pointer to a BlueSTSDKDebug class
  */
--(instancetype) initWithNode:(BlueSTSDKNode *)node periph:(CBPeripheral *)periph
-         termChart:(CBCharacteristic*)termChar
-          errChart:(CBCharacteristic*)errChar;
+-(instancetype _Nonnull ) initWithNode:(BlueSTSDKNode *_Nonnull)node periph:(CBPeripheral *_Nonnull)periph
+                             termChart:(CBCharacteristic*_Nonnull)termChar
+                              errChart:(CBCharacteristic*_Nonnull)errChar;
 
--(void) addDebugOutputDelegate:(id<BlueSTSDKDebugOutputDelegate>)delegate;
--(void) removeDebugOutputDelegate:(id<BlueSTSDKDebugOutputDelegate>)delegate;
 
 /**
  *  send a message to the debug console, the message longer than the maximum size will
@@ -79,8 +77,10 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @param msg message to write in the node debug console, the string will be converted in raw data using the utf8 encoding
  *  @return number of byte send
  */
--(NSUInteger) writeMessage:(NSString*)msg;
+-(NSUInteger) writeMessage:(NSString*_Nonnull)msg;
 
+-(void) addDebugOutputDelegate:(id<BlueSTSDKDebugOutputDelegate>_Nonnull)delegate;
+-(void) removeDebugOutputDelegate:(id<BlueSTSDKDebugOutputDelegate>_Nonnull)delegate;
 /**
  *  send a message to the debug console, the message longer than the maximum size will
  * be splited in several ble packages
@@ -88,13 +88,13 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *  @param data message to write in the node debug console
  *  @return number of byte send
  */
--(NSUInteger) writeMessageData:(NSData*)data;
+-(NSUInteger) writeMessageData:(NSData*_Nonnull)data;
 
 /**
  * send a message to the debug console, without reuqesti the ack and without
  * using queue for spliting the message in multiple packages.
  */
-- (BOOL)writeMessageDataFast:(NSData *)data ;
+- (BOOL)writeMessageDataFast:(NSData *_Nonnull)data ;
 @end
 
 /** Protocol used for notify an console update */

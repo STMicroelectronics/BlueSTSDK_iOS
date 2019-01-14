@@ -75,21 +75,21 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @param delegate class that implement the {@link BlueSTSDKManagerDelegate} protocol
  */
--(void)addDelegate:(id<BlueSTSDKManagerDelegate>)delegate;
+-(void)addDelegate:(id<BlueSTSDKManagerDelegate>_Nonnull)delegate;
 
 /**
  *  Remove a delegate
  *
  *  @param delegate delegate to remove
  */
--(void)removeDelegate:(id<BlueSTSDKManagerDelegate>)delegate;
+-(void)removeDelegate:(id<BlueSTSDKManagerDelegate>_Nonnull)delegate;
 
 /**
  *  Get all the discovered nodes
  *
  *  @return array of {@link BlueSTSDKNode} with all the discovered nodes
  */
--(NSArray<BlueSTSDKNode*> *) nodes;
+-(NSArray<BlueSTSDKNode*> *_Nonnull) nodes;
 
 /**
  *  Tell if the manager is in a discovery state
@@ -116,7 +116,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @return a node with the name, or nil if a node with that name doesn't exist
  */
--(BlueSTSDKNode *)nodeWithName:(NSString *)name;
+-(BlueSTSDKNode *_Nullable)nodeWithName:(NSString *_Nullable)name;
 
 /**
  *  Search in the discovered node the one that has a particular tag
@@ -125,7 +125,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  *
  *  @return a node with that tag or nil if the node doesn't exist
  */
--(BlueSTSDKNode *)nodeWithTag:(NSString *)tag;
+-(BlueSTSDKNode *_Nullable)nodeWithTag:(NSString *_Nonnull)tag;
 
 /**
  *  Insert a fake node inside the list of discovered node
@@ -140,14 +140,14 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  * <{@link featureMask_t},BlueSTSDKFeature>
  * @throw an exception if the featureMask as more than one bit set to 1
  */
--(void)addFeatureForNode:(uint8_t)nodeId features:(NSDictionary*)features;
+-(void)addFeatureForNode:(uint8_t)nodeId features:(NSDictionary*_Nonnull)features;
 
 /**
  *  Get the singleton instance of the manager
  *
  *  @return instance of the BlueSTSDKManager
  */
-+ (instancetype)sharedInstance;
++ (instancetype _Nonnull )sharedInstance;
 
 
 

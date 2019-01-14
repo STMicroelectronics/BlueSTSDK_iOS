@@ -697,7 +697,7 @@ didDiscoverServices:(NSError *)error{
         if((featureMask & mask)!=0){
             NSNumber *key = @(mask);
             Class featureClass = maskFeatureMap[key];
-            if(featureClass!=nil ){
+            if(featureClass!=nil && [self isExportingFeature:featureClass]){
                 BlueSTSDKFeature *f = [self buildFeatureFromClass:featureClass];
                 if(f!=nil){
                     [mAvailableFeature addObject:f];
@@ -968,6 +968,8 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
             return @"NUCLEO";
         case BlueSTSDKNodeTypeSensor_Tile:
             return @"SENSOR_TILE";
+        case BlueSTSDKNodeTypeSensor_Tile_101:
+            return @"SENSOR_TILE.101";
         case BlueSTSDKNodeTypeBlue_Coin:
             return @"BLUE_COIN";
         case BlueSTSDKNodeTypeSTEVAL_WESU1:
@@ -1009,9 +1011,10 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
 -(BOOL) isExportingFeature:(Class)featureClass{
     NSDictionary<NSNumber*,Class> *maskFeatureMap = [[BlueSTSDKManager sharedInstance] getFeaturesForNode: self.typeId];
     NSArray<NSNumber*>* maskArray = [maskFeatureMap allKeysForObject:featureClass];
-    if(maskArray.count>0){
-        uint32_t mask = (uint32_t) maskArray[0].unsignedIntValue;
-        return (self.advertiseBitMask & mask) != 0;
+    for (int i = 0 ; i < maskArray.count ; i++){
+        uint32_t mask = (uint32_t) maskArray[i].unsignedIntValue;
+        if((self.advertiseBitMask & mask) != 0)
+            return true;
     }
     return false;
 }

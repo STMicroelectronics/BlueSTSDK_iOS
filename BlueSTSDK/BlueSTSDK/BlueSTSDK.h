@@ -36,7 +36,6 @@
 #import "BlueSTSDKFeature_pro.h"
 
 #import "BlueSTSDKFeatureAcceleration.h"
-#import "BlueSTSDKFeatureActivity.h"
 #import "BlueSTSDKFeatureAutoConfigurable.h"
 #import "BlueSTSDKFeatureBattery.h"
 #import "BlueSTSDKFeatureCarryPosition.h"
