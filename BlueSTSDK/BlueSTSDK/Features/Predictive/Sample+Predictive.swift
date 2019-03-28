@@ -1,5 +1,5 @@
 /*******************************************************************************
- * COPYRIGHT(c) 2015 STMicroelectronics
+ * COPYRIGHT(c) 2018 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -25,48 +25,22 @@
  *
  ******************************************************************************/
 
-#ifndef BlueSTSDK_BlueSTSDKFeatureGyroscope_h
-#define BlueSTSDK_BlueSTSDKFeatureGyroscope_h
+import Foundation
 
-#import "BlueSTSDKFeature.h"
-
-/**
- * Feature that contains the data from a gyroscope sensor
- * \par
- * The data exported are an array of 3 float component (x,y,z) with the gyroscope
- * value on that axis
- * @author STMicroelectronics - Central Labs.
- */
-@interface BlueSTSDKFeatureGyroscope : BlueSTSDKFeature
-
-/**
- *  gyroscope data in the x Axis
- *
- *  @param data sample read from the node
- *
- *  @return  gyroscope data in the x Axis
- */
-+(float)getGyroX:(BlueSTSDKFeatureSample*)data;
-
-/**
- *  gyroscope data in the y Axis
- *
- *  @param data sample read from the node
- *
- *  @return  gyroscope data in the y Axis
- */
-+(float)getGyroY:(BlueSTSDKFeatureSample*)data;
-
-/**
- *  gyroscope data in the z Axis
- *
- *  @param data sample read from the node
- *
- *  @return  gyroscope data in the z Axis
- */
-+(float)getGyroZ:(BlueSTSDKFeatureSample*)data;
-
-
-@end
-
-#endif
+extension BlueSTSDKFeatureSample {
+    typealias Status =  BlueSTSDKFeaturePredictiveStatus.Status
+    
+    func extractStatus(index:Int)->Status{
+        guard self.data.count>=index else {
+            return Status.UNKNOWN
+        }
+        return Status.fromByte(self.data[index].uint8Value)
+    }
+    
+    func extractFloat(index:Int)->Float{
+        guard self.data.count>=index else{
+            return Float.nan
+        }
+        return self.data[index].floatValue
+    }
+}

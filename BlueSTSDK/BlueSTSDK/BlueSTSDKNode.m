@@ -25,7 +25,8 @@
  *
  ******************************************************************************/
 
-#import "BlueSTSDKManager_prv.h"
+#import "BlueSTSDK/BlueSTSDK-Swift.h"
+
 #import "BlueSTSDKNode_prv.h"
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureGenPurpose.h"
@@ -34,7 +35,6 @@
 #import "BlueSTSDK_LocalizeUtil.h"
 
 #import "Util/BlueSTSDKCharacteristic.h"
-#import "Util/BlueSTSDKBleAdvertiseParser.h"
 #import "Util/BlueSTSDKBleNodeDefines.h"
 #import "Util/NSData+NumberConversion.h"
 #import "Util/UnwrapTimeStamp.h"
@@ -194,25 +194,24 @@ static dispatch_queue_t sNotificationQueue;
 }
 
 
--(instancetype)init:(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertise:(NSDictionary*)advertisementData{
+-(instancetype)init:(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertiseInfo:(BlueSTSDKAdvertiseInfo * _Nonnull)advertiseInfo{
     self = [self init];
     mPeripheral=peripheral;
     mPeripheral.delegate=self;
 
     _tag = peripheral.identifier.UUIDString;
-
-    BlueSTSDKBleAdvertiseParser *parser = [BlueSTSDKBleAdvertiseParser
-                                         advertiseParserWithAdvertise:advertisementData];
-    _type = parser.nodeType;
-    _typeId = parser.nodeId;
-    _name = parser.name;
-    _address = parser.address;
-    _protocolVersion = parser.protocolVersion;
-    _hasExtension = parser.hasExtension;
-    _isSleeping = parser.isSleeping;
-    _advertiseBitMask = parser.featureMap;
+    _advertiseInfo = advertiseInfo;
     
-    [self updateTxPower: parser.txPower];
+    _type = _advertiseInfo.boardType;
+    _typeId = _advertiseInfo.deviceId;
+    _name = _advertiseInfo.name;
+    _address = _advertiseInfo.address;
+    _protocolVersion = _advertiseInfo.protocolVersion;
+    _hasExtension = _advertiseInfo.hasGeneralPurpose;
+    _isSleeping = _advertiseInfo.isSleeping;
+    _advertiseBitMask = _advertiseInfo.featureMap;
+    
+    [self updateTxPower: [NSNumber numberWithUnsignedChar:_advertiseInfo.txPower]];
     
     [self updateRssi:rssi];
     //NSLog(@"create Node: name: %@ type: %x feature: %d",_name,_type,parser.featureMap);
@@ -534,12 +533,15 @@ static dispatch_queue_t sNotificationQueue;
     return msg;
 }//prepareMessageWithMask
 
+/**
+ * get the available write type for the characteristics, if both are present the default one is withoutResponse
+ */
 +(CBCharacteristicWriteType) getWriteTypeForChar:(CBCharacteristic*)characteristic{
-    
-    if(characteristic.properties & CBCharacteristicPropertyWrite)
-        return CBCharacteristicWriteWithResponse;
-    else
+    bool hasWrithoutResponse = (characteristic.properties & CBCharacteristicPropertyWriteWithoutResponse) == CBCharacteristicPropertyWriteWithoutResponse;
+    if(hasWrithoutResponse)
         return CBCharacteristicWriteWithoutResponse;
+    else
+        return CBCharacteristicWriteWithResponse;
     
 }
 
@@ -593,6 +595,7 @@ static dispatch_queue_t sNotificationQueue;
     }
     
     CBCharacteristicWriteType writeType = [BlueSTSDKNode getWriteTypeForChar:featureChar];
+    //CBCharacteristicWriteType writeType = CBCharacteristicWriteWithoutResponse;
     [mPeripheral writeValue:data forCharacteristic:featureChar type:writeType];
     return true;
 }//writeDataToFeature
@@ -961,6 +964,12 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
     }//if-else
 }//didUpdateNotificationStateForCharacteristic
 
+/** call if the node change its services/characteristics, just re scan the new services */
+- (void)peripheral:(CBPeripheral *)peripheral
+ didModifyServices:(NSArray<CBService *> *)invalidatedServices{
+    [peripheral discoverServices:nil];
+}
+
 +(NSString*)nodeTypeToString:(BlueSTSDKNodeType)type{
     
     switch (type) {
@@ -978,6 +987,8 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
             return @"STEVAL_IDB008VX";
         case BlueSTSDKNodeTypeSTEVAL_BCN002V1:
             return @"STEVAL_BCN002V1";
+        case BlueSTSDKNodeTypeDiscovery_IOT01A:
+            return @"DISCOVERY_IOT01A";
         case BlueSTSDKNodeTypeGeneric:
             return @"GENERIC";
     }
@@ -1017,6 +1028,10 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
             return true;
     }
     return false;
+}
+
+-(NSInteger)maximumWriteValueLength{
+    return [mPeripheral maximumWriteValueLengthForType:CBCharacteristicWriteWithoutResponse];
 }
 
 @end

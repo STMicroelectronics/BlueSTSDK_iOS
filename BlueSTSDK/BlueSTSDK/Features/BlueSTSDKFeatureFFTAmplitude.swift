@@ -45,6 +45,10 @@ public class BlueSTSDKFeatureFFTAmplitude : BlueSTSDKDeviceTimestampFeature {
     public override init(whitNode node: BlueSTSDKNode) {
         super.init(whitNode: node, name: BlueSTSDKFeatureFFTAmplitude.FEATURE_NAME)
     }
+    
+    public override func getFieldsDesc() -> [BlueSTSDKFeatureField] {
+        return BlueSTSDKFeatureFFTAmplitude.FIELDS;
+    }
 
     private class FFTSample : BlueSTSDKFeatureSample{
         
@@ -60,7 +64,7 @@ public class BlueSTSDKFeatureFFTAmplitude : BlueSTSDKDeviceTimestampFeature {
         
         public var isCompleted:Bool {
             get {
-                return rawData.count == rawDataCapacity
+                return rawData.count >= rawDataCapacity
             }
         }
         
@@ -68,13 +72,24 @@ public class BlueSTSDKFeatureFFTAmplitude : BlueSTSDKDeviceTimestampFeature {
         private var rawData:Data
         private var nLastData:UInt = 0
         
+        override var data: [NSNumber] {
+            get{
+                return [
+                    NSNumber(value:dataLoadPercentage),
+                    NSNumber(value:nSample),
+                    NSNumber(value:nComponents),
+                    NSNumber(value:freqStep)
+                ]
+            }
+        }
+        
         init(timestamp: UInt64, nSample:UInt16, nComponents:UInt8, freqStep:Float) {
             self.nSample = nSample
             self.nComponents = nComponents
             self.freqStep = freqStep
             rawDataCapacity = Int(nSample)*Int(nComponents)*4
             rawData = Data(capacity: rawDataCapacity)// components * 4 byte each float
-            super.init(whitTimestamp: timestamp, data: [])
+            super.init(whitTimestamp: timestamp, data:[])
         }
  
         public func append(data : Data){
@@ -128,6 +143,19 @@ public class BlueSTSDKFeatureFFTAmplitude : BlueSTSDKDeviceTimestampFeature {
         return getComponent(sample, index: 2)
     }
    
+    public static func getComponents(_ sample: BlueSTSDKFeatureSample) -> [[Float]]?{
+        guard let fftSample = sample as? FFTSample,
+            fftSample.isCompleted else{
+                return nil
+        }
+        
+        let nComponents = fftSample.nComponents
+        
+        return (0..<nComponents)
+            .compactMap{ index in
+                fftSample.getComponent(Int(index))}
+    }
+    
     private var mPartialSample:FFTSample? = nil
     
     public override func enableNotification() -> Bool {
@@ -142,7 +170,6 @@ public class BlueSTSDKFeatureFFTAmplitude : BlueSTSDKDeviceTimestampFeature {
     
     private func readHeaderData(_ timestamp: UInt64, data: Data, dataOffset offset: UInt)->FFTSample?{
         let intOffset = Int(offset)
-        
         if((data.count-intOffset) < 12){
             NSException(name: NSExceptionName(rawValue: "Invalid Euler Angle data "),
                         reason: "There are no 12 bytes available to read",
@@ -156,7 +183,8 @@ public class BlueSTSDKFeatureFFTAmplitude : BlueSTSDKDeviceTimestampFeature {
         let stepFreq = nsData.extractLeFloat(fromOffset: offset+3)
         
         let sample = FFTSample(timestamp: timestamp, nSample: nSample, nComponents: nComponents, freqStep: stepFreq)
-        sample.append(data: data[Int(offset+7)..<data.count])
+        let fftData = data.subdata(in: Int(offset+7)..<data.count)
+        sample.append(data:fftData)
         return sample
     }
     
@@ -168,7 +196,7 @@ public class BlueSTSDKFeatureFFTAmplitude : BlueSTSDKDeviceTimestampFeature {
         }else{
             mPartialSample?.append(data: data)
             returnSample = mPartialSample
-            if(mPartialSample?.isCompleted ?? false){
+            if(mPartialSample?.isCompleted ?? false ){
                 mPartialSample = nil
             }
         }

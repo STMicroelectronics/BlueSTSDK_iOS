@@ -69,6 +69,8 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
                              termChart:(CBCharacteristic*_Nonnull)termChar
                               errChart:(CBCharacteristic*_Nonnull)errChar;
 
+-(void) addDebugOutputDelegate:(id<BlueSTSDKDebugOutputDelegate>_Nonnull)delegate;
+-(void) removeDebugOutputDelegate:(id<BlueSTSDKDebugOutputDelegate>_Nonnull)delegate;
 
 /**
  *  send a message to the debug console, the message longer than the maximum size will
@@ -79,8 +81,6 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  */
 -(NSUInteger) writeMessage:(NSString*_Nonnull)msg;
 
--(void) addDebugOutputDelegate:(id<BlueSTSDKDebugOutputDelegate>_Nonnull)delegate;
--(void) removeDebugOutputDelegate:(id<BlueSTSDKDebugOutputDelegate>_Nonnull)delegate;
 /**
  *  send a message to the debug console, the message longer than the maximum size will
  * be splited in several ble packages

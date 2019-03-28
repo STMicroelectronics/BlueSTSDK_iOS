@@ -1,5 +1,5 @@
 /*******************************************************************************
- * COPYRIGHT(c) 2015 STMicroelectronics
+ * COPYRIGHT(c) 2019 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -25,48 +25,26 @@
  *
  ******************************************************************************/
 
-#ifndef BlueSTSDK_BlueSTSDKFeatureGyroscope_h
-#define BlueSTSDK_BlueSTSDKFeatureGyroscope_h
+import Foundation
 
-#import "BlueSTSDKFeature.h"
-
-/**
- * Feature that contains the data from a gyroscope sensor
- * \par
- * The data exported are an array of 3 float component (x,y,z) with the gyroscope
- * value on that axis
- * @author STMicroelectronics - Central Labs.
- */
-@interface BlueSTSDKFeatureGyroscope : BlueSTSDKFeature
-
-/**
- *  gyroscope data in the x Axis
- *
- *  @param data sample read from the node
- *
- *  @return  gyroscope data in the x Axis
- */
-+(float)getGyroX:(BlueSTSDKFeatureSample*)data;
-
-/**
- *  gyroscope data in the y Axis
- *
- *  @param data sample read from the node
- *
- *  @return  gyroscope data in the y Axis
- */
-+(float)getGyroY:(BlueSTSDKFeatureSample*)data;
-
-/**
- *  gyroscope data in the z Axis
- *
- *  @param data sample read from the node
- *
- *  @return  gyroscope data in the z Axis
- */
-+(float)getGyroZ:(BlueSTSDKFeatureSample*)data;
-
-
-@end
-
-#endif
+public extension BlueSTSDKDebug{
+    private static let DATA_CHUNK_SIZE = 20
+    
+    /**
+     * write the string into the stdin char, if the message is longer than 20byte,
+     * it is splitted in multiple write that are done without waiting an answer.
+    */
+    public func writeWithoutQueue(_ msg:String){
+        if let data = msg.data(using: .isoLatin1){
+            var endOffset = min(BlueSTSDKDebug.DATA_CHUNK_SIZE,data.count)
+            var startOffset = 0
+            while(startOffset<endOffset){
+                self.writeMessageDataFast(data[startOffset..<endOffset])
+                startOffset = endOffset
+                endOffset = min(endOffset+BlueSTSDKDebug.DATA_CHUNK_SIZE,data.count)
+            }
+        }
+        
+    }
+    
+}

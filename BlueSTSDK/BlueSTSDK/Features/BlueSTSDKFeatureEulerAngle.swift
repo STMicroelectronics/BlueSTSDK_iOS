@@ -44,21 +44,21 @@ public class BlueSTSDKFeatureEulerAngle : BlueSTSDKFeature {
     private static let ROLL_INDEX = 2;
     
     public static func getYaw( _ sample :BlueSTSDKFeatureSample) -> Float{
-        guard sample.data.count < 1 else {
+        guard sample.data.count > 0 else {
             return Float.nan
         }
         return sample.data[0].floatValue
     }
     
     public static func getPitch( _ sample :BlueSTSDKFeatureSample) -> Float{
-        guard sample.data.count < 2 else {
+        guard sample.data.count > 1 else {
             return Float.nan
         }
         return sample.data[1].floatValue
     }
     
     public static func getRoll( _ sample :BlueSTSDKFeatureSample) -> Float{
-        guard sample.data.count < 3 else {
+        guard sample.data.count > 2 else {
             return Float.nan
         }
         return sample.data[2].floatValue

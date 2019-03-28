@@ -83,13 +83,21 @@ static NSDictionary<CBUUID*,NSArray<Class>*> *EXTENDED_FEATURE_MAP = nil;
     NSString *uuidString = [NSString stringWithFormat:@"%08X%@",prefix,EXTENDED_FEATURE_COMMON_UUID];
     return [CBUUID UUIDWithString: uuidString];
 }
-
+/*
+ EXTENDED_FEATURE_MAP.put(buildExtendedFeatureCharacteristics(0x07), asList(FeaturePredictiveSpeedStatus.class));
+ EXTENDED_FEATURE_MAP.put(buildExtendedFeatureCharacteristics(0x08), asList(FeaturePredictiveAccelerationStatus.class));
+ EXTENDED_FEATURE_MAP.put(buildExtendedFeatureCharacteristics(0x09), asList(FeaturePredictiveFrequencyDomainStatus.class));
+ */
 +(void)initialize{
     if(self == [BlueSTSDKFeatureCharacteristics class]){
         EXTENDED_FEATURE_MAP = @{
                                  [BlueSTSDKFeatureCharacteristics buildExtendedFeatureCharacteristicsWithPrefix: 0x3]:@[[BlueSTSDKFeatureAudioSceneCalssification class]],
                                  [BlueSTSDKFeatureCharacteristics buildExtendedFeatureCharacteristicsWithPrefix: 0x4]:@[[BlueSTSDKFeatureAILogging class]],
-                                 [BlueSTSDKFeatureCharacteristics buildExtendedFeatureCharacteristicsWithPrefix: 0x5]:@[[BlueSTSDKFeatureFFTAmplitude class]]
+                                 [BlueSTSDKFeatureCharacteristics buildExtendedFeatureCharacteristicsWithPrefix: 0x5]:@[[BlueSTSDKFeatureFFTAmplitude class]],
+                                 [BlueSTSDKFeatureCharacteristics buildExtendedFeatureCharacteristicsWithPrefix: 0x6]:@[[BlueSTSDKFeatureMotorTimeParameters class]],
+                                 [BlueSTSDKFeatureCharacteristics buildExtendedFeatureCharacteristicsWithPrefix: 0x7]:@[[BlueSTSDKFeaturePredictiveSpeedStatus class]],
+                                 [BlueSTSDKFeatureCharacteristics buildExtendedFeatureCharacteristicsWithPrefix: 0x8]:@[[BlueSTSDKFeaturePredictiveAccelerationStatus class]],
+                                 [BlueSTSDKFeatureCharacteristics buildExtendedFeatureCharacteristicsWithPrefix: 0x9]:@[[BlueSTSDKFeaturePredictiveFrequencyDomainStatus class]],
                                  };
     }
     
@@ -268,7 +276,7 @@ static NSDictionary *boardFeatureMap = nil;
              @0x80000000: [BlueSTSDKFeatureFFTAmplitude class],
              @0x40000000: [BlueSTSDKFeatureAudioADPCMSync class],
              @0x20000000: [BlueSTSDKFeatureSwitch class],
-             @0x10000000: [BlueSTSDKFeatureDirectionOfArrival class], //Sound source of arrival
+             @0x10000000: [BlueSTSDKFeatureAccelerationNorm class],
              @0x08000000: [BlueSTSDKFeatureAudioADPCM class],
              @0x04000000: [BlueSTSDKFeatureMicLevel class], //Mic Level
              @0x02000000: [BlueSTSDKFeatureProximity class], //proximity
@@ -281,11 +289,11 @@ static NSDictionary *boardFeatureMap = nil;
              @0x00040000: [BlueSTSDKFeatureTemperature class], //temperature
              @0x00020000: [BlueSTSDKFeatureBattery class],
              @0x00010000: [BlueSTSDKFeatureTemperature class], //temperature
-             @0x00008000: [BlueSTSDKFeatureCOSensor class],
+             @0x00008000: [BlueSTSDKFeatureGyroscopeNorm class],
              @0x00004000: [BlueSTSDKFeatureEulerAngle class],
              //@0x00002000:
              @0x00001000: [BlueSTSDKFeatureSDLogging class],
-             @0x00000800: [BlueSTSDKFeatureBeamForming class],
+             @0x00000800: [BlueSTSDKFeatureMagnetometerNorm class],
              @0x00000400: [BlueSTSDKFeatureAccelerometerEvent class], //Free fall detection
              @0x00000200: [BlueSTSDKFeatureFreeFall class], //Free fall detection
              @0x00000100: [BlueSTSDKFeatureMemsSensorFusionCompact class], //Mems sensor fusion compact

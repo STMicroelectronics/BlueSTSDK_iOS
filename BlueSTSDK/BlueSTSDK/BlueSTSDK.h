@@ -26,14 +26,12 @@
  ******************************************************************************/
 
 
-#import "BlueSTSDKManager.h"
+#import "BlueSTSDKFeature.h"
+#import "BlueSTSDKFeature_pro.h"
 
 #import "BlueSTSDKNode.h"
 #import "BlueSTSDKNode_pro.h"
 #import "BlueSTSDKDebug.h"
-
-#import "BlueSTSDKFeature.h"
-#import "BlueSTSDKFeature_pro.h"
 
 #import "BlueSTSDKFeatureAcceleration.h"
 #import "BlueSTSDKFeatureAutoConfigurable.h"
@@ -91,4 +89,7 @@
 #import "NSMutableDictionary+BlueSTSDKFeature.h"
 #import "NSData+NumberConversion.h"
 
-
+//private header added to enable swit interaction
+#import "BlueSTSDKBleNodeDefines.h"
+#import "BlueSTSDKNodeFake.h"
+#import "BlueSTSDKNode_prv.h"

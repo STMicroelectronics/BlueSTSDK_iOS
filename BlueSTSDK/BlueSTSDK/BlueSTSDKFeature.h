@@ -173,6 +173,7 @@ NS_CLASS_AVAILABLE(10_7, 5_0)
  */
 -(bool) enableNotification;
 
+-(bool) read;
 /**
  *  <b>abstract method</b>, build a feature that is exported by the node
  *  @note it is an abstract method, you have to overwrite it!

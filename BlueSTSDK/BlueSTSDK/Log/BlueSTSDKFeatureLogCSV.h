@@ -108,6 +108,13 @@
 -(void) removeLogFiles;
 
 /**
+ *  get the tag to identify the logging session, generated from the startup timestamp
+ *
+ *  @return the tag to identify the logging session
+ */
+-(NSString *)sessionPrefix;
+
+/**
  *  true if there are log files
  *
  *  @return true if there are log files, false if there are no log files
@@ -131,6 +138,13 @@
  *  clear log folder from all csv files
  */
 +(void) clearLogFolder;
+
+/**
+ *  return the position of the app document directory
+ *
+ *  @return position of the document directory
+ */
++(NSURL*) getDumpFileDirectoryUrl;
 
 @end
 #endif

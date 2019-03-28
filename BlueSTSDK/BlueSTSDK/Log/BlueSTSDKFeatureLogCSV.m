@@ -167,7 +167,7 @@ void appendTo(NSMutableArray<NSString *> *array, NSArray<NSNumber *> *data) {
  *
  *  @return the tag to identify the logging session
  */
--(NSString *)tag {
+-(NSString *)sessionPrefix {
     return [mDateFormatter stringFromDate:self.startupTimestamp];
 }
 /**
@@ -191,7 +191,7 @@ void appendTo(NSMutableArray<NSString *> *array, NSArray<NSNumber *> *data) {
         NSURL *documentsDirectory = [BlueSTSDKFeatureLogCSV getDumpFileDirectoryUrl];
 //        NSString *fileName = [NSString stringWithFormat:@"%@_%@.csv",feature.parentNode.friendlyNameEasy,feature.name ];
 
-        NSString *fileName = [NSString stringWithFormat:@"%@_%@.csv",[self tag],feature.name ];
+        NSString *fileName = [NSString stringWithFormat:@"%@_%@.csv",[self sessionPrefix],feature.name ];
         fileName = [fileName stringByReplacingOccurrencesOfString:@" " withString:@"_"];
         NSURL *fileUrl = [NSURL URLWithString:fileName relativeToURL:documentsDirectory];
         NSLog(@"LOG\n- Generating filename: [%@]\n- fileUrl: [%@]", fileName, fileUrl);
@@ -277,15 +277,15 @@ void appendTo(NSMutableArray<NSString *> *array, NSArray<NSNumber *> *data) {
                                                           NSDirectoryEnumerationSkipsSubdirectoryDescendants)
                                                     error:&error];
     //filter the files and keep only the ones with extenstion csv
-    NSString *tag = [self tag];
+    NSString *tag = [self sessionPrefix];
     NSInteger ltag = tag.length;
     NSIndexSet *indexes = [files indexesOfObjectsPassingTest:
                            ^BOOL (id obj, NSUInteger i, BOOL *stop) {
                                NSURL *url = (NSURL*)obj;
-                               NSString *lpc = url.lastPathComponent;
-                               BOOL a = [url.pathExtension isEqualToString:@"csv"];
-                               BOOL b = [lpc compare:tag options:NSCaseInsensitiveSearch range:NSMakeRange(0, ltag)] == NSOrderedSame;
-                               return a && b;
+                               NSString *fileName = url.lastPathComponent;
+                               BOOL endWithCSV = [url.pathExtension isEqualToString:@"csv"];
+                               BOOL startWithTag = [fileName compare:tag options:NSCaseInsensitiveSearch range:NSMakeRange(0, ltag)] == NSOrderedSame;
+                               return startWithTag && endWithCSV;
                            }];
     return [files objectsAtIndexes:indexes];
 }

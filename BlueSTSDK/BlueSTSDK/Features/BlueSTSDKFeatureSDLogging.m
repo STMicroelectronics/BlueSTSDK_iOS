@@ -27,7 +27,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "BlueSTSDKManager_prv.h"
+#import "BlueSTSDK/BlueSTSDK-Swift.h"
 #import "BlueSTSDKNode.h"
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureSDLogging.h"

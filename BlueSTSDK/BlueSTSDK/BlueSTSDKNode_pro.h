@@ -48,10 +48,9 @@
  *  @param advertisementData data in the advertise
  *
  *  @return class BlueSTSDKNode
- *  @throw NSException if the ble advertise hasn't all the mandatory fields
  */
--(instancetype) init :(CBPeripheral *)peripheral rssi:(NSNumber*)rssi
-            advertise:(NSDictionary*)advertisementData;
+-(instancetype __nonnull) init :(CBPeripheral * _Nonnull)peripheral rssi:(NSNumber* _Nonnull)rssi
+                       advertiseInfo:(BlueSTSDKAdvertiseInfo* _Nonnull) advertiseInfo;
 
 /**
  *@protected
@@ -62,7 +61,7 @@
  *
  *  @return partialy functional node pointer
  */
--(instancetype) init;
+-(instancetype __nullable) init;
 
 /**
  * @protected
@@ -71,7 +70,7 @@
  *
  *  @param rssi new rssi values
  */
--(void)updateRssi:(NSNumber*)rssi;
+-(void)updateRssi:(NSNumber* _Nonnull)rssi;
 
 /**
  * @protected
@@ -80,7 +79,7 @@
  *
  *  @param txPower new tx power
  */
--(void)updateTxPower:(NSNumber*)txPower;
+-(void)updateTxPower:(NSNumber* _Nonnull)txPower;
 
 /**
  * @protected
@@ -100,8 +99,8 @@
  *
  *  @return true if the command is correctly send
  */
--(BOOL)sendCommandMessageToFeature:(BlueSTSDKFeature*)f type:(uint8_t)commandType
-                              data:(NSData*) commandData;
+-(BOOL)sendCommandMessageToFeature:(BlueSTSDKFeature* _Nonnull)f type:(uint8_t)commandType
+                              data:(NSData* _Nonnull) commandData;
 
 @end
 

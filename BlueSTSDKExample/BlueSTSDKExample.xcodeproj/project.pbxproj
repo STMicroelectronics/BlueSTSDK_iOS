@@ -13,17 +13,24 @@
 		66123F921B6F55FE00F1A3B3 /* DeviceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66123F911B6F55FE00F1A3B3 /* DeviceTableViewCell.m */; };
 		662B58821B6F87ED000F5072 /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B58811B6F87ED000F5072 /* SettingsTableViewController.m */; };
 		664335861B6F6E42001B63DE /* ConsoleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 664335851B6F6E42001B63DE /* ConsoleViewController.m */; };
+		6653E1B7221D438700C0A3FD /* BlueSTSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66E7BF611B6F4CB6005CB59E /* BlueSTSDK.framework */; };
+		6653E1B8221D438700C0A3FD /* BlueSTSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66E7BF611B6F4CB6005CB59E /* BlueSTSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		66E7BF381B6F4C3B005CB59E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E7BF371B6F4C3B005CB59E /* main.m */; };
 		66E7BF3B1B6F4C3B005CB59E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E7BF3A1B6F4C3B005CB59E /* AppDelegate.m */; };
 		66E7BF411B6F4C3B005CB59E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66E7BF3F1B6F4C3B005CB59E /* Main.storyboard */; };
 		66E7BF431B6F4C3B005CB59E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66E7BF421B6F4C3B005CB59E /* Images.xcassets */; };
 		66E7BF461B6F4C3B005CB59E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 66E7BF441B6F4C3B005CB59E /* LaunchScreen.xib */; };
 		66E7BF521B6F4C3B005CB59E /* BlueSTSDKExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E7BF511B6F4C3B005CB59E /* BlueSTSDKExampleTests.m */; };
-		66E7BF6F1B6F4D28005CB59E /* BlueSTSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66E7BF611B6F4CB6005CB59E /* BlueSTSDK.framework */; };
-		66E7BF701B6F4D28005CB59E /* BlueSTSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66E7BF611B6F4CB6005CB59E /* BlueSTSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		6653E1B9221D438700C0A3FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66E7BF5B1B6F4CB6005CB59E /* BlueSTSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 665241EF1B0B1BB100931F93;
+			remoteInfo = BlueSTSDK;
+		};
 		66E7BF4C1B6F4C3B005CB59E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 66E7BF2A1B6F4C3B005CB59E /* Project object */;
@@ -45,23 +52,16 @@
 			remoteGlobalIDString = 665241FB1B0B1BB100931F93;
 			remoteInfo = BlueSTSDKTests;
 		};
-		66E7BF711B6F4D28005CB59E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 66E7BF5B1B6F4CB6005CB59E /* BlueSTSDK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 665241EF1B0B1BB100931F93;
-			remoteInfo = BlueSTSDK;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		66E7BF731B6F4D28005CB59E /* Embed Frameworks */ = {
+		6653E1BB221D438700C0A3FD /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				66E7BF701B6F4D28005CB59E /* BlueSTSDK.framework in Embed Frameworks */,
+				6653E1B8221D438700C0A3FD /* BlueSTSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -100,7 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66E7BF6F1B6F4D28005CB59E /* BlueSTSDK.framework in Frameworks */,
+				6653E1B7221D438700C0A3FD /* BlueSTSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,6 +114,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6653E1B0221D435500C0A3FD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		66E7BF291B6F4C3B005CB59E = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +128,7 @@
 				66E7BF341B6F4C3B005CB59E /* BlueSTSDKExample */,
 				66E7BF4E1B6F4C3B005CB59E /* BlueSTSDKExampleTests */,
 				66E7BF331B6F4C3B005CB59E /* Products */,
+				6653E1B0221D435500C0A3FD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -203,12 +211,12 @@
 				66E7BF2E1B6F4C3B005CB59E /* Sources */,
 				66E7BF2F1B6F4C3B005CB59E /* Frameworks */,
 				66E7BF301B6F4C3B005CB59E /* Resources */,
-				66E7BF731B6F4D28005CB59E /* Embed Frameworks */,
+				6653E1BB221D438700C0A3FD /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				66E7BF721B6F4D28005CB59E /* PBXTargetDependency */,
+				6653E1BA221D438700C0A3FD /* PBXTargetDependency */,
 			);
 			name = BlueSTSDKExample;
 			productName = BlueSTSDKExample;
@@ -341,15 +349,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		6653E1BA221D438700C0A3FD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BlueSTSDK;
+			targetProxy = 6653E1B9221D438700C0A3FD /* PBXContainerItemProxy */;
+		};
 		66E7BF4D1B6F4C3B005CB59E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 66E7BF311B6F4C3B005CB59E /* BlueSTSDKExample */;
 			targetProxy = 66E7BF4C1B6F4C3B005CB59E /* PBXContainerItemProxy */;
-		};
-		66E7BF721B6F4D28005CB59E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = BlueSTSDK;
-			targetProxy = 66E7BF711B6F4D28005CB59E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -481,6 +489,7 @@
 		66E7BF561B6F4C3B005CB59E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 9L4QA9SNQK;
@@ -494,6 +503,7 @@
 		66E7BF571B6F4C3B005CB59E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 9L4QA9SNQK;

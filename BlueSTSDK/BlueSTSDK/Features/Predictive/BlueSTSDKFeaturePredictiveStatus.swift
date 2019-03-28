@@ -1,5 +1,5 @@
 /*******************************************************************************
- * COPYRIGHT(c) 2015 STMicroelectronics
+ * COPYRIGHT(c) 2018 STMicroelectronics
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -25,44 +25,50 @@
  *
  ******************************************************************************/
 
-#ifndef BlueSTSDK_BlueSTSDKManager_prv_h
-#define BlueSTSDK_BlueSTSDKManager_prv_h
+import Foundation
 
-#import <CoreBluetooth/CBPeripheral.h>
-#import "BlueSTSDKManager.h"
+public class BlueSTSDKFeaturePredictiveStatus : BlueSTSDKFeature{
+    
 
-/**
- *  private method of the class {@link BlueSTSDKManager} this method are used 
- *  by the sdk
- * @author STMicroelectronics - Central Labs.
- */
-@interface BlueSTSDKManager()
+    static func buildStatusField(name:String)->BlueSTSDKFeatureField{
+        return BlueSTSDKFeatureField(name: name, unit: nil, type: .float,
+                                     min: NSNumber(value:0.0),
+                                     max: NSNumber(value:Float.greatestFiniteMagnitude))
+    }
 
-/**
- * @private
- *  start a connection with a ble peripheral
- *
- *  @param peripheral node to connect
- */
--(void)connect:(CBPeripheral*)peripheral;
+    
+    static func extractXStatus(_ packed:UInt8) -> Status{
+        return Status.fromByte((packed>>4) & 0x03)
+    }
+    
+    static func extractYStatus(_ packed:UInt8) -> Status{
+        return Status.fromByte((packed>>2) & 0x03)
+    }
+    
+    static func extractZStatus(_ packed:UInt8) -> Status{
+        return Status.fromByte((packed) & 0x03)
+    }
+    
+    public enum Status:UInt8{
+        
+        case GOOD = 0x00
+        case WARNING = 0x01
+        case BAD = 0x02
+        case UNKNOWN = 0xFF
+        
+        public static func fromByte(_ val:UInt8) -> Status{
+            return Status.init(rawValue: val) ?? Status.UNKNOWN
+        }
+        
+    }
+    
+}
+
+extension  BlueSTSDKFeaturePredictiveStatus.Status{
+    func toNumber()->NSNumber{
+        return NSNumber(value:self.rawValue)
+    }
+}
 
 
-/**
- * @private
- *  close the connection with a ble peripheral
- *
- *  @param peripheral node to disconnect
- */
--(void)disconnect:(CBPeripheral*)peripheral;
 
-/**
- * @private
- * get the list of feature that is possible find in a specific node.
- *
- *  @return map of <{@link featureMask_t},BlueSTSDKFeature>
- */
--(NSDictionary*)getFeaturesForNode:(uint8_t)nodeId;
-
-@end
-
-#endif

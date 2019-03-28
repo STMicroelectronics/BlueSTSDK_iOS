@@ -30,12 +30,11 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CBUUID.h>
-#import "BlueSTSDKManager.h"
 
 @class BlueSTSDKDebug;
 @class BlueSTSDKConfigControl;
 @class BlueSTSDKFeature;
-
+@class BlueSTSDKAdvertiseInfo;
 
 @protocol BlueSTSDKNodeBleConnectionParamDelegate;
 @protocol BlueSTSDKNodeStateDelegate;
@@ -112,6 +111,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
     BlueSTSDKNodeTypeSTEVAL_IDB008VX = 0x04,
     BlueSTSDKNodeTypeSTEVAL_BCN002V1 = 0x05,
     BlueSTSDKNodeTypeSensor_Tile_101 = 0x06,
+    BlueSTSDKNodeTypeDiscovery_IOT01A = 0x07,
     /**
      *  nucleo + ble expansion board
      */
@@ -175,6 +175,8 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 
 @property (readonly) BOOL isSleeping;
 @property (readonly) BOOL hasExtension;
+
+@property (readonly,nonnull) BlueSTSDKAdvertiseInfo* advertiseInfo;
 
 @property (readonly) uint32_t advertiseBitMask;
 
@@ -358,6 +360,10 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  */
 -(BOOL)isExportingFeature:(Class _Nonnull )featureClass;
 
+/**
+ * @return maximum number of write that is possibile to sent during a write without response
+ */
+-(NSInteger)maximumWriteValueLength;
 @end
 
 /**

@@ -29,7 +29,7 @@
 
 #import "MBProgressHUD.h"
 
-#import <BlueSTSDK/BlueSTSDKManager.h>
+#import <BlueSTSDK/BlueSTSDK-Swift.h>
 #import <BlueSTSDK/BlueSTSDKNode.h>
 #import <BlueSTSDK/BlueSTSDKNodeStatusNSLog.h>
 #import "DeviceTableViewCell.h"
@@ -79,6 +79,7 @@ BlueSTSDKNodeStateDelegate>
                 [node disconnect];
             }
         }
+
         [mManager resetDiscovery]; // remove know nodes
         [self.tableView reloadData];
     }
@@ -290,10 +291,9 @@ BlueSTSDKNodeStateDelegate>
             NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
             BlueSTSDKNode *node = mNodes[indexPath.row];
             ((FeatureListTableViewController *)[segue destinationViewController]).node=node;
-           
+            
         }
     }
 }
-
 
 @end
