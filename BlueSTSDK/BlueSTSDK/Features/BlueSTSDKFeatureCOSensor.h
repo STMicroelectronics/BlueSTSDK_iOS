@@ -29,7 +29,7 @@
 
 @interface BlueSTSDKFeatureCOSensor : BlueSTSDKFeature
 
-+(float)getGasPresence:(BlueSTSDKFeatureSample*)data;
++(float)getGasPresence:(BlueSTSDKFeatureSample* _Nonnull)data;
 
 -(void)setSensorSensitivity:(float) newSensitivity;
 -(void) requestSensitivity;

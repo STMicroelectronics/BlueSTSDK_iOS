@@ -34,7 +34,7 @@ public extension BlueSTSDKDebug{
      * write the string into the stdin char, if the message is longer than 20byte,
      * it is splitted in multiple write that are done without waiting an answer.
     */
-    public func writeWithoutQueue(_ msg:String){
+    func writeWithoutQueue(_ msg:String){
         if let data = msg.data(using: .isoLatin1){
             var endOffset = min(BlueSTSDKDebug.DATA_CHUNK_SIZE,data.count)
             var startOffset = 0

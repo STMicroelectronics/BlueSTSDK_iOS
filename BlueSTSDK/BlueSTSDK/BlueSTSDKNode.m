@@ -193,15 +193,8 @@ static dispatch_queue_t sNotificationQueue;
     return self;
 }
 
-
--(instancetype)init:(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertiseInfo:(BlueSTSDKAdvertiseInfo * _Nonnull)advertiseInfo{
-    self = [self init];
-    mPeripheral=peripheral;
-    mPeripheral.delegate=self;
-
-    _tag = peripheral.identifier.UUIDString;
-    _advertiseInfo = advertiseInfo;
-    
+-(void)updateAdvertiseInfo:(id<BleAdvertiseInfo> _Nonnull)newInfo{
+    _advertiseInfo = newInfo;
     _type = _advertiseInfo.boardType;
     _typeId = _advertiseInfo.deviceId;
     _name = _advertiseInfo.name;
@@ -210,6 +203,15 @@ static dispatch_queue_t sNotificationQueue;
     _hasExtension = _advertiseInfo.hasGeneralPurpose;
     _isSleeping = _advertiseInfo.isSleeping;
     _advertiseBitMask = _advertiseInfo.featureMap;
+}
+
+-(instancetype)init:(CBPeripheral *)peripheral rssi:(NSNumber*)rssi advertiseInfo:(id<BleAdvertiseInfo> _Nonnull)advertiseInfo{
+    self = [self init];
+    mPeripheral=peripheral;
+    mPeripheral.delegate=self;
+
+    _tag = peripheral.identifier.UUIDString;
+    [self updateAdvertiseInfo:advertiseInfo];
     
     [self updateTxPower: [NSNumber numberWithUnsignedChar:_advertiseInfo.txPower]];
     
@@ -469,6 +471,9 @@ static dispatch_queue_t sNotificationQueue;
     if(![feature enabled])
         return false;
     
+    if([self isEnableNotification:feature])
+        return true;
+    
     CBCharacteristic *c= [self extractCharacteristicsFromFeature:feature];
     
     if(c==nil)
@@ -488,9 +493,12 @@ static dispatch_queue_t sNotificationQueue;
 
 -(BOOL) disableNotification:(BlueSTSDKFeature*)feature{
    // NSLog(@"Disable: %@",feature.name);
-
     if(![feature enabled])
         return false;
+    
+    if(![self isEnableNotification:feature])
+        return true;
+    
     CBCharacteristic *c=[self extractCharacteristicsFromFeature:feature];
     if(c==nil)
         return false;
@@ -502,9 +510,9 @@ static dispatch_queue_t sNotificationQueue;
     @synchronized(mAskForNotification){
         [mAskForNotification removeObject:c.UUID];
     }//synchronized
+    
     [mPeripheral setNotifyValue:NO forCharacteristic:c];
     [mNotifyFeature removeObject:feature];
-
 
     return true;
 }//disableNotification

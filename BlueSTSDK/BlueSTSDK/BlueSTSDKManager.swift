@@ -36,9 +36,9 @@ import Foundation
     private override init() {
         super.init()
         mCBCentralManager = CBCentralManager(delegate: self, queue: nil)
-        let  defaultFeatureMap = BlueSTSDKBoardFeatureMap.boardFeatureMap()
+        let  defaultFeatureMap = BlueSTSDKBoardFeatureMap.boardFeatureMap
         defaultFeatureMap.forEach{ boardId, featureMap in
-            mNodeFeatures[boardId.uint8Value] = (featureMap as! [NSNumber:BlueSTSDKFeature.Type])
+            mNodeFeatures[boardId.uint8Value] = featureMap
         }
     }
     
@@ -175,7 +175,7 @@ import Foundation
         
         var currentMap = mNodeFeatures[nodeId]
         if(currentMap == nil){
-            currentMap = (BlueSTSDKBoardFeatureMap.defaultMaskToFeatureMap() as! [NSNumber : BlueSTSDKFeature.Type])
+            currentMap = (BlueSTSDKBoardFeatureMap.defaultMaskToFeatureMap )
             mNodeFeatures[nodeId] = currentMap
         }
         features.forEach{ (arg) in
@@ -188,7 +188,7 @@ import Foundation
         if let featuresMap = mNodeFeatures[nodeId] {
             return featuresMap
         }else {
-            return BlueSTSDKBoardFeatureMap.defaultMaskToFeatureMap() as! [NSNumber : BlueSTSDKFeature.Type]
+            return BlueSTSDKBoardFeatureMap.defaultMaskToFeatureMap
         }
         
     }
@@ -259,12 +259,14 @@ extension BlueSTSDKManager : CBCentralManagerDelegate {
     
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         let tag = peripheral.identifier.uuidString
+        
+        
         if let node = nodeWith(tag: tag){
             node.updateRssi(RSSI)
         }else{
             //get the fist value != nil returned by a filter
-            let firstMetch = mAdvertiseFilters.lazy.compactMap{ $0.filter(advertisementData)}.first
-            if let info = firstMetch{
+            let firstMatch = mAdvertiseFilters.lazy.compactMap{ $0.filter(advertisementData)}.first
+            if let info = firstMatch{
                 let newNode = BlueSTSDKNode(peripheral, rssi: RSSI, advertiseInfo:info)
                 addAndNotify(node: newNode)
             }

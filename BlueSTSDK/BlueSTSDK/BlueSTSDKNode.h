@@ -34,10 +34,11 @@
 @class BlueSTSDKDebug;
 @class BlueSTSDKConfigControl;
 @class BlueSTSDKFeature;
-@class BlueSTSDKAdvertiseInfo;
 
 @protocol BlueSTSDKNodeBleConnectionParamDelegate;
 @protocol BlueSTSDKNodeStateDelegate;
+@protocol BleAdvertiseInfo;
+
 
 /**
  * Class that represent a remote node that will export some data (as {@link BlueSTSDKFeature})
@@ -176,7 +177,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
 @property (readonly) BOOL isSleeping;
 @property (readonly) BOOL hasExtension;
 
-@property (readonly,nonnull) BlueSTSDKAdvertiseInfo* advertiseInfo;
+@property (readonly,nonnull) id<BleAdvertiseInfo> advertiseInfo;
 
 @property (readonly) uint32_t advertiseBitMask;
 
@@ -364,6 +365,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
  * @return maximum number of write that is possibile to sent during a write without response
  */
 -(NSInteger)maximumWriteValueLength;
+
 @end
 
 /**

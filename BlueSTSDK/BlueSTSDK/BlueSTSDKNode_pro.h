@@ -50,7 +50,7 @@
  *  @return class BlueSTSDKNode
  */
 -(instancetype __nonnull) init :(CBPeripheral * _Nonnull)peripheral rssi:(NSNumber* _Nonnull)rssi
-                       advertiseInfo:(BlueSTSDKAdvertiseInfo* _Nonnull) advertiseInfo;
+                       advertiseInfo:(id<BleAdvertiseInfo> _Nonnull) advertiseInfo;
 
 /**
  *@protected

@@ -24,33 +24,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ******************************************************************************/
-
-
 import Foundation
 
-//TODO extend nsobject only to be availabe in Node
-@objc public protocol BleAdvertiseInfo : NSObjectProtocol {
-    @objc var name:String? {get}
-    @objc var address:String? {get}
-    @objc var featureMap:UInt32 {get}
-    @objc var deviceId:UInt8 {get}
-    @objc var protocolVersion:UInt8 {get}
-    @objc var boardType:BlueSTSDKNodeType {get}
-    @objc var isSleeping:Bool {get}
-    @objc var hasGeneralPurpose:Bool {get}
-    @objc var txPower:UInt8 {get}
-}
-
-/**
- * Protocol used to decide if we can build a BlueSTSDKNode from a CBPeriperal advertise
- * if we can build an AdvertiseInfo object the sdk will build a node from that infos
- */
-//is objc becouse the startScanning is objc
-@objc public protocol BlueSTSDKAdvertiseFilter{
+//is pubblic and objc to be used inside the BlueSTSDKNode class
+class BlueSTSDKAdvertiseInfo : NSObject, BleAdvertiseInfo{
+    public let name:String?
+    public let address:String?
+    public let featureMap:UInt32
+    public let deviceId:UInt8
+    public let protocolVersion:UInt8
+    public let boardType:BlueSTSDKNodeType
+    public let isSleeping:Bool
+    public let hasGeneralPurpose:Bool
+    public let txPower:UInt8
     
-    /**
-     * @param data: advertise data from centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber)
-     * @return nill if the advertise doesn't contain all the needed info, otherwise a info object that is used to build the node
-    */
-    func filter(_ data:[String:Any])->BleAdvertiseInfo?
+    init(name: String?, address: String?, featureMap: UInt32, deviceId: UInt8, protocolVersion: UInt8,
+               boardType: BlueSTSDKNodeType, isSleeping: Bool, hasGeneralPurpose: Bool, txPower: UInt8){
+        self.name = name
+        self.address = address
+        self.featureMap = featureMap
+        self.deviceId = deviceId
+        self.protocolVersion = protocolVersion
+        self.boardType = boardType
+        self.isSleeping = isSleeping
+        self.hasGeneralPurpose = hasGeneralPurpose
+        self.txPower = txPower
+        super.init()
+    }
+    
 }
