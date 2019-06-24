@@ -35,7 +35,6 @@
 #import "BlueSTSDK_LocalizeUtil.h"
 
 #import "Util/BlueSTSDKCharacteristic.h"
-#import "Util/BlueSTSDKBleNodeDefines.h"
 #import "Util/NSData+NumberConversion.h"
 #import "Util/UnwrapTimeStamp.h"
 
@@ -338,6 +337,7 @@ static dispatch_queue_t sNotificationQueue;
     //reset the unwrap object
     mUnwrapUtil = [[UnwrapTimeStamp alloc]init];
     [self updateNodeStatus:BlueSTSDKNodeStateConnecting];
+    
     [[BlueSTSDKManager sharedInstance]connect:mPeripheral];
 }//connect
 
@@ -578,7 +578,7 @@ static dispatch_queue_t sNotificationQueue;
     
     CBCharacteristicWriteType writeType = [BlueSTSDKNode getWriteTypeForChar:writeTo];
     //extract the feature bit mask
-    featureMask_t featureMask = [BlueSTSDKFeatureCharacteristics extractFeatureMask:featureChar.UUID];
+    featureMask_t featureMask = featureChar.UUID.featureMask;
     
     //compose the message
     NSData *msg = [BlueSTSDKNode prepareMessageWithMask:featureMask type:commandType data:commandData];
@@ -655,9 +655,9 @@ didDiscoverServices:(NSError *)error{
     
     CBCharacteristic *term=nil,*err=nil;
     for(CBCharacteristic *c in service.characteristics){
-        if([c.UUID isEqual:BlueSTSDKServiceDebug.termUuid]){
+        if(c.isDebugTermCharacteristic){
             term = c;
-        }else if([c.UUID isEqual:BlueSTSDKServiceDebug.stdErrUuid]){
+        }else if(c.isDebugErrorCharacteristic){
             err = c;
         }//if-else-if
     }//for
@@ -680,9 +680,9 @@ didDiscoverServices:(NSError *)error{
     
     CBCharacteristic *configcontrolchar=nil;
     for(CBCharacteristic *c in service.characteristics) {
-        if([c.UUID isEqual:BlueSTSDKServiceConfig.configControlUuid]){
+        if(c.isConfigControlCharacteristic){
             configcontrolchar = c;
-        } else if ([c.UUID isEqual:BlueSTSDKServiceConfig.featureCommandUuid]) {
+        } else if (c.isConfigFeatureCommandCharacteristic) {
             mFeatureCommand = c; //to compatibility with previous code
         }
     }//for
@@ -700,7 +700,7 @@ didDiscoverServices:(NSError *)error{
  */
 -(void)buildKnowFeatureFromChar:(CBCharacteristic*)c{
     NSDictionary<NSNumber*,Class> *maskFeatureMap = [[BlueSTSDKManager sharedInstance] getFeaturesForNode: self.typeId];
-    featureMask_t featureMask = [BlueSTSDKFeatureCharacteristics extractFeatureMask:c.UUID];
+    featureMask_t featureMask = c.UUID.featureMask;
     NSMutableArray *charFeature = [[NSMutableArray alloc] initWithCapacity:1];
     
     uint32_t mask = 1<<31;
@@ -786,17 +786,17 @@ didDiscoverCharacteristicsForService:(CBService *)service
     //    NSLog(@" - Char: %@", c.UUID.UUIDString);
     //}
     
-    if( [[service UUID] isEqual:[BlueSTSDKServiceDebug serviceUuid]]  ){
+    if( service.isDebugService  ){
         _debugConsole = [self buildDebugService:service];
-    }else if( [[service UUID] isEqual:[BlueSTSDKServiceConfig serviceUuid]]  ){
+    }else if( service.isConfigService){
         _configControl = [self buildConfigService:service];
     }else{
         for (CBCharacteristic *c in service.characteristics) {            
-            if ([BlueSTSDKFeatureCharacteristics isFeatureCharacteristics: c]){
+            if (c.isFeatureCaracteristics){
                 [self buildKnowFeatureFromChar:c];
-            }else if ([BlueSTSDKFeatureCharacteristics getExtendedFeatureInCharacteristics: c]!=nil){
-                [self buildKnowUUID:c features:[BlueSTSDKFeatureCharacteristics getExtendedFeatureInCharacteristics: c]];
-            }else if ([BlueSTSDKFeatureCharacteristics isFeatureGeneralPurposeCharacteristics:c]){
+            }else if (c.extendedFeature!=nil){
+                [self buildKnowUUID:c features:c.extendedFeature];
+            }else if (c.isFeatureGeneralPurposeCharacteristics){
                 [self buildGeneraPurposeFeatureFromChar:c];
             }else if (mExternalCharFeature!=nil && mExternalCharFeature[c.UUID]!=nil)
                 [self buildKnowUUID:c features:mExternalCharFeature[c.UUID]];
@@ -857,12 +857,11 @@ didDiscoverCharacteristicsForService:(CBService *)service
     if([characteristics isEqual: mFeatureCommand]){
         [self notifyCommandResponse: characteristics.value];
         return;
-    } else if(_debugConsole!=nil &&
-             [BlueSTSDKServiceDebug isDebugCharacteristics:characteristics]){
+    } else if(_debugConsole!=nil && characteristics.isDebugCharacteristic){
         [_debugConsole receiveCharacteristicsUpdate:characteristics];
         return;
     } else if(_configControl!=nil &&
-             [BlueSTSDKServiceConfig isConfigControlCharacteristic:characteristics]){
+             characteristics.isConfigCharacteristics){
         [_configControl characteristicsUpdate:characteristics];
         return;
     }//else
@@ -928,11 +927,11 @@ didWriteValueForCharacteristic:(CBCharacteristic *)characteristic
         [self updateNodeStatus:BlueSTSDKNodeStateLost];
     }//if
     
-    if ([characteristic.UUID isEqual: [BlueSTSDKServiceDebug termUuid]] &&
+    if (characteristic.isDebugTermCharacteristic &&
         _debugConsole!=nil){
         [_debugConsole receiveCharacteristicsWriteUpdate:characteristic error:error];
     } else if(_configControl!=nil &&
-              [BlueSTSDKServiceConfig isConfigControlCharacteristic:characteristic]){
+              characteristic.isConfigCharacteristics){
         [_configControl characteristicsWriteUpdate:characteristic success:(error == nil)];
     }//else
 
@@ -982,13 +981,13 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
     
     switch (type) {
         case BlueSTSDKNodeTypeNucleo:
-            return @"NUCLEO";
+            return @"Nucleo";
         case BlueSTSDKNodeTypeSensor_Tile:
-            return @"SENSOR_TILE";
-        case BlueSTSDKNodeTypeSensor_Tile_101:
-            return @"SENSOR_TILE.101";
+            return @"SensorTile";
+        case BlueSTSDKNodeTypeSensor_Tile_Box:
+            return @"SensorTile.Box";
         case BlueSTSDKNodeTypeBlue_Coin:
-            return @"BLUE_COIN";
+            return @"BlueCoin";
         case BlueSTSDKNodeTypeSTEVAL_WESU1:
             return @"STEVAL_WESU1";
         case BlueSTSDKNodeTypeSTEVAL_IDB008VX:

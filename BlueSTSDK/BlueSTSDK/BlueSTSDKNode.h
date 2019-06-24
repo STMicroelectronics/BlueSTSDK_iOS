@@ -39,6 +39,7 @@
 @protocol BlueSTSDKNodeStateDelegate;
 @protocol BleAdvertiseInfo;
 
+typedef uint32_t featureMask_t;
 
 /**
  * Class that represent a remote node that will export some data (as {@link BlueSTSDKFeature})
@@ -111,7 +112,7 @@ typedef NS_ENUM(NSInteger, BlueSTSDKNodeType){
     BlueSTSDKNodeTypeBlue_Coin = 0x03,
     BlueSTSDKNodeTypeSTEVAL_IDB008VX = 0x04,
     BlueSTSDKNodeTypeSTEVAL_BCN002V1 = 0x05,
-    BlueSTSDKNodeTypeSensor_Tile_101 = 0x06,
+    BlueSTSDKNodeTypeSensor_Tile_Box = 0x06,
     BlueSTSDKNodeTypeDiscovery_IOT01A = 0x07,
     /**
      *  nucleo + ble expansion board

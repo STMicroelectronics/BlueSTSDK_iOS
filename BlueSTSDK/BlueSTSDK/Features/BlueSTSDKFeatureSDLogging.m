@@ -178,7 +178,7 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
  */
 -(BlueSTSDKExtractResult*) extractData:(uint64_t)timestamp data:(NSData*)rawData dataOffset:(uint32_t)offset{
     
-    if(rawData.length-offset < 4){
+    if(rawData.length-offset < 9){
         @throw [NSException
                 exceptionWithName:BLUESTSDK_LOCALIZE(@"Invalid SD Logging data",nil)
                 reason:BLUESTSDK_LOCALIZE(@"The feature need almost 9 bytes to extract the data",nil)

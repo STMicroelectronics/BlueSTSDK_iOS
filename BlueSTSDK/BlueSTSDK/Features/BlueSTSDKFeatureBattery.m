@@ -115,6 +115,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
             return BlueSTSDKFeatureBatteryStatusPluggedNotCharging;
         case 0x03:
             return BlueSTSDKFeatureBatteryStatusCharging;
+        case 0x04:
+            return BlueSTSDKFeatureBatteryStatusUnknown;
         case 0xFF:
             return BlueSTSDKFeatureBatteryStatusError;
         default:
@@ -132,6 +134,8 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
             return BLUESTSDK_LOCALIZE(@"Plugged",nil);
         case BlueSTSDKFeatureBatteryStatusCharging:
             return BLUESTSDK_LOCALIZE(@"Charging",nil);
+        case BlueSTSDKFeatureBatteryStatusUnknown:
+            return BLUESTSDK_LOCALIZE(@"Unknown",nil);
         case BlueSTSDKFeatureBatteryStatusError:
             return BLUESTSDK_LOCALIZE(@"Error",nil);
     }//switch

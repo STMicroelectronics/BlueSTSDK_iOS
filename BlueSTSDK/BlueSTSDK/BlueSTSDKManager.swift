@@ -173,15 +173,13 @@ import Foundation
             return
         }
         
-        var currentMap = mNodeFeatures[nodeId]
-        if(currentMap == nil){
-            currentMap = (BlueSTSDKBoardFeatureMap.defaultMaskToFeatureMap )
-            mNodeFeatures[nodeId] = currentMap
-        }
+        var currentMap = mNodeFeatures[nodeId] ?? BlueSTSDKBoardFeatureMap.defaultMaskToFeatureMap
+        
         features.forEach{ (arg) in
             let (key, feature) = arg
-                currentMap?[NSNumber(value: key)] = feature
+            currentMap[NSNumber(value: key)] = feature
         }
+        mNodeFeatures[nodeId] = currentMap
     }
     
     @objc public func getFeaturesForNode(_ nodeId:UInt8)-> [NSNumber : BlueSTSDKFeature.Type]{
@@ -305,12 +303,7 @@ fileprivate extension UInt32 {
     
     var isValidFeatureMask:Bool{
         get{
-            var temp = self
-            //http://stackoverflow.com/questions/109023/how-to-count-the-number-of-set-bits-in-a-32-bit-integer
-            temp = temp - ((temp >> 1) & 0x55555555);
-            temp = (temp & 0x33333333) + ((temp >> 2) & 0x33333333);
-            temp = (((temp + (temp >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
-            return temp == 1
+            return self.nonzeroBitCount == 1
         }
     }
     

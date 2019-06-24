@@ -64,6 +64,10 @@ typedef NS_ENUM(NSInteger, BlueSTSDKFeatureBatteryStatus){
      */
     BlueSTSDKFeatureBatteryStatusCharging =0x03,
     /**
+     *  the battery is unknown
+     */
+    BlueSTSDKFeatureBatteryStatusUnknown =0x04,
+    /**
      *  error state/battery not present
      */
      BlueSTSDKFeatureBatteryStatusError =0xFF

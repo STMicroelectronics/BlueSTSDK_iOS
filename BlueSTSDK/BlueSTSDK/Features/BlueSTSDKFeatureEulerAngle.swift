@@ -28,7 +28,7 @@
 import Foundation
 
 @objc
-public class BlueSTSDKFeatureEulerAngle : BlueSTSDKFeature {
+public class BlueSTSDKFeatureEulerAngle : BlueSTSDKFeatureAutoConfigurable {
     private static let FEATURE_NAME = "Euler Angle";
     private static let FIELDS:[BlueSTSDKFeatureField] = [
         BlueSTSDKFeatureField(name: "Yaw", unit: "°", type: .float,

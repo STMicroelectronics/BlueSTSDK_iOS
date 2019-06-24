@@ -90,6 +90,5 @@
 #import "NSData+NumberConversion.h"
 
 //private header added to enable swit interaction
-#import "BlueSTSDKBleNodeDefines.h"
 #import "BlueSTSDKNodeFake.h"
 #import "BlueSTSDKNode_prv.h"

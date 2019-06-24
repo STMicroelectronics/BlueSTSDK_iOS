@@ -127,7 +127,7 @@ fileprivate extension UInt8 {
                 case 0x05:
                     return .STEVAL_BCN002V1
                 case 0x06:
-                    return .sensor_Tile_101
+                    return .sensor_Tile_Box
                 case 0x07:
                     return .discovery_IOT01A
                 case 0x80...0xFF:

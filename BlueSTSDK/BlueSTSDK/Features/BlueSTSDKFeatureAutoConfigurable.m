@@ -25,6 +25,7 @@
  *
  ******************************************************************************/
 
+#import "BlueSTSDKDebug.h"
 #import "BlueSTSDKFeature_prv.h"
 #import "BlueSTSDKFeatureAutoConfigurable.h"
 #import "../Util/NSData+NumberConversion.h"
@@ -47,6 +48,10 @@
  */
 static dispatch_queue_t sNotificationQueue;
 
+@interface BlueSTSDKFeatureAutoConfigurable(BlueSTSDKDebugOutputDelegate) <BlueSTSDKDebugOutputDelegate>
+
+@end
+
 @implementation BlueSTSDKFeatureAutoConfigurable{
     /**
      *  Set of delegate where notify the change on the confuguration
@@ -61,7 +66,6 @@ static dispatch_queue_t sNotificationQueue;
         sNotificationQueue = dispatch_queue_create("BlueSTSDKFeatureAutoConfigurable",
                                                    DISPATCH_QUEUE_CONCURRENT);
     });
-    
     _isConfigured=NO;
     mFeatureAutoConfDelegates = [NSMutableSet set];
     return self;
@@ -112,7 +116,17 @@ static dispatch_queue_t sNotificationQueue;
 }
 
 -(BOOL) startAutoConfiguration{
-    BOOL sendMessage = [self sendCommand:FEATURE_COMMAND_START_CONFIGURATION data:nil];
+    BOOL sendMessage;
+    BlueSTSDKNode *node = self.parentNode;
+
+    if(node.type == BlueSTSDKNodeTypeSensor_Tile_Box){
+        sendMessage = true;
+        BlueSTSDKDebug *console = node.debugConsole;
+        [console addDebugOutputDelegate:self];
+        [console writeMessage:@"startMagnCalib"];
+    }else{
+     sendMessage = [self sendCommand:FEATURE_COMMAND_START_CONFIGURATION data:nil];
+    }
     if(sendMessage)
         [self notifyAutoConfStart];
     return sendMessage;
@@ -167,3 +181,85 @@ static dispatch_queue_t sNotificationQueue;
 }//parseCommandResponseWithTimestamp
 
 @end
+
+@implementation BlueSTSDKFeatureAutoConfigurable(BlueSTSDKDebugOutputDelegate)
+
+    - (void)debug:(nonnull BlueSTSDKDebug *)debug didStdOutReceived:(nonnull NSString *)msg {
+        NSError *error;
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"magnCalibStatus (\\d+)"
+                                                                               options:0
+                                                                                 error:&error];
+        if(error!=nil){
+            return;
+        }
+        NSArray *matches = [regex matchesInString:msg
+                                          options:0
+                                            range:NSMakeRange(0, [msg length])];
+        
+        NSTextCheckingResult *match = [matches firstObject];
+        if(match == nil){
+            return ;
+        }
+        [debug removeDebugOutputDelegate:self];
+        NSRange statuRange = [match rangeAtIndex:1];
+        uint8_t status = (uint8_t )([msg substringWithRange:statuRange].intValue);
+        NSData *statusData = [ NSData dataWithBytes:&status length:1];
+        [self parseCommandResponseWithTimestamp:0 commandType:FEATURE_COMMAND_GET_CONFIGURATION_STATUS data:statusData];
+        
+        
+    }
+
+- (void)debug:(nonnull BlueSTSDKDebug *)debug didStdErrReceived:(nonnull NSString *)msg {
+}
+
+- (void)debug:(nonnull BlueSTSDKDebug *)debug didStdInSend:(nonnull NSString *)msg error:(nullable NSError *)error {
+    
+}
+
+@end
+
+
+/*
+ private class CalibrationSensorTileBox implements Debug.DebugOutputListener{
+ 
+ private Debug mConsole;
+ private final Pattern STATUS_PARSER = Pattern.compile("magnCalibStatus (\\d+)");
+ 
+ public CalibrationSensorTileBox(Debug console){
+ mConsole = console;
+ 
+ }
+ 
+ void startCalibration(){
+ mConsole.addDebugOutputListener(this);
+ mConsole.write("startMagnCalib");
+ }
+ 
+ void getCalibrationStatus(){
+ mConsole.write("getMagnCalibStatus");
+ }
+ 
+ @Override
+ public void onStdOutReceived(@NonNull Debug debug, @NonNull String message) {
+ Matcher matcher = STATUS_PARSER.matcher(message);
+ if (!matcher.matches())
+ return;
+ mConsole.removeDebugOutputListener(this);
+ byte calibStatus = Byte.parseByte(matcher.group(1));
+ parseCommandResponse(0,FEATURE_COMMAND_GET_CONFIGURATION_STATUS,
+ new byte[]{calibStatus});
+ }
+ 
+ @Override
+ public void onStdErrReceived(@NonNull Debug debug, @NonNull String message) {
+ 
+ }
+ 
+ @Override
+ public void onStdInSent(@NonNull Debug debug, @NonNull String message, boolean writeResult) {
+ 
+ }
+ }
+ */
+                                                                                
+                                                                                

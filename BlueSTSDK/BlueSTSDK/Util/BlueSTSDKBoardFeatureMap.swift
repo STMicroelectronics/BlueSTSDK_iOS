@@ -27,8 +27,17 @@
 
 import Foundation
 
+/**
+ *  For each board type contains a map for of pair ( {@link featureMask_t},
+ *  {@link BlueSTSDKFeature } class )
+ */
 internal struct BlueSTSDKBoardFeatureMap{
     
+    /**
+     * if the board doesn't have a specific device id the map returned by this feature will be used
+     *
+     * @return the default map used to convert the bit in the advertise mask into feature.
+     */
     static let defaultMaskToFeatureMap = [
         //NSNumber(0x80000000:
         NSNumber(0x40000000) : BlueSTSDKFeatureAudioADPCMSync.self,
@@ -65,11 +74,11 @@ internal struct BlueSTSDKBoardFeatureMap{
     ];
     
     
-    private static let SENSOR_TILE_101_FEATURE_MASK = [
+    private static let SENSOR_TILE_BOX_FEATURE_MASK = [
         NSNumber(value: UInt32(0x80000000)) : BlueSTSDKFeatureFFTAmplitude.self,
         NSNumber(0x40000000) : BlueSTSDKFeatureAudioADPCMSync.self,
         NSNumber(0x20000000) : BlueSTSDKFeatureSwitch.self,
-        NSNumber(0x10000000) : BlueSTSDKFeatureAccelerationNorm.self,
+        NSNumber(0x10000000) : BlueSTSDKFeatureMemsNorm.self,
         NSNumber(0x08000000) : BlueSTSDKFeatureAudioADPCM.self,
         NSNumber(0x04000000) : BlueSTSDKFeatureMicLevel.self, //Mic Level
         NSNumber(0x02000000) : BlueSTSDKFeatureProximity.self, //proximity
@@ -82,13 +91,13 @@ internal struct BlueSTSDKBoardFeatureMap{
         NSNumber(0x00040000) : BlueSTSDKFeatureTemperature.self, //temperature
         NSNumber(0x00020000) : BlueSTSDKFeatureBattery.self,
         NSNumber(0x00010000) : BlueSTSDKFeatureTemperature.self, //temperature
-        NSNumber(0x00008000) : BlueSTSDKFeatureGyroscopeNorm.self,
+        // NSNumber(0x00008000) :
         NSNumber(0x00004000) : BlueSTSDKFeatureEulerAngle.self,
         //NSNumber(0x00002000:
         NSNumber(0x00001000) : BlueSTSDKFeatureSDLogging.self,
-        NSNumber(0x00000800) : BlueSTSDKFeatureMagnetometerNorm.self,
-        NSNumber(0x00000400) : BlueSTSDKFeatureAccelerometerEvent.self, //Free fall detection
-        NSNumber(0x00000200) : BlueSTSDKFeatureFreeFall.self, //Free fall detection
+        // NSNumber(0x00000800) :
+        NSNumber(0x00000400) : BlueSTSDKFeatureAccelerometerEvent.self,
+        NSNumber(0x00000200) : BlueSTSDKFeatureEventCounter.self,
         NSNumber(0x00000100) : BlueSTSDKFeatureMemsSensorFusionCompact.self, //Mems sensor fusion compact
         NSNumber(0x00000080) : BlueSTSDKFeatureMemsSensorFusion.self, //Mems sensor fusion
         NSNumber(0x00000040) : BlueSTSDKFeatureCompass.self,
@@ -108,8 +117,14 @@ internal struct BlueSTSDKBoardFeatureMap{
     ];
     
     
+    /**
+     *  return a map of type <boardId, map<{@link featureMask_t}, {@link BlueSTSDKFeature }> >
+     *  from this data you can understand what class will be manage a specific characteristics
+     *
+     *  @return map needed for build a feature class that manage a specific characteristics
+     */
     static var boardFeatureMap = [
-        NSNumber(0x06): SENSOR_TILE_101_FEATURE_MASK,
+        NSNumber(0x06): SENSOR_TILE_BOX_FEATURE_MASK,
         NSNumber(0x81): bleStarNucleoFeatureMap
     ];
     

@@ -25,9 +25,8 @@
  *
  ******************************************************************************/
 
+#import "BlueSTSDK/BlueSTSDK-Swift.h"
 #import "BlueSTSDKDebug_prv.h"
-
-#import "Util/BlueSTSDKBleNodeDefines.h"
 
 #define MAX_MESSAGE_LENGTH 20
 
@@ -202,7 +201,7 @@ static dispatch_queue_t sNotificationQueue;
     if(_consoleDelegates.count == 0)
         return;
     //if the write comes from an our characteristics
-    if([termChar.UUID isEqual:BlueSTSDKServiceDebug.termUuid]){
+    if(termChar.isDebugTermCharacteristic){
         //remove the message from the queue and sent the callback
         NSData *sentMsg=nil;
        
@@ -236,7 +235,7 @@ static dispatch_queue_t sNotificationQueue;
     if(_consoleDelegates.count==0)
         return;
     NSString *temp = [[NSString alloc]initWithData:termChar.value encoding:NSISOLatin1StringEncoding];
-    if([termChar.UUID isEqual:BlueSTSDKServiceDebug.termUuid]){
+    if(termChar.isDebugTermCharacteristic){
         @synchronized (_consoleDelegates) {
             for(id<BlueSTSDKDebugOutputDelegate> delegate in _consoleDelegates){
                 dispatch_async(sNotificationQueue,^{
@@ -244,7 +243,7 @@ static dispatch_queue_t sNotificationQueue;
                 });
             }//for
         }//sync
-    }else if([termChar.UUID isEqual:BlueSTSDKServiceDebug.stdErrUuid]){
+    }else if(termChar.isDebugErrorCharacteristic){
         @synchronized (_consoleDelegates) {
             for(id<BlueSTSDKDebugOutputDelegate> delegate in _consoleDelegates){
                 dispatch_async(sNotificationQueue,^{
