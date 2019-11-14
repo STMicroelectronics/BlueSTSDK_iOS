@@ -37,6 +37,9 @@ public class BlueSTSDKFeatureActivity : BlueSTSDKFeature {
         BlueSTSDKFeatureField(name: "Date", unit: nil, type: .double,
                               min: NSNumber(value: 0),
                               max: NSNumber(value: Double.infinity)),
+        BlueSTSDKFeatureField(name: "AlgorithmId", unit: nil, type: .uInt8,
+                              min: NSNumber(value: 0),
+                              max: NSNumber(value: UInt8.max)),
     ];
     
     public override func getFieldsDesc() -> [BlueSTSDKFeatureField] {

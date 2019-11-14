@@ -28,49 +28,77 @@
 import Foundation
 
 @objc
-public class BlueSTSDKFeatureAudioSceneCalssification : BlueSTSDKFeature {
+public class BlueSTSDKFeatureAudioCalssification : BlueSTSDKFeature {
     private static let FEATURE_NAME = "Audio Scene Classification";
     private static let FIELDS:[BlueSTSDKFeatureField] = [
         BlueSTSDKFeatureField(name: "SceneType", unit: nil, type: .uInt8,
-                              min: NSNumber(value: 0), max: NSNumber(value:3))
+                              min: NSNumber(value: 0), max: NSNumber(value:4)),
+        BlueSTSDKFeatureField(name: "Algorithm", unit: nil, type: .uInt8,
+        min: NSNumber(value: 0), max: NSNumber(value:0xFF))
         ];
     
     public override func getFieldsDesc() -> [BlueSTSDKFeatureField] {
-        return BlueSTSDKFeatureAudioSceneCalssification.FIELDS;
+        return BlueSTSDKFeatureAudioCalssification.FIELDS;
     }
     
-    public static func getScene(_ sample:BlueSTSDKFeatureSample)->Scene{
+    public static func getAudioScene(_ sample:BlueSTSDKFeatureSample)->AudioClass{
         guard sample.data.count > 0 else {
-            return Scene.Unknown
+            return AudioClass.Unknown
         }
         let rawValue = sample.data[0].uint8Value
-        return Scene.init(rawValue: rawValue) ?? Scene.Unknown
+        return AudioClass.init(rawValue: rawValue) ?? AudioClass.Unknown
     }
     
-    public enum Scene : UInt8{
+    public static func getAlgorythmType(_ sample:BlueSTSDKFeatureSample) -> UInt8{
+        guard sample.data.count > 1 else {
+            return 0
+        }
+        return sample.data[1].uint8Value
+    }
+    
+    public enum AudioClass : UInt8{
         public typealias RawValue = UInt8
         case Unknown = 0xFF
         case Indoor = 0x00
         case Outdoor = 0x01
         case InVehicle = 0x02
+        case BabyIsCrying = 0x03
     }
     
     public override init(whitNode node: BlueSTSDKNode) {
-        super.init(whitNode: node, name: BlueSTSDKFeatureAudioSceneCalssification.FEATURE_NAME)
+        super.init(whitNode: node, name: BlueSTSDKFeatureAudioCalssification.FEATURE_NAME)
+    }
+    
+    private func extractAudioClass(_ timestamp: UInt64, _ data: Data,_ offset: Int)  -> BlueSTSDKExtractResult{
+        let sample = BlueSTSDKFeatureSample(timestamp: timestamp,
+                                            data: [ NSNumber(value: data[offset]) ])
+        
+        return BlueSTSDKExtractResult(whitSample: sample, nReadData: 1)
+    }
+    
+    private func extractAudioClassAndAlgo(_ timestamp: UInt64, _ data: Data,_ offset: Int) -> BlueSTSDKExtractResult{
+        let sample = BlueSTSDKFeatureSample(timestamp: timestamp,
+                                            data: [
+                                                NSNumber(value: data[offset]),
+                                                NSNumber(value: data[offset+1])
+        ])
+        return BlueSTSDKExtractResult(whitSample: sample, nReadData: 2)
     }
     
     public override func extractData(_ timestamp: UInt64, data: Data,
                                      dataOffset offset: UInt32) -> BlueSTSDKExtractResult {
         let intOffset = Int(offset)
-        if((data.count-intOffset) < 1){
+        let availableData = (data.count-intOffset)
+        if( availableData < 1){
             NSException(name: NSExceptionName(rawValue: "Invalid Audio Scene Classification data "),
                         reason: "There are no bytes available to read",
                         userInfo: nil).raise()
             return BlueSTSDKExtractResult(whitSample: nil, nReadData: 0)
         }
-        let sample = BlueSTSDKFeatureSample(timestamp: timestamp,
-                                            data: [NSNumber(value: data[intOffset])])
-        
-        return BlueSTSDKExtractResult(whitSample: sample, nReadData: 1)
+        if(availableData == 1) {
+            return extractAudioClass(timestamp,data,intOffset)
+        }else{
+            return extractAudioClassAndAlgo(timestamp,data,intOffset)
+        }
     }
 }

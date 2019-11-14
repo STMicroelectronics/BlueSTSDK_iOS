@@ -116,17 +116,16 @@ static dispatch_queue_t sNotificationQueue;
 }
 
 -(BOOL) startAutoConfiguration{
-    BOOL sendMessage;
+    BOOL sendMessage = [self sendCommand:FEATURE_COMMAND_START_CONFIGURATION data:nil];
     BlueSTSDKNode *node = self.parentNode;
 
-    if(node.type == BlueSTSDKNodeTypeSensor_Tile_Box){
+    if(!sendMessage && node.type == BlueSTSDKNodeTypeSensor_Tile_Box){
         sendMessage = true;
         BlueSTSDKDebug *console = node.debugConsole;
         [console addDebugOutputDelegate:self];
         [console writeMessage:@"startMagnCalib"];
-    }else{
-     sendMessage = [self sendCommand:FEATURE_COMMAND_START_CONFIGURATION data:nil];
     }
+    
     if(sendMessage)
         [self notifyAutoConfStart];
     return sendMessage;

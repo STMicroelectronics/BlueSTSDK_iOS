@@ -26,6 +26,7 @@
  ******************************************************************************/
 
 import Foundation
+import UIKit
 
 public extension BlueSTSDKDebug{
     private static let DATA_CHUNK_SIZE = 20
@@ -35,7 +36,7 @@ public extension BlueSTSDKDebug{
      * it is splitted in multiple write that are done without waiting an answer.
     */
     func writeWithoutQueue(_ msg:String){
-        if let data = msg.data(using: .isoLatin1){
+        if let data = BlueSTSDKDebug.stringToData(msg){
             var endOffset = min(BlueSTSDKDebug.DATA_CHUNK_SIZE,data.count)
             var startOffset = 0
             while(startOffset<endOffset){
@@ -45,6 +46,14 @@ public extension BlueSTSDKDebug{
             }
         }
         
+    }
+    
+    @objc static func stringToData(_ str:String) -> Data?{
+        return str.data(using: .isoLatin1)
+    }
+    
+    @objc static func dataToString(_ data:Data) -> String?{
+        return String(bytes: data, encoding: .isoLatin1)
     }
     
 }

@@ -67,6 +67,7 @@
  *  @return object that contains the data
  */
 +(instancetype _Nonnull ) sampleWithTimestamp:(uint64_t)timestamp data:(NSArray<NSNumber*>* _Nonnull)data;
++(instancetype _Nonnull ) sampleWithData:(NSArray<NSNumber*>* _Nonnull)data;
 
 /**
  *  initialize a BlueSTSDKFeatureSample
@@ -77,6 +78,8 @@
  *  @return object that contains the data
  */
 -(instancetype _Nonnull) initWhitTimestamp: (uint64_t)timestamp data:(NSArray<NSNumber*>* _Nonnull)data;
+
+-(instancetype _Nonnull) initWhitData:(NSArray<NSNumber*>* _Nonnull)data;
 
 @end
 

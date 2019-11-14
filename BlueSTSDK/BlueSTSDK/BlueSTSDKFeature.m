@@ -41,6 +41,10 @@
     return [[BlueSTSDKFeatureSample alloc] initWhitTimestamp: timestamp data:data];
 }
 
++(instancetype) sampleWithData:(NSArray<NSNumber*> *)data{
+    return [[BlueSTSDKFeatureSample alloc] initWhitData:data];
+}
+
 -(instancetype) initWhitTimestamp: (uint64_t)timestamp data:(NSArray<NSNumber*> *)data{
     self = [super init];
     _timestamp=timestamp;
@@ -48,6 +52,16 @@
     _notificaitonTime = [NSDate date];
     return self;
 }
+
+-(instancetype _Nonnull) initWhitData:(NSArray<NSNumber*>* _Nonnull)data{
+    self = [super init];
+    _notificaitonTime = [NSDate date];
+    _timestamp=(uint64_t)_notificaitonTime.timeIntervalSince1970;
+    _data=data;
+    
+    return self;
+}
+
 
 @end
 
@@ -175,15 +189,18 @@ static NSNumberFormatter *sFormatter;
     BlueSTSDKExtractResult *temp = [self extractData:timestamp data:data dataOffset:offset];
     if(temp.sample!=nil){
         self.lastSample = temp.sample;
-        [self notifyUpdateWithSample:temp.sample];
+        if(self.enabled){
+            [self notifyUpdateWithSample:temp.sample];
+        }
     }
-    if(temp.nReadBytes!=data.length)
-        [self logFeatureUpdate:[data subdataWithRange:NSMakeRange(offset, temp.nReadBytes)]
-                    sample:temp.sample];
-    else
-        [self logFeatureUpdate:data
+    if(self.enabled){
+        if(temp.nReadBytes!=data.length)
+            [self logFeatureUpdate:[data subdataWithRange:NSMakeRange(offset, temp.nReadBytes)]
                         sample:temp.sample];
-
+        else
+            [self logFeatureUpdate:data
+                            sample:temp.sample];
+    }
 
     return temp.nReadBytes;
 }//update

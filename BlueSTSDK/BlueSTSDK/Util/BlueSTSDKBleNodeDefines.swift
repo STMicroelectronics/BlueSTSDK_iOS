@@ -92,9 +92,9 @@ extension CBCharacteristic {
     }
     
     private static let EXTENDED_FEATURE_MAP = [
-        //buildExtendedFeatureCharacteristics(prefix: 0x01) : [], //opus
-        //buildExtendedFeatureCharacteristics(prefix: 0x02) : [], //opus
-        buildExtendedFeatureCharacteristics(prefix: 0x03) : [BlueSTSDKFeatureAudioSceneCalssification.self],
+        buildExtendedFeatureCharacteristics(prefix: 0x01) : [BlueSTSDKFeatureAudioOpus.self],
+        buildExtendedFeatureCharacteristics(prefix: 0x02) : [BlueSTSDKFeatureAudioOpusConf.self],
+        buildExtendedFeatureCharacteristics(prefix: 0x03) : [BlueSTSDKFeatureAudioCalssification.self],
         buildExtendedFeatureCharacteristics(prefix: 0x04) : [BlueSTSDKFeatureAILogging.self],
         buildExtendedFeatureCharacteristics(prefix: 0x05) : [BlueSTSDKFeatureFFTAmplitude.self],
         buildExtendedFeatureCharacteristics(prefix: 0x06) : [BlueSTSDKFeatureMotorTimeParameters.self],

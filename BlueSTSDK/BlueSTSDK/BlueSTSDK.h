@@ -59,8 +59,6 @@
 #import "BlueSTSDKRemoteFeatureTemperature.h"
 #import "BlueSTSDKRemoteFeatureSwitch.h"
 #import "BlueSTSDKRemoteFeaturePressure.h"
-#import "BlueSTSDKFeatureAudioADPCM.h"
-#import "BlueSTSDKFeatureAudioADPCMSync.h"
 #import "BlueSTSDKFeatureCompass.h"
 #import "BlueSTSDKFeatureBeamForming.h"
 #import "BlueSTSDKFeatureMotionIntensity.h"

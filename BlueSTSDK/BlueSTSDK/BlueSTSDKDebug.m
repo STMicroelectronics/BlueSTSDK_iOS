@@ -117,7 +117,7 @@ static dispatch_queue_t sNotificationQueue;
 }
 
 -(NSUInteger) writeMessage:(NSString*)msg{
-    NSData *tempData = [msg dataUsingEncoding:NSISOLatin1StringEncoding];
+    NSData *tempData = [BlueSTSDKDebug stringToData:msg];
     return [self writeMessageData:tempData];
 }
 
@@ -148,7 +148,7 @@ static dispatch_queue_t sNotificationQueue;
 
 - (BOOL)writeMessageDataFast:(NSData *)data {
     mLastFastSendMsg = data;
-    NSString *sentMsgStr = [NSString stringWithUTF8String:[data bytes]];
+    NSString *sentMsgStr = [BlueSTSDKDebug dataToString:data];
     if(_parentNode.state==BlueSTSDKNodeStateConnected) {
         [mPeriph writeValue:data forCharacteristic:mTermChar type:CBCharacteristicWriteWithoutResponse];
         @synchronized (_consoleDelegates) {
@@ -218,7 +218,7 @@ static dispatch_queue_t sNotificationQueue;
         if(sentMsg==nil)
             return;
          
-        NSString *sentMsgStr = [NSString stringWithUTF8String:[sentMsg bytes]];
+        NSString *sentMsgStr = [BlueSTSDKDebug dataToString:sentMsg];
         if(_consoleDelegates.count==0)
             return;
         @synchronized (_consoleDelegates) {
@@ -234,7 +234,7 @@ static dispatch_queue_t sNotificationQueue;
 -(void)receiveCharacteristicsUpdate:(CBCharacteristic*)termChar{
     if(_consoleDelegates.count==0)
         return;
-    NSString *temp = [[NSString alloc]initWithData:termChar.value encoding:NSISOLatin1StringEncoding];
+    NSString *temp = [BlueSTSDKDebug dataToString:termChar.value];
     if(termChar.isDebugTermCharacteristic){
         @synchronized (_consoleDelegates) {
             for(id<BlueSTSDKDebugOutputDelegate> delegate in _consoleDelegates){

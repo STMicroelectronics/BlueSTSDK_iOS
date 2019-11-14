@@ -83,7 +83,7 @@
 /**
  *  set of delegate where notify the feature update
  */
-@property(readonly,atomic,retain) NSMutableSet * _Nonnull featureDelegates;
+@property(readonly,atomic,retain) NSMutableSet<id<BlueSTSDKFeatureDelegate>> * _Nonnull featureDelegates;
 
 /**
  * @protected

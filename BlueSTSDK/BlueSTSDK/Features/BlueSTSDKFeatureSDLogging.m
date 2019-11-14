@@ -191,8 +191,6 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     [rawData getBytes:&featureMask range:NSMakeRange(offset+1, 4)];
     uint32_t logInterval;
     [rawData getBytes:&logInterval range:NSMakeRange(offset+5, 4)];
-    NSLog(@"logInterval: %d",logInterval);
-    NSLog(@"data: %@",rawData);
     NSArray *data = @[@(isLogEnable),@(featureMask),@(logInterval)];
     BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:9];

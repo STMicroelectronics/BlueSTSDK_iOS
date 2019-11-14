@@ -137,38 +137,6 @@ static dispatch_queue_t sNotificationQueue;
 
 }
 
-/**
- * from the bitmask in the advertise message and the dictionary that map a 
- * bitmask to a feature class initialize the mAvvailableFeature and the
- * mMaskToFeature array
- *
- *  @param mask           bitmask from the advertise, tell us what feature are present in the node
- *  @param maskFeatureMap map that connect a bit position with a feature class, 
- *   if null the method don't do anything
- */
--(void)buildAvailableFeatures:(featureMask_t)mask maskFeatureMap:(NSDictionary*)maskFeatureMap{
-    uint32_t nBit = 8*sizeof(featureMask_t);
-    if(maskFeatureMap==nil)
-        return;
-    for (uint32_t i=0; i<nBit; i++) {
-        featureMask_t test = 1<<i;
-        if((mask & test)!=0){ //we select a bit in the mask
-            NSNumber *temp = @(test);
-            Class featureClass = maskFeatureMap[temp];
-            if(featureClass!=nil){ //if exist a feature link to that bit
-                BlueSTSDKFeature *f = [self buildFeatureFromClass:featureClass];
-                if(f!=nil){
-                    [mAvailableFeature addObject:f];
-                    mMaskToFeature[temp] = f;
-                }else{
-                    NSLog(@"Impossible build the feature %@",[featureClass description]);
-                }//if f
-            }// if featureClass
-        }//if mask
-    }//for
-}
-
-
 -(instancetype)init{
     self = [super init];
     static dispatch_once_t onceToken;
@@ -386,6 +354,8 @@ static dispatch_queue_t sNotificationQueue;
     //we close the connection so we remove all the notify characteristics
     [mNotifyFeature removeAllObjects];
     
+    [mAvailableFeature removeAllObjects];
+    
     [[BlueSTSDKManager sharedInstance]disconnect:mPeripheral];
 }//disconnect
 
@@ -469,6 +439,9 @@ static dispatch_queue_t sNotificationQueue;
 -(BOOL) enableNotification:(BlueSTSDKFeature*)feature{
    // NSLog(@"Enable: %@",feature.name);
     if(![feature enabled])
+        return false;
+    
+    if(![self isConnected])
         return false;
     
     if([self isEnableNotification:feature])
@@ -627,7 +600,7 @@ static dispatch_queue_t sNotificationQueue;
  */
 - (void)peripheral:(CBPeripheral *)peripheral
 didDiscoverServices:(NSError *)error{
-    
+    //[NSThread sleepForTimeInterval:1];
     if([self isConnected]) //we already run this method one time
         return;
     
@@ -711,10 +684,13 @@ didDiscoverServices:(NSError *)error{
             if(featureClass!=nil && [self isExportingFeature:featureClass]){
                 BlueSTSDKFeature *f = [self buildFeatureFromClass:featureClass];
                 if(f!=nil){
-                    [mAvailableFeature addObject:f];
+
                     [charFeature addObject:f];
                     mMaskToFeature[key] = f;
-                    [f setEnabled:true];
+                    if([self isExportingFeature:featureClass]){
+                        [mAvailableFeature addObject:f];
+                        [f setEnabled:true];
+                    }
                 }//if
             }//if feature class
         }//if
@@ -806,20 +782,25 @@ didDiscoverCharacteristicsForService:(CBService *)service
     
     [mCharDiscoverServiceReq removeObject:service];
     if(mCharDiscoverServiceReq.count == 0){
-        if(mFeatureCommand!=nil){
-            mFeatureCommandNotifyEnable=false;
-           [mPeripheral setNotifyValue:YES forCharacteristic:mFeatureCommand];
-        }
-        [self updateNodeStatus:BlueSTSDKNodeStateConnected];
-    }//if
-    
-    /*
+        // before fire the connected state, wait a second if a didModifyServices callback arrive and rebuild all the
+        // feature/characteristics mapping
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(NSEC_PER_SEC)), sNotificationQueue, ^{
+            if(![self isConnected]){
+                if(self->mFeatureCommand!=nil){
+                    self->mFeatureCommandNotifyEnable=false;
+                    [self->mPeripheral setNotifyValue:YES forCharacteristic:self->mFeatureCommand];
+                }
+                [self updateNodeStatus:BlueSTSDKNodeStateConnected];
+            }//if
+        });
+    }
+
     //debug
-    NSLog(@"Know Char:");
+    /*NSLog(@"Know Char:");
     for (BlueSTSDKCharacteristic *temp in mCharFeatureMap) {
         NSLog(@"Add Char %@",temp.characteristic.UUID.UUIDString);
-    }
-    */
+    }*/
+    
 }
 
 /**
@@ -957,23 +938,29 @@ didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
         dispatch_time_t when = dispatch_time(DISPATCH_TIME_NOW,
                 (int64_t)(RETRAY_ENABLE_NOTIFICATION_DELAY) * NSEC_PER_SEC);
 
-        //we reuse the queue for the notification
-        dispatch_after(when, sNotificationQueue, ^{
-            @synchronized(self->mAskForNotification){
-                //if the uuid is still there we didn't receive data ->
-                //subscribe again to the characteristics
-                if([self->mAskForNotification containsObject:characteristic.UUID]){
-                   // NSLog(@"enable: %@",characteristic.UUID.UUIDString);
-                    [self->mPeripheral setNotifyValue:YES forCharacteristic:characteristic]; //request again
-                }//if
-            }//syncronized
-        });
+        if(characteristic.isNotifying){
+            //we reuse the queue for the notification
+            dispatch_after(when, sNotificationQueue, ^{
+                @synchronized(self->mAskForNotification){
+                    //if the uuid is still there we didn't receive data ->
+                    //subscribe again to the characteristics
+                    if([self->mAskForNotification containsObject:characteristic.UUID]){
+                        [self->mPeripheral setNotifyValue:YES forCharacteristic:characteristic]; //request again
+                    }//if
+                }//syncronized
+            });
+        }
     }//if-else
 }//didUpdateNotificationStateForCharacteristic
 
 /** call if the node change its services/characteristics, just re scan the new services */
 - (void)peripheral:(CBPeripheral *)peripheral
  didModifyServices:(NSArray<CBService *> *)invalidatedServices{
+    //remove all the feature char object since it will be reboud with the new scanning
+    [mCharFeatureMap removeAllObjects];
+    [mAvailableFeature removeAllObjects];
+    [mNotifyFeature removeAllObjects];
+    
     [peripheral discoverServices:nil];
 }
 

@@ -81,7 +81,7 @@ internal struct BlueSTSDKBoardFeatureMap{
         NSNumber(0x10000000) : BlueSTSDKFeatureMemsNorm.self,
         NSNumber(0x08000000) : BlueSTSDKFeatureAudioADPCM.self,
         NSNumber(0x04000000) : BlueSTSDKFeatureMicLevel.self, //Mic Level
-        NSNumber(0x02000000) : BlueSTSDKFeatureProximity.self, //proximity
+        NSNumber(0x02000000) : BlueSTSDKFeatureAudioCalssification.self, //audio scene classification
         NSNumber(0x01000000) : BlueSTSDKFeatureLuminosity.self, //luminosity
         NSNumber(0x00800000) : BlueSTSDKFeatureAcceleration.self, //acc
         NSNumber(0x00400000) : BlueSTSDKFeatureGyroscope.self, //gyo

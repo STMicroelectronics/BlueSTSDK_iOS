@@ -99,7 +99,7 @@ static NSArray<BlueSTSDKFeatureField*> *sFieldDesc;
     int16_t temp= [rawData extractLeInt16FromOffset:offset];
     
     NSArray *data = @[@(temp / 10.0f)];
-    BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample sampleWithTimestamp:timestamp data:data ];
+    BlueSTSDKFeatureSample *sample = [BlueSTSDKFeatureSample  sampleWithTimestamp:timestamp data:data ];
     return [BlueSTSDKExtractResult resutlWithSample:sample nReadData:2];
 }
 
