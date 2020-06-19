@@ -104,6 +104,10 @@ public class BlueSTSDKFeatureActivity : BlueSTSDKFeature {
          */
         case stairs = 0x07
         /**
+         * the adult is in the car
+         */
+        case adultInCar = 0x08
+        /**
          *  unknown activity
          */
         case error = 0xFF

@@ -42,11 +42,30 @@ Currently, bits are mapped in the following way:
 
 |Bit|15|14|13|12|11|10|9|8|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|Feature|CO Sensor|STM32WB Thread Reboot bit | STM32WB OTA Reboot bit|SD Logging|Beam forming|AccEvent|FreeFall|Sensor Fusion Compact|
+|Feature|CO Sensor|STM32WB Reboot bit | STM32WB OTA Reboot bit|SD Logging|Beam forming|AccEvent|FreeFall|Sensor Fusion Compact|
 
 |Bit|7|6|5|4|3|2|1|0|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 |Feature|Sensor Fusion|Motion intensity|Compass|Activity|Carry Position|ProximityGesture|MemsGesture|Pedometer|
+
+a custom bitmask is defined for the SensorTile.box board:
+
+|Bit|31|30|29|28|27|26|25|24|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|Feature|FFT Amplitude|ADPCM Sync|Switch|MEMS Norm|ADPC Audio|MicLevel|Audio Classification|RFU|
+
+|Bit|23|22|21|20|19|18|17|16|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|Feature|Acc|Gyro|Mag|Pressure|Humidity|Temperature|Battery|Second Temperature|
+
+|Bit|15|14|13|12|11|10|9|8|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|Feature|RFU|Euler Angle|RFU|SD Logging|RFU|AccEvent|EventCounter|Sensor Fusion Compact|
+
+|Bit|7|6|5|4|3|2|1|0|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|Feature|Sensor Fusion|Motion intensity|Compass|Activity|Carry Position|RFU|MemsGesture|Pedometer|
+
 
 You can use one of the RFU bits or define a new device and decide how to map the feature. 
 To see how the data is exported by pre-defined features, consult the export method [<code> Feature.ExtractResult Feature.extractData(long,byte[],int)</code>](https://stmicroelectronics.github.io/BlueSTSDK_Android/javadoc/com/st/BlueSTSDK/Feature.html#extractData-long-byte:A-int-).  within the feature class definition.

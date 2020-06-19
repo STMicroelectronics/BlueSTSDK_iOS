@@ -106,6 +106,8 @@ extension CBCharacteristic {
         //buildExtendedFeatureCharacteristics(prefix: 0x0C) : [],
         buildExtendedFeatureCharacteristics(prefix: 0x0D) : [BlueSTSDKFeatureEulerAngle.self],
         buildExtendedFeatureCharacteristics(prefix: 0x0E) : [BlueSTSDKFeatureFitnessActivity.self],
+        buildExtendedFeatureCharacteristics(prefix: 0x0F) : [BlueSTSDKFeatureMachineLearningCore.self],
+        buildExtendedFeatureCharacteristics(prefix: 0x10) : [BlueSTSDKFeatureFiniteStateMachine.self]
     ]
     
     var extendedFeature:[BlueSTSDKFeature.Type]?{
