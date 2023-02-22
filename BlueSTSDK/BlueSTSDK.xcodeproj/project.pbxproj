@@ -785,9 +785,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 665242061B0B1BB100931F93 /* Build configuration list for PBXNativeTarget "BlueSTSDK" */;
 			buildPhases = (
+				665241ED1B0B1BB100931F93 /* Headers */,
 				665241EB1B0B1BB100931F93 /* Sources */,
 				665241EC1B0B1BB100931F93 /* Frameworks */,
-				665241ED1B0B1BB100931F93 /* Headers */,
 				665241EE1B0B1BB100931F93 /* Resources */,
 				6642E69C23478AA600F44DF7 /* CopyFiles */,
 			);
