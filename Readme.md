@@ -10,7 +10,7 @@ The SDK is used in different application as:
 To clone the repository:
 
 ```Shell
-https://github.com/STMicroelectronics/BlueSTSDK_iOS.git
+git clone https://github.com/STMicroelectronics/BlueSTSDK_iOS.git
 ```
 
 ## Sample app
