@@ -142,120 +142,50 @@ If available, the configuration service must have the UUID <code>00000000-000F-1
 - <code>00000001-000F-11e1-ac36-0002a5d5c51b</code> (Read/Write/Notify): if available it is used to access the board configuration register that can be modified using the [<code>BlueSTSDKConfigControl</code>](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_config_control.html) class.
 
 ### Example
-The SDK is compatible with different ST firmware as:
- - [FP-SNS-MOTENV1](http://www.st.com/content/st_com/en/products/embedded-software/mcus-embedded-software/stm32-embedded-software/stm32-ode-function-pack-sw/fp-sns-motenv1.html): STM32 ODE function pack for IoT node with BLE connectivity and environmental and motion sensors
- - [FP-SNS-ALLMEMS1](http://www.st.com/content/st_com/en/products/embedded-software/mcus-embedded-software/stm32-embedded-software/stm32-ode-function-pack-sw/fp-sns-allmems1.html): STM32 ODE function pack for IoT node with BLE connectivity, digital microphone, environmental and motion sensors
- - [FP-SNS-FLIGHT1](http://www.st.com/content/st_com/en/products/embedded-software/mcus-embedded-software/stm32-embedded-software/stm32-ode-function-pack-sw/fp-sns-flight1.html): STM32 ODE function pack for IoT node with NFC, BLE connectivity and environmental, motion and time-of-flight sensors
- - [FP-NET-BLESTAR1](http://www.st.com/content/st_com/en/products/embedded-software/mcus-embedded-software/stm32-embedded-software/stm32-ode-function-pack-sw/fp-net-blestar1.html): STM32 ODE function pack for creating a BLE star network connected via Wi-Fi to IBM Watson IoT cloud
+The SDK is used in different application as:
+ - [ST BLE Sensor](https://github.com/STMicroelectronics/STBLESensor_iOS.git)
 
-And it is used in different application as:
- - [ST BlueMS](https://github.com/STMicroelectronics/STBlueMS_iOS)
- - [ST SensNet](https://github.com/STMicroelectronics/STSensNet_iOS)
+## Download the source code
 
-## How to install the library
-### As an external library
-1. Clone the repository or add it as submodule:
-  
-  ```Shell
-  $ git submodule add https://github.com/STMicroelectronics/BlueSTSDK_iOS.git BlueSTSDK
-  ```
-2. In the application project, in the general tab, file open the BlueSTSDK project file as "Linked external frameworks or library"
-3. Add the BlueSTSDK framework as enbeded library 
+To clone the repository:
 
-## Main library actors
-
-### [Manager](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_manager.html)
-This is a singleton class that starts/stops the discovery process and stores the retrieved nodes.
-Before starting the scanning process, it is also possible to define a new deviceId and to register/add new features to already-defined devices
-
-The Manager will notify a node discovery through the [<code>BlueSTSDKManagerDelegate</code>](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/com/html/protocol_blue_s_t_s_d_k_manager_delegate-p.html) delegate.
-Note that each callback is performed asynchronously by a background thread.
-
-### [Node](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_node.html)
-This class represents a remote device.
-
-From this class you can recover what features are exported by a node and read/write data from/to the device.
-The node will export all the features that are set to 1 in the advertise message. Once the device is connected, scanning and enabling of available characteristics are performed. At this point it is possible to request/send data related to the discovered features.
-
-A node notifies its RSSI (signal strength) through the [<code>BlueSTSDKNodeBleConnectionParamDelegate</code>](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html/protocol_blue_s_t_s_d_k_node_ble_connection_param_delegate-p.html) delegate.
-A node notifies any change of its state through the [<code>BlueSTSDKNodeStateDelegate</code>](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html/protocol_blue_s_t_s_d_k_node_state_delegate-p.html) delegate.
-
-A node can be in one of following states:
-- **Idle**: the node is waiting for a connection and sending an advertise message
-- **Connecting**: a connection with the node was triggered, the node is performing the discovery of device services/characteristics
-- **Connected**: connection with the node was successful. Note: this status can be fired twice if a secure connection with BLE pairing was performed
-- **Disconnecting**: ongoing disconnection, once disconnected the node goes back to the idle state
-- **Lost**: the device sent an advertise, however currently it is not reachable
-- **Unreachable**: we were connected with the node, however we lost the connection
-
-Note that each callback is performed asynchronously by a background thread.
-
-
-### [Feature](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature.html)
-This class represent data exported by the node.
-
-Each Feature has an array of  [<code>BlueSTSDKFeatureField</code>](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature_field.html) that describes the data exported.
-
-Data are received from a BLE characteristic and contained in a class  [<code>BlueSTSDKFeatureSample</code>](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature_sample.html). The user is notified of data using a listener pattern.
-
-The data exported by the Sample can be extracted using the static utility methods of the class.
-
-Note that each callback is performed asynchronously by a background thread.
-
-#### How to add a new Feature
-
- 1. Extend the class Feature: 
-    1.  Implement the getFieldDesc that usually return an static array of [<code>BlueSTSDKFeatureField</code>](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature_field.html) that that will describe the data exported by the new  feature
-    2.	Create a constructor that accepts only the node as parameter. From this constructor call the [super constructor](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature.html#a177b789571d712cb8a20d9a48fd06427), passing the feature name.
-    3.  Implement the method [<code>BlueSTSDKFeature::extractData:data:dataOffset</code>](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature.html#aca7a0947e86bcffba03ffa29bdcdd473).
-    3.  Create a utility static method that extracts the data from the [<code>BlueSTSDKFeatureSample</code>](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html/interface_blue_s_t_s_d_k_feature_sample.html) class 
- 2. Before start the scanning register the new feature
- 
-    ```Objective-C
-    // add the feature to the Nucleo device
-    uint8_t deviceId = 0x80;
-    // the feature will be mapped in the characteristic 
-    // 0x10000000-0001-11e1-ac36-0002a5d5c51b
-    NSDictionary * temp = @{
-        @0x10000000: [MyNewFeature class]
-    };
-
-    BlueSTSDKManager *manager = [BlueSTSDKManager sharedInstance];
-    [manager addFeatureForBoard:deviceId features:temp];
-
-    ```
-    Otherwise you can register the characteristics before call the connect method:
-
-    ```Objective-C
-    BlueSTSDKNode *node = ...
-    NSDictionary *map = [BlueSTSDKStdCharToFeatureMap getManageStdCharacteristics];
-    [node addExternalCharacteristics: map];
-    ```
- 
-## Docs
-You can find the documentation at this link: [Documentation](https://stmicroelectronics.github.io/BlueSTSDK_iOS/doc/html)
+```Shell
+https://github.com/STMicroelectronics/BlueSTSDK_iOS.git
+```
 
 ## License
-COPYRIGHT(c) 2015 STMicroelectronics
 
- Redistribution and use in source and binary forms, with or without modification,
- are permitted provided that the following conditions are met:
-   1. Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-   2. Redistributions in binary form must reproduce the above copyright notice,
-      this list of conditions and the following disclaimer in the documentation
-      and/or other materials provided with the distribution.
-   3. Neither the name of STMicroelectronics nor the names of its contributors
-      may be used to endorse or promote products derived from this software
-      without specific prior written permission.
+Copyright (c) 2017  STMicroelectronics – All rights reserved
+The STMicroelectronics corporate logo is a trademark of STMicroelectronics
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+- Redistributions of source code must retain the above copyright notice, this list of conditions
+and the following disclaimer.
+
+- Redistributions in binary form must reproduce the above copyright notice, this list of
+conditions and the following disclaimer in the documentation and/or other materials provided
+with the distribution.
+
+- Neither the name nor trademarks of STMicroelectronics International N.V. nor any other
+STMicroelectronics company nor the names of its contributors may be used to endorse or
+promote products derived from this software without specific prior written permission.
+
+- All of the icons, pictures, logos and other images that are provided with the source code
+in a directory whose title begins with st_images may only be used for internal purposes and
+shall not be redistributed to any third party or modified in any way.
+
+- Any redistributions in binary form shall not include the capability to display any of the
+icons, pictures, logos and other images that are provided with the source code in a directory
+whose title begins with st_images.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER
+OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+OF SUCH DAMAGE.
