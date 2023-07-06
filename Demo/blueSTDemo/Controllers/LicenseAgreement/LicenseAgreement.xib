@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LicenseAgreement" customModule="blueSTDemo" customModuleProvider="target">
+            <connections>
+                <outlet property="buttonsStackView" destination="zJy-Vz-Jto" id="wBw-cv-yIa"/>
+                <outlet property="licenseAgreementLabel" destination="RhD-z7-45j" id="AxL-vM-p4Y"/>
+                <outlet property="textDescription" destination="Zb9-e3-JsU" id="MZp-nM-pMP"/>
+                <outlet property="view" destination="23C-hf-cX5" id="iyy-9m-mvX"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="23C-hf-cX5">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wjn-Xt-EuA">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="FAx-f4-rxt">
+                            <rect key="frame" x="20" y="20" width="374" height="95"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zb9-e3-JsU">
+                                    <rect key="frame" x="0.0" y="0.0" width="374" height="0.0"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RhD-z7-45j">
+                                    <rect key="frame" x="0.0" y="32" width="374" height="0.0"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zJy-Vz-Jto">
+                                    <rect key="frame" x="0.0" y="64" width="374" height="31"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgV-nt-0r2">
+                                            <rect key="frame" x="0.0" y="0.0" width="187" height="31"/>
+                                            <state key="normal" title="Button"/>
+                                            <buttonConfiguration key="configuration" style="plain" title="I do not agree"/>
+                                            <connections>
+                                                <action selector="dontAgreeButtonTapped:" destination="-1" eventType="touchUpInside" id="o9Y-EE-joA"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ty8-Uo-2og">
+                                            <rect key="frame" x="187" y="0.0" width="187" height="31"/>
+                                            <state key="normal" title="Button"/>
+                                            <buttonConfiguration key="configuration" style="filled" title="I agree"/>
+                                            <connections>
+                                                <action selector="agreeButtonTapped:" destination="-1" eventType="touchUpInside" id="u1e-yN-fZi"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="FAx-f4-rxt" firstAttribute="bottom" secondItem="SiL-CN-yvS" secondAttribute="bottom" id="4Md-in-PIS"/>
+                        <constraint firstItem="FAx-f4-rxt" firstAttribute="trailing" secondItem="SiL-CN-yvS" secondAttribute="trailing" constant="20" id="iHk-cD-oX3"/>
+                        <constraint firstItem="FAx-f4-rxt" firstAttribute="top" secondItem="SiL-CN-yvS" secondAttribute="top" constant="20" id="tna-Wi-mQP"/>
+                        <constraint firstItem="FAx-f4-rxt" firstAttribute="leading" secondItem="SiL-CN-yvS" secondAttribute="leading" constant="20" id="vtD-wW-nhH"/>
+                        <constraint firstItem="FAx-f4-rxt" firstAttribute="width" secondItem="ilM-Bp-YSc" secondAttribute="width" constant="-40" id="zPr-6l-2Rk"/>
+                    </constraints>
+                    <viewLayoutGuide key="contentLayoutGuide" id="SiL-CN-yvS"/>
+                    <viewLayoutGuide key="frameLayoutGuide" id="ilM-Bp-YSc"/>
+                </scrollView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="siI-AC-O3i"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="wjn-Xt-EuA" firstAttribute="trailing" secondItem="siI-AC-O3i" secondAttribute="trailing" id="A5d-ua-t5V"/>
+                <constraint firstItem="wjn-Xt-EuA" firstAttribute="leading" secondItem="siI-AC-O3i" secondAttribute="leading" id="KIg-53-dO2"/>
+                <constraint firstAttribute="bottom" secondItem="wjn-Xt-EuA" secondAttribute="bottom" id="iNT-P6-SxZ"/>
+                <constraint firstItem="wjn-Xt-EuA" firstAttribute="top" secondItem="23C-hf-cX5" secondAttribute="top" id="jpX-eE-Qnt"/>
+            </constraints>
+            <point key="canvasLocation" x="100.00000000000001" y="110.49107142857143"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

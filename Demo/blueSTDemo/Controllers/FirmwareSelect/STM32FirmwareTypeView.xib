@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="STM32FirmwareTypeView" customModule="blueSTDemo" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="320"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="LXW-uN-wry">
+                    <rect key="frame" x="10" y="10" width="394" height="300"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select board Type" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U5L-L1-7kQ">
+                            <rect key="frame" x="0.0" y="0.0" width="394" height="20.5"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="20.5" id="KLy-qB-jRJ"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bet-TG-4g7">
+                            <rect key="frame" x="0.0" y="30.5" width="394" height="33"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="7xC-Kc-Dpg"/>
+                            </constraints>
+                            <segments>
+                                <segment title="STM32WBA"/>
+                                <segment title="STM32WB5x/WB3x"/>
+                                <segment title="STM32WB1x"/>
+                            </segments>
+                            <connections>
+                                <action selector="boardTypeValueChanged:" destination="iN0-l3-epB" eventType="valueChanged" id="hFY-PH-6S3"/>
+                            </connections>
+                        </segmentedControl>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sector to update" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="agQ-ZM-vwl">
+                            <rect key="frame" x="0.0" y="72.5" width="394" height="20.5"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="20.5" id="4oS-k3-heJ"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Th9-JG-Pvg">
+                            <rect key="frame" x="0.0" y="103" width="394" height="33"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="1Hd-D1-YqB"/>
+                            </constraints>
+                            <segments>
+                                <segment title="Application"/>
+                                <segment title="User conf"/>
+                                <segment title="Custom"/>
+                            </segments>
+                            <connections>
+                                <action selector="sectorValueChanged:" destination="iN0-l3-epB" eventType="valueChanged" id="OEL-kh-m7K"/>
+                            </connections>
+                        </segmentedControl>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First sector to delete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A7T-st-qhX">
+                            <rect key="frame" x="0.0" y="145" width="394" height="20.5"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="20.5" id="1ej-ZX-W58"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8Cz-2Q-Tud">
+                            <rect key="frame" x="0.0" y="175.5" width="394" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="Fl9-fY-7xG"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textField>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Number of sector to delete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfX-IL-cyo">
+                            <rect key="frame" x="0.0" y="217.5" width="394" height="20.5"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="20.5" id="cDP-Qr-xRv"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nZM-wi-obp">
+                            <rect key="frame" x="0.0" y="248" width="394" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="BFH-xW-pS4"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textField>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eGq-Zv-yxU">
+                            <rect key="frame" x="0.0" y="290" width="394" height="10"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="LXW-uN-wry" secondAttribute="trailing" constant="10" id="Hcy-fE-zgR"/>
+                <constraint firstItem="LXW-uN-wry" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="Twm-Ev-WxX"/>
+                <constraint firstItem="LXW-uN-wry" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="ktt-9O-e4d"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="LXW-uN-wry" secondAttribute="bottom" constant="10" id="mzZ-au-uCG"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="boardTypeSegmentedControl" destination="bet-TG-4g7" id="5V3-zc-svd"/>
+                <outlet property="firstSectorToDeleteLabel" destination="A7T-st-qhX" id="oo5-tX-5oZ"/>
+                <outlet property="firstSectorToDeleteTextField" destination="8Cz-2Q-Tud" id="Kn4-Go-7EB"/>
+                <outlet property="numberOfSectorToDeleteLabel" destination="dfX-IL-cyo" id="Kpu-KK-Rz4"/>
+                <outlet property="numberOfSectorToDeleteTextField" destination="nZM-wi-obp" id="rEw-Fd-bP0"/>
+                <outlet property="sectorSegmentedControl" destination="Th9-JG-Pvg" id="rp5-jM-chT"/>
+                <outlet property="sectorToUpdateLabel" destination="agQ-ZM-vwl" id="24I-YE-2Yh"/>
+                <outlet property="titleLabel" destination="U5L-L1-7kQ" id="Lvi-6t-T0c"/>
+            </connections>
+            <point key="canvasLocation" x="-151" y="-146"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

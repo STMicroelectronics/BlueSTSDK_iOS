@@ -1,0 +1,555 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6010C4CE27FC367A00761DDE /* CorePlot in Frameworks */ = {isa = PBXBuildFile; productRef = 6010C4CD27FC367A00761DDE /* CorePlot */; };
+		6010C4D027FC36C700761DDE /* BlueVoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6010C4CF27FC36C700761DDE /* BlueVoiceViewController.swift */; };
+		6010C4D327FC376000761DDE /* AudioPlotDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6010C4D227FC376000761DDE /* AudioPlotDataSource.swift */; };
+		6010C4D527FC379600761DDE /* AudioCircularBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6010C4D427FC379600761DDE /* AudioCircularBuffer.swift */; };
+		6076519427EB669100E0D55E /* FilePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6076519327EB669100E0D55E /* FilePicker.swift */; };
+		6076519627EDE43400E0D55E /* FirmwareSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6076519527EDE43400E0D55E /* FirmwareSelectViewController.swift */; };
+		6076519927EDE8C500E0D55E /* STM32FirmwareTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6076519827EDE8C500E0D55E /* STM32FirmwareTypeView.swift */; };
+		60781B7F27AAC33D0042B0AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60781B7E27AAC33D0042B0AF /* AppDelegate.swift */; };
+		60781B8127AAC33D0042B0AF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60781B8027AAC33D0042B0AF /* SceneDelegate.swift */; };
+		60781B8327AAC33D0042B0AF /* NodeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60781B8227AAC33D0042B0AF /* NodeListViewController.swift */; };
+		60781B8627AAC33D0042B0AF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 60781B8427AAC33D0042B0AF /* Main.storyboard */; };
+		60781B8827AAC33F0042B0AF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60781B8727AAC33F0042B0AF /* Assets.xcassets */; };
+		60781B8B27AAC33F0042B0AF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 60781B8927AAC33F0042B0AF /* LaunchScreen.storyboard */; };
+		607AD9E227EDED8100BD9426 /* STM32FirmwareTypeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607AD9E127EDED8100BD9426 /* STM32FirmwareTypeView.xib */; };
+		60B084A627D0F29000450B43 /* NodeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B084A527D0F29000450B43 /* NodeDetailViewController.swift */; };
+		60B084AB27D1165100450B43 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 60B084AA27D1165100450B43 /* JGProgressHUD */; };
+		60DDEDB327AAC46E00CD0DB9 /* NodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DDEDB227AAC46E00CD0DB9 /* NodeCell.swift */; };
+		60E3E65627C930D200442A9F /* DebugConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E3E65527C930D200442A9F /* DebugConsoleViewController.swift */; };
+		60E3E65A27C9312A00442A9F /* DebugConsoleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 60E3E65927C9312A00442A9F /* DebugConsoleViewController.xib */; };
+		60F5AB1529A4D65600BB4396 /* STBlueSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 60F5AB1429A4D65600BB4396 /* STBlueSDK */; };
+		60FDEA1C27B3F58C00088C95 /* BaseNodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FDEA1B27B3F58C00088C95 /* BaseNodeViewController.swift */; };
+		60FDEA1E27B3F5D800088C95 /* FeatureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FDEA1D27B3F5D700088C95 /* FeatureCell.swift */; };
+		60FDEA2227B3F93F00088C95 /* FeatureLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FDEA2127B3F93F00088C95 /* FeatureLogViewController.swift */; };
+		E3AAF8BE2859C4410039C5D3 /* DiscoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AAF8BD2859C4410039C5D3 /* DiscoveryViewController.swift */; };
+		E3AAF8C12859C5200039C5D3 /* LicenseAgreement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AAF8C02859C5200039C5D3 /* LicenseAgreement.swift */; };
+		E3AAF8C32859C52B0039C5D3 /* LicenseAgreement.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3AAF8C22859C52B0039C5D3 /* LicenseAgreement.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6010C4CF27FC36C700761DDE /* BlueVoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueVoiceViewController.swift; sourceTree = "<group>"; };
+		6010C4D227FC376000761DDE /* AudioPlotDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlotDataSource.swift; sourceTree = "<group>"; };
+		6010C4D427FC379600761DDE /* AudioCircularBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCircularBuffer.swift; sourceTree = "<group>"; };
+		6076519327EB669100E0D55E /* FilePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilePicker.swift; sourceTree = "<group>"; };
+		6076519527EDE43400E0D55E /* FirmwareSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirmwareSelectViewController.swift; sourceTree = "<group>"; };
+		6076519827EDE8C500E0D55E /* STM32FirmwareTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STM32FirmwareTypeView.swift; sourceTree = "<group>"; };
+		60781B7B27AAC33D0042B0AF /* blueSTDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = blueSTDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		60781B7E27AAC33D0042B0AF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		60781B8027AAC33D0042B0AF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		60781B8227AAC33D0042B0AF /* NodeListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeListViewController.swift; sourceTree = "<group>"; };
+		60781B8527AAC33D0042B0AF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		60781B8727AAC33F0042B0AF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		60781B8A27AAC33F0042B0AF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		60781B8C27AAC33F0042B0AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		607AD9E127EDED8100BD9426 /* STM32FirmwareTypeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = STM32FirmwareTypeView.xib; sourceTree = "<group>"; };
+		6098641E29A4D5EB00DB9249 /* iOS_Module_BlueSTSDK */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = iOS_Module_BlueSTSDK; path = ..; sourceTree = "<group>"; };
+		60B084A527D0F29000450B43 /* NodeDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeDetailViewController.swift; sourceTree = "<group>"; };
+		60DDEDB227AAC46E00CD0DB9 /* NodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeCell.swift; sourceTree = "<group>"; };
+		60E3E65527C930D200442A9F /* DebugConsoleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugConsoleViewController.swift; sourceTree = "<group>"; };
+		60E3E65927C9312A00442A9F /* DebugConsoleViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DebugConsoleViewController.xib; sourceTree = "<group>"; };
+		60EC140329B5ECF900DB2E01 /* iOS_Module_STCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = iOS_Module_STCore; path = ../../iOS_Module_STCore; sourceTree = "<group>"; };
+		60FDEA1B27B3F58C00088C95 /* BaseNodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNodeViewController.swift; sourceTree = "<group>"; };
+		60FDEA1D27B3F5D700088C95 /* FeatureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureCell.swift; sourceTree = "<group>"; };
+		60FDEA2127B3F93F00088C95 /* FeatureLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureLogViewController.swift; sourceTree = "<group>"; };
+		E3AAF8BD2859C4410039C5D3 /* DiscoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryViewController.swift; sourceTree = "<group>"; };
+		E3AAF8C02859C5200039C5D3 /* LicenseAgreement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseAgreement.swift; sourceTree = "<group>"; };
+		E3AAF8C22859C52B0039C5D3 /* LicenseAgreement.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LicenseAgreement.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		60781B7827AAC33D0042B0AF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				60F5AB1529A4D65600BB4396 /* STBlueSDK in Frameworks */,
+				60B084AB27D1165100450B43 /* JGProgressHUD in Frameworks */,
+				6010C4CE27FC367A00761DDE /* CorePlot in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6010C4D127FC373200761DDE /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				6010C4CF27FC36C700761DDE /* BlueVoiceViewController.swift */,
+				6010C4D227FC376000761DDE /* AudioPlotDataSource.swift */,
+				6010C4D427FC379600761DDE /* AudioCircularBuffer.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		6076519727EDE44C00E0D55E /* FirmwareSelect */ = {
+			isa = PBXGroup;
+			children = (
+				6076519527EDE43400E0D55E /* FirmwareSelectViewController.swift */,
+				6076519827EDE8C500E0D55E /* STM32FirmwareTypeView.swift */,
+				607AD9E127EDED8100BD9426 /* STM32FirmwareTypeView.xib */,
+			);
+			path = FirmwareSelect;
+			sourceTree = "<group>";
+		};
+		60781B7227AAC33D0042B0AF = {
+			isa = PBXGroup;
+			children = (
+				60DDEDB527AAC59000CD0DB9 /* Packages */,
+				60781B7D27AAC33D0042B0AF /* blueSTDemo */,
+				60781B7C27AAC33D0042B0AF /* Products */,
+				60DDEDB727AAC5BA00CD0DB9 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		60781B7C27AAC33D0042B0AF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				60781B7B27AAC33D0042B0AF /* blueSTDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		60781B7D27AAC33D0042B0AF /* blueSTDemo */ = {
+			isa = PBXGroup;
+			children = (
+				60781B7E27AAC33D0042B0AF /* AppDelegate.swift */,
+				60781B8027AAC33D0042B0AF /* SceneDelegate.swift */,
+				60E3E65727C930DD00442A9F /* Controllers */,
+				60781B8427AAC33D0042B0AF /* Main.storyboard */,
+				60781B8727AAC33F0042B0AF /* Assets.xcassets */,
+				60781B8927AAC33F0042B0AF /* LaunchScreen.storyboard */,
+				60781B8C27AAC33F0042B0AF /* Info.plist */,
+				60E3E65827C930EC00442A9F /* Views */,
+			);
+			path = blueSTDemo;
+			sourceTree = "<group>";
+		};
+		60DDEDB527AAC59000CD0DB9 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				60EC140329B5ECF900DB2E01 /* iOS_Module_STCore */,
+				6098641E29A4D5EB00DB9249 /* iOS_Module_BlueSTSDK */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		60DDEDB727AAC5BA00CD0DB9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		60E3E65727C930DD00442A9F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				6076519327EB669100E0D55E /* FilePicker.swift */,
+				E3AAF8BD2859C4410039C5D3 /* DiscoveryViewController.swift */,
+				60B084A527D0F29000450B43 /* NodeDetailViewController.swift */,
+				60781B8227AAC33D0042B0AF /* NodeListViewController.swift */,
+				60FDEA1B27B3F58C00088C95 /* BaseNodeViewController.swift */,
+				60FDEA2127B3F93F00088C95 /* FeatureLogViewController.swift */,
+				E3AAF8BF2859C4FB0039C5D3 /* LicenseAgreement */,
+				60E3E65B27C9312E00442A9F /* DebugConsole */,
+				6076519727EDE44C00E0D55E /* FirmwareSelect */,
+				6010C4D127FC373200761DDE /* Audio */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		60E3E65827C930EC00442A9F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				60DDEDB227AAC46E00CD0DB9 /* NodeCell.swift */,
+				60FDEA1D27B3F5D700088C95 /* FeatureCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		60E3E65B27C9312E00442A9F /* DebugConsole */ = {
+			isa = PBXGroup;
+			children = (
+				60E3E65527C930D200442A9F /* DebugConsoleViewController.swift */,
+				60E3E65927C9312A00442A9F /* DebugConsoleViewController.xib */,
+			);
+			path = DebugConsole;
+			sourceTree = "<group>";
+		};
+		E3AAF8BF2859C4FB0039C5D3 /* LicenseAgreement */ = {
+			isa = PBXGroup;
+			children = (
+				E3AAF8C02859C5200039C5D3 /* LicenseAgreement.swift */,
+				E3AAF8C22859C52B0039C5D3 /* LicenseAgreement.xib */,
+			);
+			path = LicenseAgreement;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		60781B7A27AAC33D0042B0AF /* blueSTDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 60781B8F27AAC33F0042B0AF /* Build configuration list for PBXNativeTarget "blueSTDemo" */;
+			buildPhases = (
+				60781B7727AAC33D0042B0AF /* Sources */,
+				60781B7827AAC33D0042B0AF /* Frameworks */,
+				60781B7927AAC33D0042B0AF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = blueSTDemo;
+			packageProductDependencies = (
+				60B084AA27D1165100450B43 /* JGProgressHUD */,
+				6010C4CD27FC367A00761DDE /* CorePlot */,
+				60F5AB1429A4D65600BB4396 /* STBlueSDK */,
+			);
+			productName = blueSTDemo;
+			productReference = 60781B7B27AAC33D0042B0AF /* blueSTDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		60781B7327AAC33D0042B0AF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1320;
+				LastUpgradeCheck = 1320;
+				ORGANIZATIONNAME = STMicroelectronics;
+				TargetAttributes = {
+					60781B7A27AAC33D0042B0AF = {
+						CreatedOnToolsVersion = 13.2;
+					};
+				};
+			};
+			buildConfigurationList = 60781B7627AAC33D0042B0AF /* Build configuration list for PBXProject "blueSTDemo" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 60781B7227AAC33D0042B0AF;
+			packageReferences = (
+				60B084A927D1165100450B43 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
+				6010C4CC27FC367A00761DDE /* XCRemoteSwiftPackageReference "core-plot" */,
+			);
+			productRefGroup = 60781B7C27AAC33D0042B0AF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				60781B7A27AAC33D0042B0AF /* blueSTDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		60781B7927AAC33D0042B0AF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E3AAF8C32859C52B0039C5D3 /* LicenseAgreement.xib in Resources */,
+				60E3E65A27C9312A00442A9F /* DebugConsoleViewController.xib in Resources */,
+				60781B8B27AAC33F0042B0AF /* LaunchScreen.storyboard in Resources */,
+				60781B8827AAC33F0042B0AF /* Assets.xcassets in Resources */,
+				607AD9E227EDED8100BD9426 /* STM32FirmwareTypeView.xib in Resources */,
+				60781B8627AAC33D0042B0AF /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		60781B7727AAC33D0042B0AF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				60781B8327AAC33D0042B0AF /* NodeListViewController.swift in Sources */,
+				6076519927EDE8C500E0D55E /* STM32FirmwareTypeView.swift in Sources */,
+				60781B7F27AAC33D0042B0AF /* AppDelegate.swift in Sources */,
+				60FDEA1E27B3F5D800088C95 /* FeatureCell.swift in Sources */,
+				6010C4D027FC36C700761DDE /* BlueVoiceViewController.swift in Sources */,
+				60781B8127AAC33D0042B0AF /* SceneDelegate.swift in Sources */,
+				60DDEDB327AAC46E00CD0DB9 /* NodeCell.swift in Sources */,
+				60FDEA2227B3F93F00088C95 /* FeatureLogViewController.swift in Sources */,
+				60FDEA1C27B3F58C00088C95 /* BaseNodeViewController.swift in Sources */,
+				6010C4D527FC379600761DDE /* AudioCircularBuffer.swift in Sources */,
+				E3AAF8C12859C5200039C5D3 /* LicenseAgreement.swift in Sources */,
+				6076519427EB669100E0D55E /* FilePicker.swift in Sources */,
+				6076519627EDE43400E0D55E /* FirmwareSelectViewController.swift in Sources */,
+				60B084A627D0F29000450B43 /* NodeDetailViewController.swift in Sources */,
+				6010C4D327FC376000761DDE /* AudioPlotDataSource.swift in Sources */,
+				60E3E65627C930D200442A9F /* DebugConsoleViewController.swift in Sources */,
+				E3AAF8BE2859C4410039C5D3 /* DiscoveryViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		60781B8427AAC33D0042B0AF /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				60781B8527AAC33D0042B0AF /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		60781B8927AAC33F0042B0AF /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				60781B8A27AAC33F0042B0AF /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		60781B8D27AAC33F0042B0AF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		60781B8E27AAC33F0042B0AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		60781B9027AAC33F0042B0AF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4.17;
+				DEVELOPMENT_TEAM = W8X777DAT2;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = blueSTDemo/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Use bluetooth to discover node";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.17;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.atlantis.BlueSTSDKDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		60781B9127AAC33F0042B0AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4.17;
+				DEVELOPMENT_TEAM = W8X777DAT2;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = blueSTDemo/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Use bluetooth to discover node";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.17;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.atlantis.BlueSTSDKDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		60781B7627AAC33D0042B0AF /* Build configuration list for PBXProject "blueSTDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60781B8D27AAC33F0042B0AF /* Debug */,
+				60781B8E27AAC33F0042B0AF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		60781B8F27AAC33F0042B0AF /* Build configuration list for PBXNativeTarget "blueSTDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60781B9027AAC33F0042B0AF /* Debug */,
+				60781B9127AAC33F0042B0AF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6010C4CC27FC367A00761DDE /* XCRemoteSwiftPackageReference "core-plot" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/core-plot/core-plot.git";
+			requirement = {
+				branch = "release-2.4";
+				kind = branch;
+			};
+		};
+		60B084A927D1165100450B43 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6010C4CD27FC367A00761DDE /* CorePlot */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6010C4CC27FC367A00761DDE /* XCRemoteSwiftPackageReference "core-plot" */;
+			productName = CorePlot;
+		};
+		60B084AA27D1165100450B43 /* JGProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 60B084A927D1165100450B43 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
+			productName = JGProgressHUD;
+		};
+		60F5AB1429A4D65600BB4396 /* STBlueSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = STBlueSDK;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 60781B7327AAC33D0042B0AF /* Project object */;
+}
