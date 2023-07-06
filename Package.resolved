@@ -1,24 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "core-plot",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/core-plot/core-plot.git",
-      "state" : {
-        "branch" : "release-2.4",
-        "revision" : "d2ed732ffc8e52c323c92e14ea94433ab8d0375f"
-      }
-    },
-    {
-      "identity" : "jgprogresshud",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/JonasGessner/JGProgressHUD",
-      "state" : {
-        "revision" : "78d7cd35f1d90ff74fd82e486f2cbe4b24be8cf9",
-        "version" : "2.2.0"
-      }
-    },
-    {
       "identity" : "keychainaccess",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kishikawakatsumi/KeychainAccess.git",
