@@ -10,21 +10,21 @@
       }
     },
     {
+      "identity" : "ios_module_stcore",
+      "kind" : "localSourceControl",
+      "location" : "/Users/giuseppe/git/_STMicroelectronics/BlueSTSDK_iOS/Packages/iOS_Module_STCore",
+      "state" : {
+        "revision" : "be26511a6cba72bcfffc0bbb09f0ca86e4407377",
+        "version" : "0.1.0"
+      }
+    },
+    {
       "identity" : "jgprogresshud",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/JonasGessner/JGProgressHUD",
       "state" : {
         "revision" : "78d7cd35f1d90ff74fd82e486f2cbe4b24be8cf9",
         "version" : "2.2.0"
-      }
-    },
-    {
-      "identity" : "keychainaccess",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kishikawakatsumi/KeychainAccess.git",
-      "state" : {
-        "revision" : "84e546727d66f1adc5439debad16270d0fdd04e7",
-        "version" : "4.2.2"
       }
     },
     {
