@@ -84,9 +84,9 @@ public extension Catalog {
         })
     }
 
-    func availableNewV2Firmwares(with deviceId: String, currentFirmware: Firmware) -> [Firmware]? {
+    func availableNewV2Firmwares(with deviceId: String, currentFirmware: Firmware, enabledFirmwares: [String]?) -> [Firmware]? {
 
-        availableV2Firmwares(with: deviceId, currentFirmware: currentFirmware)?.filter {
+        availableV2Firmwares(with: deviceId, currentFirmware: currentFirmware, enabledFirmwares: enabledFirmwares)?.filter {
             $0.name == currentFirmware.name &&
             $0.version > currentFirmware.version &&
             $0.fota?.url != nil &&
@@ -95,13 +95,16 @@ public extension Catalog {
     }
 
     func mostRecentAvailableNewV2Firmware(with deviceId: String, currentFirmware: Firmware) -> Firmware? {
-        availableNewV2Firmwares(with: deviceId, currentFirmware: currentFirmware)?.max(by: { $0.version < $1.version } )
+        availableNewV2Firmwares(with: deviceId, currentFirmware: currentFirmware, enabledFirmwares: nil)?.max(by: { $0.version < $1.version } )
     }
 
-    func availableV2Firmwares(with deviceId: String, currentFirmware: Firmware?) -> [Firmware]? {
-        blueStSdkV2.filter {
-            $0.deviceId.lowercased() == deviceId.lowercased() &&
-            $0.bleVersionIdHex.lowercased() != currentFirmware?.bleVersionIdHex.lowercased()
+    func availableV2Firmwares(with deviceId: String, currentFirmware: Firmware?, enabledFirmwares: [String]?) -> [Firmware]? {
+        blueStSdkV2.filter { firmware in
+            firmware.deviceId.lowercased() == deviceId.lowercased() &&
+            firmware.bleVersionIdHex.lowercased() != currentFirmware?.bleVersionIdHex.lowercased() &&
+            enabledFirmwares?.contains(where: { firmwareId in
+                return firmware.bleVersionIdHex.lowercased() == firmwareId.lowercased()
+            }) ?? true
         }
     }
 }

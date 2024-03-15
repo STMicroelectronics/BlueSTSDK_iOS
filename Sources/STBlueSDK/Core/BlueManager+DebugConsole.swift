@@ -24,4 +24,15 @@ public extension BlueManager {
 
         return true
     }
+    
+    @discardableResult
+    func sendData(_ data: Data, to node: Node, completion: DebugConsoleCallback) -> Bool {
+        guard let nodeService = nodeServices.nodeService(with: node),
+              let debugConsole = nodeService.debugConsole else {return false}
+        
+        debugConsole.addDelegate(completion)
+        debugConsole.write(data: data)
+
+        return true
+    }
 }

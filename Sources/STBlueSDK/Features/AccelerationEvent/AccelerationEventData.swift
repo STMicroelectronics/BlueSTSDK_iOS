@@ -30,7 +30,7 @@ public enum AccelerationEventCommand: FeatureCommandType {
     var value: UInt8 {
         switch self {
         case .orientation:
-            return 0x61
+            return 0x6F
         case .multiple:
             return 0x6D
         case .tilt:

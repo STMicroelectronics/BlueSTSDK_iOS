@@ -49,7 +49,12 @@ extension PnpLContent: Codable {
         case "component":
             let content = try singleContainer.decode(PnpLComponentContent.self)
             self = .component(content)
-        case "property":
+        case "property",
+            "property|vector",
+            "property|initialized",
+            "property|initialized|numbervalue",
+            "property|booleanvalue|initialized",
+            "property|numbervalue|initialized":
             guard let content = try? singleContainer.decode(PnpLPropertyContent.self) else {
                 let content = try singleContainer.decode(PnpLPrimitiveContent.self)
                 self = .primitiveProperty(content)

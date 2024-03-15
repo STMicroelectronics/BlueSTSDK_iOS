@@ -1,7 +1,7 @@
 //
-//  StringValue.swift
-//  
-//  Copyright (c) 2022 STMicroelectronics.
+//  BleCharacteristicStringValue.swift
+//
+//  Copyright (c) 2024 STMicroelectronics.
 //  All rights reserved.
 //
 //  This software is licensed under terms that can be found in the LICENSE file in
@@ -11,18 +11,14 @@
 
 import Foundation
 
-public struct StringValue {
-    public let type: String?
-    public let displayName: String?
-    public let comment: String?
-    public let value: Int?
+public struct BleCharacteristicStringValue {
+    public let displayName: String
+    public let value: Int
 }
 
-extension StringValue: Codable {
+extension BleCharacteristicStringValue: Codable {
     enum CodingKeys: String, CodingKey {
-        case type
         case displayName = "display_name"
-        case comment
         case value
     }
 }

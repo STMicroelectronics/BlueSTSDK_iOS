@@ -60,13 +60,22 @@ public extension JSONValue {
             switch self {
                 
             case .object(let dict):
+
+                var found: JSONValue?
+
                 for key in dict.keys {
                     if keyValue == key {
-                        return dict[key]
+                        found = dict[key]
+                        break
                     } else {
-                        return dict[key]?.searchKey(keyValue: key)
+                        found = dict[key]?.searchKey(keyValue: key)
+                        if found != nil {
+                            break
+                        }
                     }
                 }
+
+                return found
                 
             case .array(let arr):
                 for item in arr {

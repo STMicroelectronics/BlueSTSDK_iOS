@@ -96,6 +96,8 @@ public enum FeatureType: Equatable {
             static let jsonNfc: UInt32 = 0x00000020
             // the 0x21 is reserved for FeatureMemsNorm
             // the 0x22 is reserved for FeatureBinaryContent
+            // the 0x23 is reserved for RawPnPLControlled
+            // the 0x23 is reserved for neaiExtrapolation
         }
         
         internal struct External {
@@ -438,7 +440,9 @@ public extension FeatureType {
         switch nodeType {
         case .sensorTileBox:
             return FeatureType.sensorTileBoxFeatureTypes
-        case .nucleo:
+//        case .nucleo:
+//            return FeatureType.bleStarNucleoFeatureTypes
+        case .wbBoard:
             return FeatureType.bleStarNucleoFeatureTypes
         default:
             return FeatureType.defaultFeatureTypes

@@ -33,6 +33,8 @@ public extension BlueManager {
             return false
         }
         
-        return nodeService.sendJSONCommand(command, characteristic: blueChar.characteristic, mtu: blueChar.maxMtu, completion)
+        return nodeService.sendJSONCommand(command, characteristic: blueChar.characteristic, mtu: blueChar.maxMtu, progress: { index, parts in
+
+        }, completion: completion)
     }
 }

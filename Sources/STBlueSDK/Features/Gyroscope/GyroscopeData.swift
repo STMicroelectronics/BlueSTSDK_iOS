@@ -22,9 +22,9 @@ public struct GyroscopeData {
     
     init(with data: Data, offset: Int) {
         
-        let gyroX = Float(data.extractInt16(fromOffset: offset))
-        let gyroY = Float(data.extractInt16(fromOffset: offset + 2))
-        let gyroZ = Float(data.extractInt16(fromOffset: offset + 4))
+        let gyroX = Float(data.extractInt16(fromOffset: offset))/10.0
+        let gyroY = Float(data.extractInt16(fromOffset: offset + 2))/10.0
+        let gyroZ = Float(data.extractInt16(fromOffset: offset + 4))/10.0
         
         self.gyroX = FeatureField<Float>(name: "X",
                                          uom: "dps",

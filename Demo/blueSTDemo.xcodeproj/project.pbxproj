@@ -39,7 +39,6 @@
 		6010C4CF27FC36C700761DDE /* BlueVoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueVoiceViewController.swift; sourceTree = "<group>"; };
 		6010C4D227FC376000761DDE /* AudioPlotDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlotDataSource.swift; sourceTree = "<group>"; };
 		6010C4D427FC379600761DDE /* AudioCircularBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCircularBuffer.swift; sourceTree = "<group>"; };
-		603BD28C2A56F2FA00D447F2 /* iOS_Module_BlueSTSDK_Pub */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = iOS_Module_BlueSTSDK_Pub; path = ..; sourceTree = "<group>"; };
 		6076519327EB669100E0D55E /* FilePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilePicker.swift; sourceTree = "<group>"; };
 		6076519527EDE43400E0D55E /* FirmwareSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirmwareSelectViewController.swift; sourceTree = "<group>"; };
 		6076519827EDE8C500E0D55E /* STM32FirmwareTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STM32FirmwareTypeView.swift; sourceTree = "<group>"; };
@@ -52,6 +51,7 @@
 		60781B8A27AAC33F0042B0AF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		60781B8C27AAC33F0042B0AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607AD9E127EDED8100BD9426 /* STM32FirmwareTypeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = STM32FirmwareTypeView.xib; sourceTree = "<group>"; };
+		6098641E29A4D5EB00DB9249 /* iOS_Module_BlueSTSDK */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = iOS_Module_BlueSTSDK; path = ..; sourceTree = "<group>"; };
 		60B084A527D0F29000450B43 /* NodeDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeDetailViewController.swift; sourceTree = "<group>"; };
 		60DDEDB227AAC46E00CD0DB9 /* NodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeCell.swift; sourceTree = "<group>"; };
 		60E3E65527C930D200442A9F /* DebugConsoleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugConsoleViewController.swift; sourceTree = "<group>"; };
@@ -134,7 +134,7 @@
 		60DDEDB527AAC59000CD0DB9 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				603BD28C2A56F2FA00D447F2 /* iOS_Module_BlueSTSDK_Pub */,
+				6098641E29A4D5EB00DB9249 /* iOS_Module_BlueSTSDK */,
 			);
 			name = Packages;
 			sourceTree = "<group>";

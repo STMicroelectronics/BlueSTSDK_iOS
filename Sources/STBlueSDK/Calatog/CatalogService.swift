@@ -110,7 +110,7 @@ extension CatalogServiceCore: CatalogService {
     @discardableResult
     public func storeCatalog(_ catalog: Catalog?) -> Catalog? {
 
-        if internalCatalog?.checksum == catalog?.checksum {
+        if let internalCatalog = internalCatalog, internalCatalog.checksum == catalog?.checksum {
             return self.catalog
         }
 

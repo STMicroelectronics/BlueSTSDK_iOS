@@ -30,7 +30,7 @@ public struct FFTAmplitudeData {
     init(with data: Data, offset: Int) {
         let numberOfSamples = data.extractUInt16(fromOffset: offset)
         let numberOfComponents = data.extractUInt8(fromOffset: offset + 2)
-        let frequencyStep = Float(data.extractUInt16(fromOffset: offset + 3))
+        let frequencyStep = data.extractFloat(fromOffset: offset + 3)
         
         let fftData = data.subdata(in: Int(offset + 7)..<data.count)
         rawData.append(fftData)

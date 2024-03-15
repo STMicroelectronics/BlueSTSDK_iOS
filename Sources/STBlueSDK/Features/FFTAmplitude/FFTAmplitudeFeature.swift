@@ -17,10 +17,10 @@ public class FFTAmplitudeFeature: TimestampFeature<FFTAmplitudeData> {
     let packetLength = 12
     
     override func extractData<T>(with timestamp: UInt64, data: Data, offset: Int) -> FeatureExtractDataResult<T> {
-    
-        if data.count - offset < packetLength {
-            return (FeatureSample(with: timestamp, data: data as? T, rawData: data), 0)
-        }
+
+//        if data.count - offset < packetLength {
+//            return (FeatureSample(with: timestamp, data: data as? T, rawData: data), 0)
+//        }
         
         let parsedData = dataTransporter.decapsulate(data: data, offset: offset)
         

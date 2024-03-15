@@ -25,6 +25,9 @@ public struct Firmware {
     public let description: String?
     public let changelog: String?
     public let fota: FotaDetails?
+    public let compatibleSensorAdapters: [Int]?
+    public let demoDecorator: DemoDecorator?
+    public let maturity: Maturity?
 }
 
 extension Firmware: Codable {
@@ -41,6 +44,9 @@ extension Firmware: Codable {
         case description = "fw_desc"
         case changelog
         case fota
+        case compatibleSensorAdapters = "compatible_sensor_adapters"
+        case demoDecorator = "demo_decorator"
+        case maturity
     }
 }
 
@@ -106,12 +112,14 @@ public extension Sequence where Iterator.Element: Hashable {
 public struct Board {
     public let deviceId: String
     public let name: String
+    public var variant: String? = nil
     public var friendlyName: String? = nil
     public var status: String? = nil
     public var description: String? = nil
     public var url: String? = nil
     public var datasheetsUrl: String? = nil
     public var videoId: String? = nil
+    public var releaseDate: String? = nil
     public var characteristics: [BleCharacteristic]?
 
     public var type: NodeType? {
@@ -138,12 +146,14 @@ public struct CatalogBoard {
     public let usbDeviceId: String?
     public let uniqueDeviceId: Int?
     public let name: String
+    public let variant: String?
     public let friendlyName: String
     public let status: String
     public let description: String?
     public let documentationUrl: String?
     public let orderUrl: String?
     public let videoUrl: String?
+    public let releaseDate: String?
 //
 //    public var type: NodeType? {
 //        guard let boardId = UInt8(bleDeviceId.dropFirst(2), radix: 16) else { return nil }
@@ -158,11 +168,13 @@ extension CatalogBoard: Codable {
         case usbDeviceId = "usb_dev_id"
         case uniqueDeviceId = "unique_dev_id"
         case name = "brd_name"
+        case variant = "brd_variant"
         case friendlyName = "friendly_name"
         case status
         case description
         case documentationUrl = "documentation_url"
         case orderUrl = "order_url"
         case videoUrl = "video_url"
+        case releaseDate = "release_date"
     }
 }

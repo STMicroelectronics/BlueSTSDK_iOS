@@ -37,6 +37,7 @@ public enum NodeType: UInt8 {
     case nucleoF446RE = 0x7C
     case wbBoard = 0x81
     case wbOtaBoard = 0x86
+    case nuceloWB09KE = 0x8D
     case nucleo = 0x80
     case wbaBoard = 0x8B
 }
@@ -96,6 +97,8 @@ public extension NodeType {
             return "WBA_BOARD"
         case .wbOtaBoard:
             return "WB_OTA_BOARD"
+        case .nuceloWB09KE:
+            return "STM32WB09"
         case .nucleo:
             return "Nucleo"
         }
@@ -162,6 +165,10 @@ public extension NodeType {
             return "schema_sensorTile"
         case .sensorTileBox:
             return "schema_sensorTileBox"
+        case .sensorTileBoxPro:
+            return "schema_sensorTileBoxPro"
+        case .sensorTileBoxProB:
+            return "schema_sensorTileBoxPro"
         case .blueCoin:
             return "schema_blueCoin"
         case .stEvalBCN002V1:

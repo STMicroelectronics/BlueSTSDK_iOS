@@ -12,6 +12,8 @@
 import Foundation
 
 public struct IconValue {
+    public let type: String?
+    public let displayName: String?
     public let comment: String?
     public let value: Int?
     public let code: Int?
@@ -19,6 +21,8 @@ public struct IconValue {
 
 extension IconValue: Codable {
     enum CodingKeys: String, CodingKey {
+        case type
+        case displayName = "display_name"
         case comment
         case value
         case code = "icon_code"

@@ -39,7 +39,7 @@ public struct DataTransporterConfig {
 
 public class DataTransporter {
     private var codedBuffer = Data()
-    private let debug = true
+    private let debug = false
 
     public var config: DataTransporterConfig = DataTransporterConfig.standard
     
@@ -78,7 +78,7 @@ public class DataTransporter {
         var count = 0
         let codedDataLength = byteCommand.count
         let codedDataLengthBytes = Data(bytes: Int16(codedDataLength).reversedBytes, count: Int16(codedDataLength).reversedBytes.count)
-        
+
         while count < codedDataLength {
             var size = min(Int(mtuSize) - 1, codedDataLength - count)
             if codedDataLength - count <= mtuSize - 1 {

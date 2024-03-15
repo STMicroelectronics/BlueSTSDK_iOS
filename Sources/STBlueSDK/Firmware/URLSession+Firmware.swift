@@ -56,7 +56,11 @@ internal extension URLSession {
                       fileName: String,
                       completion: @escaping (Result<URL, STError>) -> Void) {
 
-        let destinationUrl = FileManager.default.documentFolder.appendingPathComponent(fileName)
+        var destinationUrl = FileManager.default.documentFolder.appendingPathComponent(fileName)
+        
+        if fileName.contains("/") {
+            destinationUrl = FileManager.default.documentFolder.appendingPathComponent(fileName.replacingOccurrences(of: "/", with: ""))
+        }
 
         guard let url = url else {
             STBlueSDK.log(text: "URL not valid")

@@ -18,10 +18,12 @@ class WriteDataManager {
         let data: Data
         let charactheristic: CBCharacteristic
         let completion: (Bool) -> Void
-        init(data: Data, charactheristic: CBCharacteristic, mtu: Int = 20, completion: @escaping (Bool) -> Void) {
+        let progress: (Int, Int) -> Void
+        init(data: Data, charactheristic: CBCharacteristic, mtu: Int = 20, progress: @escaping (Int, Int) -> Void, completion: @escaping (Bool) -> Void) {
             self.data = data
             self.charactheristic = charactheristic
             self.mtu = mtu
+            self.progress = progress
             self.completion = completion
         }
     }
@@ -55,14 +57,17 @@ class WriteDataManager {
             STBlueSDK.log(text: "start write bytes: \(command.data.hex)")
         }
 
-        sendWrite(command.data, characteristic: command.charactheristic, mtu: command.mtu) { [weak self] success in
+        sendWrite(command.data, characteristic: command.charactheristic, mtu: command.mtu,
+                  progress: { index, count in
+            command.progress(index, count)
+        }) { [weak self] success in
             command.completion(success)
             self?.isSending = false
             self?.dequeueCommand()
         }
     }
     
-    private func sendWrite(_ data: Data, characteristic: CBCharacteristic, mtu: Int, completion: @escaping (Bool) -> Void) {
+    private func sendWrite(_ data: Data, characteristic: CBCharacteristic, mtu: Int, progress: @escaping (Int, Int) -> Void, completion: @escaping (Bool) -> Void) {
         if debug {
             STBlueSDK.log(text: "start write bytes: \(data.count) -> \(data.hex)")
         }
@@ -99,6 +104,7 @@ class WriteDataManager {
                 //  Wait some times otherwise data is not received correctly
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     if index < parts {
+                        progress(index, parts)
                         writeBytesPart(bytes, characteristic: characteristic, atIndex: index + 1, completion: completion)
                     } else {
                         completion(true)

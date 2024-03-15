@@ -166,6 +166,8 @@ fileprivate extension UInt8 {
                 return .nucleoL053R8
             case 0x7C:
                 return .nucleoF446RE
+            case 0x8D:
+                return .nuceloWB09KE
             case 0x86:
                 return .wbOtaBoard
             case 0x81...0x8A:

@@ -75,6 +75,7 @@ public protocol BlueSTManager {
     func sendCommand(_ command: FeatureCommand, to node: Node, feature: Feature) -> Bool
 
     func sendMessage(_ message: String, to node: Node, completion: DebugConsoleCallback) -> Bool
+    func sendData(_ data: Data, to node: Node, completion: DebugConsoleCallback) -> Bool
 
     func sendECCommand(_ type: ECCommandType, to node: Node) -> Bool
     func sendECCommand(_ type: ECCommandType, int: Int, to node: Node) -> Bool

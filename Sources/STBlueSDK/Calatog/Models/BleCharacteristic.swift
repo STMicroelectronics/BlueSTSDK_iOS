@@ -14,6 +14,7 @@ import Foundation
 public struct BleCharacteristic {
     public let name: String
     public let uuid: String
+    public let uuidType: Int?
     public let dtmiName: String?
     public let description: String?
     public let formatNotify: [BleCharacteristicFormat]?
@@ -24,6 +25,7 @@ extension BleCharacteristic: Codable {
     enum CodingKeys: String, CodingKey {
         case name
         case uuid
+        case uuidType = "uuid_type"
         case dtmiName = "dtmi_name"
         case description
         case formatNotify = "format_notify"

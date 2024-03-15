@@ -49,6 +49,10 @@ public class AccelerationEventFeature: BaseFeature<AccelerationEventData>, Comma
     public override func parse(commandResponse response: FeatureCommandResponse) -> FeatureCommandResponse {
         response
     }
+    
+    public func setPedometerStatus(_ enabled: Bool) {
+        isPedometerEnabled = enabled
+    }
 
 }
 
