@@ -12,6 +12,11 @@
 import Foundation
 
 public class BaseFeature<T: Loggable & CustomStringConvertible>: Feature, Initializable {
+    
+    public func changeName(newName: String) {
+        name = newName
+    }
+    
 
     public typealias FeatureExtractDataResult<T: Loggable> = (sample: FeatureSample<T>, offset: Int)
 
@@ -20,6 +25,7 @@ public class BaseFeature<T: Loggable & CustomStringConvertible>: Feature, Initia
     public var type: FeatureType
     public var isEnabled: Bool = false
     public var isNotificationsEnabled: Bool = false
+    public var isDataNotifyFeature: Bool = true
     public var sample: FeatureSample<T>?
     public var lastSample: AnyFeatureSample? {
         return sample

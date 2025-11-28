@@ -14,6 +14,7 @@ import Foundation
 public struct BleCharacteristic {
     public let name: String
     public let uuid: String
+    public let maxWriteLength: Int?
     public let uuidType: Int?
     public let dtmiName: String?
     public let description: String?
@@ -27,6 +28,7 @@ extension BleCharacteristic: Codable {
         case uuid
         case uuidType = "uuid_type"
         case dtmiName = "dtmi_name"
+        case maxWriteLength = "max_write_length"
         case description
         case formatNotify = "format_notify"
         case formatWrite = "format_write"

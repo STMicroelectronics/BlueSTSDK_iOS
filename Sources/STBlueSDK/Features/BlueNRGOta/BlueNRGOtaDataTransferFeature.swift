@@ -12,6 +12,11 @@
 import Foundation
 
 class BlueNRGOtaDataTransferFeature: BaseFeature<Data> {
+    
+    public required init(name: String, type: FeatureType) {
+        super.init(name: name, type: type)
+        isDataNotifyFeature = false
+    }
 
     override func extractData<T>(with timestamp: UInt64, data: Data, offset: Int) -> FeatureExtractDataResult<T> {
         return (FeatureSample(with: timestamp, data: data as? T, rawData: data), 0)

@@ -11,7 +11,6 @@
 		6010C4D027FC36C700761DDE /* BlueVoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6010C4CF27FC36C700761DDE /* BlueVoiceViewController.swift */; };
 		6010C4D327FC376000761DDE /* AudioPlotDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6010C4D227FC376000761DDE /* AudioPlotDataSource.swift */; };
 		6010C4D527FC379600761DDE /* AudioCircularBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6010C4D427FC379600761DDE /* AudioCircularBuffer.swift */; };
-		6076519427EB669100E0D55E /* FilePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6076519327EB669100E0D55E /* FilePicker.swift */; };
 		6076519627EDE43400E0D55E /* FirmwareSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6076519527EDE43400E0D55E /* FirmwareSelectViewController.swift */; };
 		6076519927EDE8C500E0D55E /* STM32FirmwareTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6076519827EDE8C500E0D55E /* STM32FirmwareTypeView.swift */; };
 		60781B7F27AAC33D0042B0AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60781B7E27AAC33D0042B0AF /* AppDelegate.swift */; };
@@ -39,7 +38,6 @@
 		6010C4CF27FC36C700761DDE /* BlueVoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueVoiceViewController.swift; sourceTree = "<group>"; };
 		6010C4D227FC376000761DDE /* AudioPlotDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlotDataSource.swift; sourceTree = "<group>"; };
 		6010C4D427FC379600761DDE /* AudioCircularBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCircularBuffer.swift; sourceTree = "<group>"; };
-		6076519327EB669100E0D55E /* FilePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilePicker.swift; sourceTree = "<group>"; };
 		6076519527EDE43400E0D55E /* FirmwareSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirmwareSelectViewController.swift; sourceTree = "<group>"; };
 		6076519827EDE8C500E0D55E /* STM32FirmwareTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STM32FirmwareTypeView.swift; sourceTree = "<group>"; };
 		60781B7B27AAC33D0042B0AF /* blueSTDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = blueSTDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -149,7 +147,6 @@
 		60E3E65727C930DD00442A9F /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				6076519327EB669100E0D55E /* FilePicker.swift */,
 				E3AAF8BD2859C4410039C5D3 /* DiscoveryViewController.swift */,
 				60B084A527D0F29000450B43 /* NodeDetailViewController.swift */,
 				60781B8227AAC33D0042B0AF /* NodeListViewController.swift */,
@@ -285,7 +282,6 @@
 				60FDEA1C27B3F58C00088C95 /* BaseNodeViewController.swift in Sources */,
 				6010C4D527FC379600761DDE /* AudioCircularBuffer.swift in Sources */,
 				E3AAF8C12859C5200039C5D3 /* LicenseAgreement.swift in Sources */,
-				6076519427EB669100E0D55E /* FilePicker.swift in Sources */,
 				6076519627EDE43400E0D55E /* FirmwareSelectViewController.swift in Sources */,
 				60B084A627D0F29000450B43 /* NodeDetailViewController.swift in Sources */,
 				6010C4D327FC376000761DDE /* AudioPlotDataSource.swift in Sources */,
@@ -439,7 +435,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 4.17;
-				DEVELOPMENT_TEAM = W8X777DAT2;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = blueSTDemo/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Use bluetooth to discover node";
@@ -448,6 +444,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -468,7 +465,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 4.17;
-				DEVELOPMENT_TEAM = W8X777DAT2;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = blueSTDemo/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Use bluetooth to discover node";
@@ -477,6 +474,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -12,6 +12,11 @@
 import Foundation
 
 class BlueNRGOtaMemoryInfoFeature: TimestampFeature<BlueNRGOtaMemoryInfoData> {
+    
+    public required init(name: String, type: FeatureType) {
+        super.init(name: name, type: type)
+        isDataNotifyFeature = false
+    }
 
     override func extractData<T>(with timestamp: UInt64, data: Data, offset: Int) -> FeatureExtractDataResult<T> {
         if data.count - offset < 8 {
@@ -20,7 +25,7 @@ class BlueNRGOtaMemoryInfoFeature: TimestampFeature<BlueNRGOtaMemoryInfoData> {
         
         let parsedData = BlueNRGOtaMemoryInfoData(with: data, offset: offset)
         
-        return (FeatureSample(with: timestamp, data: parsedData as? T, rawData: data), data.count - offset)
+        return (FeatureSample(with: timestamp, data: parsedData as? T, rawData: data), data.count)
     }
 
     public override func parse(commandResponse response: FeatureCommandResponse) -> FeatureCommandResponse {

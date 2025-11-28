@@ -11,7 +11,12 @@
 
 import Foundation
 
-public class ExtendedConfigurationFeature: BaseFeature<ExtendedConfigurationData> {
+public class ExtendedConfigurationFeature: TimestampFeature<ExtendedConfigurationData> {
+    
+    public required init(name: String, type: FeatureType) {
+        super.init(name: name, type: type)
+        isDataNotifyFeature = false
+    }
 
     private let dataTransporter = DataTransporter()
 
@@ -26,7 +31,7 @@ public class ExtendedConfigurationFeature: BaseFeature<ExtendedConfigurationData
                 commandFrame.removeLast()
                 let response = try JSONDecoder().decode(ECResponse.self, from: commandFrame)
                 dataTransporter.clear()
-                return (FeatureSample(with: timestamp, data: ExtendedConfigurationData(response: response) as? T, rawData: data), 0)
+                return (FeatureSample(with: timestamp, data: ExtendedConfigurationData(response: response) as? T, rawData: data),  data.count)
             } catch {
                 STBlueSDK.log(text: "Extract Data parse error: \(error)")
                 return (FeatureSample(with: timestamp, data: nil, rawData: data), 0)

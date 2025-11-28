@@ -49,6 +49,12 @@ internal struct OpusConf {
 }
 
 public class OpusAudioConfFeature: AudioFeature<OpusConfData> {
+    
+    public required init(name: String, type: FeatureType) {
+        super.init(name: name, type: type)
+        isDataNotifyFeature = false
+    }
+    
     override func extractData<T>(with timestamp: UInt64, data: Data, offset: Int) -> FeatureExtractDataResult<T> {
     
         if data.count - offset != 2 || data.count - offset != 4 {

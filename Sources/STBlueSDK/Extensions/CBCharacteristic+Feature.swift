@@ -30,8 +30,9 @@ public extension CBCharacteristic {
                                       features: buildFeatures(with: FeatureType.extentedTypes),
                                       maxMtu: maxMtu)
         } else if isFeatureGeneralPurposeCharacteristics {
-            let feature = GeneralPurposeFeature(name: "",
+            let feature = GeneralPurposeFeature(name: "GP_\(uuid.featureGeneralPurposeNum)",
                                             type: .generalPurpose(identifier: uuid.featureMask))
+            feature.isEnabled = true
             return BlueCharacteristic(characteristic: self,
                                       features: [ feature ],
                                       maxMtu: maxMtu)

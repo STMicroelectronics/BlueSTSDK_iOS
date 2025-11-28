@@ -13,8 +13,9 @@ import Foundation
 
 public struct PnpLPropertyContent: Codable {
     public let id: String
-    public var type: PnpLPropertyContentType
+    public var type: PnpLGenericType
     public let displayName: DisplayName?
+    public let displayUnit: DisplayName?
     public let name: String
     public var schema: PnpLContent
     public let writable: Bool
@@ -24,6 +25,7 @@ public struct PnpLPropertyContent: Codable {
         case id = "@id"
         case type = "@type"
         case displayName
+        case displayUnit
         case name
         case schema
         case writable
@@ -31,7 +33,7 @@ public struct PnpLPropertyContent: Codable {
     }
 }
 
-public enum PnpLPropertyContentType: Codable {
+public enum PnpLGenericType: Codable {
     case string(String)
     case stringArray([String])
 
@@ -45,7 +47,7 @@ public enum PnpLPropertyContentType: Codable {
             self = .string(x)
             return
         }
-        throw DecodingError.typeMismatch(PnpLPropertyContentType.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for PnpLPropertyContentType"))
+        throw DecodingError.typeMismatch(PnpLGenericType.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for PnpLGenericType"))
     }
 
     public func encode(to encoder: Encoder) throws {

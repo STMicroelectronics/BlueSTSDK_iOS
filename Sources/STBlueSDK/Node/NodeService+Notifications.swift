@@ -28,13 +28,16 @@ internal extension NodeService {
         if !blueChar.characteristic.isCharacteristicCanBeNotify {
             return false
         }
-
-        if blueChar.characteristic.isNotifying {
-            return true
-        }
-
+        
+        blueChar.numberEnables += 1
+        
         var feature = feature
         feature.isNotificationsEnabled = true
+        
+        if blueChar.hasEnabledNotifications {
+            return true
+        }
+        blueChar.hasEnabledNotifications = true
 
         bleService.enableNotifications(for: blueChar.characteristic)
 
@@ -43,6 +46,9 @@ internal extension NodeService {
 
     @discardableResult
     func disableNotifications(for feature: Feature) -> Bool {
+
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
 
         if !feature.isEnabled || !node.isConnected {
             return false
@@ -54,16 +60,31 @@ internal extension NodeService {
 
         guard let blueChar = node.characteristics.characteristic(with: feature) else { return false }
 
-        let otherEnabledFeatureCount = blueChar.features.filter({ $0.isNotificationsEnabled && ($0.name != feature.name) }).count
-
+        //let otherEnabledFeatureCount = blueChar.features.filter({ $0.isNotificationsEnabled && ($0.name != feature.name) }).count
+        
+        
+        blueChar.numberEnables -= 1
+        
+        if !blueChar.hasEnabledNotifications {
+            return true
+        }
+        
         var feature = feature
         feature.isNotificationsEnabled = false
-
-        if otherEnabledFeatureCount > 0 {
+        
+        if blueChar.numberEnables > 0 {
             return true
-        } else {
-            bleService.disableNotifications(for: blueChar.characteristic)
         }
+        
+        blueChar.hasEnabledNotifications = false
+        
+//        if otherEnabledFeatureCount > 0 {
+//            return true
+//        } else {
+//            bleService.disableNotifications(for: blueChar.characteristic)
+//        }
+        
+        bleService.disableNotifications(for: blueChar.characteristic)
 
         return true
     }

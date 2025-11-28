@@ -12,6 +12,11 @@
 import Foundation
 
 class BlueNRGOtaSettingsFeature: TimestampFeature<BlueNRGOtaSettingsData> {
+    
+    public required init(name: String, type: FeatureType) {
+        super.init(name: name, type: type)
+        isDataNotifyFeature = false
+    }
 
     override func extractData<T>(with timestamp: UInt64, data: Data, offset: Int) -> FeatureExtractDataResult<T> {
 
@@ -21,7 +26,7 @@ class BlueNRGOtaSettingsFeature: TimestampFeature<BlueNRGOtaSettingsData> {
         
         let parsedData = BlueNRGOtaSettingsData(with: data, offset: offset)
         
-        return (FeatureSample(with: timestamp, data: parsedData as? T, rawData: data), data.count - offset)
+        return (FeatureSample(with: timestamp, data: parsedData as? T, rawData: data), data.count)
         
     }
 

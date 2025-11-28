@@ -13,7 +13,7 @@ import Foundation
 
 public struct PnpLObjectContent: Codable {
     public let id: String?
-    public var type: String = "object"
+    public var type: PnpLGenericType
     public let name: String?
     public let displayName: DisplayName?
     public var fields: [PnpLPrimitiveContent]

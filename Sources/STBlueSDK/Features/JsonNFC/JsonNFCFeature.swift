@@ -11,7 +11,12 @@
 
 import Foundation
 
-public class JsonNFCFeature: BaseFeature<JsonNFCData> {
+public class JsonNFCFeature: TimestampFeature<JsonNFCData> {
+    
+    public required init(name: String, type: FeatureType) {
+        super.init(name: name, type: type)
+        isDataNotifyFeature = false
+    }
 
     private let dataTransporter = DataTransporter()
     
@@ -21,7 +26,7 @@ public class JsonNFCFeature: BaseFeature<JsonNFCData> {
                  commandFrame.removeLast()
                  let response = try JSONDecoder().decode(JsonReadModes.self, from: commandFrame)
                  dataTransporter.clear()
-                 return (FeatureSample(with: timestamp, data: JsonNFCData(response: response) as? T, rawData: data), 0)
+                 return (FeatureSample(with: timestamp, data: JsonNFCData(response: response) as? T, rawData: data),  data.count)
              } catch {
                  STBlueSDK.log(text: "Extract Data parse error: \(error)")
                  return (FeatureSample(with: timestamp, data: nil, rawData: data), 0)

@@ -24,7 +24,7 @@ public class ToFMultiObjectFeature: BaseFeature<ToFMultiObjectData>, CommandFeat
     
         let parsedData = ToFMultiObjectData(with: data, offset: offset)
         
-        return (FeatureSample(with: timestamp, data: parsedData as? T, rawData: data), data.count)
+        return (FeatureSample(with: timestamp, data: parsedData as? T, rawData: data),  data.count - offset)
     }
 
 }

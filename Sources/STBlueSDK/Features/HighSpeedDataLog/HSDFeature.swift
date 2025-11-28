@@ -13,6 +13,11 @@ import Foundation
 
 public class HSDFeature: BaseFeature<HSDData> {
     
+    public required init(name: String, type: FeatureType) {
+        super.init(name: name, type: type)
+        isDataNotifyFeature = false
+    }
+    
     let dataTransporter = DataTransporter()
     
     override func extractData<T>(with timestamp: UInt64, data: Data, offset: Int) -> FeatureExtractDataResult<T> {

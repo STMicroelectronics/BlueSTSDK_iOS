@@ -41,44 +41,52 @@ extension PnpLContent: Codable {
         if type == nil, let detailedProperty = try? container.decode([String].self, forKey: .type) {
             type = detailedProperty.joined(separator: "|").lowercased()
         }
-
-        switch type {
-        case "interface":
+        
+        if type == "interface" {
             let content = try singleContainer.decode(PnpLInterfaceContent.self)
             self = .interface(content)
-        case "component":
+        } else if type == "component" {
             let content = try singleContainer.decode(PnpLComponentContent.self)
             self = .component(content)
-        case "property",
-            "property|vector",
-            "property|initialized",
-            "property|initialized|numbervalue",
-            "property|booleanvalue|initialized",
-            "property|numbervalue|initialized":
+        } else if type == "property" {
             guard let content = try? singleContainer.decode(PnpLPropertyContent.self) else {
                 let content = try singleContainer.decode(PnpLPrimitiveContent.self)
                 self = .primitiveProperty(content)
                 return
             }
             self = .property(content)
-        case "property|booleanvalue",
-            "property|numbervalue",
-            "property|stringvalue":
-            let content = try singleContainer.decode(PnpLPrimitiveContent.self)
-            self = .primitiveProperty(content)
-        case "enum":
+        } else if type?.contains("property")==true {
+            if (type?.contains("vector")==true) ||
+                (type?.contains("initialized")==true) ||
+                (type?.contains("booleanvalue")==true) ||
+                (type?.contains("numbervalue")==true) ||
+                (type?.contains("stringvalue")==true) {
+                
+                guard let content = try? singleContainer.decode(PnpLPropertyContent.self) else {
+                    let content = try singleContainer.decode(PnpLPrimitiveContent.self)
+                    self = .primitiveProperty(content)
+                    return
+                }
+                self = .property(content)
+            } else {
+             //Fallback
+                let content = try singleContainer.decode(PnpLUnknownContent.self)
+                self = .unknown(content)
+            }
+        } else if type == "enum" {
             let content = try singleContainer.decode(PnpLEnumerativeContent.self)
             self = .enumerative(content)
-        case "object":
+        } else if type == "object" {
             let content = try singleContainer.decode(PnpLObjectContent.self)
             self = .object(content)
-        case "command":
+        } else if type == "command" {
             let content = try singleContainer.decode(PnpLCommandContent.self)
             self = .command(content)
-        case "commandpayload":
+        } else if type == "commandpayload" {
             let content = try singleContainer.decode(PnpLCommandPayloadContent.self)
             self = .commandPayload(content)
-        default:
+        } else {
+            //Fallback
             let content = try singleContainer.decode(PnpLUnknownContent.self)
             self = .unknown(content)
         }

@@ -15,6 +15,17 @@ import STCore
 
 class NodeListViewController: UIViewController, LoadableView {
 
+    var nodes: [Any] {
+        switch currentDeviceScanSelection {
+        case .classic:
+            return BlueManager.shared.discoveredNodes
+        case .le:
+            return BlueManager.shared.discoverLeNodes
+        }
+    }
+    
+    var currentDeviceScanSelection = BlueManager.shared.scanMode
+    
     let tableView = UITableView()
 
     override func viewDidLoad() {
@@ -36,11 +47,19 @@ class NodeListViewController: UIViewController, LoadableView {
         tableView.dataSource = self
 
         tableView.register(NodeCell.self, forCellReuseIdentifier: "NodeCell")
+        
+        let leNodelistItem = UIBarButtonItem(title: currentDeviceScanSelection.title,
+                                             style: .plain,
+                                             target: self,
+                                             action: #selector(changeScanMode))
+        
+        navigationItem.rightBarButtonItems = [ leNodelistItem ]
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         BlueManager.shared.addDelegate(self)
+        BlueManager.shared.addLeDelegate(self)
         BlueManager.shared.discoveryStart()
     }
 
@@ -52,8 +71,43 @@ class NodeListViewController: UIViewController, LoadableView {
 
     deinit {
         BlueManager.shared.removeDelegate(self)
-        BlueManager.shared.resetDiscovery()
+        BlueManager.shared.removeLeDelegate(self)
+        BlueManager.shared.resetDiscovery(true)
         Logger.debug(text: "DEINIT: \(String(describing: self))")
+    }
+    
+    @objc
+    func changeScanMode() {
+        switch currentDeviceScanSelection {
+        case .classic:
+            BlueManager.shared.discoveryStop()
+            BlueManager.shared.resetDiscovery(true)
+        case .le:
+            BlueManager.shared.discoveryLeStop()
+            BlueManager.shared.resetDiscoveredLeNodes()
+        }
+
+        currentDeviceScanSelection = (currentDeviceScanSelection == .classic) ? .le : .classic
+
+        if let button = navigationItem.rightBarButtonItems?.first {
+            button.title = currentDeviceScanSelection.title
+        }
+
+        switch currentDeviceScanSelection {
+        case .classic:
+            BlueManager.shared.scanMode = .classic
+            BlueManager.shared.discoveryStart()
+        case .le:
+            BlueManager.shared.scanMode = .le
+            BlueManager.shared.discoveryLeStart { [weak self] manager, leNode in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+        
+        tableView.reloadData()
     }
 }
 
@@ -64,11 +118,20 @@ extension NodeListViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        OLD METHOD -->
+//        tableView.deselectRow(at: indexPath, animated: true)
+//        showLoadingView()
+//        let node = BlueManager.shared.discoveredNodes[indexPath.row]
+//        BlueManager.shared.discoveryStop()
+//        BlueManager.shared.connect(node)
+//        <--
         tableView.deselectRow(at: indexPath, animated: true)
-        showLoadingView()
-        let node = BlueManager.shared.discoveredNodes[indexPath.row]
-        BlueManager.shared.discoveryStop()
-        BlueManager.shared.connect(node)
+        
+        if let node = nodes[indexPath.row] as? Node {
+            showLoadingView()
+            BlueManager.shared.discoveryStop()
+            BlueManager.shared.connect(node)
+        }
     }
 
 }
@@ -80,19 +143,34 @@ extension NodeListViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return BlueManager.shared.discoveredNodes.count
+//        return BlueManager.shared.discoveredNodes.count
+        return nodes.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NodeCell",
-                                                 for: indexPath)
-
-        let node = BlueManager.shared.discoveredNodes[indexPath.row]
-
-        cell.textLabel?.text = node.name
-        cell.detailTextLabel?.text = node.address
-
+//        OLD METHOD -->
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "NodeCell",
+//                                                 for: indexPath)
+//
+//        let node = BlueManager.shared.discoveredNodes[indexPath.row]
+//
+//        cell.textLabel?.text = node.name
+//        cell.detailTextLabel?.text = node.address
+//
+//        return cell
+//        <--
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "NodeCell", for: indexPath)
+        
+        if let node = nodes[indexPath.row] as? Node {
+            cell.textLabel?.text = node.name ?? "Unknown Node"
+            cell.detailTextLabel?.text = node.address
+        } else if let leNode = nodes[indexPath.row] as? LeNode {
+            cell.textLabel?.text = leNode.name ?? "Unknown LeNode"
+            cell.detailTextLabel?.numberOfLines = 0
+            cell.detailTextLabel?.text = "deviceId: \(leNode.deviceId.longHex) • firmwareId: \(leNode.firmwareId.longHex) • protocolId: \(leNode.protocolId.longHex) • payload: \(leNode.payloadData.hex)"
+        }
+        
         return cell
     }
 }
@@ -113,17 +191,12 @@ extension NodeListViewController: BlueDelegate {
 
                 BlueManager.shared.updateDtmi(with: .prod, firmware: firmware) { result, error in
 
-
                     Logger.debug(text: "\(result.count)")
-
-                    //
-                    //                if let error = error {
-                    //                    Logger.debug(text: error.localizedDescription)
-                    //                } else if let catalog = catalog {
-                    //                    Logger.debug(text: "Catalog version: \(catalog.version), cheksum: \(catalog.checksum)")
-                    //                }
+                    
+                    if result.isEmpty || error != nil {
+                        BlueManager.shared.updateDtmi(with: .dev, firmware: firmware) { dtmiElements, error in }
+                    }
                 }
-
             }
         }
     }
@@ -159,4 +232,22 @@ extension NodeListViewController: BlueDelegate {
     }
 }
 
-
+// MARK: - NodeListViewController Extension to support LeNodes
+extension NodeListViewController: BlueDelegateLeExtension {
+    func manager(_ manager: BlueManager, didDiscoverLeNode leNode: LeNode) {
+        guard currentDeviceScanSelection == .le else { return }
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func manager(_ manager: BlueManager, didUpdateLeNodePayload leNode: LeNode) {
+        guard currentDeviceScanSelection == .le else { return }
+        if let index = nodes.firstIndex(where: { ($0 as? LeNode)?.peripheral.identifier == leNode.peripheral.identifier }) {
+            let indexPath = IndexPath(row: index, section: 0)
+            DispatchQueue.main.async {
+                self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+        }
+    }
+}

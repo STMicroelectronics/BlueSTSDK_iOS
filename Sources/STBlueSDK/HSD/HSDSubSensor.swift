@@ -22,6 +22,13 @@ public class HSDSubSensor: Codable {
         case Pressure = "PRESS"
         case Microphone = "MIC"
         case MLC = "MLC"
+        case CLASS = "CLASS"
+        case STREDL = "STREDL"
+        case TimeOfFlight = "TOF"
+        case AmbientLightSensor = "ALS" ///Ambient Light Sensor
+        case TmosInfrared = "TMOS"
+        case PowerMeter = "POW"
+        case ISPU = "ISPU"
         case Unknown = ""
     }
     

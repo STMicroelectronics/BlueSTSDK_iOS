@@ -14,15 +14,21 @@ import Foundation
 public struct PnpLPrimitiveContent: Codable {
     public let id: String?
     public let displayName: DisplayName?
+    public let unit: String?
+    public let displayUnit: DisplayName?
     public let name: String
-    public let schema: PnpLContentSchema
+    public let schema: PnpLPrimitiveSchema
     public var writable: Bool?
     public var type: [String]?
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(self.id, forKey: .id)
-        try container.encodeIfPresent(self.schema.encodeValue, forKey: .type)
+        switch schema {
+        case .obj(_): break
+        case .string(let pnpLContentSchema):
+            try container.encodeIfPresent(pnpLContentSchema.encodeValue, forKey: .type)
+        }
         try container.encodeIfPresent(self.displayName, forKey: .displayName)
         try container.encode(self.name, forKey: .name)
         try container.encode(self.schema, forKey: .schema)
@@ -35,17 +41,56 @@ public struct PnpLPrimitiveContent: Codable {
         self.type = try? container.decodeIfPresent([String].self, forKey: .type)
         self.displayName = try container.decodeIfPresent(DisplayName.self, forKey: .displayName)
         self.name = try container.decode(String.self, forKey: .name)
-        self.schema = try container.decode(PnpLContentSchema.self, forKey: .schema)
+        self.unit = try container.decodeIfPresent(String.self, forKey: .unit)
+        self.displayUnit = try container.decodeIfPresent(DisplayName.self, forKey: .displayUnit)
+        self.schema = try container.decode(PnpLPrimitiveSchema.self, forKey: .schema)
         self.writable = try container.decodeIfPresent(Bool.self, forKey: .writable)
     }
 
     public enum CodingKeys: String, CodingKey {
         case id = "@id"
         case type = "@type"
+        case unit
         case displayName
+        case displayUnit
         case name
         case schema
         case writable
+    }
+}
+
+public enum PnpLPrimitiveSchema: Codable {
+
+    case obj(PnpLContent)
+    case string(PnpLContentSchema)
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+
+        if let x = try? container.decode(PnpLContentSchema.self) {
+            self = .string(x)
+            return
+        }
+
+        if let x = try? container.decode(PnpLContent.self) {
+            self = .obj(x)
+            return
+        }
+
+        throw DecodingError.typeMismatch(PnpLPrimitiveSchema.self,
+                                         DecodingError.Context(codingPath: decoder.codingPath,
+                                                               debugDescription: "Wrong type for PnpLPrimitiveSchema"))
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var singleContainer = encoder.singleValueContainer()
+
+        switch self {
+        case .obj(let pnpLContent):
+            try singleContainer.encode(pnpLContent)
+        case .string(let string):
+            try singleContainer.encode(string)
+        }
     }
 }
 

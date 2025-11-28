@@ -34,15 +34,15 @@ public enum JSONValue: Codable {
 }
 
 public extension JSONValue {
-
+    
     func value(for deviceId: Int, firmwareId: Int, key: String?) -> JSONValue? {
-
+        
         if case let .array(devices) = searchKey(keyValue: "devices") {
-
+            
             for device in devices {
                 if case let .int(devId) = device.searchKey(keyValue: "board_id"),
                    case let .int(fwId) = device.searchKey(keyValue: "fw_id") {
-
+                    
                     if devId == deviceId, fwId == firmwareId {
                         return device.searchKey(keyValue: key)
                     } else {
@@ -51,30 +51,46 @@ public extension JSONValue {
                 }
             }
         }
-
+        
         return nil
     }
-
-    func searchKey(keyValue: String?) -> JSONValue? {
+    
+//    func checkBleResponseFlag() -> Bool {
+//        if case let .array(devices) = searchKey(keyValue: "devices") {
+//            
+//            for device in devices {
+//                if case let .bool(bleResponse) = device.searchKey(keyValue: "pnpl_ble_responses") {
+//                    return bleResponse
+//                }
+//            }
+//        }
+//        
+//        return false
+//    }
+    
+    func searchKey(keyValue: String?, nested: Bool = true) -> JSONValue? {
         if keyValue != nil {
             switch self {
                 
             case .object(let dict):
-
+                
                 var found: JSONValue?
-
+                
                 for key in dict.keys {
                     if keyValue == key {
                         found = dict[key]
                         break
                     } else {
-                        found = dict[key]?.searchKey(keyValue: key)
+                        if !nested {
+                            continue
+                        }
+                        found = dict[key]?.searchKey(keyValue: keyValue)
                         if found != nil {
                             break
                         }
                     }
                 }
-
+                
                 return found
                 
             case .array(let arr):
@@ -93,29 +109,29 @@ public extension JSONValue {
         return nil
     }
     
-//    /// Function used to search to extract actual value for a specific parameter present in JSON Board
+    //    /// Function used to search to extract actual value for a specific parameter present in JSON Board
     func extractValueParam(keyValue: String?) -> JSONValue? {
         extractObjectParam(keyValue: keyValue)
     }
-//        if keyValue != nil {
-//
-//            switch self {
-//
-//            case .object(let dict):
-//                for key in dict.keys {
-//                    if keyValue == key {
-//                        return dict[key]?.value
-//                    }
-//                }
-//
-//            default:
-//                return nil
-//            }
-//
-//        }
-//
-//        return nil
-//    }
+    //        if keyValue != nil {
+    //
+    //            switch self {
+    //
+    //            case .object(let dict):
+    //                for key in dict.keys {
+    //                    if keyValue == key {
+    //                        return dict[key]?.value
+    //                    }
+    //                }
+    //
+    //            default:
+    //                return nil
+    //            }
+    //
+    //        }
+    //
+    //        return nil
+    //    }
     
     func extractObjectParam(keyValue: String?) -> JSONValue? {
         if keyValue != nil {
@@ -130,6 +146,66 @@ public extension JSONValue {
                 return nil
             }
         }
+        return nil
+    }
+
+    @discardableResult
+    mutating func replaceKey(keyValue: String?, object: JSONValue, nested: Bool = true) -> JSONValue? {
+        if keyValue != nil {
+            switch self {
+
+            case .object(var dict):
+
+                var found: JSONValue?
+
+                for key in dict.keys {
+                    if keyValue == key {
+                        dict[key] = object
+
+                        self = .object(dict)
+
+                        found = self
+                        break
+                    } else {
+                        if !nested {
+                            continue
+                        }
+                        found = dict[key]?.replaceKey(keyValue: keyValue, object: object, nested: nested)
+                        if found != nil {
+                            break
+                        }
+                    }
+                }
+
+                return found
+
+            case .array(var arr):
+
+                var found: JSONValue?
+                var index: Int?
+
+                for (currentIndex, var item) in arr.enumerated() {
+                    if let foundObj = item.replaceKey(keyValue: keyValue, object: object, nested: nested) {
+                        found = foundObj
+                        index = currentIndex
+                        break;
+                    }
+                }
+
+                if let index = index, let found = found {
+                    arr.remove(at: index)
+                    arr.append(found)
+                }
+
+                self = .array(arr)
+
+                return found
+
+            default:
+                return nil
+            }
+        }
+
         return nil
     }
 }

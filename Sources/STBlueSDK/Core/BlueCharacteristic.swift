@@ -16,6 +16,8 @@ public class BlueCharacteristic {
     let characteristic: CBCharacteristic
     let maxMtu: Int
     let features: [Feature]
+    var hasEnabledNotifications: Bool = false
+    var numberEnables: Int = 0
 
     init(characteristic: CBCharacteristic, features: [Feature], maxMtu: Int) {
         self.characteristic = characteristic

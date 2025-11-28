@@ -12,6 +12,11 @@
 import Foundation
 
 class STM32WBRebootOtaModeFeature: BaseFeature<Data> {
+    
+    public required init(name: String, type: FeatureType) {
+        super.init(name: name, type: type)
+        isDataNotifyFeature = false
+    }
 
     private static let rebootOtaMode = UInt8(0x01)
 

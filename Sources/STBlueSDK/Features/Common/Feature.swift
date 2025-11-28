@@ -18,14 +18,17 @@ public protocol Loggable {
 
 public protocol Feature: Loggable {
 
-    var name: String { get }
+    var name: String { get set }
     var simpleDescription: String { get }
     var isEnabled: Bool { get set }
     var isNotificationsEnabled: Bool { get set }
+    var isDataNotifyFeature: Bool { get }
     var type: FeatureType { get }
     var notificationDate: Date? { get }
     var hasData: Bool { get }
     var lastSample: AnyFeatureSample? { get }
+    
+    func changeName(newName: String)
 
     func update(with timestamp: UInt64, data: Data, offset: Int, mtu: Int) -> Int
 

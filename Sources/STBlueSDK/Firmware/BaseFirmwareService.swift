@@ -1,6 +1,6 @@
 //
 //  BaseFirmwareService.swift
-//  
+//
 //  Copyright (c) 2022 STMicroelectronics.
 //  All rights reserved.
 //
@@ -24,14 +24,35 @@ internal class BaseFirmwareService: FirmwareService {
 
     func upgradeFirmware(with url: URL, type: FirmwareType, callback: FirmwareUpgradeCallback) {
 
-        do {
-            let fileHandler = try FileHandle(forReadingFrom: url)
-            let data = fileHandler.readDataToEndOfFile()
-            fileHandler.closeFile()
-            startLoading(with: url, type: type, firmwareData: data, callback: callback)
-        } catch {
-            callback.completion(url, .invalidFwFile)
+        
+        if(url.startAccessingSecurityScopedResource()==true) {
+            do {
+                let fileHandler = try FileHandle(forReadingFrom: url)
+                
+                let data = fileHandler.readDataToEndOfFile()
+                fileHandler.closeFile()
+                startLoading(with: url, type: type, firmwareData: data, callback: callback)
+            } catch {
+                print("Unexpected error: \(error).")
+                callback.completion(url, .invalidFwFile)
+            }
+        } else {
+            if url.description.contains("Containers/Data/Application") {
+                do {
+                    let fileHandler = try FileHandle(forReadingFrom: url)
+                    let data = fileHandler.readDataToEndOfFile()
+                    fileHandler.closeFile()
+                    startLoading(with: url, type: type, firmwareData: data, callback: callback)
+                } catch {
+                    print("Unexpected error: \(error).")
+                    callback.completion(url, .invalidFwFile)
+                }
+            } else {
+                callback.completion(url, .invalidFwFile)
+            }
         }
+        
+        url.stopAccessingSecurityScopedResource()
     }
 
     func startLoading(with url: URL, type: FirmwareType, firmwareData: Data, callback: FirmwareUpgradeCallback) {

@@ -88,8 +88,10 @@ public protocol BlueSTManager {
     func sendHSDSetCommand(_ command: HSDSetCmd, to node: Node, completion: @escaping () -> Void)  -> Bool
     func sendHSDControlCommand(_ command: HSDControlCmd, to node: Node)  -> Bool
     func sendHSDCommand(_ command: String?, to node: Node, completion: @escaping () -> Void)  -> Bool
+    
+    func sendBinaryCommand(_ data: Data?, to node: Node, feature: Feature, writeSize: Int, progress: @escaping (Int, Int) -> Void,completion: @escaping () -> Void)  -> Bool
 
-    func sendPnpLCommand(_ command: PnpLCommand, to node: Node, feature: Feature)  -> Bool
+    func sendPnpLCommand(_ command: PnpLCommand, maxWriteLength: Int, to node: Node, feature: Feature)  -> Bool
 
     func firmwareUpgrade(for node: Node, type: FirmwareType, url: URL, catalog: Catalog, callback: FirmwareUpgradeCallback)
     
@@ -100,23 +102,46 @@ public protocol BlueSTManager {
 }
 
 public typealias BlueDiscovering = (_ manager: BlueManager, _ discoveredNode: Node) -> Void
+public typealias BlueDiscoveringLe = (_ manager: BlueManager, _ discoveredLeNode: LeNode) -> Void
 
 public class BlueManager : NSObject, BlueSTManager {
 
     internal static let retryStartScanningDelay = TimeInterval(0.5)
     internal static let defaultAdvertiseFilter: [AdvertiseFilter] = [AdvertiseParser(), BlueNRGOtaAdvertiseParser()]
+    
+    /// Le Nodes
+    internal static let defaultLeAdvertiseFilter: [LeAdvertiseFilter] = [LeAdvertiseParser()]
 
+    public var scanMode: ScanMode = .classic
+    private var discoveringLeCallbacks: [WeakCallback<BlueDiscoveringLe>] = []
+    internal var leNodes: [LeNode] = []
+    
     public let featureLogger = FeatureFileLogger()
 
     public static let shared = BlueManager()
 
     public var discoveredNodes: [Node] {
+//        OLD METHOD
+//        if let favoritesService: FavoritesService = Resolver.shared.resolve() {
+//            return nodeServices.map {
+//                $0.node
+//            }.sorted { first, second in
+//                return favoritesService.isFavorite(node: first) && !favoritesService.isFavorite(node: second)
+//            }
+//        }
+//        return nodeServices.map { $0.node }
         if let favoritesService: FavoritesService = Resolver.shared.resolve() {
-            return nodeServices.map {
-                $0.node
-            }.sorted { first, second in
-                return favoritesService.isFavorite(node: first) && !favoritesService.isFavorite(node: second)
-            }
+            return nodeServices.map { $0.node }
+                .sorted { first, second in
+                    let isFirstFavorite = favoritesService.isFavorite(node: first)
+                    let isSecondFavorite = favoritesService.isFavorite(node: second)
+
+                    if isFirstFavorite == isSecondFavorite {
+                        return false
+                    } else {
+                        return isFirstFavorite && !isSecondFavorite
+                    }
+                }
         }
         return nodeServices.map { $0.node }
     }
@@ -141,10 +166,12 @@ public class BlueManager : NSObject, BlueSTManager {
     private var discoveringCallbacks: [WeakCallback<BlueDiscovering>] = []
 
     public var delegates: [WeakObject<BlueDelegate>] = [WeakObject<BlueDelegate>]()
+    internal var leNodesDelegates: [WeakObject<BlueDelegateLeExtension>] = []
 
     internal let notificationQueue = DispatchQueue(label: "BlueManager", qos: .background, attributes: .concurrent)
     internal var centralManager: CBCentralManager!
     internal var advertiseFilters: [AdvertiseFilter] = BlueManager.defaultAdvertiseFilter
+    internal var leAdvertiseFilters: [LeAdvertiseFilter] = BlueManager.defaultLeAdvertiseFilter
     internal var timeoutWorkItem: DispatchWorkItem?
     internal var delayWorkItem: DispatchWorkItem?
 
@@ -251,20 +278,54 @@ extension BlueManager: CBCentralManagerDelegate {
                                advertisementData: [String : Any],
                                rssi RSSI: NSNumber) {
 
-        let uuid = peripheral.identifier.uuidString
-        if let node = discoveredNodes.nodeWith(tag: uuid) {
-            node.rssi = Int(truncating: RSSI)
-            if node.peripheral != peripheral {
-                node.peripheral = peripheral
+        switch scanMode {
+        case .classic:
+            let uuid = peripheral.identifier.uuidString
+            if let node = discoveredNodes.nodeWith(tag: uuid) {
+                node.rssi = Int(truncating: RSSI)
+                if node.peripheral != peripheral {
+                    node.peripheral = peripheral
+                }
+                notify(node: node)
+            } else {
+                let firstMatch = advertiseFilters.lazy.compactMap { $0.filter(advertisementData) }.first
+                if let info = firstMatch {
+                    let newNode = Node(peripheral: peripheral,
+                                       rssi: Int(truncating: RSSI),
+                                       advertiseInfo: info)
+                    addAndNotify(node: newNode)
+                }
             }
-            notify(node: node)
-        } else {
-            let firstMatch = advertiseFilters.lazy.compactMap { $0.filter(advertisementData) }.first
-            if let info = firstMatch {
-                let newNode = Node(peripheral: peripheral,
-                                   rssi: Int(truncating: RSSI),
-                                   advertiseInfo: info)
-                addAndNotify(node: newNode)
+            
+        case .le:
+            let uuid = peripheral.identifier.uuidString
+            if let existingIndex = leNodes.firstIndex(where: { $0.peripheral.identifier.uuidString == uuid }) {
+                let leNode = leNodes[existingIndex]
+                
+                if leNode.peripheral != peripheral {
+                    leNode.peripheral = peripheral
+                }
+                
+                if let updatedInfo = leAdvertiseFilters.lazy.compactMap({ $0.filter(advertisementData) }).first {
+                    let oldPayload = leNode.payloadData
+                    let newPayload = updatedInfo.payloadData
+
+                    if newPayload != oldPayload {
+                        leNode.payloadData = newPayload
+                        notifyLeNodePayloadChanged(leNode)
+                    } else {
+                        notify(leNode: leNode)
+                    }
+                } else {
+                    notify(leNode: leNode)
+                }
+            } else {
+                let firstMatch = leAdvertiseFilters.lazy.compactMap { $0.filter(advertisementData) }.first
+                if let info = firstMatch {
+                    let leNode = LeNode(peripheral: peripheral, advertiseInfo: info)
+                    leNodes.append(leNode)
+                    notify(leNode: leNode)
+                }
             }
         }
     }
@@ -347,5 +408,114 @@ extension BlueManager: NodeServiceDelegate {
                 weakDelegate.manager(self, didReceiveCommandResponseFor: node, feature: feature, response: response)
             }
         }
+    }
+}
+
+// MARK: - BlueManager Extension to support LeNodes
+extension BlueManager {
+    
+    public func addLeDelegate(_ delegate: BlueDelegateLeExtension) {
+        guard leNodesDelegates.firstIndex(where: { $0.refItem === delegate }) == nil else { return }
+        leNodesDelegates.append(WeakObject(refItem: delegate))
+    }
+
+    public func removeLeDelegate(_ delegate: BlueDelegateLeExtension) {
+        if let index = leNodesDelegates.firstIndex(where: { $0.refItem === delegate }) {
+            leNodesDelegates.remove(at: index)
+        }
+    }
+    public var discoverLeNodes: [LeNode] {
+        return leNodes
+    }
+    
+    public func discoveryLeStart(completion: BlueDiscoveringLe? = nil) {
+        resetDiscovery(true)
+        scanMode = .le
+
+        if let completion = completion {
+            discoveringLeCallbacks.append(WeakCallback(refItem: self, callback: completion))
+        }
+        discoveryStart()
+    }
+
+    public func discoveryLeStop() {
+        discoveryStop()
+        discoveringLeCallbacks.removeAll()
+    }
+    
+    public func resetDiscoveredLeNodes() {
+        leNodes.removeAll()
+    }
+    
+    public func addDiscoveringLeCallback(_ callback: @escaping BlueDiscoveringLe) {
+        cleanupLeCallback()
+        discoveringLeCallbacks.append(WeakCallback(callback: callback))
+    }
+    
+    private func cleanupLeCallback() {
+        discoveringLeCallbacks = discoveringLeCallbacks.filter { $0.refItem != nil }
+    }
+    
+    private func notify(leNode: LeNode) {
+        delegates.forEach { delegate in
+            notificationQueue.async { [weak self] in
+                guard let self = self else { return }
+                if let leDelegate = delegate.refItem as? BlueDelegateLeExtension {
+                    leDelegate.manager(self, didDiscoverLeNode: leNode)
+                }
+            }
+        }
+
+        discoveringLeCallbacks.forEach { weakCallback in
+            notificationQueue.async { [weak self] in
+                guard let self = self else { return }
+                weakCallback.callback(self, leNode)
+            }
+        }
+    }
+    
+    public func notifyLeNodePayloadChanged(_ leNode: LeNode) {
+        leNodesDelegates.forEach { weakDelegate in
+            if let delegate = weakDelegate.refItem as? BlueDelegateLeExtension {
+                DispatchQueue.main.async {
+                    delegate.manager(self, didUpdateLeNodePayload: leNode)
+                }
+            }
+        }
+        
+        discoveringLeCallbacks.forEach { weakCallback in
+            DispatchQueue.main.async {
+                weakCallback.callback(self, leNode)
+            }
+        }
+    }
+}
+
+public protocol BlueDelegateLeExtension: AnyObject {
+    func manager(_ manager: BlueManager, didDiscoverLeNode leNode: LeNode)
+    func manager(_ manager: BlueManager, didUpdateLeNodePayload leNode: LeNode)
+}
+
+// MARK: - Scan Mode
+public enum ScanMode: String {
+    case classic = "Scan BlueST-LE Device" // BlueST classic Node pipeline
+    case le = "Scan BlueST Device"         // BlueST-LE LeNode pipeline
+
+    public var title: String { rawValue }
+}
+
+
+extension BlueManager {
+    public func switchToClassicDiscovery() {
+        discoveryLeStop()
+        scanMode = .classic
+        discoveryStart()
+    }
+
+    public func switchToLeDiscovery(with delegate: BlueDelegateLeExtension? = nil) {
+        discoveryStop()
+        if let del = delegate { addLeDelegate(del) }
+        scanMode = .le
+        discoveryLeStart()
     }
 }

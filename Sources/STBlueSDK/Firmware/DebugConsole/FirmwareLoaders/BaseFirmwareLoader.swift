@@ -31,16 +31,20 @@ internal class BaseFirmwareLoader: DebugConsoleDelegate {
     internal var byteSent = 0
     internal var numberOfPackageReceived = 0
     internal var maxMtu: Int
+    internal var fotaMaxChunkLength: Int
+    internal var otaChunkDivisorConstraint: Int
     internal var callback: FirmwareUpgradeCallback?
     internal var writeError = false
 
-    init(url: URL, firmwareData: Data, packageDelay: UInt, fastFota: Bool, maxMtu: Int, callback: FirmwareUpgradeCallback) {
+    init(url: URL, firmwareData: Data, packageDelay: UInt, fastFota: Bool, maxMtu: Int, fotaMaxChunkLength: Int, otaChunkDivisorConstraint: Int, callback: FirmwareUpgradeCallback) {
         self.url = url
         self.firmwareData = firmwareData
         self.packageDelay = UInt64(packageDelay) * UInt64(1000000) // Nano seconds
         self.crc = BlueSTM32CRC.getCrc(firmwareData)
         self.maxMtu = maxMtu
         self.callback = callback
+        self.fotaMaxChunkLength = fotaMaxChunkLength
+        self.otaChunkDivisorConstraint = otaChunkDivisorConstraint
 
         self.nodeReadyToReceiveFile = false
         self.byteSent = 0
@@ -48,10 +52,16 @@ internal class BaseFirmwareLoader: DebugConsoleDelegate {
 
         if fastFota {
             chunkSize = maxMtu
-
-            while !(chunkSize % 8 == 0) {
-                chunkSize = chunkSize - 1
+            
+            
+            if (fotaMaxChunkLength<chunkSize) && (fotaMaxChunkLength>0) {
+                chunkSize = fotaMaxChunkLength
             }
+            
+            if otaChunkDivisorConstraint > 0 {
+                chunkSize = (chunkSize/otaChunkDivisorConstraint)*otaChunkDivisorConstraint
+            }
+
             STBlueSDK.log(text: "[Firmware upgrade] >>FAST FOTA Debug Console<< chunkLength: \(chunkSize)")
         }
 

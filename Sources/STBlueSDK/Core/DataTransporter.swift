@@ -14,24 +14,28 @@ import Foundation
 public struct DataTransporterConfig {
     var mtu: Int
     var startPacket: UInt8
+    var startLongPacket: UInt8
     var startEndPacket: UInt8
     var middlePacket: UInt8
     var endPacket: UInt8
-
+    
     public init(mtu: Int,
                 startPacket: UInt8,
+                startLongPacket: UInt8,
                 startEndPacket: UInt8,
                 middlePacket: UInt8,
                 endPacket: UInt8) {
         self.mtu = mtu
         self.startPacket = startPacket
+        self.startLongPacket = startLongPacket
         self.startEndPacket = startEndPacket
         self.middlePacket = middlePacket
         self.endPacket = endPacket
     }
-
+    
     static var standard: DataTransporterConfig = DataTransporterConfig(mtu: 20,
                                                                        startPacket: 0x00,
+                                                                       startLongPacket: 0x10,
                                                                        startEndPacket: 0x20,
                                                                        middlePacket: 0x40,
                                                                        endPacket: 0x80)
@@ -40,8 +44,18 @@ public struct DataTransporterConfig {
 public class DataTransporter {
     private var codedBuffer = Data()
     private let debug = false
-
+    
+    private let maxShortMessage = (1 << 16) - 1
+    
+    public var bytesRec = 0
+    public var numberPackets = 0
+    
     public var config: DataTransporterConfig = DataTransporterConfig.standard
+    
+    public func getMaxSize()-> Int {return config.mtu}
+    public func setMaxSize(maxSize: Int) {
+        config.mtu = maxSize
+    }
     
     public func decapsulate(data: Data) -> Data? {
         
@@ -49,19 +63,27 @@ public class DataTransporter {
         case config.startPacket:
             codedBuffer.removeAll(keepingCapacity: true)
             codedBuffer.append(data[1...])
+            numberPackets = 1
+            bytesRec += data.count - 1
             return nil
             
         case config.startEndPacket:
             codedBuffer.removeAll(keepingCapacity: true)
             codedBuffer.append(data[1...])
+            numberPackets = 1
+            bytesRec += data.count - 1
             return codedBuffer
             
         case config.middlePacket:
             codedBuffer.append(data[1...])
+            numberPackets += 1
+            bytesRec += data.count - 1
             return nil
             
         case config.endPacket:
             codedBuffer.append(data[1...])
+            numberPackets += 1
+            bytesRec += data.count - 1
             return codedBuffer
             
         default:
@@ -77,8 +99,14 @@ public class DataTransporter {
         let mtuSize = config.mtu
         var count = 0
         let codedDataLength = byteCommand.count
-        let codedDataLengthBytes = Data(bytes: Int16(codedDataLength).reversedBytes, count: Int16(codedDataLength).reversedBytes.count)
-
+        let isShortPacket =  byteCommand.count < maxShortMessage
+        
+        let codedDataLengthBytes = if isShortPacket {
+            Data(bytes: Int16(codedDataLength).reversedBytes, count: Int16(codedDataLength).reversedBytes.count)
+        } else {
+            Data(bytes: Int32(codedDataLength).reversedBytes, count: Int32(codedDataLength).reversedBytes.count)
+        }
+        
         while count < codedDataLength {
             var size = min(Int(mtuSize) - 1, codedDataLength - count)
             if codedDataLength - count <= mtuSize - 1 {
@@ -86,7 +114,11 @@ public class DataTransporter {
                     if codedDataLength - count <= mtuSize - 3 {
                         head = config.startEndPacket
                     } else {
-                        head = config.startPacket
+                        if isShortPacket {
+                            head = config.startPacket
+                        } else {
+                            head = config.startEndPacket
+                        }
                     }
                 } else {
                     head = config.endPacket
@@ -94,6 +126,17 @@ public class DataTransporter {
             }
             
             switch head {
+            case config.startLongPacket:
+                let to = (mtuSize - 5) - 1
+                data.append(head)
+                data.append(codedDataLengthBytes)
+                data.append(byteCommand[0...to])
+                size = Int(mtuSize - 5)
+                head = config.middlePacket
+                
+                if debug {
+                    STBlueSDK.log(text: "set data from 0 to \(to), size: \(size) -> \(byteCommand[0...to])")
+                }
             case config.startPacket:
                 let to = (mtuSize - 3) - 1
                 data.append(head)
@@ -150,8 +193,111 @@ public class DataTransporter {
         
         return data
     }
-
+    
+    public func encapsulate(byteCommand: Data) -> Data {
+        
+        var head = config.startPacket
+        var data = Data()
+        let mtuSize = config.mtu
+        var count = 0
+        let codedDataLength = byteCommand.count
+        let isShortPacket =  byteCommand.count < maxShortMessage
+        
+        let codedDataLengthBytes = if isShortPacket {
+            Data(bytes: Int16(codedDataLength).reversedBytes, count: Int16(codedDataLength).reversedBytes.count)
+        } else {
+            Data(bytes: Int32(codedDataLength).reversedBytes, count: Int32(codedDataLength).reversedBytes.count)
+        }
+        
+        while count < codedDataLength {
+            var size = min(Int(mtuSize) - 1, codedDataLength - count)
+            if codedDataLength - count <= mtuSize - 1 {
+                if count == 0 {
+                    if codedDataLength - count <= mtuSize - 3 {
+                        head = config.startEndPacket
+                    } else {
+                        if isShortPacket {
+                            head = config.startPacket
+                        } else {
+                            head = config.startEndPacket
+                        }
+                    }
+                } else {
+                    head = config.endPacket
+                }
+            }
+            
+            switch head {
+            case config.startLongPacket:
+                let to = (mtuSize - 5) - 1
+                data.append(head)
+                data.append(codedDataLengthBytes)
+                data.append(byteCommand[0...to])
+                size = Int(mtuSize - 5)
+                head = config.middlePacket
+                
+                if debug {
+                    STBlueSDK.log(text: "set data from 0 to \(to), size: \(size) -> \(byteCommand[0...to])")
+                }
+            case config.startPacket:
+                let to = (mtuSize - 3) - 1
+                data.append(head)
+                data.append(codedDataLengthBytes)
+                data.append(byteCommand[0...to])
+                size = Int(mtuSize - 3)
+                head = config.middlePacket
+                
+                if debug {
+                    STBlueSDK.log(text: "set data from 0 to \(to), size: \(size) -> \(byteCommand[0...to])")
+                }
+                
+            case config.startEndPacket:
+                data.append(head)
+                data.append(codedDataLengthBytes)
+                data.append(byteCommand[0...(codedDataLength - 1)])
+                size = codedDataLength
+                head = config.startPacket
+                
+                if debug {
+                    STBlueSDK.log(text: "set data from 0 to \(codedDataLength), size: \(size) -> \(byteCommand[0..<codedDataLength])")
+                }
+                
+            case config.middlePacket:
+                let to = (count + (mtuSize - 1)) - 1
+                
+                data.append(head)
+                data.append(byteCommand[count...to])
+                
+                if debug {
+                    STBlueSDK.log(text: "set data from \(count) to \( to ), size: \(size) -> \(byteCommand[count...to])")
+                }
+                
+            case config.endPacket:
+                data.append(head)
+                data.append(byteCommand[count...])
+                head = config.startPacket
+                
+                if debug {
+                    STBlueSDK.log(text: "set data from \(count) to END, size: \(size) -> \(byteCommand[count...])")
+                }
+                
+            default:
+                break
+            }
+            
+            count += size
+        }
+        
+        if debug {
+            STBlueSDK.log(text: "result: \(String(data: data, encoding: .ascii) ?? "n/a")")
+            STBlueSDK.log(text: "Result hex: \(data.hex)")
+        }
+        
+        return data
+    }
     public func clear() {
         codedBuffer = Data()
+        numberPackets = 0
+        bytesRec = 0
     }
 }

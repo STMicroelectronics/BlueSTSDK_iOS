@@ -29,12 +29,22 @@ internal extension Data {
         Data([STM32WBCommand.stop])
     }
 
-    static func startUpload(type: FirmwareType, fileLength: Int?) -> Data? {
+    static func startUpload(type: FirmwareType, revertCommand: Bool, fileLength: Int?) -> Data? {
 
         var uploadType = STM32WBCommand.startM4
         
-        if case .radio = type {
-            uploadType = STM32WBCommand.startM0
+        if(revertCommand) {
+            if case .radio = type {
+                uploadType = STM32WBCommand.startM4
+            } else {
+                uploadType = STM32WBCommand.startM0
+            }
+        } else {
+            if case .radio = type {
+                uploadType = STM32WBCommand.startM0
+            } else {
+                uploadType = STM32WBCommand.startM4
+            }
         }
 
         var commandData = Data()

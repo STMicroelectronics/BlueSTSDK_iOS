@@ -11,14 +11,6 @@
 
 import Foundation
 
-public protocol FeatureCommandType {
-    
-    func data(with nodeId: UInt8) -> Data
-    var description: String { get }
-    var useMask: Bool { get }
-    var payload: Data? { get }
-}
-
 public enum BatteryCommand: UInt8, FeatureCommandType {
     case getBatteryCapacity = 0x01
     case getMaxAssorbedCurrent = 0x02

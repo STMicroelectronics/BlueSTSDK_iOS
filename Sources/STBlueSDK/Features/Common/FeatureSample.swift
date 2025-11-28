@@ -39,7 +39,8 @@ public struct FeatureSample<T: Loggable>: AnyFeatureSample {
 extension FeatureSample: CustomStringConvertible {
     public var description: String {
         
-        var descr = "ts: \(timestamp)\nraw data: \(rawData.hex)"
+        //var descr = "ts: \(timestamp)\nraw data: \(rawData.hex)"
+        var descr = "ts: \(timestamp)"
         
         if let data = data as? Data {
             descr += "\n\(data.hex)"

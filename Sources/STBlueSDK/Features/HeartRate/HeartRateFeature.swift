@@ -23,7 +23,7 @@ public class HeartRateFeature: BaseFeature<HeartRateData> {
         
         let parsedData = HeartRateData(with: data, offset: offset)
         
-        return (FeatureSample(with: timestamp, data: parsedData as? T, rawData: data), packetLength)
+        return (FeatureSample(with: timestamp, data: parsedData as? T, rawData: data),  data.count - offset)
     }
 
 }

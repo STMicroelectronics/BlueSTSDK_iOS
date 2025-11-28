@@ -11,10 +11,13 @@
 
 import Foundation
 
-class GeneralPurposeFeature: BaseFeature<Data> {
+public class GeneralPurposeFeature: BaseFeature<GeneralPurposeData> {
 
     override func extractData<T>(with timestamp: UInt64, data: Data, offset: Int) -> FeatureExtractDataResult<T> {
-        return (FeatureSample(with: timestamp, data: data as? T, rawData: data), data.count)
+        
+        let parsedData = GeneralPurposeData(with: data, offset: offset)
+        
+        return (FeatureSample(with: timestamp, data: parsedData as? T, rawData: data), data.count-offset)
     }
 
 }

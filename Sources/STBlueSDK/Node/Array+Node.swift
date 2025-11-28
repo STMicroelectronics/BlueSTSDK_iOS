@@ -51,11 +51,19 @@ public extension Array {
         append(newElement)
     }
 
-    mutating func syncRemove(at index: Int) {
+    mutating func syncAppend<S>(contentsOf newElements: S) where Element == S.Element, S : Sequence {
         objc_sync_enter(self)
 
         defer { objc_sync_exit(self) }
 
-        remove(at: index)
+        append(contentsOf: newElements)
+    }
+
+    mutating func syncRemove(at index: Int) -> Element {
+        objc_sync_enter(self)
+
+        defer { objc_sync_exit(self) }
+
+        return remove(at: index)
     }
 }

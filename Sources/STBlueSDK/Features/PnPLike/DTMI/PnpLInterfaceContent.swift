@@ -1,5 +1,5 @@
 //
-//  PnpLPrimitiveContent.swift
+//  PnpLInterfaceContent.swift
 //
 //  Copyright (c) 2022 STMicroelectronics.
 //  All rights reserved.
@@ -13,7 +13,7 @@ import Foundation
 
 public struct PnpLInterfaceContent: Codable {
     public let id: String
-    public var type: String = "interface"
+    public var type: PnpLGenericType
     public let name: String?
     public let context: [String]
     public let displayName: DisplayName?

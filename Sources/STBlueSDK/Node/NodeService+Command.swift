@@ -10,6 +10,7 @@
 //
 
 import Foundation
+import CoreBluetooth
 
 internal extension NodeService {
     func sendCommand(_ command: FeatureCommand, feature: Feature) -> Bool {
@@ -41,5 +42,22 @@ internal extension NodeService {
         bleService.write(data: message, characteristic: writeChar.characteristic)
 
         return true
+    }
+    
+    func sendBinaryContent(_ data: Data,
+                           characteristic: CBCharacteristic,
+                           writeSize: Int=20,
+                           progress: @escaping (Int, Int) -> Void,
+                           completion: @escaping () -> Void) -> Bool {
+        if debug { STBlueSDK.log(text: "Send Binary Content : \(data.count)") }
+        
+        let dataTransporter = DataTransporter()
+        dataTransporter.config.mtu = writeSize
+        
+        return sendWrite(dataTransporter.encapsulate(byteCommand: data),
+                         characteristic: characteristic,
+                         mtu: dataTransporter.config.mtu,
+                         progress: progress,
+                         completion: completion)
     }
 }

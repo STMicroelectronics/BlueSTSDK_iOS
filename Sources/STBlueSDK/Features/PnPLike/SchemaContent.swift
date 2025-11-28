@@ -15,9 +15,9 @@ public struct SchemaObject: Codable {
     public let id: String?
     public let type: String
     public let displayName: DisplayName?
+    public let fields: [EnumResponseValue]?
     public let enumValues: [EnumResponseValue]?
     public let valueSchema: String?
-    public let fields: [EnumResponseValue]?
     public let writable: Bool?
 
     public enum CodingKeys: String, CodingKey {

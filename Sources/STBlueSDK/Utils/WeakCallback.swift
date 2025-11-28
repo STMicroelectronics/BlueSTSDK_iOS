@@ -20,7 +20,7 @@ public class WeakCallback<T> : Equatable {
     weak var refItem: AnyObject?
     let callback: T
 
-    public init(refItem: AnyObject, callback: T) {
+    public init(refItem: AnyObject? = nil, callback: T) {
         self.refItem = refItem
         self.callback = callback
     }

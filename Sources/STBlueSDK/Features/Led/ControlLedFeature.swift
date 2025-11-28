@@ -67,6 +67,11 @@ public enum ControlLedCommand: UInt8, FeatureCommandType {
 
 public class ControlLedFeature: BaseFeature<Data>, CommandFeature {
     
+    public required init(name: String, type: FeatureType) {
+        super.init(name: name, type: type)
+        isDataNotifyFeature = false
+    }
+    
     public var commands: [FeatureCommandType] = [
         ControlLedCommand.switchOnLed,
         ControlLedCommand.switchOffLed

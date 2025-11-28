@@ -49,6 +49,13 @@ public extension URLSession {
                      fileName: firmware.fileName,
                      completion: completion)
     }
+    
+    func directDownloadFirmware(_ firmware: Firmware,
+                      completion: @escaping (Result<URL, STError>) -> Void) {
+        directDownloadFile(with: firmware.url,
+                     fileName: firmware.fileName,
+                     completion: completion)
+    }
 }
 
 internal extension URLSession {
@@ -101,9 +108,92 @@ internal extension URLSession {
                             completion(.failure(STError.server(error: error)))
                         }
                     }
+                } else {
+                    completion(.failure(STError.generic(text: "Corrupted file")))
                 }
             }
             dataTask.resume()
         }
+    }
+    
+    func directDownloadFile(with url: URL?,
+                      fileName: String,
+                      completion: @escaping (Result<URL, STError>) -> Void) {
+
+        var destinationUrl = FileManager.default.documentFolder.appendingPathComponent(fileName)
+        
+        if fileName.contains("/") {
+            destinationUrl = FileManager.default.documentFolder.appendingPathComponent(fileName.replacingOccurrences(of: "/", with: ""))
+        }
+
+        guard let url = url else {
+            STBlueSDK.log(text: "URL not valid")
+            completion(.failure(STError.urlNotValid))
+            return
+        }
+        
+        var urlRequest = URLRequest(url: url)
+        if UserDefaults.standard.bool(forKey: "isBetaCatalogActivated") {
+            if let url = urlRequest.url {
+                if let newUrl = replacingWithBetaUrl(originalUrl: url) {
+                    urlRequest.url = newUrl
+                }
+            }
+        }
+
+        let dataTask = dataTask(with: urlRequest) { (data, response, error) in
+
+            if let error = error {
+                STBlueSDK.log(text: "Request error: \(error.localizedDescription)")
+                completion(.failure(STError.server(error: error)))
+                return
+            }
+
+            guard let response = response as? HTTPURLResponse else { return }
+
+            if response.statusCode == 200 {
+                guard let data = data else {
+                    STBlueSDK.log(text: "File data not valid")
+                    completion(.failure(STError.dataNotValid))
+                    return
+                }
+                DispatchQueue.main.async {
+                    do {
+                        try data.write(to: destinationUrl,
+                                       options: Data.WritingOptions.atomic)
+                        STBlueSDK.log(text: "File download completed: \(destinationUrl.path)")
+                        completion(.success(destinationUrl))
+                    } catch let error {
+                        STBlueSDK.log(text: "Error decoding: \(error.localizedDescription)")
+                        completion(.failure(STError.server(error: error)))
+                    }
+                }
+            } else {
+                completion(.failure(STError.generic(text: "Corrupted file")))
+            }
+        }
+        dataTask.resume()
+    }
+    
+    private func replacingWithBetaUrl(originalUrl: URL) -> URL? {
+
+        if var comps = URLComponents(url: originalUrl, resolvingAgainstBaseURL: false) {
+            var segments = comps.path.split(separator: "/")
+
+            if segments.first == "STMicroelectronics" {
+                segments[0] = "SW-Platforms"
+            }
+
+            comps.path = "/" + segments.joined(separator: "/")
+
+            if let updated = comps.url {
+                return updated
+            }
+            
+            return nil
+        }
+        
+        return nil
+        
     }
 }

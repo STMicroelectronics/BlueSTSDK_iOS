@@ -16,12 +16,16 @@ internal class DebugConsoleFirmwareService: BaseFirmwareService {
     private let nodeService: NodeService
     private let packageDelay: UInt
     private let fastFota: Bool
+    private let fotaMaxChunkLength: Int
+    private let otaChunkDivisorConstraint: Int
     private let resume: Bool
 
-    init(nodeService: NodeService, packageDelay: UInt = 13, fastFota: Bool, resume: Bool) {
+    init(nodeService: NodeService, packageDelay: UInt = 13, fastFota: Bool,fotaMaxChunkLength: Int, otaChunkDivisorConstraint: Int, resume: Bool) {
         self.nodeService = nodeService
         self.packageDelay = packageDelay
         self.fastFota = fastFota
+        self.fotaMaxChunkLength = fotaMaxChunkLength
+        self.otaChunkDivisorConstraint = otaChunkDivisorConstraint
         self.resume = resume
     }
 
@@ -48,6 +52,8 @@ internal class DebugConsoleFirmwareService: BaseFirmwareService {
                                                                           packageDelay: packageDelay,
                                                                           fastFota: fastFota,
                                                                           maxMtu: nodeService.node.mtu,
+                                                                          fotaMaxChunkLength: fotaMaxChunkLength,
+                                                                          otaChunkDivisorConstraint: otaChunkDivisorConstraint,
                                                                           callback: callback))
         } else {
             debugConsole.addDelegate(DebugConsoleFirmwareLoader(url: url,
@@ -55,6 +61,8 @@ internal class DebugConsoleFirmwareService: BaseFirmwareService {
                                                                 packageDelay: packageDelay,
                                                                 fastFota: fastFota,
                                                                 maxMtu: nodeService.node.mtu,
+                                                                fotaMaxChunkLength: fotaMaxChunkLength,
+                                                                otaChunkDivisorConstraint: otaChunkDivisorConstraint,
                                                                 callback: callback))
         }
 

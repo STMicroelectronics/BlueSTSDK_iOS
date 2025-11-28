@@ -13,7 +13,7 @@ import Foundation
 
 public struct PnpLComponentContent: Codable {
     public let id: String
-    public var type: String = "component"
+    public var type: PnpLGenericType
     public let displayName: DisplayName?
     public var name: String
     public let schema: String

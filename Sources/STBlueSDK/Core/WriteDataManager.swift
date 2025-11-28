@@ -57,6 +57,7 @@ class WriteDataManager {
             STBlueSDK.log(text: "start write bytes: \(command.data.hex)")
         }
 
+        usleep(200)
         sendWrite(command.data, characteristic: command.charactheristic, mtu: command.mtu,
                   progress: { index, count in
             command.progress(index, count)

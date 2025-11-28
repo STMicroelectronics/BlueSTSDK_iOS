@@ -19,7 +19,7 @@ public extension BlueManager {
                        feature: Feature) -> Bool {
         if let nodeService = nodeServices.nodeService(with: node) {
             let command = ECCommand<String>(type: type)
-            return nodeService.sendCommand(command, feature: feature)
+            return nodeService.sendCommand(command,  maxWriteLength: 20,feature: feature)
         }
         
         return false
@@ -31,7 +31,7 @@ public extension BlueManager {
         if let nodeService = nodeServices.nodeService(with: node),
            let blueChar = node.characteristics.characteristic(with: ExtendedConfigurationFeature.self){
             let command = ECCommand<String>(type: type)
-            return nodeService.sendCommand(command, blueChar: blueChar)
+            return nodeService.sendCommand(command,  maxWriteLength: 20, blueChar: blueChar)
         }
 
         return false
@@ -44,7 +44,7 @@ public extension BlueManager {
         if let nodeService = nodeServices.nodeService(with: node),
            let blueChar = node.characteristics.characteristic(with: ExtendedConfigurationFeature.self) {
             let command = ECCommand<String>(type: type, argNumber: int)
-            return nodeService.sendCommand(command, blueChar: blueChar)
+            return nodeService.sendCommand(command,  maxWriteLength: 20, blueChar: blueChar)
         }
         
         return false
@@ -57,7 +57,7 @@ public extension BlueManager {
         if let nodeService = nodeServices.nodeService(with: node),
            let blueChar = node.characteristics.characteristic(with: ExtendedConfigurationFeature.self) {
             let command = ECCommand<String>(type: type, argString: string)
-            return nodeService.sendCommand(command, blueChar: blueChar)
+            return nodeService.sendCommand(command,  maxWriteLength: 20, blueChar: blueChar)
         }
 
         return false
@@ -70,7 +70,7 @@ public extension BlueManager {
         if let nodeService = nodeServices.nodeService(with: node),
            let blueChar = node.characteristics.characteristic(with: ExtendedConfigurationFeature.self) {
             let command = ECCommand(type: type, argJSON: json)
-            return nodeService.sendCommand(command, blueChar: blueChar)
+            return nodeService.sendCommand(command,  maxWriteLength: 20, blueChar: blueChar)
         }
         
         return false
@@ -82,7 +82,7 @@ public extension BlueManager {
         if let nodeService = nodeServices.nodeService(with: node),
            let blueChar = node.characteristics.characteristic(with: ExtendedConfigurationFeature.self) {
             let command = ECCommand<String>(name: commandName)
-            return nodeService.sendCommand(command, blueChar: blueChar)
+            return nodeService.sendCommand(command,  maxWriteLength: 20, blueChar: blueChar)
         }
         
         return false
@@ -95,7 +95,7 @@ public extension BlueManager {
         if let nodeService = nodeServices.nodeService(with: node),
            let blueChar = node.characteristics.characteristic(with: ExtendedConfigurationFeature.self) {
             let command = ECCommand<String>(name: commandName, argString: string)
-            return nodeService.sendCommand(command, blueChar: blueChar)
+            return nodeService.sendCommand(command,  maxWriteLength: 20, blueChar: blueChar)
         }
         
         return false
@@ -108,7 +108,7 @@ public extension BlueManager {
         if let nodeService = nodeServices.nodeService(with: node),
            let blueChar = node.characteristics.characteristic(with: ExtendedConfigurationFeature.self) {
             let command = ECCommand<Int>(name: commandName, argNumber: int)
-            return nodeService.sendCommand(command, blueChar: blueChar)
+            return nodeService.sendCommand(command,  maxWriteLength: 20, blueChar: blueChar)
         }
         
         return false

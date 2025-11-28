@@ -1,6 +1,6 @@
 //
 //  NodeService+ECCommand.swift
-//  
+//
 //  Copyright (c) 2022 STMicroelectronics.
 //  All rights reserved.
 //
@@ -13,16 +13,16 @@ import Foundation
 import CoreBluetooth
 
 internal extension NodeService {
-
-    func sendCommand(_ command: JsonCommand, feature: Feature, progress: ((Int, Int) -> Void)? = nil, completion: (() -> Void)? = nil) -> Bool {
-
+    
+    func sendCommand(_ command: JsonCommand, maxWriteLength: Int,feature: Feature, progress: ((Int, Int) -> Void)? = nil, completion: (() -> Void)? = nil) -> Bool {
+        
         guard let json = command.json,
               let blueChar = node.characteristics.characteristic(with: feature),
               blueChar.characteristic.isCharacteristicCanBeWrite else {
-                  return false
+            return false
         }
         
-        return sendJSONCommand(json, characteristic: blueChar.characteristic, mtu: blueChar.maxMtu, progress: { index, parts in
+        return sendJSONCommand(json, characteristic: blueChar.characteristic, mtu: maxWriteLength, progress: { index, parts in
             guard let progress = progress else { return }
             progress(index, parts)
         }) {
@@ -30,15 +30,15 @@ internal extension NodeService {
             completion()
         }
     }
-
-    func sendCommand(_ command: JsonCommand, blueChar: BlueCharacteristic, progress: ((Int, Int) -> Void)? = nil, completion: (() -> Void)? = nil) -> Bool {
-
+    
+    func sendCommand(_ command: JsonCommand, maxWriteLength: Int, blueChar: BlueCharacteristic, progress: ((Int, Int) -> Void)? = nil, completion: (() -> Void)? = nil) -> Bool {
+        
         guard let json = command.json,
               blueChar.characteristic.isCharacteristicCanBeWrite,
               blueChar.characteristic.isExtendedFeatureCaracteristics else {
-                  return false
+            return false
         }
-        return sendJSONCommand(json, characteristic: blueChar.characteristic, mtu: blueChar.maxMtu,
+        return sendJSONCommand(json, characteristic: blueChar.characteristic, mtu: maxWriteLength,
                                progress: { index, parts in
             guard let progress = progress else { return }
             progress(index, parts)
@@ -47,26 +47,28 @@ internal extension NodeService {
             completion()
         }
     }
-
+    
     func sendJSONCommand(_ json: String,
                          characteristic: CBCharacteristic,
                          mtu: Int,
                          progress: @escaping (Int, Int) -> Void,
                          completion: @escaping () -> Void) -> Bool {
         if debug { STBlueSDK.log(text: "Send command: \(json)") }
-
+        
         let dataTransporter = DataTransporter()
-        dataTransporter.config.mtu = 20
-
+        dataTransporter.config.mtu = mtu
+        
         return sendWrite(dataTransporter.encapsulate(string: json),
                          characteristic: characteristic,
                          mtu: dataTransporter.config.mtu,
                          progress: progress,
                          completion: completion)
     }
-
+    
     @discardableResult
     func sendWrite(_ data: Data, characteristic: CBCharacteristic, mtu: Int, progress: @escaping (Int, Int) -> Void, completion: @escaping () -> Void) -> Bool {
+
+        Thread.sleep(forTimeInterval: 0.2)
 
         writeDataManager.enqueueCommand(WriteDataManager.WriteData(data: data,
                                                                    charactheristic: characteristic,
@@ -77,7 +79,7 @@ internal extension NodeService {
                                                                    completion: { _ in
             completion()
         }))
-
+        
         return true
     }
 }

@@ -82,16 +82,14 @@ public struct FirmwareServiceFactory {
         guard nodeService.debugConsole != nil else { return nil }
 
         let advertiseBleFirmwareId = nodeService.node.bleFirmwareVersion
-        var fastFota = false
+        var fotaDetails: FotaDetails?=nil
 
         for firmware in catalog.blueStSdkV2 {
             if let boardType = firmware.boardType,
                let bleVersionId = firmware.bleVersionId,
-               let fota = firmware.fota,
                nodeService.node.type == boardType,
-               advertiseBleFirmwareId == bleVersionId,
-               fota.type == .fast {
-                fastFota = true
+               advertiseBleFirmwareId == bleVersionId {
+                fotaDetails = firmware.fota
                 break
             }
         }
@@ -101,12 +99,16 @@ public struct FirmwareServiceFactory {
             if FirmwareServiceFactory.stBoxHasNewFwUpgrade(version: currentVersion) {
                 return DebugConsoleFirmwareService(nodeService: nodeService,
                                                    packageDelay: 15,
-                                                   fastFota: false,
+                                                   fastFota: (fotaDetails?.type == .fast),
+                                                   fotaMaxChunkLength: fotaDetails?.fotaMaxChunkLength ?? 0,
+                                                   otaChunkDivisorConstraint: fotaDetails?.fotaChunkDivisorConstraint ?? 0,
                                                    resume: true)
             } else {
                 return DebugConsoleFirmwareService(nodeService: nodeService,
                                                    packageDelay: 30,
-                                                   fastFota: fastFota,
+                                                   fastFota: (fotaDetails?.type == .fast),
+                                                   fotaMaxChunkLength: fotaDetails?.fotaMaxChunkLength ?? 0,
+                                                   otaChunkDivisorConstraint: fotaDetails?.fotaChunkDivisorConstraint ?? 0,
                                                    resume: false)
             }
         case .nucleo,
@@ -122,10 +124,13 @@ public struct FirmwareServiceFactory {
                 .stEvalSTWINKT1B,
                 .sensorTileBoxPro,
                 .sensorTileBoxProB,
+                .sensorTileBoxProC,
                 .bL475eIot01A:
                 //.proteus:
             return DebugConsoleFirmwareService(nodeService: nodeService,
-                                               fastFota: fastFota,
+                                               fastFota: (fotaDetails?.type == .fast),
+                                               fotaMaxChunkLength: fotaDetails?.fotaMaxChunkLength ?? 0,
+                                               otaChunkDivisorConstraint: fotaDetails?.fotaChunkDivisorConstraint ?? 0,
                                                resume: false)
         default:
             return nil;

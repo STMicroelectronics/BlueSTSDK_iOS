@@ -26,6 +26,12 @@ public extension CBUUID {
             return data.extractUInt32(fromOffset: 0, endian: .big)
         }
     }
+    
+    var featureGeneralPurposeNum: Int {
+        get {
+            return Int(data.extractUInt16(fromOffset: 0, endian: .big))
+        }
+    }
 
     static func uuid(_ identifier: UInt32, suffix: String) -> CBUUID {
         let uuidString = String(format: "%08X%@", identifier, suffix)

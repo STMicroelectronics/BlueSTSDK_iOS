@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -15,33 +16,29 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="LXW-uN-wry">
-                    <rect key="frame" x="10" y="10" width="394" height="300"/>
+                    <rect key="frame" x="10" y="10" width="394" height="266"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select board Type" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U5L-L1-7kQ">
+                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0kH-37-uZ8">
                             <rect key="frame" x="0.0" y="0.0" width="394" height="20.5"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="20.5" id="KLy-qB-jRJ"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bet-TG-4g7">
-                            <rect key="frame" x="0.0" y="30.5" width="394" height="33"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="32" id="7xC-Kc-Dpg"/>
-                            </constraints>
-                            <segments>
-                                <segment title="STM32WBA"/>
-                                <segment title="STM32WB5x/WB3x"/>
-                                <segment title="STM32WB1x"/>
-                            </segments>
-                            <connections>
-                                <action selector="boardTypeValueChanged:" destination="iN0-l3-epB" eventType="valueChanged" id="hFY-PH-6S3"/>
-                            </connections>
-                        </segmentedControl>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select board Type" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U5L-L1-7kQ">
+                                    <rect key="frame" x="0.0" y="0.0" width="138.5" height="20.5"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="20.5" id="KLy-qB-jRJ"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KAI-Co-A3e">
+                                    <rect key="frame" x="138.5" y="0.0" width="255.5" height="20.5"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="plain" image="chevron.down" catalog="system" imagePlacement="trailing" title="BoardType"/>
+                                </button>
+                            </subviews>
+                        </stackView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sector to update" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="agQ-ZM-vwl">
-                            <rect key="frame" x="0.0" y="72.5" width="394" height="20.5"/>
+                            <rect key="frame" x="0.0" y="30.5" width="394" height="20.5"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="20.5" id="4oS-k3-heJ"/>
                             </constraints>
@@ -50,21 +47,20 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Th9-JG-Pvg">
-                            <rect key="frame" x="0.0" y="103" width="394" height="33"/>
+                            <rect key="frame" x="0.0" y="61" width="394" height="33"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="32" id="1Hd-D1-YqB"/>
                             </constraints>
                             <segments>
                                 <segment title="Application"/>
                                 <segment title="User conf"/>
-                                <segment title="Custom"/>
                             </segments>
                             <connections>
                                 <action selector="sectorValueChanged:" destination="iN0-l3-epB" eventType="valueChanged" id="OEL-kh-m7K"/>
                             </connections>
                         </segmentedControl>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First sector to delete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A7T-st-qhX">
-                            <rect key="frame" x="0.0" y="145" width="394" height="20.5"/>
+                            <rect key="frame" x="0.0" y="103" width="394" height="20.5"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="20.5" id="1ej-ZX-W58"/>
                             </constraints>
@@ -73,7 +69,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8Cz-2Q-Tud">
-                            <rect key="frame" x="0.0" y="175.5" width="394" height="32"/>
+                            <rect key="frame" x="0.0" y="133.5" width="394" height="32"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="32" id="Fl9-fY-7xG"/>
                             </constraints>
@@ -81,7 +77,7 @@
                             <textInputTraits key="textInputTraits"/>
                         </textField>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Number of sector to delete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfX-IL-cyo">
-                            <rect key="frame" x="0.0" y="217.5" width="394" height="20.5"/>
+                            <rect key="frame" x="0.0" y="175.5" width="394" height="20.5"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="20.5" id="cDP-Qr-xRv"/>
                             </constraints>
@@ -90,7 +86,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nZM-wi-obp">
-                            <rect key="frame" x="0.0" y="248" width="394" height="32"/>
+                            <rect key="frame" x="0.0" y="206" width="394" height="32"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="32" id="BFH-xW-pS4"/>
                             </constraints>
@@ -98,7 +94,7 @@
                             <textInputTraits key="textInputTraits"/>
                         </textField>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eGq-Zv-yxU">
-                            <rect key="frame" x="0.0" y="290" width="394" height="10"/>
+                            <rect key="frame" x="0.0" y="248" width="394" height="18"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -116,7 +112,7 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="boardTypeSegmentedControl" destination="bet-TG-4g7" id="5V3-zc-svd"/>
+                <outlet property="boardSelectionButton" destination="KAI-Co-A3e" id="6Nl-Se-zMd"/>
                 <outlet property="firstSectorToDeleteLabel" destination="A7T-st-qhX" id="oo5-tX-5oZ"/>
                 <outlet property="firstSectorToDeleteTextField" destination="8Cz-2Q-Tud" id="Kn4-Go-7EB"/>
                 <outlet property="numberOfSectorToDeleteLabel" destination="dfX-IL-cyo" id="Kpu-KK-Rz4"/>
@@ -129,6 +125,7 @@
         </view>
     </objects>
     <resources>
+        <image name="chevron.down" catalog="system" width="128" height="70"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

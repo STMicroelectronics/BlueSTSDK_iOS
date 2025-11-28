@@ -23,9 +23,11 @@ public struct PnPLResponse: Codable {
 
 // MARK: - PnPLDataModelDevice
 public struct PnPLDataModelDevice: Codable {
-    public let components: JSONValue
+    public var waitForBleResponses: Bool?
+    public var components: JSONValue
 
     public enum CodingKeys: String, CodingKey {
+        case waitForBleResponses = "pnpl_ble_responses"
         case components
     }
 }

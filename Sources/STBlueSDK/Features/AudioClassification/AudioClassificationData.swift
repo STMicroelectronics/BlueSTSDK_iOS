@@ -52,24 +52,31 @@ public struct AudioClassificationData {
         var algorithm : UInt8? = nil
         var audioClass: AudioClass? = nil
         
-        if data.count - offset == 1 {
+        let numberOfBytes = min(data.count - offset, 2)
+
+        if numberOfBytes == 1 {
             audioClass = AudioClass(rawValue: data.extractUInt8(fromOffset: offset))
-        } else if data.count - offset > 1 {
-            algorithm = data.extractUInt8(fromOffset: offset)
-            audioClass = AudioClass(rawValue: data.extractUInt8(fromOffset: offset + 1))
+            algorithm = nil
+        } else if numberOfBytes >= 2 {
+            audioClass = AudioClass(rawValue: data.extractUInt8(fromOffset: offset))
+            algorithm = data.extractUInt8(fromOffset: offset + 1)
         }
         
-        self.algorithm = FeatureField<UInt8>(name: "Algorithm",
-                                             uom: nil,
-                                             min: 0,
-                                             max: 0xFF,
-                                             value: algorithm)
-        
-        self.audioClass = FeatureField<AudioClass>(name: "SceneType",
-                                                   uom: nil,
-                                                   min: nil,
-                                                   max: nil,
-                                                   value: audioClass)
+        self.algorithm = FeatureField<UInt8>(
+             name: "Algorithm",
+             uom: nil,
+             min: 0,
+             max: 0xFF,
+             value: algorithm
+         )
+         
+         self.audioClass = FeatureField<AudioClass>(
+             name: "AudioClassification",
+             uom: nil,
+             min: nil,
+             max: nil,
+             value: audioClass
+         )
     }
     
 }

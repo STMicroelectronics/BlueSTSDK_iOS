@@ -21,6 +21,16 @@ public extension UInt8 {
     }
 }
 
+public extension UInt16 {
+    var hex: String {
+        String(format: "%02x", self).lowercased()
+    }
+
+    var longHex: String {
+        String(format: "0x%02x", self).lowercased()
+    }
+}
+
 public extension UInt32 {
     var hex: String {
         String(format: "%02x", self).lowercased()
@@ -43,6 +53,19 @@ public extension Int16 {
         return array
     }
     
+    var reversedBytes: [UInt8] {
+        let array = Array(withUnsafeBytes(of: self.bigEndian) { Data($0) })
+        return array
+    }
+
+}
+
+public extension Int32 {
+    var bytes: [UInt8] {
+        let array = Array(withUnsafeBytes(of: self.littleEndian) { Data($0) })
+        return array
+    }
+
     var reversedBytes: [UInt8] {
         let array = Array(withUnsafeBytes(of: self.bigEndian) { Data($0) })
         return array

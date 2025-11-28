@@ -102,23 +102,7 @@ internal class BlueNRGFirmwareService: BaseFirmwareService {
         
         super.startLoading(with: url, type: type, firmwareData: firmwareData, callback: callback)
         
-        switch type {
-        case .custom(let startSector, _, _):
-            switch currentState {
-            case .empty:
-                initialUpgradeParam = FirmwareUpgradeParam(file: url,
-                                                           baseAddress: startSector == nil ? nil : UInt32(startSector!),
-                                                           packageSize: maxDataLength)
-                
-                guard let initialUpgradeParam = initialUpgradeParam else { return }
-                
-                currentState = .checkMemory(param: initialUpgradeParam)
-            default:
-                callback.completion(url, .unsupportedOperation)
-            }
-        default:
             callback.completion(url, .unsupportedOperation)
-        }
     }
 }
 

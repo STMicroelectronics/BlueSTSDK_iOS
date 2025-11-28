@@ -10,12 +10,14 @@
 //
 
 import Foundation
+import STCore
 
 public struct Catalog {
     public var blueStSdkV2: [Firmware]
     public let blueStSdkV1: [Firmware]?
     public let characteristics: [BleCharacteristic]?
     public let boards: [CatalogBoard]?
+    public let sensorAdapters: [SensorAdapterElement]?
     public let checksum: String?
     public let date: String?
     public let version: String?
@@ -27,6 +29,7 @@ extension Catalog: Codable {
         case blueStSdkV1 = "bluestsdk_v1"
         case characteristics
         case boards
+        case sensorAdapters = "sensor_adapters"
         case checksum
         case date
         case version
@@ -71,6 +74,20 @@ public extension Catalog {
         })
     }
 
+    func v2Firmware(with deviceId: String, name: String, checkCustomFirmware: Bool = true) -> Firmware? {
+
+        v2Firmware(with: deviceId, names: [ name ], checkCustomFirmware: checkCustomFirmware)
+    }
+
+    func v2Firmware(with deviceId: String, names: [String], checkCustomFirmware: Bool = true) -> Firmware? {
+
+        blueStSdkV2.first(where: { firmware in
+            firmware.deviceId.lowercased() == deviceId.lowercased() && 
+            names.compactMap { firmware.name.lowercased().starts(with: $0.lowercased()) ? true : nil }.count != 0 &&
+            firmware.bleVersionId != 0xff
+        })
+    }
+
     func v2Firmware(with node: Node) -> Firmware? {
         blueStSdkV2.first(where: {
             $0.deviceId.lowercased() == node.deviceId.longHex && $0.bleVersionId == 0xff ||
@@ -99,12 +116,40 @@ public extension Catalog {
     }
 
     func availableV2Firmwares(with deviceId: String, currentFirmware: Firmware?, enabledFirmwares: [String]?) -> [Firmware]? {
-        blueStSdkV2.filter { firmware in
-            firmware.deviceId.lowercased() == deviceId.lowercased() &&
+
+        for firmware in self.blueStSdkV2 {
+            Logger.debug(text: "\(firmware.name) - \(firmware.version)")
+        }
+
+        return blueStSdkV2.filter { firmware in
+            let flag = firmware.deviceId.lowercased() == deviceId.lowercased() &&
             firmware.bleVersionIdHex.lowercased() != currentFirmware?.bleVersionIdHex.lowercased() &&
             enabledFirmwares?.contains(where: { firmwareId in
                 return firmware.bleVersionIdHex.lowercased() == firmwareId.lowercased()
             }) ?? true
+
+            return flag
         }
+    }
+
+    func availableV2Firmwares(with deviceId: String, names: [String]?, supportedVersions: [String]? = nil) -> [Firmware]? {
+        blueStSdkV2.filter { firmware in
+            let flag = names != nil ? names?.compactMap { firmware.name.lowercased().starts(with: $0.lowercased()) ? true : nil }.count != 0 : true
+            let supported = (supportedVersions != nil) ? supportedVersions!.contains(firmware.version) : true
+            return firmware.deviceId.lowercased() == deviceId.lowercased() && flag && supported
+
+        }
+    }
+}
+
+public extension Array where Element == Firmware {
+    var uniqueFwName: [Firmware] {
+        var uniqueValues: [Firmware] = []
+        forEach { item  in
+            if !uniqueValues.contains(where: {value in return value.name==item.name}) {
+                uniqueValues.append(item)
+            }
+        }
+        return uniqueValues
     }
 }

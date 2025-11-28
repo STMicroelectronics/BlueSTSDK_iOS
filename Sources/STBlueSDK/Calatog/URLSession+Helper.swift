@@ -33,7 +33,7 @@ internal enum EndPoint {
             if(env == .dev) {
                 return URL(string: "https://raw.githubusercontent.com/\(env.rawValue)/appconfig/release/bluestsdkv2/catalog.json")
             } else {
-                return URL(string: "https://raw.githubusercontent.com/\(env.rawValue)/appconfig/blesensor_\(STCore.appShortVersion)/bluestsdkv2/catalog.json")
+                return URL(string: "https://raw.githubusercontent.com/\(env.rawValue)/appconfig/blesensor_\(STCore.catalogVersion)/bluestsdkv2/catalog.json")
             }
 
         case .dtmi(let env, let firmware):

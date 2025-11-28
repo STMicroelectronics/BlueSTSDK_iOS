@@ -20,8 +20,23 @@ public struct BleCharacteristicFormat {
     public let max: Float?
     public let offset: Float?
     public let scaleFactor: Float?
-    public let type: String?
+    public let type: BleCharacteristicType?
     public let stringValues: [BleCharacteristicStringValue]?
+}
+
+
+public enum BleCharacteristicType: String, Codable {
+    case Float
+    case Int64
+    case UInt32
+    case Int32
+    case UInt16
+    case Int16
+    case UInt8
+    case Int8
+    case ByteArray
+    case RawData
+    case Unit16 // TODO: Remove this
 }
 
 extension BleCharacteristicFormat: Codable {

@@ -24,6 +24,14 @@ public extension Data {
 
         return subdata.withUnsafeBytes { $0.load(as: N.self) }
     }
+    
+    func extractNumber24<N: Numeric>(fromOffset: Int) -> N {
+        let range: ClosedRange<Index> = fromOffset...(fromOffset + MemoryLayout<N>.size-1)
+        
+        let subdata =  subdata(in: range.lowerBound..<range.upperBound) + Data([0x00])
+
+        return subdata.withUnsafeBytes { $0.load(as: N.self) }
+    }
 
     func extractUInt8(fromOffset: Int) -> UInt8 {
         extractNumber(fromOffset: fromOffset)
@@ -57,6 +65,13 @@ public extension Data {
 
         return endian == .little ? value : value.bigEndian
     }
+    
+    func extractUInt24(fromOffset: Int, endian: Endian = .little) -> UInt32 {
+        let value: UInt32 = extractNumber24(fromOffset: fromOffset)
+
+        return endian == .little ? value : value.bigEndian
+    }
+    
 
     func extractFloat(fromOffset: Int, endian: Endian = .little) -> Float {
         extractNumber(fromOffset: fromOffset)

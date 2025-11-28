@@ -14,41 +14,41 @@ import CoreBluetooth
 import STCore
 
 internal class STM32WBFirmwareService: BaseFirmwareService {
-
+    
     private let writeQueue = DispatchQueue(label: "STM32WBFirmwareService_writeQueue")
-
+    
     private static let disconnectDelay: TimeInterval = 0.3
     private static let discoveryTimeout = 30 * 1000
     private static var writeDelay: TimeInterval = 0.001
-
+    
     var control: BlueCharacteristic?
     var upload: BlueCharacteristic?
     var reboot: BlueCharacteristic?
     var willReboot: BlueCharacteristic?
     var nodeService: NodeService
-
+    
     init?(with nodeService: NodeService) {
         if let reboot = nodeService.node.characteristics.characteristic(with: STM32WBRebootOtaModeFeature.self) {
             self.reboot = reboot
             self.nodeService = nodeService
             super.init()
-
+            
             BlueManager.shared.addDelegate(self)
         } else if let upload = nodeService.node.characteristics.characteristic(with: STM32WBOtaUploadFeature.self) {
             self.upload = upload
             self.nodeService = nodeService
             super.init()
-
+            
             BlueManager.shared.addDelegate(self)
         } else {
             return nil
         }
     }
-
+    
     deinit {
         STBlueSDK.log(text: "DEINIT FIRMWARE UPGRADE")
     }
-
+    
     override func upgradeFirmware(with url: URL, type: FirmwareType, callback: FirmwareUpgradeCallback) {
         switch type {
         case .application(let board), .radio(let board):
@@ -57,44 +57,60 @@ internal class STM32WBFirmwareService: BaseFirmwareService {
                 callback.completion(url, .unsupportedOperation)
                 return
             }
-        case .custom:
-            break;
             
         default:
             BlueManager.shared.removeDelegate(self)
             callback.completion(url, .unsupportedOperation)
             return
         }
-
+        
         super.upgradeFirmware(with: url, type: type, callback: callback)
     }
-
+    
     override func currentVersion(_ completion: @escaping FirmwareVersionCompletion) {
-        let version = (nodeService.node.type == NodeType.wbaBoard) ?
-                        FirmwareVersion(name: "STM32Cube_FW_WBA-OTA",
-                                        mcuType: "STM32WBA",
-                                        major: 1,
-                                        minor: 0,
-                                        patch: 0)
-                        :
-                      FirmwareVersion(name: "STM32Cube_FW_WB-OTA",
-                                      mcuType: "STM32WBXX",
-                                      major: 1,
-                                      minor: 0,
-                                      patch: 0)
+        let version = if nodeService.node.type == NodeType.nucleoWB0X {
+            FirmwareVersion(name: "STM32WB0X OTA",
+                            mcuType: "STM32WB0X",
+                            major: 1,
+                            minor: 0,
+                            patch: 0)
+        } else if nodeService.node.type.family == NodeFamily.wbaFamily {
+            FirmwareVersion(name: "STM32WBA OTA",
+                            mcuType: "STM32WBA",
+                            major: 1,
+                            minor: 0,
+                            patch: 0)
+        } else {
+            FirmwareVersion(name: "STM32WB OTA",
+                            mcuType: "STM32WB",
+                            major: 1,
+                            minor: 0,
+                            patch: 0)
+        }
+        
         completion(version)
     }
-
+    
     override func startLoading(with url: URL, type: FirmwareType, firmwareData: Data, callback: FirmwareUpgradeCallback) {
-
+        
         super.startLoading(with: url, type: type, firmwareData: firmwareData, callback: callback)
-
-        // STEP 1.: REBOOT IN OTA MODE
-
-        if nodeService.node.isOTA() {
+        
+        //        print("STARTING STM32WB OTA UPGRADE...")
+        //        print("type: \(type)")
+        //        print("typeFromNode: \(nodeService.node.type)")
+        
+        // STEP 1.: REBOOT IN OTA MODE if it's necessary
+        if nodeService.node.isOTA() ||
+            type.wbBoardType == .wba5 ||
+            type.wbBoardType == .wb09 ||
+            type.wbBoardType == .wba6 ||
+            type.wbBoardType == .wba2 ||
+            type.wbBoardType == .st67w6x {
+        //if nodeService.node.isOTA() || nodeService.node.type.family == .wbaFamily || nodeService.node.type == .nucleoWB0X  {
             DispatchQueue.global(qos: .background).async { [weak self] in
                 guard let self = self else { return }
-                self.sendFirmware(to: self.nodeService.node)
+                self.sendFirmware(to: self.nodeService.node, revertCommand: type.wbBoardType == .st67w6x)
+                //self.sendFirmware(to: self.nodeService.node, revertCommand: nodeService.node.type == .st67w6x)
             }
         } else {
             rebootInOtaMode(type: type, firmwareData: firmwareData)
@@ -132,7 +148,7 @@ private extension STM32WBFirmwareService {
         }
     }
 
-    func sendFirmware(to node: Node) {
+    func sendFirmware(to node: Node, revertCommand: Bool) {
         self.nodeService.update(node: node)
 
         self.control = nodeService.node.characteristics.characteristic(with: STM32WBOtaControlFeature.self)
@@ -149,7 +165,7 @@ private extension STM32WBFirmwareService {
 
         guard let firmwareType = firmwareType,
               let data = firmwareData,
-              let startCommand = Data.startUpload(type: firmwareType, fileLength: firmwareData?.count) else { return }
+              let startCommand = Data.startUpload(type: firmwareType, revertCommand: revertCommand, fileLength: firmwareData?.count) else { return }
         
         guard let control = control else {
             STBlueSDK.log(text: "[Firmware upgrade] - No upload characteristic found")
@@ -203,7 +219,7 @@ extension STM32WBFirmwareService: BlueDelegate {
         } else if node.state == .connected {
             // STEP 5. SEND START UPLOAD COMMAND
 
-            self.sendFirmware(to: node)
+            self.sendFirmware(to: node, revertCommand: false)
         }
     }
 
@@ -214,6 +230,7 @@ extension STM32WBFirmwareService: BlueDelegate {
            let callback = callback,
            let url = self.url {
             callback.completion(url, nil)
+            
         }
         writeQueue.async {
             if(self.firmwareType?.mustWaitForConfirmation == true) {
@@ -222,10 +239,9 @@ extension STM32WBFirmwareService: BlueDelegate {
                     switch(value![0]) {
                     case 0x02:
                         Thread.sleep(forTimeInterval: STM32WBFirmwareService.writeDelay)
-                        self.sendFirmware(data: self.firmwareData!, isWBA: true)
+                        self.sendFirmware(data: self.firmwareData!, isWBA: (node.type.family == NodeFamily.wbaFamily || node.type == .nucleoWB0X))
                         let finishCommand = Data.uploadFinished()
-                        self.nodeService.bleService.write(data: finishCommand,
-                                                          characteristic: self.control!.characteristic)
+                        self.nodeService.bleService.write(data: finishCommand,characteristic: self.control!.characteristic)
                     case 0x03: break
                     default: break
                     }

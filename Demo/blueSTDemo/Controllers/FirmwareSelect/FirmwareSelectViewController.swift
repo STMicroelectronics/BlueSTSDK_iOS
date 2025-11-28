@@ -13,6 +13,7 @@ import UIKit
 import STBlueSDK
 import STCore
 import JGProgressHUD
+import STUI
 
 class FirmwareSelectViewController: BaseNodeViewController {
     
@@ -54,15 +55,34 @@ class FirmwareSelectViewController: BaseNodeViewController {
         
         if firmwareSelectType == .stm32 {
             if let typeView = Bundle.main.loadNibNamed("STM32FirmwareTypeView", owner: self)?.first as? STM32FirmwareTypeView {
-                typeView.configure(with: .application(board: (node.type == .wbaBoard) ? .wba : .wb55))
+                
+                let type: WbBoardType = switch node.type {
+                case .wba55CGNucleoBoard, .stm32Wba55gDk1Board, .wba5mWpanBoard:
+                        .wba5
+                case .nucleoWB0X:
+                        .wb09
+                case .wba65RiNucleoBoard, .stm32wba65iDk1Board:
+                        .wba6
+                case .wba2NucleoBoard:
+                        .wba2
+                case .st67w6x:
+                        .st67w6x
+                default:
+                        .wb55
+                }
+                
+                //typeView.configure(with: .application(board: (node.type == .wbaBoard) ? .wba5 : .wb55))
+                typeView.configure(with: .application(board: type))
                 typeView.translatesAutoresizingMaskIntoConstraints = false
                 
                 stackView.addArrangedSubview(typeView)
                 typeView.heightAnchor.constraint(equalToConstant: 320.0).isActive = true
                 self.typeView = typeView
+                
+                typeView.configureButton()
             }
-        } else if firmwareSelectType == .blueNrg {
-            firmwareType = .custom(startSector: nil, numberOfSectors: 0, sectorSize: 0)
+//        } else if firmwareSelectType == .blueNrg {
+//            firmwareType = .custom(startSector: nil, numberOfSectors: 0, sectorSize: 0)
         }
         
         let firmwareSelectButton = UIButton(frame: .zero)
@@ -70,8 +90,7 @@ class FirmwareSelectViewController: BaseNodeViewController {
         firmwareSelectButton.setTitleColor(.systemBlue, for: .normal)
         firmwareSelectButton.addAction(UIAction(handler: { action in
             
-            FilePicker.shared.pickFile(with: .bin) { [weak self] url in
-                
+            FilePicker.shared.pickFile(with: [.bin]) { [weak self] (url: URL?) in
                 guard let self = self,
                 let url = url else { return }
                 

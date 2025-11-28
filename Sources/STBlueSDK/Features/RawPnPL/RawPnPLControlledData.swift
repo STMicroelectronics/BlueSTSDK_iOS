@@ -1,5 +1,5 @@
 //
-//  RawPnPLData.swift
+//  RawPnPLControlledData.swift
 //  
 //  Copyright (c) 2022 STMicroelectronics.
 //  All rights reserved.
@@ -11,7 +11,7 @@
 
 import Foundation
 
-public class RawPnPLData {
+public class RawPnPLControlledData {
     
     public let rawData: FeatureField<Data>
     
@@ -24,7 +24,7 @@ public class RawPnPLData {
         }
     
         
-        self.rawData = FeatureField<Data>(name: "RawPnPLData",
+        self.rawData = FeatureField<Data>(name: "RawPnPLControlledData",
                                           uom: nil,
                                           min: nil,
                                           max: nil,
@@ -32,16 +32,16 @@ public class RawPnPLData {
     }
 }
 
-extension RawPnPLData: CustomStringConvertible {
-    public var description: String {   
+extension RawPnPLControlledData: CustomStringConvertible {
+    public var description: String {
         
         let rawData = rawData.value ?? Data()
         
-        return "RawPnPLData: \(rawData)"
+        return "RawPnPLControlledData: \(rawData)"
     }
 }
 
-extension RawPnPLData: Loggable {
+extension RawPnPLControlledData: Loggable {
     public var logHeader: String {
         "\(rawData.logHeader)"
     }

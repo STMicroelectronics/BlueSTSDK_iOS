@@ -22,24 +22,28 @@ public class SensorFusionFeature: BaseFeature<SensorFusionData> {
         var quaternionI = data.extractFloat(fromOffset: offset)
         var quaternionJ = data.extractFloat(fromOffset: offset + 4)
         var quaternionK = data.extractFloat(fromOffset: offset + 8)
+        
+        var readByte = 12
 
         var quaternionS = (1 - (pow(quaternionI, 2) + pow(quaternionJ, 2) + pow(quaternionK, 2))).squareRoot()
 
         if data.count - offset > 12 {
             quaternionS = data.extractFloat(fromOffset: offset + 12)
+            readByte = 16
 
-            let norm = ((pow(quaternionI, 2) + pow(quaternionJ, 2) + pow(quaternionK, 2))).squareRoot()
+            let norm = ((pow(quaternionI, 2) + pow(quaternionJ, 2) + pow(quaternionK, 2) + pow(quaternionS, 2))).squareRoot()
 
             quaternionI /= norm
             quaternionJ /= norm
             quaternionK /= norm
+            quaternionS /= norm
         }
 
         return (FeatureSample(with: timestamp,
                              data: SensorFusionData(quaternionI: quaternionI,
                                                     quaternionJ: quaternionJ,
                                                     quaternionK: quaternionK,
-                                                    quaternionS: quaternionS) as? T, rawData: data), 12)
+                                                    quaternionS: quaternionS) as? T, rawData: data), readByte)
     }
 }
 

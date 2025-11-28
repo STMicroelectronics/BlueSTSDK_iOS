@@ -49,7 +49,7 @@ open class AdvertiseParser: AdvertiseFilter {
         }
         
         let deviceId = vendorData[1 + offset].nodeId
-        let deviceType = deviceId.nodeType
+        let deviceType = NodeTypeMapper.getNodeType(deviceId: deviceId, protocolVersion: protocolVersion)
         let isSleeping = vendorData[1 + offset].isSleeping
         let hasGeneralPourpose = vendorData[1 + offset].hasGeneralPurpose
         let featureMap = vendorData.extractUInt32(fromOffset: 2 + offset, endian: .big)
@@ -111,71 +111,6 @@ fileprivate extension UInt8 {
                 return false
             } else {
                 return (self & UInt8.hasGeneralPurposeBitMask) != 0
-            }
-        }
-    }
-    
-    var nodeType: NodeType {
-        get {
-            switch nodeId {
-            case 0x00:
-                return .generic
-            case 0x01:
-                return .stevalWesu1
-            case 0x02:
-                return .sensorTile
-            case 0x03:
-                return .blueCoin
-            case 0x04:
-                return .stEvalIDB008VX
-            case 0x05:
-                return .stEvalBCN002V1
-            case 0x06:
-                return .sensorTileBox
-            case 0x07:
-                return .discoveryIOT01A
-            case 0x08:
-                return .stEvalSTWINKIT1
-            case 0x09:
-                return .stEvalSTWINKT1B
-            case 0x0A:
-                return .bL475eIot01A
-            case 0x0B:
-                return .bU585iIot02A
-            case 0x0C:
-                return .polaris
-            case 0x0D:
-                return .sensorTileBoxPro
-            case 0x0E:
-                return .stWinBox
-            case 0x0F:
-                return .proteus
-            case 0x10:
-                return .stdesCBMLoRaBLE
-            case 0x11:
-                return .sensorTileBoxProB
-            case 0x12:
-                return .stWinBoxB
-            case 0x80: //0x80...0xFF before
-                return .nucleo
-            case 0x7F:
-                return .nucleoF401RE
-            case 0x7E:
-                return .nucleoL476RG
-            case 0x7D:
-                return .nucleoL053R8
-            case 0x7C:
-                return .nucleoF446RE
-            case 0x8D:
-                return .nuceloWB09KE
-            case 0x86:
-                return .wbOtaBoard
-            case 0x81...0x8A:
-                return .wbBoard
-            case 0x8B...0x8C:
-                return .wbaBoard
-            default:
-                return .generic
             }
         }
     }

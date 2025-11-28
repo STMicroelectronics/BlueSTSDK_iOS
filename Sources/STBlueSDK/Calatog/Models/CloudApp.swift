@@ -14,6 +14,7 @@ import Foundation
 public struct CloudApp {
     public let description: String?
     public let dtmi: String?
+    public let dtmiType: String?
     public let name: String?
     public let shareableLink: String?
     public let url: String?
@@ -23,6 +24,7 @@ extension CloudApp: Codable {
     enum CodingKeys: String, CodingKey {
         case description
         case dtmi
+        case dtmiType = "dtmi_type"
         case name
         case shareableLink = "shareable_link"
         case url

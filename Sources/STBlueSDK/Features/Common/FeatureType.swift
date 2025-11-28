@@ -80,6 +80,7 @@ public enum FeatureType: Equatable {
             static let machineLearningCore: UInt32 = 0x0000000F
             static let finiteStateMachine: UInt32 = 0x00000010
             static let highSpeedDataLog: UInt32 = 0x00000011
+            // the 0x12 is exposed by HSDataLog old fw even if it's not used
             static let tofMultiObject: UInt32 = 0x00000013
             static let extendedConfiguration: UInt32 = 0x00000014
             static let colorAmbientLight: UInt32 = 0x00000015
@@ -89,15 +90,21 @@ public enum FeatureType: Equatable {
             static let neaiAnomalyDetection: UInt32 = 0x00000019
             static let neaiClassification: UInt32 = 0x0000001A
             static let pnpLike: UInt32 = 0x0000001B
-            // the 0x1C is reserved for BlueSTSDKFeaturePiano
+            static let piano: UInt32 = 0x0000001C
             static let eventCounter: UInt32 = 0x0000001D
             // the 0x1E is reserved for Quasar
             static let gestureNavigation: UInt32 = 0x0000001F
             static let jsonNfc: UInt32 = 0x00000020
-            // the 0x21 is reserved for FeatureMemsNorm
-            // the 0x22 is reserved for FeatureBinaryContent
-            // the 0x23 is reserved for RawPnPLControlled
-            // the 0x23 is reserved for neaiExtrapolation
+            static let memsNorm: UInt32 = 0x00000021
+            static let binaryContent: UInt32 = 0x00000022
+            static let rawPnPLControlled: UInt32 = 0x00000023
+            static let neaiExtrapolation: UInt32 = 0x00000024
+            // the 0x25 is reserved for ISPUControlFeature
+            static let medicalSignal16Bit: UInt32 = 0x00000026
+            static let medicalSignal24Bit: UInt32 = 0x00000027
+            static let RoboticsMovement: UInt32 = 0x00000028
+            static let sceneDescription: UInt32 = 0x00000029
+            static let assetTrackingEvent: UInt32 = 0x00000030
         }
         
         internal struct External {
@@ -222,9 +229,20 @@ public enum FeatureType: Equatable {
         .extended(identifier: Mask.Extended.neaiAnomalyDetection),
         .extended(identifier: Mask.Extended.neaiClassification),
         .extended(identifier: Mask.Extended.pnpLike),
+        .extended(identifier: Mask.Extended.piano),
         .extended(identifier: Mask.Extended.eventCounter),
         .extended(identifier: Mask.Extended.gestureNavigation),
-        .extended(identifier: Mask.Extended.jsonNfc)
+        .extended(identifier: Mask.Extended.jsonNfc),
+        .extended(identifier: Mask.Extended.memsNorm),
+        .extended(identifier: Mask.Extended.binaryContent),
+        .extended(identifier: Mask.Extended.neaiExtrapolation),
+        .extended(identifier: Mask.Extended.rawPnPLControlled),
+        //ISPU
+        .extended(identifier: Mask.Extended.medicalSignal16Bit),
+        .extended(identifier: Mask.Extended.medicalSignal24Bit),
+        extended(identifier: Mask.Extended.RoboticsMovement),
+        extended(identifier: Mask.Extended.sceneDescription),
+        extended(identifier: Mask.Extended.assetTrackingEvent)
     ]
     
     internal static let externalTypes: [FeatureType] = [
@@ -272,33 +290,33 @@ public extension FeatureType {
         }
         
     }
-
+    
     static func featureClasses(from uuids: [String]) -> [ Feature.Type ] {
-
+        
         var list = Set<FeatureType>()
-
-//        08000000-0001-11E1-AC36-0002A5D5C51B
-
+        
+        //        08000000-0001-11E1-AC36-0002A5D5C51B
+        
         FeatureType.defaultFeatureTypes.filter { uuids.contains($0.uuid.uuidString.lowercased()) }.forEach { type in
             list.insert(type)
         }
-
+        
         FeatureType.sensorTileBoxFeatureTypes.filter { uuids.contains($0.uuid.uuidString.lowercased()) }.forEach { type in
             list.insert(type)
         }
-
+        
         FeatureType.bleStarNucleoFeatureTypes.filter { uuids.contains($0.uuid.uuidString.lowercased()) }.forEach { type in
             list.insert(type)
         }
-
+        
         FeatureType.extentedTypes.filter { uuids.contains($0.uuid.uuidString.lowercased()) }.forEach { type in
             list.insert(type)
         }
-
+        
         FeatureType.externalTypes.filter { uuids.contains($0.uuid.uuidString.lowercased()) }.forEach { type in
             list.insert(type)
         }
-
+        
         return Array(list.map({ $0.descriptor.featureClass }))
     }
     
@@ -378,9 +396,20 @@ public extension FeatureType {
             case Mask.Extended.neaiAnomalyDetection: return (identifier, NEAIAnomalyDetectionFeature.self)
             case Mask.Extended.neaiClassification: return (identifier, NEAIClassificationFeature.self)
             case Mask.Extended.pnpLike: return (identifier, PnPLFeature.self)
+            case Mask.Extended.piano: return (identifier, PianoFeature.self)
             case Mask.Extended.eventCounter: return (identifier, EventCounterFeature.self)
             case Mask.Extended.gestureNavigation: return (identifier, GestureNavigationFeature.self)
             case Mask.Extended.jsonNfc: return (identifier, JsonNFCFeature.self)
+            case Mask.Extended.memsNorm: return (identifier,MemsNormFeature.self)
+            case Mask.Extended.binaryContent: return (identifier, BinaryContentFeature.self)
+            case Mask.Extended.neaiExtrapolation: return (identifier,NEAIExtrapolationFeature.self)
+            case Mask.Extended.rawPnPLControlled: return (identifier, RawPnPLControlledFeature.self)
+            //ISPU
+            case Mask.Extended.medicalSignal16Bit: return (identifier, MedicalSignal16BitFeature.self)
+            case Mask.Extended.medicalSignal24Bit: return (identifier, MedicalSignal24BitFeature.self)
+            case Mask.Extended.RoboticsMovement: return (identifier, RoboticsMovementFeature.self)
+            case Mask.Extended.sceneDescription: return (identifier, SceneDescriptionFeature.self)
+            case Mask.Extended.assetTrackingEvent: return (identifier, AssetTrackingEventFeature.self)
             default:
                 return (identifier, UnkownFeature.self)
             }
@@ -440,9 +469,9 @@ public extension FeatureType {
         switch nodeType {
         case .sensorTileBox:
             return FeatureType.sensorTileBoxFeatureTypes
-//        case .nucleo:
-//            return FeatureType.bleStarNucleoFeatureTypes
-        case .wbBoard:
+            //        case .nucleo:
+            //            return FeatureType.bleStarNucleoFeatureTypes
+        case .wb55NucleoBoard:
             return FeatureType.bleStarNucleoFeatureTypes
         default:
             return FeatureType.defaultFeatureTypes

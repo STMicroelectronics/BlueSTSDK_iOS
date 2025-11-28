@@ -23,10 +23,11 @@ public extension BlueManager {
 
     @discardableResult
     func sendJsonCommand(_ command: JsonCommand,
+                         maxWriteLength: Int,
                        to node: Node,
                        feature: Feature) -> Bool {
         if let nodeService = nodeServices.nodeService(with: node) {
-            return nodeService.sendCommand(command, feature: feature)
+            return nodeService.sendCommand(command,  maxWriteLength:  maxWriteLength,feature: feature)
         }
 
         return false

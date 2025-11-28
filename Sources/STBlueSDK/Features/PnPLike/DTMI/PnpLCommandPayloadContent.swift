@@ -13,7 +13,7 @@ import Foundation
 
 public struct PnpLCommandPayloadContent: Codable {
     public let id: String?
-    public var type: String = "commandpayload"
+    public var type: PnpLGenericType
     public let displayName: DisplayName?
     public let name: String
     public let schema: PnpLCommandPayload

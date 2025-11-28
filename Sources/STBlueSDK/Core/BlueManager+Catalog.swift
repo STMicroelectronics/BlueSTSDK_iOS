@@ -22,37 +22,74 @@ public extension BlueManager {
 
     func updateCustomCatalog(with url: URL, completion: @escaping (Catalog?, STError?) -> Void) {
 
+        let isAccessing = url.startAccessingSecurityScopedResource()
+
+        defer {
+            if isAccessing {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+        
         guard let data = try? Data(contentsOf: url) else {
             completion(nil, .dataNotValid)
             return
         }
 
-        guard let catalog = try? JSONDecoder().decode(Catalog.self, from: data),
-              let customFirmware = catalog.blueStSdkV2.first(where: { $0.bleVersionId == 0xff } ) else {
+//        guard let catalog = try? JSONDecoder().decode(Catalog.self, from: data),
+//              let customFirmware = catalog.blueStSdkV2.first(where: { $0.bleVersionId == 0xff } ) else {
+//            completion(nil, .dataNotValid)
+//            return
+//        }
+        
+        guard let catalog = try? JSONDecoder().decode(Catalog.self, from: data) else {
             completion(nil, .dataNotValid)
             return
         }
-
+        
+        let customFirmwares = catalog.blueStSdkV2.filter({ $0.bleVersionId == 0xff })
+                                                        
+        if customFirmwares.isEmpty {
+            completion(nil, .dataNotValid)
+            return
+        }
+        
         if let catalogService: CatalogService = Resolver.shared.resolve() {
-            catalogService.add(customFirmware: customFirmware)
+            customFirmwares.forEach { customFirmare in
+                catalogService.add(customFirmware: customFirmare) }
             completion(catalog, nil)
         }
     }
 
     func updateCustomDtmi(with url: URL, completion: @escaping ([PnpLContent], STError?) -> Void) {
+
+        let isAccessing = url.startAccessingSecurityScopedResource()
+
+        defer {
+            if isAccessing {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+
         guard let data = try? Data(contentsOf: url) else {
             completion([], .dataNotValid)
             return
         }
-
-        guard let dtmi = try? JSONDecoder().decode([PnpLContent].self, from: data) else {
-            completion([], .dataNotValid)
-            return
-        }
-
-        if let catalogService: CatalogService = Resolver.shared.resolve() {
-            catalogService.storeCustomDtmiContents(dtmi)
-            completion(dtmi, nil)
+        
+        var dataParsed: String = String(decoding: data, as: UTF8.self)
+        
+        //replace not handled property schema
+        dataParsed = dataParsed.replacingOccurrences(of: "\"dtmi:dtdl:property:schema;2\": {", with: "\"schema\": {\"@id\": \"dtmi:appconfig:dataParsedPlaceHolder;1\",")
+            
+        if let dataParsedData = dataParsed.data(using: .utf8) {
+            guard let dtmi = try? JSONDecoder().decode([PnpLContent].self, from: dataParsedData) else {
+                completion([], .dataNotValid)
+                return
+            }
+            
+            if let catalogService: CatalogService = Resolver.shared.resolve() {
+                catalogService.storeCustomDtmiContents(dtmi)
+                completion(dtmi, nil)
+            }
         }
     }
 

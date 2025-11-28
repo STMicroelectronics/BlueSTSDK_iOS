@@ -16,6 +16,11 @@ public class RemoteSwitchFeature: TimestampFeature<RemoteData<SwitchData>> {
     var unwrapNode: [UInt16: UnwrapTimeStamp] = [UInt16: UnwrapTimeStamp]()
     let packetLength = 1
     
+    public required init(name: String, type: FeatureType) {
+        super.init(name: name, type: type)
+        isDataNotifyFeature = false
+    }
+    
     override func extractData<T>(with timestamp: UInt64, data: Data, offset: Int) -> FeatureExtractDataResult<T> {
         guard let remoteData = remoteExtractData(with: timestamp,
                                                  data: data,

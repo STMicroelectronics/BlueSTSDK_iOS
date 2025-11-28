@@ -13,17 +13,19 @@ import Foundation
 
 public class FiniteStateMachineFeature: BaseFeature<FiniteStateMachineData> {
     
-    let packetLength = 16
-    
     override func extractData<T>(with timestamp: UInt64, data: Data, offset: Int) -> FeatureExtractDataResult<T> {
     
-        if data.count - offset < packetLength {
+        let numberOfBytes = data.count - offset
+        let numberOfStatusPages = if numberOfBytes > 9 { 2 } else { 1 }
+        let numberOfRegisters = numberOfBytes - numberOfStatusPages
+                    
+        if numberOfBytes < 9 {
             return (FeatureSample(with: timestamp, data: data as? T, rawData: data), 0)
         }
         
-        let parsedData = FiniteStateMachineData(with: data, offset: offset, numberOfRegiters: packetLength)
+        let parsedData = FiniteStateMachineData(with: data, offset: offset, numberOfRegiters: numberOfRegisters)
         
-        return (FeatureSample(with: timestamp, data: parsedData as? T, rawData: data), packetLength)
+        return (FeatureSample(with: timestamp, data: parsedData as? T, rawData: data), data.count - offset)
     }
 
 }

@@ -1,5 +1,5 @@
 //
-//  PnpLPrimitiveContent.swift
+//  PnpLEnumerativeContent.swift
 //
 //  Copyright (c) 2022 STMicroelectronics.
 //  All rights reserved.
@@ -13,7 +13,7 @@ import Foundation
 
 public struct PnpLEnumerativeContent: Codable {
     public let id: String?
-    public var type: String = "enum"
+    public var type: PnpLGenericType
     public let values: [PnpLEnumerativeValue]
     public let valueSchema: PnpLContentSchema
 

@@ -12,6 +12,7 @@
 import Foundation
 
 public enum PnpLCommandValue {
+    case anyPlain(value: AnyEncodable)
     case plain(value: Encodable)
     case object(name: String, value: AnyEncodable)
     case objects(name: String, values: [AnyEncodable])
@@ -25,6 +26,8 @@ public enum PnpLCommandElement {
 public extension PnpLCommandValue {
     var value: AnyEncodable {
         switch self {
+        case .anyPlain(value: let value):
+            return AnyEncodable(value)
         case .plain(let value):
             return AnyEncodable(value)
         case .object(let name, let value):
@@ -35,12 +38,21 @@ public extension PnpLCommandValue {
     }
 }
 
+public extension PnpLCommand {
+    static var logControllerStatus: PnpLCommand {
+        PnpLCommand.simpleJson(element: "get_status",
+                               value: .plain(value: "log_controller"))
+    }
+}
+
 public enum PnpLCommand {
     case status
+    case elementStatus(element: String)
     case setTime(date: Date)
     case setName(name: String)
     case startLog
     case stopLog
+    case enableAllSensors(enable: Bool)
 
     case simpleJson(element: String, value: PnpLCommandValue)
     case json(element: String, param: String, value: PnpLCommandValue)
@@ -53,7 +65,7 @@ private extension PnpLCommand {
 
     var code: String {
         switch self {
-        case .status:
+        case .status, .elementStatus:
             return "get_status"
         case .setTime(_):
             return "log_controller*set_time"
@@ -63,6 +75,8 @@ private extension PnpLCommand {
             return "log_controller*start_log"
         case .stopLog:
             return "log_controller*stop_log"
+        case .enableAllSensors:
+            return "log_controller*enable_all"
         case .json(let element, _, _),
                 .simpleJson(let element, _):
             return "\(element)"
@@ -77,6 +91,8 @@ private extension PnpLCommand {
         switch self {
         case .status:
             return [ code: "all"]
+        case .elementStatus(let element):
+            return [ code: element]
         case .setTime(let date):
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyyMMdd_HH_mm_ss"
@@ -85,6 +101,8 @@ private extension PnpLCommand {
             return [ code: [ "name": name] ]
         case .startLog:
             return [ code: ["interface": 0] ]
+        case .enableAllSensors(let enable):
+            return [ code: ["status": enable] ]
         case .stopLog:
             return [ code: [String: String]() ]
         case .simpleJson(_, let value):
