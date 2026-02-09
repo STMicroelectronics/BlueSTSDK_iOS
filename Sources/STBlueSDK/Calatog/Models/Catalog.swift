@@ -10,7 +10,6 @@
 //
 
 import Foundation
-import STCore
 
 public struct Catalog {
     public var blueStSdkV2: [Firmware]
@@ -118,7 +117,7 @@ public extension Catalog {
     func availableV2Firmwares(with deviceId: String, currentFirmware: Firmware?, enabledFirmwares: [String]?) -> [Firmware]? {
 
         for firmware in self.blueStSdkV2 {
-            Logger.debug(text: "\(firmware.name) - \(firmware.version)")
+            BlueSTLogger.debug(text: "\(firmware.name) - \(firmware.version)")
         }
 
         return blueStSdkV2.filter { firmware in

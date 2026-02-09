@@ -12,7 +12,6 @@
 import Foundation
 import CorePlot
 import STBlueSDK
-import STCore
 
 class BlueVoiceViewController: BaseNodeViewController {
     
@@ -72,7 +71,7 @@ class BlueVoiceViewController: BaseNodeViewController {
                                                to: self.node,
                                                feature: beamFormingFeature)
                 
-                Logger.debug(text: command.description)
+                BlueSTLogger.debug(text: command.description)
                 
                 let command2 = BeamFormingCommand.setDirection(direction: .right)
                 
@@ -80,7 +79,7 @@ class BlueVoiceViewController: BaseNodeViewController {
                                                to: self.node,
                                                feature: beamFormingFeature)
                 
-                Logger.debug(text: command2.description)
+                BlueSTLogger.debug(text: command2.description)
 
                 let command3 = BeamFormingCommand.setBeamType(beamType: .strong)
 
@@ -88,7 +87,7 @@ class BlueVoiceViewController: BaseNodeViewController {
                                                to: self.node,
                                                feature: beamFormingFeature)
 
-                Logger.debug(text: command3.description)
+                BlueSTLogger.debug(text: command3.description)
             }
         }
         else{
@@ -147,7 +146,7 @@ class BlueVoiceViewController: BaseNodeViewController {
                let data = sample.data?.audio,
                let audioPlayer = self.audioPlayer,
                feature.type.uuid == audioFeature.type.uuid {
-                Logger.debug(text: feature.description(with: sample))
+                BlueSTLogger.debug(text: feature.description(with: sample))
                 
                 audioPlayer.playSample(sample: data)
                 
@@ -157,7 +156,7 @@ class BlueVoiceViewController: BaseNodeViewController {
                    let controlFeature = self.controlFeature,
                    let sample = sample,
                    feature.type.uuid == controlFeature.type.uuid {
-                    Logger.debug(text: feature.description(with: sample))
+                    BlueSTLogger.debug(text: feature.description(with: sample))
                     
                     audioFeature.codecManager.updateParameters(from: sample)
                 }

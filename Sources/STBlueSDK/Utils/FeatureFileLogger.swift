@@ -11,7 +11,6 @@
 
 import Foundation
 import UIKit
-import STCore
 
 public class FeatureFileLogger {
     

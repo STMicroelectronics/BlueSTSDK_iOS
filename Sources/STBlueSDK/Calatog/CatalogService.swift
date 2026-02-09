@@ -10,7 +10,6 @@
 //
 
 import Foundation
-import STCore
 
 public enum CatalogType {
     case standard

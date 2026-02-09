@@ -10,12 +10,11 @@
 //
 
 import Foundation
-import STUI
 
 public struct RawPnPLStream {
     let id: Int
     let streamName: String?
-    var codeValues: [any KeyValue]?
+    var codeValues: [any BlueSTKeyValue]?
     var parsedLabels: [RawPnPLEnumLabel]?
     var rawCustom: RawCustom?
 }

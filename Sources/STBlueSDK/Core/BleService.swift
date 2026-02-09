@@ -11,7 +11,6 @@
 
 import Foundation
 import CoreBluetooth
-import STCore
 
 internal protocol BleServiceDelegate: AnyObject {
 

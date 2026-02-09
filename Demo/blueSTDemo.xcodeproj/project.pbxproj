@@ -32,6 +32,7 @@
 		E3AAF8BE2859C4410039C5D3 /* DiscoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AAF8BD2859C4410039C5D3 /* DiscoveryViewController.swift */; };
 		E3AAF8C12859C5200039C5D3 /* LicenseAgreement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AAF8C02859C5200039C5D3 /* LicenseAgreement.swift */; };
 		E3AAF8C32859C52B0039C5D3 /* LicenseAgreement.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3AAF8C22859C52B0039C5D3 /* LicenseAgreement.xib */; };
+		E3EC0C132F39D8C800F03D8C /* FilePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EC0C122F39D8B900F03D8C /* FilePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		E3AAF8BD2859C4410039C5D3 /* DiscoveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryViewController.swift; sourceTree = "<group>"; };
 		E3AAF8C02859C5200039C5D3 /* LicenseAgreement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseAgreement.swift; sourceTree = "<group>"; };
 		E3AAF8C22859C52B0039C5D3 /* LicenseAgreement.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LicenseAgreement.xib; sourceTree = "<group>"; };
+		E3EC0C122F39D8B900F03D8C /* FilePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 		60781B7D27AAC33D0042B0AF /* blueSTDemo */ = {
 			isa = PBXGroup;
 			children = (
+				E3EC0C112F39D8B400F03D8C /* Utils */,
 				60781B7E27AAC33D0042B0AF /* AppDelegate.swift */,
 				60781B8027AAC33D0042B0AF /* SceneDelegate.swift */,
 				60E3E65727C930DD00442A9F /* Controllers */,
@@ -185,6 +188,14 @@
 				E3AAF8C22859C52B0039C5D3 /* LicenseAgreement.xib */,
 			);
 			path = LicenseAgreement;
+			sourceTree = "<group>";
+		};
+		E3EC0C112F39D8B400F03D8C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				E3EC0C122F39D8B900F03D8C /* FilePicker.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,6 +290,7 @@
 				60781B8127AAC33D0042B0AF /* SceneDelegate.swift in Sources */,
 				60DDEDB327AAC46E00CD0DB9 /* NodeCell.swift in Sources */,
 				60FDEA2227B3F93F00088C95 /* FeatureLogViewController.swift in Sources */,
+				E3EC0C132F39D8C800F03D8C /* FilePicker.swift in Sources */,
 				60FDEA1C27B3F58C00088C95 /* BaseNodeViewController.swift in Sources */,
 				6010C4D527FC379600761DDE /* AudioCircularBuffer.swift in Sources */,
 				E3AAF8C12859C5200039C5D3 /* LicenseAgreement.swift in Sources */,

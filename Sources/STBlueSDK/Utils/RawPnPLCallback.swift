@@ -1,7 +1,7 @@
 //
-//  STBlueSDK.swift
-//  
-//  Copyright (c) 2022 STMicroelectronics.
+//  RawPnPLCallback.swift
+//
+//  Copyright (c) 2026 STMicroelectronics.
 //  All rights reserved.
 //
 //  This software is licensed under terms that can be found in the LICENSE file in
@@ -11,9 +11,8 @@
 
 import Foundation
 
-struct STBlueSDK {
-    static func log(text: String, category: String? = nil) {
-        BlueSTLogger.log(level: .debug, category: category ?? "", text: text)
-    }
-}
+public enum RawPnPLCallback {
+    /// Warning / error non fatali (decoding, parsing, ecc.)
+    public static var onWarning: ((String) -> Void)?
 
+}

@@ -11,9 +11,7 @@
 
 import UIKit
 import STBlueSDK
-import STCore
 import JGProgressHUD
-import STUI
 
 class FirmwareSelectViewController: BaseNodeViewController {
     
@@ -90,7 +88,7 @@ class FirmwareSelectViewController: BaseNodeViewController {
         firmwareSelectButton.setTitleColor(.systemBlue, for: .normal)
         firmwareSelectButton.addAction(UIAction(handler: { action in
             
-            FilePicker.shared.pickFile(with: [.bin]) { [weak self] (url: URL?) in
+            BlueSTSDKFilePicker.shared.pickFile(with: [.bin]) { [weak self] (url: URL?) in
                 guard let self = self,
                 let url = url else { return }
                 
@@ -162,12 +160,12 @@ class FirmwareSelectViewController: BaseNodeViewController {
                     }
                     
                     if let error = error {
-                        Logger.debug(text: "[Firmware upgrade] Fail with error: \(error.localizedDescription)")
+                        BlueSTLogger.debug(text: "[Firmware upgrade] Fail with error: \(error.localizedDescription)")
                         self.navigationController?.popToRootViewController(animated: true)
                         return
                     }
                     
-                    Logger.debug(text: "[Firmware upgrade] Complete with success")
+                    BlueSTLogger.debug(text: "[Firmware upgrade] Complete with success")
                     
                     self.navigationController?.popToRootViewController(animated: true)
                 }
@@ -176,7 +174,7 @@ class FirmwareSelectViewController: BaseNodeViewController {
                 
                 guard let self = self else { return }
                 
-                Logger.debug(text: "[Firmware upgrade] Remaining bytes: \(bytes)/\(totalBytes)")
+                BlueSTLogger.debug(text: "[Firmware upgrade] Remaining bytes: \(bytes)/\(totalBytes)")
                 let percentage = Float(bytes) / Float(totalBytes)
                 
                 DispatchQueue.main.async {

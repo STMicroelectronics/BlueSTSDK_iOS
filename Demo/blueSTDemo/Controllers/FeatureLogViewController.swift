@@ -11,7 +11,6 @@
 
 import UIKit
 import STBlueSDK
-import STCore
 
 class FeatureLogViewController: BaseNodeViewController {
     
@@ -92,7 +91,7 @@ class FeatureLogViewController: BaseNodeViewController {
                 guard let self = self else { return }
                 
                 let command = FeatureCommand(type: command, data: command.payload)
-                Logger.debug(text: "\(command.description) - Message: \(command.message(with: self.feature.type.mask, nodeId: self.node.deviceId).hex)")
+                BlueSTLogger.debug(text: "\(command.description) - Message: \(command.message(with: self.feature.type.mask, nodeId: self.node.deviceId).hex)")
                 BlueManager.shared.sendCommand(command, to: self.node, feature: self.feature)
             }), for: .touchUpInside)
             
@@ -140,7 +139,7 @@ class FeatureLogViewController: BaseNodeViewController {
             
             let description = feature.description(with: sample)
             
-            Logger.debug(text: "\(description)")
+            BlueSTLogger.debug(text: "\(description)")
             self.textView.text = description
         }
     }

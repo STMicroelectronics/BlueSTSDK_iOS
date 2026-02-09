@@ -10,7 +10,6 @@
 //
 
 import Foundation
-import STCore
 
 public extension LeNode {
     var name: String? {

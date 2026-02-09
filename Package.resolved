@@ -19,24 +19,6 @@
       }
     },
     {
-      "identity" : "ios_module_stui",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/PRG-SWP/iOS_Module_STUI.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "97138526fb36b8f7674f88d1e4c59c895efe3a01"
-      }
-    },
-    {
-      "identity" : "iqkeyboardmanager",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hackiftekhar/IQKeyboardManager.git",
-      "state" : {
-        "revision" : "c00b1ae9fa1ad8af4465bb6ca901f6943fc98eba",
-        "version" : "6.5.16"
-      }
-    },
-    {
       "identity" : "jgprogresshud",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/JonasGessner/JGProgressHUD",
@@ -70,15 +52,6 @@
       "state" : {
         "revision" : "92e76803ce7efc8e8903433cfd5f7f68938534ba",
         "version" : "0.8.0"
-      }
-    },
-    {
-      "identity" : "progresshud",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/relatedcode/ProgressHUD.git",
-      "state" : {
-        "revision" : "46792db49f80454879a939f9b2be31bb61c37b0c",
-        "version" : "13.8.6"
       }
     }
   ],

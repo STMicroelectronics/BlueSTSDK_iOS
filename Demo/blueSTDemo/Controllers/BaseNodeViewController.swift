@@ -11,7 +11,6 @@
 
 import UIKit
 import STBlueSDK
-import STCore
 
 class BaseNodeViewController: UIViewController, BlueDelegate {
     func manager(_ manager: STBlueSDK.BlueManager, discoveringStatus isDiscovering: Bool) { }
@@ -49,7 +48,7 @@ class BaseNodeViewController: UIViewController, BlueDelegate {
 
     deinit {
         BlueManager.shared.removeDelegate(self)
-        Logger.debug(text: "DEINIT: \(String(describing: self))")
+        BlueSTLogger.debug(text: "DEINIT: \(String(describing: self))")
         deinitController()
     }
 
@@ -74,6 +73,6 @@ class BaseNodeViewController: UIViewController, BlueDelegate {
     }
 
     func manager(_ manager: BlueManager, didReceiveCommandResponseFor node: Node, feature: Feature, response: FeatureCommandResponse) {
-        Logger.debug(text: "\(response.description)")
+        BlueSTLogger.debug(text: "\(response.description)")
     }
 }

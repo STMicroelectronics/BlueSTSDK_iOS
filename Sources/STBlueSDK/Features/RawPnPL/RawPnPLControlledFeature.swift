@@ -10,7 +10,6 @@
 //
 
 import Foundation
-import STUI
 
 public class RawPnPLControlledFeature: BaseFeature<RawPnPLControlledData> {
 

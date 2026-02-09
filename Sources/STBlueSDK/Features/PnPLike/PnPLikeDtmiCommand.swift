@@ -10,7 +10,6 @@
 //
 
 import Foundation
-import STCore
 
 public typealias PnPLikeDtmiElements = [PnPLikeElement]
 

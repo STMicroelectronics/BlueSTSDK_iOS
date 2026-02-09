@@ -11,7 +11,6 @@
 
 import UIKit
 import STBlueSDK
-import STCore
 
 class DebugConsoleViewController: BaseNodeViewController {
 
@@ -41,7 +40,7 @@ class DebugConsoleViewController: BaseNodeViewController {
 
             self.logTextView.text = text + "\n\n" + self.logTextView.text
         }, onCommandError: {
-            Logger.debug(text: "!!! DEBUG CONSOLE ERROR !!!")
+            BlueSTLogger.debug(text: "!!! DEBUG CONSOLE ERROR !!!")
         }))
     }
 }

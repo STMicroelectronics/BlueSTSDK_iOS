@@ -10,8 +10,6 @@
 //
 
 import Foundation
-import STUI
-import STCore
 
 public extension RawPnPLControlledFeature {
 
@@ -31,13 +29,13 @@ public extension RawPnPLControlledFeature {
                                                 stBleStreamArray.forEach { stBleStream in
                                                     if stBleStream.key.elementsEqual(RawPnPLControlledFeature.PROPERTY_NAME_CUSTOM) {
                                                         if case .string(let customStringValue) = stBleStream.value {
-                                                            guard let data = customStringValue.data(using: .utf8)  else { StandardHUD.shared.show(with: "Could not convert string to data."); return }
-                                                            guard let customStream = try? JSONDecoder().decode(RawCustom.self, from: data) else { StandardHUD.shared.show(with: "Failed to decode data."); return }
+                                                            guard let data = customStringValue.data(using: .utf8)  else { RawPnPLCallback.onWarning?("Could not convert string to data."); return }
+                                                            guard let customStream = try? JSONDecoder().decode(RawCustom.self, from: data) else { RawPnPLCallback.onWarning?("Failed to decode data."); return }
                                                             rawBleStreams.append(
                                                                 RawPnPLStream(id:streamNumber, streamName: nil, rawCustom: customStream)
                                                             )
                                                         } else {
-                                                            StandardHUD.shared.show(with: "Could not read Raw Custom BLE Stream")
+                                                            RawPnPLCallback.onWarning?("Could not read Raw Custom BLE Stream")
                                                         }
                                                     } else {
                                                         let hasActiveStream = stBleStream.value.codeValues(with: []).filter { $0.keys.contains { $0.contains(RawPnPLControlledFeature.PROPERTY_NAME_ENABLE) } && $0.value as? Bool == true || $0.keys.contains(RawPnPLControlledFeature.PROPERTY_NAME_CUSTOM) }
@@ -48,8 +46,8 @@ public extension RawPnPLControlledFeature {
                                                                 stBleStreamArrayObjectValues.forEach { objValue in
                                                                     if objValue.key.elementsEqual(RawPnPLControlledFeature.PROPERTY_NAME_LABELS) {
                                                                         if case .string(let enumStringValue) = objValue.value {
-                                                                            guard let data = enumStringValue.data(using: .utf8)  else { StandardHUD.shared.show(with: "Could not convert string to data."); return }
-                                                                            guard let enumStream = try? JSONDecoder().decode([RawPnPLEnumLabel].self, from: data) else { StandardHUD.shared.show(with: "Failed to decode data."); return }
+                                                                            guard let data = enumStringValue.data(using: .utf8)  else { RawPnPLCallback.onWarning?("Could not convert string to data."); return }
+                                                                            guard let enumStream = try? JSONDecoder().decode([RawPnPLEnumLabel].self, from: data) else { RawPnPLCallback.onWarning?("Failed to decode data."); return }
                                                                             currentRawPnPLStream.parsedLabels = enumStream
                                                                         }
                                                                     }
@@ -240,9 +238,9 @@ public extension Array {
 }
 
 extension JSONValue {
-    func codeValues(with key: [String]) -> [any KeyValue] {
+    func codeValues(with key: [String]) -> [any BlueSTKeyValue] {
 
-        var codeValues = [any KeyValue]()
+        var codeValues = [any BlueSTKeyValue]()
         var keys = [String]()
 
         keys.append(contentsOf: key)
@@ -262,13 +260,13 @@ extension JSONValue {
                 codeValues.append(contentsOf: sensor.codeValues(with: keys))
             }
         case .string(let string):
-            codeValues.append(CodeValue<String>(keys: keys, value: string))
+            codeValues.append(BlueSTCodeValue<String>(keys: keys, value: string))
         case .int(let int):
-            codeValues.append(CodeValue<Int>(keys: keys, value: int))
+            codeValues.append(BlueSTCodeValue<Int>(keys: keys, value: int))
         case .double(let double):
-            codeValues.append(CodeValue<Double>(keys: keys, value: double))
+            codeValues.append(BlueSTCodeValue<Double>(keys: keys, value: double))
         case .bool(let bool):
-            codeValues.append(CodeValue<Bool>(keys: keys, value: bool))
+            codeValues.append(BlueSTCodeValue<Bool>(keys: keys, value: bool))
         }
 
         return codeValues

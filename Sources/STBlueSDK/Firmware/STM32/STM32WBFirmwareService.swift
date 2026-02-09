@@ -11,7 +11,6 @@
 
 import Foundation
 import CoreBluetooth
-import STCore
 
 internal class STM32WBFirmwareService: BaseFirmwareService {
     

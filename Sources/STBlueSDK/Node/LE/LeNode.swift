@@ -11,7 +11,6 @@
 
 import Foundation
 import CoreBluetooth
-import STCore
 
 public class LeNode {
 

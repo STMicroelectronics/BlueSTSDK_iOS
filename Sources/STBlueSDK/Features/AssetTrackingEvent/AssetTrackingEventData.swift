@@ -10,7 +10,6 @@
 //
 
 import Foundation
-import STCore
 
 public struct AssetTrackingEventInfo {
     public let type: AssetTrackingEventType

@@ -10,7 +10,6 @@
 //
 
 import Foundation
-import STCore
 
 public struct Firmware {
     public let deviceId: String

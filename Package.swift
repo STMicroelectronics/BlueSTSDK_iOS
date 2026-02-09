@@ -18,7 +18,6 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // // .package(url: /* package url */, from: "1.0.0")
-        .package(url: "https://github.com/PRG-SWP/iOS_Module_STUI.git", branch: "main"),
         .package(url: "https://github.com/PRG-SWP/iOS_Module_STCore.git", branch: "main"),
         .package(url: "https://github.com/ybrid/opus-swift.git", from: "0.8.0")
     ],
@@ -29,7 +28,6 @@ let package = Package(
             name: "STBlueSDK",
             dependencies: [
                 .product(name: "YbridOpus", package: "opus-swift"),
-                .product(name: "STUI", package: "iOS_Module_STUI"),
                 .product(name: "STCore", package: "iOS_Module_STCore")
             ]),
         .testTarget(
