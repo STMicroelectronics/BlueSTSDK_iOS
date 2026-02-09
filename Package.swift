@@ -18,8 +18,11 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // // .package(url: /* package url */, from: "1.0.0")
-        .package(url: "https://github.com/PRG-SWP/iOS_Module_STCore.git", branch: "main"),
-        .package(url: "https://github.com/ybrid/opus-swift.git", from: "0.8.0")
+        .package(url: "https://github.com/ybrid/opus-swift.git", from: "0.8.0"),
+        // MARK: - LOCAL STCore
+        .package(path: "Packages/STCore")
+        // MARK: - REMOTE STCore
+        //.package(url: "https://github.com/PRG-SWP/iOS_Module_STCore.git", branch: "main")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -28,7 +31,10 @@ let package = Package(
             name: "STBlueSDK",
             dependencies: [
                 .product(name: "YbridOpus", package: "opus-swift"),
-                .product(name: "STCore", package: "iOS_Module_STCore")
+                // MARK: - LOCAL STCore
+                .product(name: "STCore", package: "STCore")
+                // MARK: - REMOTE STCore
+                //.product(name: "STCore", package: "iOS_Module_STCore")
             ]),
         .testTarget(
             name: "STBlueSDKTests",

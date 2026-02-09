@@ -29,6 +29,7 @@
 		60FDEA1C27B3F58C00088C95 /* BaseNodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FDEA1B27B3F58C00088C95 /* BaseNodeViewController.swift */; };
 		60FDEA1E27B3F5D800088C95 /* FeatureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FDEA1D27B3F5D700088C95 /* FeatureCell.swift */; };
 		60FDEA2227B3F93F00088C95 /* FeatureLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FDEA2127B3F93F00088C95 /* FeatureLogViewController.swift */; };
+		E333A0652F39FAA400B086DC /* STCore in Frameworks */ = {isa = PBXBuildFile; productRef = E333A0642F39FAA400B086DC /* STCore */; };
 		E3AAF8BE2859C4410039C5D3 /* DiscoveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AAF8BD2859C4410039C5D3 /* DiscoveryViewController.swift */; };
 		E3AAF8C12859C5200039C5D3 /* LicenseAgreement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AAF8C02859C5200039C5D3 /* LicenseAgreement.swift */; };
 		E3AAF8C32859C52B0039C5D3 /* LicenseAgreement.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3AAF8C22859C52B0039C5D3 /* LicenseAgreement.xib */; };
@@ -71,6 +72,7 @@
 			files = (
 				60F5AB1529A4D65600BB4396 /* STBlueSDK in Frameworks */,
 				60B084AB27D1165100450B43 /* JGProgressHUD in Frameworks */,
+				E333A0652F39FAA400B086DC /* STCore in Frameworks */,
 				6010C4CE27FC367A00761DDE /* CorePlot in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -218,6 +220,7 @@
 				60B084AA27D1165100450B43 /* JGProgressHUD */,
 				6010C4CD27FC367A00761DDE /* CorePlot */,
 				60F5AB1429A4D65600BB4396 /* STBlueSDK */,
+				E333A0642F39FAA400B086DC /* STCore */,
 			);
 			productName = blueSTDemo;
 			productReference = 60781B7B27AAC33D0042B0AF /* blueSTDemo.app */;
@@ -231,7 +234,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1320;
-				LastUpgradeCheck = 1320;
+				LastUpgradeCheck = 2620;
 				ORGANIZATIONNAME = STMicroelectronics;
 				TargetAttributes = {
 					60781B7A27AAC33D0042B0AF = {
@@ -359,8 +362,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 2DMQJQTJ5W;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -380,6 +385,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -420,8 +426,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 2DMQJQTJ5W;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -434,6 +442,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
@@ -556,6 +565,10 @@
 		60F5AB1429A4D65600BB4396 /* STBlueSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = STBlueSDK;
+		};
+		E333A0642F39FAA400B086DC /* STCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = STCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
