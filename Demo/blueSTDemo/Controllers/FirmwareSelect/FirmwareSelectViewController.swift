@@ -11,6 +11,7 @@
 
 import UIKit
 import STBlueSDK
+import STCore
 import JGProgressHUD
 
 class FirmwareSelectViewController: BaseNodeViewController {
@@ -160,12 +161,12 @@ class FirmwareSelectViewController: BaseNodeViewController {
                     }
                     
                     if let error = error {
-                        BlueSTLogger.debug(text: "[Firmware upgrade] Fail with error: \(error.localizedDescription)")
+                        Logger.debug(text: "[Firmware upgrade] Fail with error: \(error.localizedDescription)")
                         self.navigationController?.popToRootViewController(animated: true)
                         return
                     }
                     
-                    BlueSTLogger.debug(text: "[Firmware upgrade] Complete with success")
+                    Logger.debug(text: "[Firmware upgrade] Complete with success")
                     
                     self.navigationController?.popToRootViewController(animated: true)
                 }
@@ -174,7 +175,7 @@ class FirmwareSelectViewController: BaseNodeViewController {
                 
                 guard let self = self else { return }
                 
-                BlueSTLogger.debug(text: "[Firmware upgrade] Remaining bytes: \(bytes)/\(totalBytes)")
+                Logger.debug(text: "[Firmware upgrade] Remaining bytes: \(bytes)/\(totalBytes)")
                 let percentage = Float(bytes) / Float(totalBytes)
                 
                 DispatchQueue.main.async {

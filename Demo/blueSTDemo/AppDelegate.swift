@@ -11,6 +11,7 @@
 
 import UIKit
 import STBlueSDK
+import STCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,9 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         BlueManager.shared.updateCatalog(with: .prod) { catalog, error in
             if let error = error {
-                BlueSTLogger.debug(text: error.localizedDescription)
+                Logger.debug(text: error.localizedDescription)
             } else if let catalog = catalog {
-                BlueSTLogger.debug(text: "Catalog version: \(catalog.version), cheksum: \(catalog.checksum)")
+                Logger.debug(text: "Catalog version: \(catalog.version), cheksum: \(catalog.checksum)")
             }
         }
 

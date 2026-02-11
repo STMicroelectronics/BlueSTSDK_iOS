@@ -10,10 +10,11 @@
 //
 
 import Foundation
+import STCore
 
 struct STBlueSDK {
     static func log(text: String, category: String? = nil) {
-        BlueSTLogger.log(level: .debug, category: category ?? "", text: text)
+        Logger.log(level: .debug, category: category ?? "", text: text)
     }
 }
 

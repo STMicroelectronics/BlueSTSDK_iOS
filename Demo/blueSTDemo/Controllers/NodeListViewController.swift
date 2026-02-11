@@ -11,6 +11,7 @@
 
 import UIKit
 import STBlueSDK
+import STCore
 
 class NodeListViewController: UIViewController, LoadableView {
 
@@ -72,7 +73,7 @@ class NodeListViewController: UIViewController, LoadableView {
         BlueManager.shared.removeDelegate(self)
         BlueManager.shared.removeLeDelegate(self)
         BlueManager.shared.resetDiscovery(true)
-        BlueSTLogger.debug(text: "DEINIT: \(String(describing: self))")
+        Logger.debug(text: "DEINIT: \(String(describing: self))")
     }
     
     @objc
@@ -190,7 +191,7 @@ extension NodeListViewController: BlueDelegate {
 
                 BlueManager.shared.updateDtmi(with: .prod, firmware: firmware) { result, error in
 
-                    BlueSTLogger.debug(text: "\(result.count)")
+                    Logger.debug(text: "\(result.count)")
                     
                     if result.isEmpty || error != nil {
                         BlueManager.shared.updateDtmi(with: .dev, firmware: firmware) { dtmiElements, error in }

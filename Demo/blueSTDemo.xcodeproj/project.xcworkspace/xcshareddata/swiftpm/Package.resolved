@@ -1,21 +1,21 @@
 {
   "pins" : [
     {
-      "identity" : "ios_module_stcore",
+      "identity" : "core-plot",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/PRG-SWP/iOS_Module_STCore.git",
+      "location" : "https://github.com/core-plot/core-plot.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "daa4c1d9cfa0dd20e8edc71e506135b43195e9c0"
+        "branch" : "release-2.4",
+        "revision" : "51aa4a006b4d44f46f821cbacd5a14f3c6a8a272"
       }
     },
     {
-      "identity" : "jwtdecode.swift",
+      "identity" : "jgprogresshud",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/auth0/JWTDecode.swift.git",
+      "location" : "https://github.com/JonasGessner/JGProgressHUD",
       "state" : {
-        "revision" : "36a5ce735a61c4bc119593f43ce2c027b4ca7392",
-        "version" : "3.3.0"
+        "revision" : "78d7cd35f1d90ff74fd82e486f2cbe4b24be8cf9",
+        "version" : "2.2.0"
       }
     },
     {
